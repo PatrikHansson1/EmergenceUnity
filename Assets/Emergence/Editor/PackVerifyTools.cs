@@ -19,7 +19,7 @@ namespace Emergence.Editor
     {
         private const string EvidenceDir = @"C:\Users\patri\Dropbox\Emergence\45-UNITY\evidence\pack-verify";
         // Pack roots as imported (packs stay byte-identical to import — plan §4 principle)
-        private static readonly string[] PackRoots = { "Assets/FANTASTIC - Village Pack", "Assets/FANTASTIC Village Pack", "Assets/TidalFlask", "Assets/Dreamscape", "Assets/_Dreamscape", "Assets/Polyart", "Assets/Quaternius", "Assets/UltimateAnimatedAnimals" };
+        private static readonly string[] PackRoots = { "Assets/Fantastic Village Pack", "Assets/FANTASTIC - Village Pack", "Assets/Polyart", "Assets/Quaternius" };
 
         private static string[] ExistingRoots() =>
             PackRoots.Where(AssetDatabase.IsValidFolder).ToArray();

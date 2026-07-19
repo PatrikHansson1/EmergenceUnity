@@ -33,3 +33,8 @@ echo %date% %time% player smoke exit code %SMOKERC% >> "%LOG%"
 echo %date% %time% queue done build=%BUILDRC% smoke=%SMOKERC% >> "%LOG%"
 echo build=%BUILDRC% smoke=%SMOKERC% > "%PROJECT%\Builds\queue-result.txt"
 endlocal
+
+rem --- post-build: push to GitHub (git installed on Windows 2026-07-19) ---
+cd /d "%PROJECT%"
+git push origin main >> "%LOG%" 2>&1
+echo %date% %time% git push exit %ERRORLEVEL% >> "%LOG%"
