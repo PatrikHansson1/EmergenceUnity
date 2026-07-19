@@ -1,10 +1,18 @@
-// EMERGENCE P1 — THE LIGHT RIG (D-069 calibration + TD-012 §1 decoupled clock)
+// EMERGENCE P1 — THE LIGHT RIG (D-069 calibration + TD-012 §1 decoupled clock + TD-025 sky)
 // Calibration source: the Village pack demo scene as measured on U-day —
 // sun intensity 1.5 @ rotation (62,32,28); Environment Lighting = FLAT ambient
 // RGB(84,98,106) — NOT skybox ambient (it washes everything lime/white).
 // The decoupled-clock law: light is DIRECTION, not clock — live cycle only at 1x;
 // above 1x the rig holds directed light (documentary principle).
+//
+// TD-025 (audition batch): the SKYBOX is a visual BACKDROP only — it kills the gray
+// horizon gap without touching the object-lighting law. Ambient stays FLAT (objects
+// are filled by the measured RGB, never by the sky), so the D-069 calibration holds;
+// the Staggart painterly skyboxes only paint what the camera sees past the terrain.
+// Painterly register + sobriety judge (VISUAL-QUALITY-BAR): Staggart hour set, not photoreal AllSky.
 #if UNITY_EDITOR
+using System;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -17,15 +25,45 @@ namespace Emergence.Editor
         [MenuItem("Emergence/P1 Dressing/Light - Dusk (one warm point)")] public static void Dusk() => Apply("spring", "dusk");
         [MenuItem("Emergence/P1 Dressing/Light - Night")] public static void Night() => Apply("spring", "night");
 
+        // Staggart Stylized Skyboxes (TD-025). Exact-name lookup (avoids "Sky_Noon (Cloudy)" etc.).
+        static Material Sky(string exact)
+        {
+            foreach (var g in AssetDatabase.FindAssets($"t:Material {exact}"))
+            {
+                var p = AssetDatabase.GUIDToAssetPath(g);
+                if (System.IO.Path.GetFileNameWithoutExtension(p) == exact)
+                    return AssetDatabase.LoadAssetAtPath<Material>(p);
+            }
+            return null;
+        }
+
         public static void Apply(string season, string phase)
         {
             var sunGo = GameObject.Find("Sun");
             if (sunGo == null) sunGo = new GameObject("Sun");
-            if (!sunGo.TryGetComponent<Light>(out var sun)) sun = sunGo.AddComponent<Light>(); // NB: never ?? on Unity objects (fake null)
+            // NEVER ?? on Unity objects (fake-null trap — GetComponent's miss is not caught by ??).
+            if (!sunGo.TryGetComponent<Light>(out var sun)) sun = sunGo.AddComponent<Light>();
             sun.type = LightType.Directional;
             sun.shadows = LightShadows.Soft;
 
             RenderSettings.ambientMode = AmbientMode.Flat; // U-day law: flat, never skybox ambient
+
+            // Skybox backdrop per phase (visual only; ambient stays flat above).
+            // Rule 34 (EP 2026-07-19): the PACK's own skybox is the same hand as the world —
+            // prefer it where it exists (day/night); the pack ships no dusk, so blue hour
+            // auditions the Staggart Sky_Dusk. Free is fallback, never first.
+            string skyName; Material sky;
+            if (phase == "dusk") { skyName = "Sky_Dusk"; sky = Sky(skyName); }
+            else if (phase == "night") { skyName = "M_ENV_SKYBOX_night"; sky = Sky(skyName) ?? Sky(skyName = "Sky_Night"); }
+            else { skyName = "M_ENV_SKYBOX_day"; sky = Sky(skyName) ?? Sky(skyName = "Sky_Noon"); }
+            if (sky != null)
+            {
+                RenderSettings.skybox = sky;
+                // ensure the doc camera actually shows the sky (not a solid gray clear)
+                var cam = Camera.main;
+                if (cam != null) cam.clearFlags = CameraClearFlags.Skybox;
+            }
+            else Debug.LogWarning($"[LightRig] skybox '{skyName}' not found — gray horizon (import Staggart Stylized Skyboxes).");
 
             switch (phase)
             {
@@ -50,7 +88,7 @@ namespace Emergence.Editor
                     if (season == "winter") { sun.intensity = 1.15f; RenderSettings.ambientLight = new Color32(88, 96, 112, 255); }
                     break;
             }
-            Debug.Log($"[LightRig] {season}/{phase} applied (flat ambient; decoupled-clock law: presentation time, never sim time)");
+            Debug.Log($"[LightRig] {season}/{phase} applied (flat ambient; sky={(sky ? skyName : "none")}; decoupled-clock law: presentation time, never sim time)");
         }
     }
 }

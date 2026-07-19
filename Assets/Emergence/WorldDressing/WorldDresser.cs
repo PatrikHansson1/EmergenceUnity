@@ -37,6 +37,11 @@ namespace Emergence.Editor
         public const float TreesPerForestTile = 0.9f;  // density budgets (AD/Producer iterate)
         public const float RocksPerStoneTile = 0.9f;
         public const float BushesPerBerryTile = 1.1f;
+        // TD-025 audition batch (Vefects fire + msVFX smoke) — Producer scale knobs
+        public const float FireScale = 1.4f;         // Vefects fire authored ~1m; a hearth reads ~1.5m
+        public const float SmokeScale = 0.6f;        // msVFX smoke is billowy — thin it to a chimney plume
+        public const float SmokeRoofLift = 4.2f;     // above the house roof
+        public const int   SmokeNearFireTiles = 3;   // huts this close to a burning fire get chimney smoke
 
         // ---- deterministic presentation hash (the engine's own pattern; NEVER sim RNG) ----
         static uint Hash(int x, int y, int salt) { unchecked { uint h = (uint)(x * 73856093 ^ y * 19349663 ^ salt * 83492791); h ^= h >> 13; h *= 2246822519; h ^= h >> 16; return h; } }
@@ -202,10 +207,14 @@ namespace Emergence.Editor
             }
         }
 
+        // TD-025 audition: Vefects fire = THE warm point; msVFX smoke = chimney plumes on huts
+        // near a burning fire. Falls back to the pack fire so the branch can be dropped cleanly.
         static void PlaceFires(WorldState S, Transform root)
         {
             var parent = new GameObject("Fires").transform; parent.SetParent(root, true);
-            var fx = FindPrefab("P_FX_fire") ?? FindPrefab("PF_FX_fire") ?? FindPrefab("fire");
+            var fx = FindPrefab("VFX_Fire_01_Medium") ?? FindPrefab("VFX_Fire_01_Big")
+                     ?? FindPrefab("P_FX_fire") ?? FindPrefab("PF_FX_fire") ?? FindPrefab("fire");
+            var smoke = FindPrefab("msVFX_Stylized Smoke 1") ?? FindPrefab("msVFX_Stylized Smoke 2");
             foreach (var f in S.fires)
             {
                 var pos = Ground(S, f.x, f.y, 0.1f);
@@ -213,12 +222,24 @@ namespace Emergence.Editor
                 {
                     var go = (GameObject)PrefabUtility.InstantiatePrefab(fx, parent);
                     go.transform.position = pos;
+                    go.transform.localScale = Vector3.one * FireScale;
                 }
+                // the warm point — kept even if the Vefects prefab carries its own light (guarantees the identity)
                 var light = new GameObject("firelight").AddComponent<Light>();
                 light.transform.SetParent(parent, true);
                 light.transform.position = pos + Vector3.up * 1.2f;
                 light.type = LightType.Point; light.color = new Color(1f, 0.62f, 0.28f); light.intensity = 2.6f; light.range = 12f;
             }
+            // chimney smoke: a hut within SmokeNearFireTiles of a burning fire is "lived-in" at this hour
+            if (smoke != null)
+                foreach (var h in S.huts)
+                {
+                    if (!S.fires.Any(f => Mathf.Abs(f.x - h.x) <= SmokeNearFireTiles && Mathf.Abs(f.y - h.y) <= SmokeNearFireTiles)) continue;
+                    var go = (GameObject)PrefabUtility.InstantiatePrefab(smoke, parent);
+                    go.transform.position = Ground(S, h.x, h.y, SmokeRoofLift);
+                    go.transform.localScale = Vector3.one * SmokeScale;
+                    go.name = $"chimneysmoke_{h.owner}";
+                }
         }
 
         static void PlaceFields(WorldState S, Transform root)
