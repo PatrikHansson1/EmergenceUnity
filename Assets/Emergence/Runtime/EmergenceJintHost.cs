@@ -11,7 +11,7 @@ namespace Emergence.Runtime
 {
     public sealed class EmergenceJintHost
     {
-        public const string ExpectedEngineSha = "1b71638545c8e6e37a45472de33bfb5d6bc4b60e279464566d1ad7dd754c8290"; // ENGINE 2.0.0 (E1, D-080)
+        public const string ExpectedEngineSha = "a06b302b149f1a48efba73c651973e7fd6526576c1a1dcf8077eae33e5b52273"; // ENGINE 2.0.1 (THE WATER FIX, D-081)
 
         private readonly Jint.Engine _engine;
         public string EngineSha256 { get; }
