@@ -18,7 +18,9 @@ namespace Emergence.Editor
         private static string GoldensDir => Path.Combine(EngineDir, "harness", "goldens");
         private static string ReportPath => Path.Combine(Application.dataPath, "..", "Reports", "golden-report.txt");
 
-        private static readonly (long seed, int ticks)[] Suite60 = { (97013, 8640), (4242, 8640), (20260718, 8640) };
+        private const string TestFounders = "[{name:'Ask the First',traits:{curiosity:0.9,social:0.4,diligence:0.6,conformity:0.3}},{name:'Embla the First'},{traits:{social:0.85}},null]";
+        private static readonly (string label, long seed, int ticks, string founders)[] Suite60 =
+            { ("97013", 97013, 8640, null), ("4242", 4242, 8640, null), ("20260718", 20260718, 8640, null), ("4242-founders", 4242, 8640, TestFounders) };
 
         [MenuItem("Emergence/Golden Master/1. Engine SHA Assert")]
         public static void ShaAssert()
@@ -52,7 +54,7 @@ namespace Emergence.Editor
         public static void Run160()
         {
             var report = new StringBuilder();
-            var green = RunOne(4242, 23040, report);
+            var green = RunOne("4242", 4242, 23040, null, report);
             Write(report);
             if (!green) throw new Exception("GOLDEN MASTER RED (160y) — stop the line.");
         }
@@ -64,31 +66,31 @@ namespace Emergence.Editor
             ShaAssert();
             report.AppendLine("Engine SHA assert: OK");
             bool green = true;
-            foreach (var (seed, ticks) in Suite60) green &= RunOne(seed, ticks, report);
+            foreach (var (label, seed, ticks, founders) in Suite60) green &= RunOne(label, seed, ticks, founders, report);
             report.AppendLine(green ? "VERDICT: GREEN" : "VERDICT: RED — STOP THE LINE (UNITY-BRIDGE-SPEC §5)");
             Write(report);
             Debug.Log("[GoldenMaster] " + (green ? "GREEN" : "RED") + " — report at Reports/golden-report.txt");
             return green;
         }
 
-        private static bool RunOne(long seed, int ticks, StringBuilder report)
+        private static bool RunOne(string label, long seed, int ticks, string founders, StringBuilder report)
         {
-            var goldenPath = Path.Combine(GoldensDir, $"seed-{seed}-t{ticks}.canon.txt");
-            if (!File.Exists(goldenPath)) { report.AppendLine($"seed={seed} t={ticks}: MISSING GOLDEN {goldenPath}"); return false; }
+            var goldenPath = Path.Combine(GoldensDir, $"seed-{label}-t{ticks}.canon.txt");
+            if (!File.Exists(goldenPath)) { report.AppendLine($"seed={label} t={ticks}: MISSING GOLDEN {goldenPath}"); return false; }
             var golden = File.ReadAllText(goldenPath);
             var host = EmergenceJintHost.FromDirectory(EngineDir, withHarness: true);
             var t0 = EditorApplication.timeSinceStartup;
-            var canon = host.RunGolden(seed, ticks);
+            var canon = host.RunGolden(seed, ticks, founders);
             var secs = EditorApplication.timeSinceStartup - t0;
             var pass = string.Equals(canon, golden, StringComparison.Ordinal);
-            var line = $"seed={seed} t={ticks}: {(pass ? "GREEN" : "RED")} jintSha={EmergenceJintHost.Sha256Hex(canon)} goldenSha={EmergenceJintHost.Sha256Hex(golden)} bytes={canon.Length} secs={secs:F0}";
+            var line = $"seed={label} t={ticks}: {(pass ? "GREEN" : "RED")} jintSha={EmergenceJintHost.Sha256Hex(canon)} goldenSha={EmergenceJintHost.Sha256Hex(golden)} bytes={canon.Length} secs={secs:F0}";
             report.AppendLine(line);
             Debug.Log("[GoldenMaster] " + line);
             if (!pass)
             {
                 var diffAt = FirstDiff(canon, golden);
                 report.AppendLine($"  first divergent char index: {diffAt} (triage per JINT-GOLDEN-MASTER-PLAN §5 / readable variant)");
-                File.WriteAllText(Path.Combine(Application.dataPath, "..", "Reports", $"divergent-{seed}-t{ticks}.canon.txt"), canon);
+                File.WriteAllText(Path.Combine(Application.dataPath, "..", "Reports", $"divergent-{label}-t{ticks}.canon.txt"), canon);
             }
             return pass;
         }

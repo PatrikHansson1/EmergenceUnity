@@ -14,7 +14,7 @@ namespace Emergence.Runtime
         // Reference values regenerated 2026-07-19 against engine 1.2.1 (see Engine/harness/goldens/GOLDENS-MANIFEST.md)
         public const long SmokeSeed = 97013;
         public const int SmokeTicks = 1440;
-        public const string ExpectedCanonSha = "dba53207c7f7e004a322933561de6fcd2fa1fbebdd4c3eb75442036a0b7ef65f";
+        public const string ExpectedCanonSha = "eb7c873a983eb3205d5fae6414a951654abf6e08032c6afae7056682558dac8f"; // engine 2.0.0
 
         private void Start()
         {

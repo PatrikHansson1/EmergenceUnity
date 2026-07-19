@@ -83,9 +83,9 @@
 
   // ---- the golden run ----
   // Full-world capture: entire event log + DNA + history + end-state digest.
-  function runGolden(seed, ticks) {
+  function runGolden(seed, ticks, founders) {
     var E = root.Emergence;
-    var S = E.createWorld(seed);
+    var S = E.createWorld(seed, founders);
     S.silent = true;
     while (S.tick < ticks && !S.ended) E.tickWorld(S);
     var dna = E.computeDNA(S);
@@ -105,7 +105,7 @@
       eventCount: S.events.length
     };
     var payload = {
-      meta: { seed: seed, ticksRequested: ticks, engine: 'emergence-engine.js' },
+      meta: { seed: seed, ticksRequested: ticks, founders: founders || null, engine: 'emergence-engine.js', engineVersion: (E.VERSION || '1.x') },
       events: S.events,
       dna: dna,
       history: hist,

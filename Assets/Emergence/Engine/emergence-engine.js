@@ -1,4 +1,16 @@
 /* ============================================================================
+   EMERGENCE — Civilization Engine — ENGINE 2.0.0 (Wave E1: THE WIDER WORLD)
+   E1 bundles every known World-Code-breaking change into this ONE major
+   (D-072/D-078): the wider valley (100x70, D-061 Stage-A) + world-gen v2
+   (same grammar, scaled density) + THE FOUNDERS input (createWorld(seed,
+   founders?) — names/traits for the first four; part of the World Code) +
+   MALTHUS (the land's berry-sites + fields set the birth ceiling — the
+   hardcoded 42 is gone) + SPEECH ACTS (phrase choice by position hash,
+   never S.rand — pools can grow or be replaced by presentation without
+   forking worlds; the engine emits acts). Engine 1.2.1 world codes are
+   retired with this version per ENGINE-CONTRACT §3.5/§5.
+   ============================================================================
+   (v4 header follows, still true:)
    EMERGENCE — Civilization Engine v4 (Information Engine + Living World)
    Philosophy: We program rules — never outcomes.
    Research principle: Research inspires the rules — never dictates the outcomes.
@@ -46,7 +58,7 @@
 })(typeof self!=='undefined'?self:this,function(){
 "use strict";
 
-const W=64,H=44;
+const W=100,H=70; // ENGINE 2.0 (E1, D-061 Stage-A): 2.49x area — villages get distance, journeys become journeys
 
 function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
 const clamp=(v,a,b)=>v<a?a:(v>b?b:v);
@@ -119,16 +131,22 @@ const SEASONS=['spring','summer','autumn','winter'];
 function seasonOf(S){const t=S.tick%144;return t<40?'spring':t<84?'summer':t<116?'autumn':'winter';} // Engine 1.1 (D-049, EP): shorter winter (28, was 36), longer growing seasons — spring 40, summer 44, autumn 32
 
 const CHAT={
-  small:['What a day!','Did you see the sunrise?','The land is good here.','I dreamt last night.','The wind is turning.'],
-  hungry:['I am so hungry...','Are there berries left?','My stomach growls.'],
-  cold:['The cold bites tonight.','I am freezing...','We need warmth.'],
-  discovery:['I have created something new!','Look what I made!','This changes everything!'],
-  teach:['Let me show you something...','This is how it is done...','I just learned this.'],
-  love:['I like being near you.','We are building something together, you and I.','Stay close.'],
-  observe:['Did you see that?','Curious...','I must remember this.'],
-  fail:['Not like that, then...','Almost. Almost!','Why will it not hold?'],
-  ritual:['It felt right.','For those before us.','So we remember.'],
+  small:['What a day!','Did you see the sunrise?','The land is good here.','I dreamt last night.','The wind is turning.','The birds are back.','My mother knew this weather.','Quiet today. I like it.','The valley smells of rain.','Have you ever counted the stars?'],
+  hungry:['I am so hungry...','Are there berries left?','My stomach growls.','I dreamt of food again.','Winter eats first, we eat after.','My hands shake. I need to eat.'],
+  cold:['The cold bites tonight.','I am freezing...','We need warmth.','My fingers have gone stiff.','Closer to the fire. Closer.'],
+  discovery:['I have created something new!','Look what I made!','This changes everything!','It works. It actually works!','My hands knew before I did.'],
+  teach:['Let me show you something...','This is how it is done...','I just learned this.','Watch my hands, not my face.','Slowly. The way matters.','My teacher showed me. Now I show you.'],
+  love:['I like being near you.','We are building something together, you and I.','Stay close.','The day is better when you are in it.','I saved you the sweetest berries.'],
+  observe:['Did you see that?','Curious...','I must remember this.','Again. It happened again.','Why does it do that?'],
+  fail:['Not like that, then...','Almost. Almost!','Why will it not hold?','The idea was right. The hands were wrong.','Tomorrow it will work.'],
+  ritual:['It felt right.','For those before us.','So we remember.','The old ones would approve.','This is how we stay ourselves.'],
 };
+// ENGINE 2.0 SPEECH ACTS (E1, TD-012/D-078): the engine emits an ACT; the phrase
+// is chosen by a deterministic position hash — NEVER by S.rand — so pools can
+// grow, be localized, or be replaced by the presentation layer without forking
+// worlds. Contract §4: visual/text variety never touches the randomness stream.
+function sayHash(a,S){let h=(a.id*2654435761+S.tick*40503)>>>0;h^=h>>>13;h=(h*2246822519)>>>0;h^=h>>>16;return h;}
+function pickSay(S,a,cat){const p=CHAT[cat];return p[sayHash(a,S)%p.length];}
 
 // ---------- culture templates (instantiated per world with the world's own randomness) ----------
 const RIT_ACTS=['placing a stone on','laying flowers on','planting a seed by','pouring water over','burning a twig at'];
@@ -161,7 +179,7 @@ function gainKnowledge(S,a,id,via,altUsed){
     const name=`${a.name}'s ${mat==='iron'&&id==='axe'?'iron ':''}${pick(S,t.var)}`;
     k=S.knowledge[id]={id,name,status:'alive',inventedBy:a.name,yearBorn:Math.floor(S.tick/YEAR)+1,rediscoveries:0,losses:0,madeFrom:altUsed?Object.keys(altUsed).join('+'):''};
     ev(S,'tech',`${t.icon} <b>${a.name}</b> ${t.flavor} — <b>${name}</b> (${t.base}) has been invented! <i>${t.effect}</i>`,{tech:id,agent:a.id,x:a.x,y:a.y});
-    speak(S,a,pick(S,CHAT.discovery));
+    speak(S,a,pickSay(S,a,'discovery'),'discovery');
     if(id==='fire')giveEpithet(S,a,'the Firebringer');
     else if(id==='writing')giveEpithet(S,a,'the Rememberer');
     else if(id==='spear')giveEpithet(S,a,'the Spearmaker');
@@ -287,7 +305,7 @@ function addCustom(S,a,c,mutatedFrom){
   adoptCustom(S,a,cu);
   const label=c.lens?'A NEW WAY OF SEEING':c.kind==='taboo'?'A TABOO TAKES HOLD':c.kind==='value'?'A CONVICTION IS BORN':c.kind==='belief'?'A BELIEF TAKES ROOT':'A CUSTOM APPEARS';
   ev(S,'custom',`🌿 <b>${a.name}</b> began ${cu.txt} — no one told them to. Others may follow. <i>(${cu.name})</i>`,{custom:id,agent:a.id,x:a.x,y:a.y,label});
-  speak(S,a,pick(S,CHAT.ritual));
+  speak(S,a,pickSay(S,a,'ritual'),'ritual');
   return cu;
 }
 function getLens(S,a){
@@ -446,7 +464,21 @@ function makeWorld(S){
       }
     }
   };
-  blob('water',3,7);blob('forest',6,6);blob('stone',4,4);blob('berry',5,3);blob('sand',2,3);
+  // world-gen v2 (E1): same grammar, two registers — the WILD LAND (uniform,
+  // sparser: distance is real) and the HEARTLAND (the central ~30x21 — the old
+  // valley's density, embedded): the first four begin here; the wide land is
+  // where later generations' journeys, exoduses and far villages belong.
+  blob('water',5,9);blob('forest',11,6);blob('stone',8,4);blob('berry',7,3);blob('sand',5,3);
+  const hb=(type,count,rad)=>{ // heartland blob: center-biased placement
+    for(let i=0;i<count;i++){
+      const cx=RI(S,(W*0.35)|0,(W*0.65)|0),cy=RI(S,(H*0.35)|0,(H*0.65)|0),r=RI(S,2,rad);
+      for(let y=cy-r;y<=cy+r;y++)for(let x=cx-r;x<=cx+r;x++){
+        if(x<0||y<0||x>=W||y>=H)continue;
+        if(Math.hypot(x-cx,y-cy)<=r*R(S,.6,1))S.tiles[y][x]={t:type,n:type==='water'?0:RI(S,4,9)};
+      }
+    }
+  };
+  hb('water',1,5);hb('forest',5,5);hb('stone',3,3);hb('berry',6,3);
   const scatter=(near,type,count)=>{
     let placed=0,guard=0;
     while(placed<count&&guard++<4000){
@@ -457,10 +489,10 @@ function makeWorld(S){
       if(ok){S.tiles[y][x]={t:type,n:RI(S,3,7)};placed++;}
     }
   };
-  scatter('water','clay',14);scatter('stone','iron',8);
+  scatter('water','clay',35);scatter('stone','iron',20);
   // loose boulders and patches — the world invites curiosity everywhere
   let placed=0,guard=0;
-  const loose=[['stone',10],['sand',5],['clay',4]];
+  const loose=[['stone',25],['sand',12],['clay',10]];
   for(const[type,count]of loose){placed=0;guard=0;
     while(placed<count&&guard++<2000){
       const x=RI(S,2,W-3),y=RI(S,2,H-3);
@@ -468,14 +500,14 @@ function makeWorld(S){
     }
   }
 }
-function makeAgent(S,x,y,parents){
+function makeAgent(S,x,y,parents,founder){
   const mut=v=>clamp(v+R(S,-.15,.15),.05,1);
   const a={
     id:S.nextId++, name:NAMES[S.usedNames++%NAMES.length]+(S.usedNames>NAMES.length?' II':''),
     x,y, age:parents?0:RI(S,17,24), gen:parents?Math.max(parents[0].gen,parents[1].gen)+1:1,
     lifespan:RI(S,55,85), hunger:80,energy:90,warmth:90,social:70,
     inv:{},knows:new Set(),obs:new Set(),customs:new Set(),rel:{},task:'thinking',expT:0,expTech:null,expAlt:null,
-    say:'',sayT:0,inspired:0,childCd:0,talkCd:0,phase:R(S,0,6.28),
+    say:'',sayT:0,sayAct:null,inspired:0,childCd:0,talkCd:0,phase:R(S,0,6.28),
     hue:parents?(parents[0].hue+parents[1].hue)/2+RI(S,-20,20):RI(S,0,360),
     traits:{
       curiosity:parents?mut((parents[0].traits.curiosity+parents[1].traits.curiosity)/2):R(S,.2,.95),
@@ -497,12 +529,19 @@ function makeAgent(S,x,y,parents){
     for(const sl in bySlot)a.customs.add(bySlot[sl]);
     for(const o of parents[0].obs)if(S.rand()<.4)a.obs.add(o);
   }
+  // ENGINE 2.0 FOUNDERS (E1, TD-009): player-shaped birth variables for the
+  // first four — recorded input, part of the World Code (Contract §1 used as designed).
+  if(founder){
+    if(founder.name)a.name=String(founder.name).slice(0,24);
+    if(founder.traits)for(const tk of ['curiosity','social','diligence','conformity'])
+      if(typeof founder.traits[tk]==='number'&&isFinite(founder.traits[tk]))a.traits[tk]=clamp(founder.traits[tk],0.05,0.95);
+  }
   S.maxGeneration=Math.max(S.maxGeneration,a.gen);
   S.traitSum.curiosity+=a.traits.curiosity;S.traitSum.social+=a.traits.social;S.traitSum.diligence+=a.traits.diligence;S.traitSum.n++;
   return a;
 }
 
-function createWorld(seed){
+function createWorld(seed,founders){
   const S={
     seed:seed>>>0, rand:mulberry32(seed>>>0),
     tick:0,hour:6,day:1,
@@ -517,15 +556,15 @@ function createWorld(seed){
   makeWorld(S);
   for(let i=0;i<4;i++){
     let x,y;
-    do{x=RI(S,20,44);y=RI(S,14,30);}while(S.tiles[y][x].t==='water');
-    const a=makeAgent(S,x,y,null);a.born=-a.age;S.agents.push(a);
+    do{x=RI(S,(W*0.43)|0,(W*0.57)|0);y=RI(S,(H*0.43)|0,(H*0.57)|0);}while(S.tiles[y][x].t==='water'); // E1: the first four begin TOGETHER in the heartland's core
+    const a=makeAgent(S,x,y,null,founders&&founders[i]);a.born=-a.age;S.agents.push(a);
   }
   // the living world: deer herds and wolf packs
-  for(let h=0;h<3;h++){
+  for(let h=0;h<7;h++){ // E1: herds scaled with the land
     let cx,cy;do{cx=RI(S,6,W-7);cy=RI(S,6,H-7);}while(S.tiles[cy][cx].t==='water');
     for(let i=0;i<RI(S,4,6);i++)S.animals.push({id:S.nextAnimalId++,type:'deer',x:clamp(cx+R(S,-2,2),1,W-2),y:clamp(cy+R(S,-2,2),1,H-2),herd:h,h:0});
   }
-  for(let p=0;p<2;p++){
+  for(let p=0;p<5;p++){ // E1: packs scaled with the land
     let cx,cy;do{cx=RI(S,4,W-5);cy=RI(S,4,H-5);}while(S.tiles[cy][cx].t==='water');
     for(let i=0;i<2;i++)S.animals.push({id:S.nextAnimalId++,type:'wolf',x:clamp(cx+R(S,-1,1),1,W-2),y:clamp(cy+R(S,-1,1),1,H-2),pack:p,h:RI(S,0,200)});
   }
@@ -534,12 +573,23 @@ function createWorld(seed){
 }
 
 // ---------- behavior ----------
-function speak(S,a,txt){a.say=txt;a.sayT=40;}
+function speak(S,a,txt,act){a.say=txt;a.sayT=40;a.sayAct=act||null;}
 function disp(a){return a.epithet?a.name+' '+a.epithet:a.name;}
 function giveEpithet(S,a,ep){
   if(a.epithet||a.dead)return;
   a.epithet=ep;
   ev(S,'epithet',`✨ From that day on, <b>${a.name}</b> was known as <b>${a.name} ${ep}</b>.`,{agent:a.id,x:a.x,y:a.y});
+}
+// ENGINE 2.0 MALTHUS (E1, audit §4.2): the land, not a number, sets the birth
+// ceiling. Berry SITES (grown or regrowing — the land's capacity, not this
+// hour's stock, so winter does not crater it) + tended fields + fishing water.
+function carryingCapacity(S){
+  let sites=0;
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++)if(S.tiles[y][x].t==='berry')sites++;
+  for(const r of S.regrows)if(r.type==='berry')sites++;
+  let cap=10+sites*0.9+S.fields.length*3;
+  if(S.agents.some(a=>!a.dead&&a.knows.has('fishing')))cap+=8;
+  return Math.floor(cap);
 }
 function worldKnows(S,id){return !!S.knowledge[id]&&S.knowledge[id].status==='alive';}
 function tryObserve(S,a,obsId,chance){
@@ -548,7 +598,7 @@ function tryObserve(S,a,obsId,chance){
   if(S.rand()<chance*(0.5+a.traits.curiosity)){
     a.obs.add(obsId);S.stats.observations++;
     if(S.rand()<.25)ev(S,'observed',`👁️ <b>${a.name}</b> noticed ${OBS[obsId].txt}. An idea begins to form.`,{obs:obsId,agent:a.id,x:a.x,y:a.y});
-    if(S.rand()<.3)speak(S,a,pick(S,CHAT.observe));
+    if(S.rand()<.3)speak(S,a,pickSay(S,a,'observe'),'observe');
   }
 }
 function pickAlt(S,a,t){
@@ -655,11 +705,11 @@ function talk(S,a,b){
     }
   }
   spreadCustoms(S,a,b);
-  if(taught)speak(S,a,pick(S,CHAT.teach));
-  else if((a.rel[b.id]||0)>70)speak(S,a,pick(S,CHAT.love));
-  else speak(S,a,pick(S,CHAT.small));
+  if(taught)speak(S,a,pickSay(S,a,'teach'),'teach');
+  else if((a.rel[b.id]||0)>70)speak(S,a,pickSay(S,a,'love'),'love');
+  else speak(S,a,pickSay(S,a,'small'),'small');
   if(a.rel[b.id]>60&&b.rel[a.id]>60&&a.age>16&&b.age>16&&a.age<50&&b.age<50
-     &&a.childCd===0&&b.childCd===0&&a.hunger>40&&b.hunger>40&&S.agents.filter(x=>!x.dead).length<42
+     &&a.childCd===0&&b.childCd===0&&a.hunger>40&&b.hunger>40&&S.agents.filter(x=>!x.dead).length<carryingCapacity(S) // E1 MALTHUS: the land sets the ceiling (was: hardcoded 42)
      &&S.rand()<(worldKnows(S,'farming')||worldKnows(S,'fishing')?0.20:0.15)){ // Engine 1.2 (D-050): food security emboldens families
     const child=makeAgent(S,a.x,a.y,[a,b]);child.born=S.tick/YEAR;
     if(worldKnows(S,'writing')){for(const k of a.knows)if(S.rand()<.5)child.knows.add(k);}
@@ -677,7 +727,7 @@ function tryBuildHut(S,a){
   const h={x:a.x,y:a.y,owner:a.name};S.huts.push(h);a.home=h;S.bgDirty=true;
   ev(S,'hut',`🛖 <b>${a.name}</b> built a hut.`,{x:a.x,y:a.y});
   const cluster=S.huts.filter(o=>dist(o,h)<7);
-  if(cluster.length>=3&&!S.villages.some(v=>dist(v,h)<9)){
+  if(cluster.length>=3&&!S.villages.some(v=>dist(v,h)<12)){ // E1: village spacing widened with the map
     giveEpithet(S,a,'the Founder');
     const vname=a.name.split(' ')[0]+pick(S,['stead','vik','heim','holm','haven']);
     S.villages.push({x:h.x,y:h.y,name:vname});
@@ -780,11 +830,11 @@ function agentTick(S,a){
         moveToward(S,a,w);a.task='going fishing';return;
       }
     }
-    doSeek(S,a,'berry',()=>{S.tiles[a.ty][a.tx0].n--;if(S.tiles[a.ty][a.tx0].n<=0)regrowLater(S,a.tx0,a.ty,'berry');a.hunger=clamp(a.hunger+45+(worldKnows(S,'mill')?20:0),0,140);a.task='eating';tryObserve(S,a,'seedsSprout',.09);{const w2=findNearest(S,a,'water');if(w2&&Math.hypot(w2.x-a.x,w2.y-a.y)<4)tryObserve(S,a,'fishGather',.12);}if(S.rand()<.1)speak(S,a,pick(S,CHAT.hungry));});return;
+    doSeek(S,a,'berry',()=>{S.tiles[a.ty][a.tx0].n--;if(S.tiles[a.ty][a.tx0].n<=0)regrowLater(S,a.tx0,a.ty,'berry');a.hunger=clamp(a.hunger+45+(worldKnows(S,'mill')?20:0),0,140);a.task='eating';tryObserve(S,a,'seedsSprout',.09);{const w2=findNearest(S,a,'water');if(w2&&Math.hypot(w2.x-a.x,w2.y-a.y)<4)tryObserve(S,a,'fishGather',.12);}if(S.rand()<.1)speak(S,a,pickSay(S,a,'hungry'),'hungry');});return;
   }
   if(night&&a.warmth<70){
     const f=nearestOf(S.fires.concat(S.huts),a);
-    if(f&&dist(f,a)<25){moveToward(S,a,f);a.task='seeking warmth';if(S.rand()<.05)speak(S,a,pick(S,CHAT.cold));return;}
+    if(f&&dist(f,a)<25){moveToward(S,a,f);a.task='seeking warmth';if(S.rand()<.05)speak(S,a,pickSay(S,a,'cold'),'cold');return;}
     if(a.knows.has('fire')&&(a.inv.wood||0)>=2){a.inv.wood-=2;S.fires.push({x:a.x,y:a.y,fuel:600});a.task='lighting a fire';S.bgDirty=true;return;}
     const buddy=nearestOf(S.agents.filter(o=>o!==a&&!o.dead),a);
     if(buddy&&dist(buddy,a)>1.2){moveToward(S,a,buddy);a.task='huddling for warmth';return;}
@@ -827,7 +877,7 @@ function agentTick(S,a){
           if(t.id==='hut')tryBuildHut(S,a);
         }else{
           S.stats.failedExperiments++;
-          if(S.rand()<.35)speak(S,a,pick(S,CHAT.fail));
+          if(S.rand()<.35)speak(S,a,pickSay(S,a,'fail'),'fail');
           if(S.rand()<.15)ev(S,'failed',`<b>${a.name}</b> tried something with ${alt?Object.keys(alt).join(' and '):'what was at hand'} — and failed. But failure teaches.`,{agent:a.id}),a.obs.size&&null;
           if(alt&&S.rand()<.3&&a.inv[Object.keys(alt)[0]]>0)a.inv[Object.keys(alt)[0]]--;
         }
@@ -1224,5 +1274,5 @@ function resimulate(seed,toTick){
   return S;
 }
 
-return {createWorld,tickWorld,computeDNA,resimulate,writeHistory,TECHS,TECH,OBS,QUIRK,W,H,YEAR,SEASONS};
+return {createWorld,tickWorld,computeDNA,resimulate,writeHistory,TECHS,TECH,OBS,QUIRK,W,H,YEAR,SEASONS,VERSION:'2.0.0'};
 });

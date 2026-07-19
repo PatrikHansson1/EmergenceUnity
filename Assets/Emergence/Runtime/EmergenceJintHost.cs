@@ -11,7 +11,7 @@ namespace Emergence.Runtime
 {
     public sealed class EmergenceJintHost
     {
-        public const string ExpectedEngineSha = "fc6bda1010032c9041021ad0de391eab92f4db71426cee2b94f11340c57ec18e";
+        public const string ExpectedEngineSha = "1b71638545c8e6e37a45472de33bfb5d6bc4b60e279464566d1ad7dd754c8290"; // ENGINE 2.0.0 (E1, D-080)
 
         private readonly Jint.Engine _engine;
         public string EngineSha256 { get; }
@@ -36,8 +36,8 @@ namespace Emergence.Runtime
         public Jint.Engine Engine => _engine;
 
         /// <summary>Golden run via the shared harness (requires harnessSrc). Returns the canonical string.</summary>
-        public string RunGolden(long seed, int ticks)
-            => _engine.Evaluate($"EmergenceGolden.runGolden({seed},{ticks})").AsString();
+        public string RunGolden(long seed, int ticks, string foundersJs = null)
+            => _engine.Evaluate($"EmergenceGolden.runGolden({seed},{ticks},{(string.IsNullOrEmpty(foundersJs) ? "null" : foundersJs)})").AsString();
 
         /// <summary>Static SHA-256 (lowercase hex) of a string's UTF-8 bytes — same convention as `sha256sum` on the golden files.</summary>
         public static string Sha256Hex(string s)
