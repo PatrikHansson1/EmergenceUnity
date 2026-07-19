@@ -223,6 +223,21 @@ namespace Emergence.Editor
             || task.Contains("tend") || task.Contains("build") || task.Contains("mill") || task.Contains("craft")
             || task.Contains("bak") || task.Contains("smith") || task.Contains("dig") || task.Contains("chop"));
 
+        static bool Moving(string task) => task != null && (task.Contains("walk") || task.Contains("forag")
+            || task.Contains("fish") || task.Contains("hunt") || task.Contains("gather") || task.Contains("carr")
+            || task.Contains("seek") || task.Contains("wander") || task.Contains("go ") || task.Contains("toward")
+            || task.Contains("travel") || task.Contains("herd"));
+
+        // the walk/work GLBs carry an AnimationClip; sampling it in EDIT mode POSES the model to a
+        // frame (mid-stride / mid-work), so stills read dynamic + varied — no play mode needed.
+        static AnimationClip LoadClip(string path)
+        {
+            foreach (var o in AssetDatabase.LoadAllAssetsAtPath(path))
+                if (o is AnimationClip c && (c.hideFlags & HideFlags.NotEditable) == 0 && !c.name.StartsWith("__preview"))
+                    return c;
+            return null;
+        }
+
         static void PlaceAgents(WorldState S, Transform root)
         {
             var parent = new GameObject("Agents").transform; parent.SetParent(root, true);
@@ -231,17 +246,21 @@ namespace Emergence.Editor
             {
                 string band = a.age < 14 ? "child" : a.age > 55 ? "elder" : "adult";
                 bool female = (Hash((int)a.x, (int)a.y, a.id) & 1u) == 0u;
-                // adults working at a task use the -work pose variant; children/elders have none
-                string suffix = (band == "adult" && Working(a.task)) ? "-work" : "";
-                string nm = band == "child" ? (female ? "villager-child-f" : "villager-child")
-                          : band == "elder" ? (female ? "villager-elder-f" : "villager-elder")
-                          : (female ? "villager-f" : "villager") + suffix;
+                // pose by task: working adults -> -work, movers -> -walk, else idle base
+                string suffix = (band == "adult" && Working(a.task)) ? "-work" : Moving(a.task) ? "-walk" : "";
+                string baseNm = band == "child" ? (female ? "villager-child-f" : "villager-child")
+                              : band == "elder" ? (female ? "villager-elder-f" : "villager-elder")
+                              : (female ? "villager-f" : "villager");
+                string nm = baseNm + suffix;
                 var pf = AssetDatabase.LoadAssetAtPath<GameObject>(CharDir + nm + ".glb");
-                if (pf == null && suffix != "") pf = AssetDatabase.LoadAssetAtPath<GameObject>(CharDir + (female ? "villager-f" : "villager") + ".glb");
+                if (pf == null) { nm = baseNm; pf = AssetDatabase.LoadAssetAtPath<GameObject>(CharDir + nm + ".glb"); } // fallback to base
                 if (pf == null) continue; // glTFast not imported yet — dressing still succeeds
                 var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, parent);
                 go.transform.position = Ground(S, a.x, a.y, 0f);
                 go.transform.localScale = Vector3.one * VillagerScale;
+                // POSE the model to a hash-varied frame of its clip (static, edit-mode)
+                var clip = LoadClip(CharDir + nm + ".glb");
+                if (clip != null && clip.length > 0f) clip.SampleAnimation(go, Hash01((int)a.x, (int)a.y, a.id + 11) * clip.length);
                 // face the nearest hut (a lived-in reading, less random) — orientation is presentation-only
                 WorldHut nh = null; float nb = float.MaxValue;
                 foreach (var h in S.huts) { float d = (h.x - a.x) * (h.x - a.x) + (h.y - a.y) * (h.y - a.y); if (d < nb) { nb = d; nh = h; } }
