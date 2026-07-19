@@ -9,6 +9,8 @@
 // light rig hookup. Composition grammar (plots/yards/fences/roads) iterates here.
 // v1.5: fields as enclosures w/ gates. v2 (TD-031): houses face the village GREEN
 // (hut centroid, the "tun") instead of a random grid + a lived-in yard per house.
+// v2.1 (TD-031): worn desire-line paths splatted into the terrain (hut->green,
+// village->village) + managed forest EDGE (thinner treeline + fallen trunks).
 #if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
@@ -140,8 +142,10 @@ namespace Emergence.Editor
             var layers = new List<TerrainLayer>();
             int liGrass = AddLayer(layers, "Layer_grass_01", new Color(0.35f, 0.5f, 0.22f));
             int liField = AddLayer(layers, "Layer_farmfield", new Color(0.45f, 0.35f, 0.2f));
+            int liPath = AddLayer(layers, "Layer_Dirt", new Color(0.42f, 0.32f, 0.2f)); // TD-031 v2.1: worn desire-line ground (also serves sand/clay tiles as bare earth)
             int liGravel = AddLayer(layers, "Layer_gravel_01", new Color(0.5f, 0.48f, 0.45f));
-            int liSand = AddLayer(layers, "Layer_pavingstone", new Color(0.76f, 0.7f, 0.5f));
+            // NOTE: keep total terrain layers <= 4 — the URP terrain base pass renders only the first 4 splats;
+            // a 5th layer silently paints nothing (the v2.1 path bug). grass/field/dirt/gravel is the budget.
             data.terrainLayers = layers.ToArray();
 
             data.alphamapResolution = 256;
@@ -156,10 +160,11 @@ namespace Emergence.Editor
                     switch (Tile(S, tx, ty))
                     {
                         case 's': case 'i': li = liGravel; break;
-                        case 'a': case 'c': li = liSand; break;
+                        case 'a': case 'c': li = liPath; break; // sand/clay read as bare earth (dirt layer)
                     }
                     am[ay, ax, li] = 1f;
                 }
+            PaintPaths(S, am, liPath, 256); // TD-031 v2.1: worn desire lines (hut->green, village->village)
             data.SetAlphamaps(0, 0, am); // field-splat stamping joins the grammar iteration
 
             AssetDatabase.CreateAsset(data, "Assets/Emergence/Scenes/TerrainData_generated.asset");
@@ -181,6 +186,57 @@ namespace Emergence.Editor
             }
             layers.Add(tl);
             return layers.Count - 1;
+        }
+
+        // TD-031 v2.1: paint worn ground along DESIRE LINES into the terrain alphamap — each hut to its
+        // village green (the commons everyone walks to), and each village to its nearest neighbour (the
+        // trackway between settlements). Deterministic geometry from sim data — no RNG (D-078 rule 4).
+        static void PaintPaths(WorldState S, float[,,] am, int liPath, int res)
+        {
+            var greens = VillageGreens(S);
+            var segs = new List<(Vector2 a, Vector2 b)>();
+            foreach (var h in S.huts)
+            {
+                int vi = NearestVillageIdx(S, h.x, h.y);
+                Vector2 g = (vi >= 0 && greens != null && vi < greens.Length) ? greens[vi] : new Vector2(h.x, h.y);
+                segs.Add((new Vector2(h.x, h.y), g));
+            }
+            if (S.villages != null)
+                for (int i = 0; i < S.villages.Length; i++)
+                {
+                    int nj = -1; float bd = float.MaxValue;
+                    for (int j = 0; j < S.villages.Length; j++)
+                    {
+                        if (j == i) continue;
+                        float d = (S.villages[i].x - S.villages[j].x) * (S.villages[i].x - S.villages[j].x) + (S.villages[i].y - S.villages[j].y) * (S.villages[i].y - S.villages[j].y);
+                        if (d < bd) { bd = d; nj = j; }
+                    }
+                    if (nj > i) segs.Add((new Vector2(S.villages[i].x, S.villages[i].y), new Vector2(S.villages[nj].x, S.villages[nj].y)));
+                }
+            int nlayers = am.GetLength(2);
+            int cellsPainted = 0;
+            const int rr = 2; // brush radius in alphamap cells (~3.1 m/cell → ~15 m worn track)
+            foreach (var (a, b) in segs)
+            {
+                float len = Vector2.Distance(a, b);
+                int steps = Mathf.Max(1, Mathf.CeilToInt(len * 4f));
+                for (int s = 0; s <= steps; s++)
+                {
+                    var p = Vector2.Lerp(a, b, s / (float)steps);
+                    int ax = Mathf.RoundToInt(p.x / Mathf.Max(1, S.W - 1) * (res - 1));
+                    int ay = Mathf.RoundToInt((1f - p.y / Mathf.Max(1, S.H - 1)) * (res - 1));
+                    for (int dy = -rr; dy <= rr; dy++)
+                        for (int dx = -rr; dx <= rr; dx++)
+                        {
+                            if (dx * dx + dy * dy > rr * rr + 1) continue; // round brush
+                            int cx = ax + dx, cy = ay + dy;
+                            if (cx < 0 || cy < 0 || cx >= res || cy >= res) continue;
+                            for (int l = 0; l < nlayers; l++) am[cy, cx, l] = (l == liPath) ? 1f : 0f;
+                            cellsPainted++;
+                        }
+                }
+            }
+            Debug.Log($"[Dresser] paths: {segs.Count} desire-line segments, {cellsPainted} alphamap cells painted (layer {liPath})");
         }
 
         static void BuildWater(WorldState S, Transform root)
@@ -530,14 +586,38 @@ namespace Emergence.Editor
                 .Concat(FindPrefabs("Prefab_TreeLarge").Where(p => !p.name.Contains("Coverage")).Take(4)).ToArray(); // no *_Coverage variants (same broken material family)
             var rocks = FindPrefabs("Prefab_RockFormation").Take(4).Concat(new[] { FindPrefab("P_ENV_stone_01") }.Where(p => p != null)).ToArray(); // NOT RocksRound: uses the broken M_RoundedRocks_Coverage (pack-author leftover, VERDICT.md)
             var bushes = FindPrefabs("Prefab_Bush").Where(p => !p.name.Contains("Flower")).Take(3).ToArray(); // berry tiles read as berries, not blossom (AD)
+            // TD-031 v2.1: the woodland EDGE is managed (coppiced), the deep wood is not — edge tiles
+            // get thinner trees + fallen trunks/stumps; interior forest stays dense (silhouette + §2 outfield).
+            var trunks = new[] { "P_PROP_treetrunk_01", "P_PROP_treetrunk_02", "P_PROP_treetrunk_03", "P_PROP_treetrunk_04" }
+                .Select(FindPrefab).Where(p => p != null).ToArray();
             for (int y = 0; y < S.H; y++)
                 for (int x = 0; x < S.W; x++)
                 {
                     char t = Tile(S, x, y);
-                    if (t == 'f' && trees.Length > 0) Scatter(S, parent, trees, x, y, TreesPerForestTile, 41);
+                    if (t == 'f' && trees.Length > 0)
+                    {
+                        bool edge = ForestEdge(S, x, y);
+                        Scatter(S, parent, trees, x, y, edge ? TreesPerForestTile * 0.45f : TreesPerForestTile, 41);
+                        if (edge && trunks.Length > 0 && Hash01(x, y, 51) < 0.45f) // coppice marks at the treeline
+                        {
+                            var pf = trunks[Hash(x, y, 52) % (uint)trunks.Length];
+                            var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, parent);
+                            float jx = Hash01(x, y, 53) - 0.5f, jy = Hash01(x, y, 54) - 0.5f;
+                            go.transform.position = Ground(S, x + jx * 0.8f, y + jy * 0.8f);
+                            go.transform.rotation = Quaternion.Euler(0, Hash(x, y, 55) % 360u, 0);
+                            go.transform.localScale = Vector3.one * (0.8f + Hash01(x, y, 56) * 0.4f);
+                        }
+                    }
                     else if (t == 's' && rocks.Length > 0) Scatter(S, parent, rocks, x, y, RocksPerStoneTile, 43);
                     else if (t == 'b' && bushes.Length > 0) Scatter(S, parent, bushes, x, y, BushesPerBerryTile, 47);
                 }
+        }
+
+        // a forest tile is an EDGE if any 4-neighbour is not forest (or it's a map border) — the treeline.
+        static bool ForestEdge(WorldState S, int x, int y)
+        {
+            if (x <= 0 || y <= 0 || x >= S.W - 1 || y >= S.H - 1) return true;
+            return Tile(S, x - 1, y) != 'f' || Tile(S, x + 1, y) != 'f' || Tile(S, x, y - 1) != 'f' || Tile(S, x, y + 1) != 'f';
         }
 
         static void Scatter(WorldState S, Transform parent, GameObject[] set, int x, int y, float perTile, int salt)
