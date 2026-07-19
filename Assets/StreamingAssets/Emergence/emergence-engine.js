@@ -1,5 +1,5 @@
 /* ============================================================================
-   EMERGENCE — Civilization Engine — ENGINE 2.0.0 (Wave E1: THE WIDER WORLD)
+   EMERGENCE — Civilization Engine — ENGINE 2.0.1 (Wave E1: THE WIDER WORLD + THE WATER FIX)
    E1 bundles every known World-Code-breaking change into this ONE major
    (D-072/D-078): the wider valley (100x70, D-061 Stage-A) + world-gen v2
    (same grammar, scaled density) + THE FOUNDERS input (createWorld(seed,
@@ -647,7 +647,7 @@ function findNearest(S,ag,type){
   let best=null,bd=1e9;
   for(let y=0;y<H;y++)for(let x=0;x<W;x++){
     const t=S.tiles[y][x];
-    if(t.t===type&&t.n>0){const d=Math.hypot(x-ag.x,y-ag.y);if(d<bd){bd=d;best={x,y};}}
+    if(t.t===type&&(type==='water'||t.n>0)){const d=Math.hypot(x-ag.x,y-ag.y);if(d<bd){bd=d;best={x,y};}} // ENGINE 2.0.1 (THE WATER FIX, D-081): water tiles carry n=0 — the n>0 guard made water unfindable, so fishing could neither be DISCOVERED (fishGather obs unreachable) nor PRACTICED (fishers found no water). Found by the EP's field report ("aldrig såg någon använda vattnet"), confirmed 0/20 worlds x 120y in both 1.2.1 and 2.0.0.
   }
   return best;
 }
@@ -1274,5 +1274,5 @@ function resimulate(seed,toTick){
   return S;
 }
 
-return {createWorld,tickWorld,computeDNA,resimulate,writeHistory,TECHS,TECH,OBS,QUIRK,W,H,YEAR,SEASONS,VERSION:'2.0.0'};
+return {createWorld,tickWorld,computeDNA,resimulate,writeHistory,TECHS,TECH,OBS,QUIRK,W,H,YEAR,SEASONS,VERSION:'2.0.1'};
 });
