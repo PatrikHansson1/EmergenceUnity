@@ -7,6 +7,8 @@
 // v1 scope (P1a): terrain from tiles (splat by type, water plane), hut->house
 // placement, fields, village markers, trees/rocks/berries by density budget,
 // light rig hookup. Composition grammar (plots/yards/fences/roads) iterates here.
+// v1.5: fields as enclosures w/ gates. v2 (TD-031): houses face the village GREEN
+// (hut centroid, the "tun") instead of a random grid + a lived-in yard per house.
 #if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
@@ -49,6 +51,10 @@ namespace Emergence.Editor
         const string TechDir = "Assets/Emergence/Models/tech/";
         const string NatureDir = "Assets/Emergence/Models/nature/";
         public const float AnimalScale = 1f;   // deer/wolf GLBs — tune after first import
+        // TD-031 composition grammar v2 (the "tun" reading — houses face the local green, each gets a yard)
+        public const float HouseFrontYawOffset = 0f;  // pack houses' door axis: 0 if the front is +Z; AD flips to 180 if doors read as facing AWAY from the green
+        public const float YardPropDist = 3.2f;        // meters in front of the door, toward the green
+        public const int   YardPropsMax = 2;           // 0..2 work-life props per house on the door side
 
         // ---- deterministic presentation hash (the engine's own pattern; NEVER sim RNG) ----
         static uint Hash(int x, int y, int salt) { unchecked { uint h = (uint)(x * 73856093 ^ y * 19349663 ^ salt * 83492791); h ^= h >> 13; h *= 2246822519; h ^= h >> 16; return h; } }
@@ -80,6 +86,7 @@ namespace Emergence.Editor
             BuildTerrain(S, root.transform);
             BuildWater(S, root.transform);
             PlaceHuts(S, root.transform);
+            PlaceYards(S, root.transform);        // TD-031: lived-in yards on each house's door side (v2 grammar)
             PlaceFires(S, root.transform);
             PlaceFields(S, root.transform);
             PlaceNature(S, root.transform);
@@ -98,6 +105,13 @@ namespace Emergence.Editor
             var t = Terrain.activeTerrain;
             if (t != null) pos.y = t.SampleHeight(pos) + t.transform.position.y;
             return pos + Vector3.up * lift;
+        }
+        // snap an arbitrary WORLD-space point to the terrain (for props placed by direction+offset, not sim tile)
+        static Vector3 GroundW(Vector3 world, float lift = 0)
+        {
+            var t = Terrain.activeTerrain;
+            if (t != null) world.y = t.SampleHeight(world) + t.transform.position.y;
+            return world + Vector3.up * lift;
         }
 
         static void BuildTerrain(WorldState S, Transform root)
@@ -200,9 +214,14 @@ namespace Emergence.Editor
                     }
         }
 
+        // TD-031 composition grammar v2: the "tun" reading — a house turns its door side toward the
+        // village GREEN (the centroid of its own village's huts, where the well/fire commons sits),
+        // not a random ±10° grid. A deterministic ±7° jitter keeps it lived-in, not mechanical.
+        // Everything from sim data + position hashes — never RNG (D-078 rule 4).
         static void PlaceHuts(WorldState S, Transform root)
         {
             var parent = new GameObject("Huts").transform; parent.SetParent(root, true);
+            var greens = VillageGreens(S);
             for (int i = 0; i < S.huts.Length; i++)
             {
                 var h = S.huts[i];
@@ -212,9 +231,93 @@ namespace Emergence.Editor
                 if (prefab == null) { Debug.LogWarning("[Dresser] no house prefab found"); return; }
                 var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, parent);
                 go.transform.position = Ground(S, h.x, h.y);
-                go.transform.rotation = Quaternion.Euler(0, Hash(hx, hy, 22) % 4 * 90 + (Hash(hx, hy, 23) % 21 - 10), 0); // grid-ish with jitter — grammar iterates
+                go.transform.rotation = Quaternion.Euler(0, HouseYaw(S, h, greens, hx, hy), 0);
                 go.name = $"hut_{h.owner}";
             }
+        }
+
+        // each village's GREEN = the centroid of the huts assigned to it (nearest village) — the local
+        // open space the doors face, the shared "tun". Falls back to the village's recorded position,
+        // then to a lone farmstead's own spot.
+        static Vector2[] VillageGreens(WorldState S)
+        {
+            int n = S.villages?.Length ?? 0;
+            var g = new Vector2[n];
+            if (n == 0) return g;
+            var sum = new Vector2[n]; var cnt = new int[n];
+            foreach (var h in S.huts)
+            {
+                int vi = NearestVillageIdx(S, h.x, h.y);
+                if (vi >= 0) { sum[vi] += new Vector2(h.x, h.y); cnt[vi]++; }
+            }
+            for (int i = 0; i < n; i++) g[i] = cnt[i] > 0 ? sum[i] / cnt[i] : new Vector2(S.villages[i].x, S.villages[i].y);
+            return g;
+        }
+
+        static int NearestVillageIdx(WorldState S, float x, float y)
+        {
+            if (S.villages == null) return -1;
+            int best = -1; float bd = float.MaxValue;
+            for (int i = 0; i < S.villages.Length; i++)
+            {
+                float d = (S.villages[i].x - x) * (S.villages[i].x - x) + (S.villages[i].y - y) * (S.villages[i].y - y);
+                if (d < bd) { bd = d; best = i; }
+            }
+            return best;
+        }
+
+        // yaw (degrees) so the house FRONT (+Z, offset by HouseFrontYawOffset) faces its village green,
+        // with a deterministic ±7° jitter. Falls back to a gentle grid for a hut standing on the green.
+        static float HouseYaw(WorldState S, WorldHut h, Vector2[] greens, int hx, int hy)
+        {
+            float jitter = (Hash(hx, hy, 23) % 15) - 7f; // ±7°, deterministic
+            int vi = NearestVillageIdx(S, h.x, h.y);
+            if (vi >= 0 && greens != null && vi < greens.Length)
+            {
+                var hutW = P(S, h.x, h.y); var greenW = P(S, greens[vi].x, greens[vi].y);
+                var d = new Vector2(greenW.x - hutW.x, greenW.z - hutW.z);
+                if (d.sqrMagnitude > 1f) // not standing on the green itself
+                    return Mathf.Atan2(d.x, d.y) * Mathf.Rad2Deg + HouseFrontYawOffset + jitter; // +Z toward the green
+            }
+            return Hash(hx, hy, 22) % 4 * 90 + jitter; // lone house: gentle grid
+        }
+
+        // TD-031: a lived-in YARD on each house's door side (toward the green) — 0..2 work-life props
+        // (cart / barrel / crate / sack / woodpile / hay / bucket), all from the Village pack (the
+        // zero-pink family, TD-021). Presentation-only + hash-driven: same world ⇒ same yard, forever.
+        static readonly string[] YardPropNames = {
+            "P_PROP_cart_01","P_PROP_cart_02","P_PROP_barrel_01","P_PROP_barrel_03","P_PROP_crate_01",
+            "P_PROP_crate_03","P_PROP_sack_02","P_PROP_sack_05","P_PROP_firepit_woodpile","P_PROP_hay_02",
+            "P_PROP_hay_04","P_PROP_bucket_01","P_PROP_trough_01"
+        };
+        static void PlaceYards(WorldState S, Transform root)
+        {
+            var parent = new GameObject("Yards").transform; parent.SetParent(root, true);
+            var props = YardPropNames.Select(FindPrefab).Where(p => p != null).ToArray();
+            if (props.Length == 0) { Debug.Log("[Dresser] no yard props found — skipping yards"); return; }
+            var greens = VillageGreens(S);
+            int placed = 0;
+            foreach (var h in S.huts)
+            {
+                int hx = Mathf.RoundToInt(h.x), hy = Mathf.RoundToInt(h.y);
+                float yaw = HouseYaw(S, h, greens, hx, hy);
+                var rot = Quaternion.Euler(0, yaw, 0);
+                var fwd = rot * Vector3.forward;   // door side (toward the green)
+                var right = rot * Vector3.right;
+                int count = (int)(Hash(hx, hy, 71) % (uint)(YardPropsMax + 1)); // 0..2
+                for (int k = 0; k < count; k++)
+                {
+                    var pf = props[Hash(hx, hy, 72 + k) % (uint)props.Length];
+                    var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, parent);
+                    float lateral = (Hash01(hx, hy, 73 + k) - 0.5f) * 3.2f; // spread along the wall
+                    var world = P(S, h.x, h.y) + fwd * YardPropDist + right * lateral;
+                    go.transform.position = GroundW(world);
+                    go.transform.rotation = Quaternion.Euler(0, Hash(hx, hy, 74 + k) % 360u, 0);
+                    go.name = $"yard_{h.owner}_{k}";
+                    placed++;
+                }
+            }
+            Debug.Log($"[Dresser] placed {placed} yard props across {S.huts.Length} houses (v2 grammar)");
         }
 
         // TD-028: a villager per living soul — the studio's OWN toon-rendered GLBs (glTFast import).
