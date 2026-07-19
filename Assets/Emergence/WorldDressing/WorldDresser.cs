@@ -164,8 +164,9 @@ namespace Emergence.Editor
                     }
                     am[ay, ax, li] = 1f;
                 }
+            StampFields(S, am, liField, 256); // TD-031 v2.1b: tilled soil inside the field enclosures (was never stamped)
             PaintPaths(S, am, liPath, 256); // TD-031 v2.1: worn desire lines (hut->green, village->village)
-            data.SetAlphamaps(0, 0, am); // field-splat stamping joins the grammar iteration
+            data.SetAlphamaps(0, 0, am);
 
             AssetDatabase.CreateAsset(data, "Assets/Emergence/Scenes/TerrainData_generated.asset");
             var tgo = Terrain.CreateTerrainGameObject(data);
@@ -186,6 +187,27 @@ namespace Emergence.Editor
             }
             layers.Add(tl);
             return layers.Count - 1;
+        }
+
+        // TD-031 v2.1b: stamp tilled soil (the field layer) at every sim field cell, so the enclosed
+        // infield reads as worked earth, not grass. Also the diagnostic for splat rendering: a big
+        // unoccluded brown patch that either shows (splat works) or doesn't (material-level splat bug).
+        static void StampFields(WorldState S, float[,,] am, int liField, int res)
+        {
+            if (S.fields == null) return;
+            int nlayers = am.GetLength(2);
+            foreach (var f in S.fields)
+            {
+                int ax = Mathf.RoundToInt(f.x / Mathf.Max(1, S.W - 1) * (res - 1));
+                int ay = Mathf.RoundToInt((1f - f.y / Mathf.Max(1, S.H - 1)) * (res - 1));
+                for (int dy = -1; dy <= 1; dy++)
+                    for (int dx = -1; dx <= 1; dx++)
+                    {
+                        int cx = ax + dx, cy = ay + dy;
+                        if (cx < 0 || cy < 0 || cx >= res || cy >= res) continue;
+                        for (int l = 0; l < nlayers; l++) am[cy, cx, l] = (l == liField) ? 1f : 0f;
+                    }
+            }
         }
 
         // TD-031 v2.1: paint worn ground along DESIRE LINES into the terrain alphamap — each hut to its
