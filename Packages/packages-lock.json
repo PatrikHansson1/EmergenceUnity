@@ -1,5 +1,11 @@
 {
   "dependencies": {
+    "com.tayx.graphy": {
+      "version": "file:com.tayx.graphy",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.unity.ai.navigation": {
       "version": "2.0.13",
       "depth": 0,
@@ -189,6 +195,18 @@
         "com.unity.modules.jsonserialize": "1.0.0"
       },
       "url": "https://packages.unity.com"
+    },
+    "com.yasirkula.assetusagedetector": {
+      "version": "file:com.yasirkula.assetusagedetector",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "xyz.staggartcreations.skyboxes": {
+      "version": "file:xyz.staggartcreations.skyboxes",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
     },
     "com.unity.modules.accessibility": {
       "version": "1.0.0",

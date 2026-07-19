@@ -75,9 +75,9 @@ namespace Emergence.Editor
                     break;
                 case "night":
                     sun.transform.rotation = Quaternion.Euler(-30f, 40f, 0f);
-                    sun.intensity = 0.12f;
-                    sun.color = new Color(0.55f, 0.65f, 0.9f);
-                    RenderSettings.ambientLight = new Color32(30, 38, 58, 255);
+                    sun.intensity = 0.22f;                                  // a touch of moonlight so the ground reads
+                    sun.color = new Color(0.6f, 0.7f, 0.95f);
+                    RenderSettings.ambientLight = new Color32(48, 58, 84, 255); // lifted from 30,38,58 — dark BLUE snow, not black
                     break;
                 default: // day — the D-069 measured calibration
                     sun.transform.rotation = Quaternion.Euler(62f, 32f, 28f);

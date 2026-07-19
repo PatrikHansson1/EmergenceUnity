@@ -48,7 +48,7 @@ namespace Emergence.Editor
             bloom.tint.Override(new Color(1f, 0.94f, 0.85f)); // warm, so fire glow reads warm
 
             bool dim = phase == "dusk" || phase == "night";
-            float exposure = phase == "dusk" ? 0.35f : phase == "night" ? 0.15f : 0.0f;
+            float exposure = phase == "dusk" ? 0.35f : phase == "night" ? 0.45f : 0.0f;
             float contrast = dim ? 4f : 8f;
             var color = profile.Add<ColorAdjustments>(true);
             color.postExposure.Override(exposure);

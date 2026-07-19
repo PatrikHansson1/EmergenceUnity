@@ -45,42 +45,51 @@ namespace Emergence.Editor
         [MenuItem("Emergence/P1 Dressing/RUN WATER BENCH (4 candidates)")]
         public static void RunWaterBench()
         {
-            var cam = FreshScene("BenchCamera", new Vector3(0f, 3.5f, -34f), new Vector3(6f, 0f, 0f));
+            // THE actual fix (TD-027 finding): stylized water is flat without depth + opaque textures.
+            EnableDepthOpaque();
 
-            // green bank ground under everything
-            var ground = GameObject.CreatePrimitive(PrimitiveType.Plane);
-            ground.name = "Bank"; ground.transform.localScale = new Vector3(20f, 1f, 20f);
-            ground.transform.position = new Vector3(0f, -0.4f, 0f);
-            ground.GetComponent<Renderer>().sharedMaterial = Lit(new Color(0.30f, 0.42f, 0.20f));
+            // "Lake to the horizon" grazing shot — the reliable water-surface framing: camera near
+            // water level looks ACROSS the water, so fresnel/reflection/transparency/wave-normals all
+            // read. A flat floor 2.5m below shows through the near water (depth), sky reflects on the far.
+            var cam = FreshScene("BenchCamera", new Vector3(0f, 1.6f, -40f), new Vector3(1.5f, 0f, 0f));
 
-            // the water surface plane (80x80m)
+            var floor = GameObject.CreatePrimitive(PrimitiveType.Plane);
+            floor.name = "LakeFloor"; floor.transform.localScale = new Vector3(30f, 1f, 30f);
+            floor.transform.position = new Vector3(0f, -2.5f, 40f);
+            floor.GetComponent<Renderer>().sharedMaterial = Lit(new Color(0.22f, 0.30f, 0.20f)); // dark lakebed
+
             var water = GameObject.CreatePrimitive(PrimitiveType.Plane);
-            water.name = "WaterSurface"; water.transform.localScale = new Vector3(8f, 1f, 8f);
-            water.transform.position = new Vector3(0f, 0.0f, 6f);
+            water.name = "WaterSurface"; water.transform.localScale = new Vector3(24f, 1f, 24f); // 240m — reaches the horizon
+            water.transform.position = new Vector3(0f, 0.0f, 60f);
             var waterRend = water.GetComponent<Renderer>();
-
-            // far shore context: pack houses + trees so reflections/shore have something to read against
-            var house = Find<GameObject>("P_BLD_house_01");
-            for (int i = 0; i < 3 && house != null; i++)
-            {
-                var h = (GameObject)PrefabUtility.InstantiatePrefab(house);
-                h.transform.position = new Vector3(-16f + i * 16f, 0.0f, 40f);
-                h.transform.rotation = Quaternion.Euler(0, 180, 0);
-            }
 
             EmergenceLightRig.Apply("spring", "day");
             EmergencePostStack.Apply("day");
 
-            // baseline: a flat stylized blue (what the dresser falls back to today)
-            waterRend.sharedMaterial = Lit(new Color(0.18f, 0.42f, 0.55f));
+            waterRend.sharedMaterial = Lit(new Color(0.18f, 0.42f, 0.55f)); // flat baseline
             Cap("waterbench-0-baseline");
-
             TrySwap(waterRend, "M_Shader Water", "waterbench-1-polyone");
             TrySwap(waterRend, "Ocean Water",    "waterbench-2-verpha");
             TrySwap(waterRend, "example-water-01","waterbench-3-bitgem");
             TrySwap(waterRend, "water",          "waterbench-4-houidisoft");
 
-            Debug.Log("[WaterBench] done — baseline + 4 candidates in " + EvidenceDir);
+            Debug.Log("[WaterBench] done (depth+opaque ON, sloped shore) — baseline + 4 in " + EvidenceDir);
+        }
+
+        // Stylized water samples _CameraDepthTexture (depth tint / shore foam) and _CameraOpaqueTexture
+        // (refraction). Both are OFF by default on the URP asset — the reason TD-027's first bench was flat.
+        static void EnableDepthOpaque()
+        {
+            var rp = UnityEngine.Rendering.GraphicsSettings.currentRenderPipeline;
+            if (rp == null) { Debug.LogWarning("[WaterBench] no URP asset in GraphicsSettings"); return; }
+            var so = new SerializedObject(rp);
+            var d = so.FindProperty("m_RequireDepthTexture");
+            var o = so.FindProperty("m_RequireOpaqueTexture");
+            if (d != null) d.boolValue = true;
+            if (o != null) o.boolValue = true;
+            so.ApplyModifiedProperties();
+            EditorUtility.SetDirty(rp);
+            Debug.Log($"[WaterBench] URP depth={(d!=null&&d.boolValue)} opaque={(o!=null&&o.boolValue)}");
         }
 
         static void TrySwap(Renderer r, string matName, string shot)
