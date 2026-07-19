@@ -34,7 +34,7 @@ namespace Emergence.Editor
     public static class WorldDresser
     {
         public const float TileSize = 8f;          // meters per sim tile (Producer knob)
-        public const float TreesPerForestTile = 1.4f;  // density budgets (AD/Producer iterate)
+        public const float TreesPerForestTile = 0.9f;  // density budgets (AD/Producer iterate)
         public const float RocksPerStoneTile = 0.9f;
         public const float BushesPerBerryTile = 1.1f;
 
@@ -58,6 +58,13 @@ namespace Emergence.Editor
                 UnityEditor.SceneManagement.NewSceneMode.Single);
 
             var root = new GameObject($"World_{S.seed}_y{S.years}");
+            // the documentary camera (P2 grows this into Cinemachine): start over the heartland
+            var camGo = new GameObject("DocCamera");
+            camGo.tag = "MainCamera";
+            var cam = camGo.AddComponent<Camera>();
+            cam.fieldOfView = 55f;
+            camGo.transform.position = new Vector3(S.W * TileSize * 0.5f, 55f, (S.H * TileSize * 0.5f) - 90f);
+            camGo.transform.rotation = Quaternion.Euler(28f, 0f, 0f);
             BuildTerrain(S, root.transform);
             BuildWater(S, root.transform);
             PlaceHuts(S, root.transform);
@@ -70,6 +77,13 @@ namespace Emergence.Editor
 
         static char Tile(WorldState S, int x, int y) => S.tileTypes[y * S.W + x];
         static Vector3 P(WorldState S, float x, float y, float h = 0) => new Vector3(x * TileSize, h, (S.H - 1 - y) * TileSize); // sim y -> world -z (map reads like the sim's screen)
+        static Vector3 Ground(WorldState S, float x, float y, float lift = 0)
+        {
+            var pos = P(S, x, y);
+            var t = Terrain.activeTerrain;
+            if (t != null) pos.y = t.SampleHeight(pos) + t.transform.position.y;
+            return pos + Vector3.up * lift;
+        }
 
         static void BuildTerrain(WorldState S, Transform root)
         {
@@ -164,7 +178,9 @@ namespace Emergence.Editor
                             plane.transform.rotation = Quaternion.Euler(90, 0, 0);
                             plane.transform.localScale = new Vector3(TileSize, TileSize, 1);
                             var mr = plane.GetComponent<MeshRenderer>();
-                            mr.sharedMaterial = FindMaterial("M_FX_water") ?? mr.sharedMaterial;
+                            var wm = FindMaterial("M_ENV_water") ?? FindMaterial("M_FX_water") ?? FindMaterial("M_water") ?? FindMaterial("water");
+                            if (wm != null) mr.sharedMaterial = wm;
+                            else mr.sharedMaterial.color = new Color(0.23f, 0.42f, 0.55f); // sober fallback: no white lakes
                         }
                     }
         }
@@ -180,7 +196,7 @@ namespace Emergence.Editor
                 var prefab = FindPrefab($"P_BLD_house_{variant:00}") ?? FindPrefab("P_BLD_house_01");
                 if (prefab == null) { Debug.LogWarning("[Dresser] no house prefab found"); return; }
                 var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, parent);
-                go.transform.position = P(S, h.x, h.y);
+                go.transform.position = Ground(S, h.x, h.y);
                 go.transform.rotation = Quaternion.Euler(0, Hash(hx, hy, 22) % 4 * 90 + (Hash(hx, hy, 23) % 21 - 10), 0); // grid-ish with jitter — grammar iterates
                 go.name = $"hut_{h.owner}";
             }
@@ -192,7 +208,7 @@ namespace Emergence.Editor
             var fx = FindPrefab("P_FX_fire") ?? FindPrefab("PF_FX_fire") ?? FindPrefab("fire");
             foreach (var f in S.fires)
             {
-                var pos = P(S, f.x, f.y, 0.1f);
+                var pos = Ground(S, f.x, f.y, 0.1f);
                 if (fx != null)
                 {
                     var go = (GameObject)PrefabUtility.InstantiatePrefab(fx, parent);
@@ -220,7 +236,7 @@ namespace Emergence.Editor
                     var go = (GameObject)PrefabUtility.InstantiatePrefab(fence, parent);
                     float half = TileSize * 0.45f;
                     Vector3 off = side == 0 ? new Vector3(0, 0, half) : side == 1 ? new Vector3(half, 0, 0) : side == 2 ? new Vector3(0, 0, -half) : new Vector3(-half, 0, 0);
-                    go.transform.position = P(S, f.x, f.y) + off;
+                    go.transform.position = Ground(S, f.x, f.y) + off;
                     go.transform.rotation = Quaternion.Euler(0, side % 2 == 0 ? 0 : 90, 0);
                 }
             }
@@ -230,9 +246,9 @@ namespace Emergence.Editor
         {
             var parent = new GameObject("Nature").transform; parent.SetParent(root, true);
             var trees = new[] { FindPrefab("P_ENV_TREE_village") }.Where(p => p != null)
-                .Concat(FindPrefabs("Prefab_Tree").Take(4)).ToArray();
-            var rocks = FindPrefabs("Prefab_Rock").Take(4).Concat(new[] { FindPrefab("P_ENV_stone_01") }.Where(p => p != null)).ToArray();
-            var bushes = FindPrefabs("Prefab_Bush").Take(3).ToArray();
+                .Concat(FindPrefabs("Prefab_TreeLarge").Where(p => !p.name.Contains("Coverage")).Take(4)).ToArray(); // no *_Coverage variants (same broken material family)
+            var rocks = FindPrefabs("Prefab_RockFormation").Take(4).Concat(new[] { FindPrefab("P_ENV_stone_01") }.Where(p => p != null)).ToArray(); // NOT RocksRound: uses the broken M_RoundedRocks_Coverage (pack-author leftover, VERDICT.md)
+            var bushes = FindPrefabs("Prefab_Bush").Where(p => !p.name.Contains("Flower")).Take(3).ToArray(); // berry tiles read as berries, not blossom (AD)
             for (int y = 0; y < S.H; y++)
                 for (int x = 0; x < S.W; x++)
                 {
@@ -251,11 +267,57 @@ namespace Emergence.Editor
                 var prefab = set[Hash(x, y, salt + 100 + i) % (uint)set.Length];
                 var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, parent);
                 float jx = Hash01(x, y, salt + 200 + i) - 0.5f, jy = Hash01(x, y, salt + 300 + i) - 0.5f;
-                go.transform.position = P(S, x + jx * 0.9f, y + jy * 0.9f);
+                go.transform.position = Ground(S, x + jx * 0.9f, y + jy * 0.9f);
                 go.transform.rotation = Quaternion.Euler(0, Hash(x, y, salt + 400 + i) % 360, 0);
                 float sc = 0.85f + Hash01(x, y, salt + 500 + i) * 0.4f;
+                if (prefab.name.StartsWith("Prefab_TreeLarge")) sc *= 0.42f; // Dreamscape canopy trees are landmarks, not the forest baseline (silhouette law)
                 go.transform.localScale = Vector3.one * sc;
+                StripImpostorLods(go); // Dreamscape impostor billboards lack baked textures in edit mode -> magenta at distance
             }
+        }
+
+        [MenuItem("Emergence/P1 Dressing/Find Pink In Scene")]
+        public static void FindPinkInScene()
+        {
+            var bad = new Dictionary<string, int>();
+            foreach (var r in UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsSortMode.None))
+                foreach (var m in r.sharedMaterials)
+                    if (m != null && m.shader != null && (m.shader.name == "Hidden/InternalErrorShader" || !m.shader.isSupported))
+                    {
+                        var key = $"{r.transform.root.name}/{r.gameObject.name} -> {m.name}";
+                        bad[key] = bad.TryGetValue(key, out var n) ? n + 1 : 1;
+                    }
+            Debug.Log("[Dresser] pink renderers: " + bad.Count + "\n" + string.Join("\n", bad.Select(kv => kv.Value + "x " + kv.Key).Take(30)));
+        }
+
+        // Impostor LOD levels (Polyart) render magenta without their runtime-baked data.
+        // Strip them and extend the last real LOD — perf headroom is ample at our counts (4070 Ti reference).
+        static void StripImpostorLods(GameObject go)
+        {
+            // impostors live as script-driven child renderers (ImpostorDataHolder), not only as LOD levels
+            foreach (var r in go.GetComponentsInChildren<Renderer>(true))
+                if (r.GetComponent("ImpostorDataHolder") != null
+                    || r.gameObject.name.IndexOf("impostor", StringComparison.OrdinalIgnoreCase) >= 0
+                    || r.sharedMaterials.Any(m => m != null && m.shader != null && m.shader.name.IndexOf("impostor", StringComparison.OrdinalIgnoreCase) >= 0))
+                    r.enabled = false;
+            foreach (var lg in go.GetComponentsInChildren<LODGroup>())
+            {
+                var lods = lg.GetLODs();
+                bool IsImpostor(Renderer r) => r != null && r.sharedMaterials.Any(m => m != null && m.shader != null && m.shader.name.IndexOf("impostor", StringComparison.OrdinalIgnoreCase) >= 0);
+                var keep = lods.Where(l => !l.renderers.Any(IsImpostor)).ToArray();
+                if (keep.Length > 0 && keep.Length < lods.Length)
+                {
+                    keep[keep.Length - 1].screenRelativeTransitionHeight = 0.005f;
+                    lg.SetLODs(keep);
+                    foreach (var l in lods.Except(keep)) foreach (var r in l.renderers) if (r != null && IsImpostor(r)) r.enabled = false;
+                }
+            }
+        }
+
+        static Material FindMaterial(string name)
+        {
+            var guid = AssetDatabase.FindAssets($"t:Material {name}").FirstOrDefault();
+            return guid == null ? null : AssetDatabase.LoadAssetAtPath<Material>(AssetDatabase.GUIDToAssetPath(guid));
         }
 
         static GameObject FindPrefab(string name)

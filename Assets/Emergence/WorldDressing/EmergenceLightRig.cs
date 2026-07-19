@@ -19,8 +19,9 @@ namespace Emergence.Editor
 
         public static void Apply(string season, string phase)
         {
-            var sunGo = GameObject.Find("Sun") ?? new GameObject("Sun");
-            var sun = sunGo.GetComponent<Light>() ?? sunGo.AddComponent<Light>();
+            var sunGo = GameObject.Find("Sun");
+            if (sunGo == null) sunGo = new GameObject("Sun");
+            if (!sunGo.TryGetComponent<Light>(out var sun)) sun = sunGo.AddComponent<Light>(); // NB: never ?? on Unity objects (fake null)
             sun.type = LightType.Directional;
             sun.shadows = LightShadows.Soft;
 
