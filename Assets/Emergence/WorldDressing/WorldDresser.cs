@@ -44,7 +44,7 @@ namespace Emergence.Editor
         public const int   SmokeNearFireTiles = 3;   // huts this close to a burning fire get chimney smoke
         // TD-028 characters + tech anchors (the studio's OWN rendered GLBs, EP directive)
         public const float VillagerScale = 1f;   // GLBs authored ~1.7m; tune after first import
-        public const float TechAnchorScale = 1f;
+        public const float TechAnchorScale = 0.3f;  // GLBs are big at 1 (well = giant staircase) — tuned down
         const string CharDir = "Assets/Emergence/Models/characters/";
         const string TechDir = "Assets/Emergence/Models/tech/";
 

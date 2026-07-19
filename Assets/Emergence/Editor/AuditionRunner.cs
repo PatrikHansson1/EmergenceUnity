@@ -35,14 +35,23 @@ namespace Emergence.Editor
             var v = S.villages[0];
             float ts = WorldDresser.TileSize;
             var t = Terrain.activeTerrain;
-            Vector3 vp = new Vector3(v.x * ts, 0f, (S.H - 1 - v.y) * ts);
-            if (t != null) vp.y = t.SampleHeight(vp) + t.transform.position.y;
+            // aim at the villagers, not the village centre (the well sits there). Find the agent
+            // nearest the village centre and frame HIM — people are the subject of this shot.
+            WorldAgent near = null; float best = float.MaxValue;
+            foreach (var a in S.agents)
+            {
+                float d = (a.x - v.x) * (a.x - v.x) + (a.y - v.y) * (a.y - v.y);
+                if (d < best) { best = d; near = a; }
+            }
+            float ax = near != null ? near.x : v.x, ay = near != null ? near.y : v.y;
+            Vector3 look = new Vector3(ax * ts, 0f, (S.H - 1 - ay) * ts);
+            if (t != null) look.y = t.SampleHeight(look) + t.transform.position.y;
             var cam = Camera.main;
-            Vector3 pos = vp + new Vector3(7f, 0f, -20f);
-            if (t != null) pos.y = t.SampleHeight(pos) + t.transform.position.y + 2.5f;
+            Vector3 pos = look + new Vector3(3.5f, 0f, -9f);   // ~10 m away, human eye height
+            if (t != null) pos.y = t.SampleHeight(pos) + t.transform.position.y + 1.7f;
             cam.transform.position = pos;
-            cam.transform.LookAt(vp + Vector3.up * 1.3f);
-            cam.fieldOfView = 55f;
+            cam.transform.LookAt(look + Vector3.up * 0.9f);    // aim at torso height
+            cam.fieldOfView = 50f;
 
             EmergencePostStack.Remove();
             EmergenceLightRig.Apply("spring", "day");
