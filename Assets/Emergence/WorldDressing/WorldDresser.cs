@@ -52,9 +52,9 @@ namespace Emergence.Editor
         const string NatureDir = "Assets/Emergence/Models/nature/";
         public const float AnimalScale = 1f;   // deer/wolf GLBs — tune after first import
         // TD-031 composition grammar v2 (the "tun" reading — houses face the local green, each gets a yard)
+        public const float HouseScale = 0.55f;         // pack houses at 1 are OVERSIZED (a house spans 2+ field plots, dwarfs props/yards); ~0.55 makes a house read as one village plot (~TileSize) — EP knob
         public const float HouseFrontYawOffset = 0f;  // pack houses' door axis: 0 if the front is +Z; AD flips to 180 if doors read as facing AWAY from the green
-        public const float YardPropDist = 3.2f;        // meters in front of the door, toward the green
-        public const int   YardPropsMax = 2;           // 0..2 work-life props per house on the door side
+        public const int   YardPropsMax = 2;           // 0..2 work-life props per house on the door side (placed just beyond the house's real front face)
 
         // ---- deterministic presentation hash (the engine's own pattern; NEVER sim RNG) ----
         static uint Hash(int x, int y, int salt) { unchecked { uint h = (uint)(x * 73856093 ^ y * 19349663 ^ salt * 83492791); h ^= h >> 13; h *= 2246822519; h ^= h >> 16; return h; } }
@@ -85,8 +85,7 @@ namespace Emergence.Editor
             camGo.transform.rotation = Quaternion.Euler(28f, 0f, 0f);
             BuildTerrain(S, root.transform);
             BuildWater(S, root.transform);
-            PlaceHuts(S, root.transform);
-            PlaceYards(S, root.transform);        // TD-031: lived-in yards on each house's door side (v2 grammar)
+            PlaceHuts(S, root.transform);         // TD-031 v2: houses face the green (scaled) + lived-in yards per house
             PlaceFires(S, root.transform);
             PlaceFields(S, root.transform);
             PlaceNature(S, root.transform);
@@ -221,7 +220,10 @@ namespace Emergence.Editor
         static void PlaceHuts(WorldState S, Transform root)
         {
             var parent = new GameObject("Huts").transform; parent.SetParent(root, true);
+            var yardParent = new GameObject("Yards").transform; yardParent.SetParent(root, true);
             var greens = VillageGreens(S);
+            var yardProps = YardPropNames.Select(FindPrefab).Where(p => p != null).ToArray();
+            int yardCount = 0;
             for (int i = 0; i < S.huts.Length; i++)
             {
                 var h = S.huts[i];
@@ -231,9 +233,13 @@ namespace Emergence.Editor
                 if (prefab == null) { Debug.LogWarning("[Dresser] no house prefab found"); return; }
                 var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, parent);
                 go.transform.position = Ground(S, h.x, h.y);
-                go.transform.rotation = Quaternion.Euler(0, HouseYaw(S, h, greens, hx, hy), 0);
+                float yaw = HouseYaw(S, h, greens, hx, hy);
+                go.transform.rotation = Quaternion.Euler(0, yaw, 0);
+                go.transform.localScale = Vector3.one * HouseScale; // v2: pack houses are oversized at 1
                 go.name = $"hut_{h.owner}";
+                yardCount += PlaceYard(S, go, h, hx, hy, yaw, yardProps, yardParent);
             }
+            Debug.Log($"[Dresser] {S.huts.Length} houses (scale {HouseScale}) + {yardCount} yard props (v2 grammar)");
         }
 
         // each village's GREEN = the centroid of the huts assigned to it (nearest village) — the local
@@ -290,34 +296,38 @@ namespace Emergence.Editor
             "P_PROP_crate_03","P_PROP_sack_02","P_PROP_sack_05","P_PROP_firepit_woodpile","P_PROP_hay_02",
             "P_PROP_hay_04","P_PROP_bucket_01","P_PROP_trough_01"
         };
-        static void PlaceYards(WorldState S, Transform root)
+        // one house's yard: 0..2 props on the door side, placed just beyond the house's REAL front face
+        // (from renderer bounds, so it tracks HouseScale) — no floating props, no props buried in-wall.
+        static int PlaceYard(WorldState S, GameObject house, WorldHut h, int hx, int hy, float yaw, GameObject[] props, Transform parent)
         {
-            var parent = new GameObject("Yards").transform; parent.SetParent(root, true);
-            var props = YardPropNames.Select(FindPrefab).Where(p => p != null).ToArray();
-            if (props.Length == 0) { Debug.Log("[Dresser] no yard props found — skipping yards"); return; }
-            var greens = VillageGreens(S);
-            int placed = 0;
-            foreach (var h in S.huts)
+            if (props.Length == 0) return 0;
+            var rot = Quaternion.Euler(0, yaw, 0);
+            var fwd = rot * Vector3.forward;   // door side (toward the green)
+            var right = rot * Vector3.right;
+            // front-face distance = the house AABB half-extent projected on the door direction, + clearance
+            float front = 2.5f;
+            var rends = house.GetComponentsInChildren<Renderer>();
+            if (rends.Length > 0)
             {
-                int hx = Mathf.RoundToInt(h.x), hy = Mathf.RoundToInt(h.y);
-                float yaw = HouseYaw(S, h, greens, hx, hy);
-                var rot = Quaternion.Euler(0, yaw, 0);
-                var fwd = rot * Vector3.forward;   // door side (toward the green)
-                var right = rot * Vector3.right;
-                int count = (int)(Hash(hx, hy, 71) % (uint)(YardPropsMax + 1)); // 0..2
-                for (int k = 0; k < count; k++)
-                {
-                    var pf = props[Hash(hx, hy, 72 + k) % (uint)props.Length];
-                    var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, parent);
-                    float lateral = (Hash01(hx, hy, 73 + k) - 0.5f) * 3.2f; // spread along the wall
-                    var world = P(S, h.x, h.y) + fwd * YardPropDist + right * lateral;
-                    go.transform.position = GroundW(world);
-                    go.transform.rotation = Quaternion.Euler(0, Hash(hx, hy, 74 + k) % 360u, 0);
-                    go.name = $"yard_{h.owner}_{k}";
-                    placed++;
-                }
+                var b = rends[0].bounds;
+                for (int r = 1; r < rends.Length; r++) b.Encapsulate(rends[r].bounds);
+                front = Vector3.Dot(b.extents, new Vector3(Mathf.Abs(fwd.x), 0f, Mathf.Abs(fwd.z))) + 0.9f;
             }
-            Debug.Log($"[Dresser] placed {placed} yard props across {S.huts.Length} houses (v2 grammar)");
+            int count = (int)(Hash(hx, hy, 71) % (uint)(YardPropsMax + 1)); // 0..2
+            int placed = 0;
+            var basePos = P(S, h.x, h.y);
+            for (int k = 0; k < count; k++)
+            {
+                var pf = props[Hash(hx, hy, 72 + k) % (uint)props.Length];
+                var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, parent);
+                float lateral = (Hash01(hx, hy, 73 + k) - 0.5f) * 3.0f; // spread along the wall
+                var world = basePos + fwd * front + right * lateral;
+                go.transform.position = GroundW(world);
+                go.transform.rotation = Quaternion.Euler(0, Hash(hx, hy, 74 + k) % 360u, 0);
+                go.name = $"yard_{h.owner}_{k}";
+                placed++;
+            }
+            return placed;
         }
 
         // TD-028: a villager per living soul — the studio's OWN toon-rendered GLBs (glTFast import).
