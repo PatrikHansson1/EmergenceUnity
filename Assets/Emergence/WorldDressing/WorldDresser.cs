@@ -233,7 +233,7 @@ namespace Emergence.Editor
         static AnimationClip LoadClip(string path)
         {
             foreach (var o in AssetDatabase.LoadAllAssetsAtPath(path))
-                if (o is AnimationClip c && (c.hideFlags & HideFlags.NotEditable) == 0 && !c.name.StartsWith("__preview"))
+                if (o is AnimationClip c && !c.name.StartsWith("__preview"))
                     return c;
             return null;
         }
