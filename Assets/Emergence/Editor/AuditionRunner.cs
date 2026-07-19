@@ -20,9 +20,9 @@ namespace Emergence.Editor
         public static void RunNoonWorld() => Run(WS("world-777-y120.json"), "spring", "noon777");
 
         [MenuItem("Emergence/P1 Dressing/RUN AUDITION - Dusk one-warm-point (4242)")]
-        public static void RunDuskWorld() => Run(WS("world-4242-y120-dusk.json"), "winter", "dusk4242");
+        public static void RunDuskWorld() => Run(WS("world-4242-y120-dusk.json"), "winter", "dusk4242", starDome: true);
 
-        static void Run(string jsonPath, string season, string tag)
+        static void Run(string jsonPath, string season, string tag, bool starDome = false)
         {
             if (!File.Exists(jsonPath)) { Debug.LogError($"[Audition] missing {jsonPath}"); return; }
             WorldDresser.Build(jsonPath);
@@ -30,16 +30,42 @@ namespace Emergence.Editor
             EmergencePostStack.Remove();
             EmergenceLightRig.Apply(season, "day");
             Cap($"{tag}-noon-nopost");
-            EmergencePostStack.Apply();
+            EmergencePostStack.Apply("day");
             Cap($"{tag}-noon-post");
 
             EmergencePostStack.Remove();
             EmergenceLightRig.Apply(season, "dusk");
             Cap($"{tag}-dusk-nopost");
-            EmergencePostStack.Apply();
+            EmergencePostStack.Apply("dusk");            // fable-5 retune: dusk lifted, no longer crushes
             Cap($"{tag}-dusk-post");
 
-            Debug.Log($"[Audition] {tag}: 4 captures written to {EvidenceDir}");
+            // EP directive 2026-07-19: the star dome must READ. Pack night sky (M_ENV_SKYBOX_night)
+            // carries moon + stars in the same painterly hand (fable-5 sky bench). Tilt the camera
+            // UP over the one warm point so the village sits low and the stars fill the dome.
+            if (starDome)
+            {
+                EmergenceLightRig.Apply(season, "night");
+                StarDomeCamera();
+                EmergencePostStack.Apply("night");
+                Cap($"{tag}-night-stardome");
+                Debug.Log($"[Audition] {tag}: 5 captures (incl. star dome) written to {EvidenceDir}");
+            }
+            else Debug.Log($"[Audition] {tag}: 4 captures written to {EvidenceDir}");
+        }
+
+        // stand just south of the one warm point, low, looking gently up — the fire/lit village
+        // anchors the lower frame, the star dome fills the top (EP's "look up and see the stars").
+        static void StarDomeCamera()
+        {
+            var cam = Camera.main; if (cam == null) return;
+            var fire = GameObject.Find("firelight");
+            Vector3 f = fire != null ? fire.transform.position : new Vector3(583f, 2f, 98f);
+            var t = Terrain.activeTerrain;
+            var pos = new Vector3(f.x, 0f, f.z - 48f);
+            if (t != null) pos.y = t.SampleHeight(pos) + t.transform.position.y + 2.2f;
+            cam.transform.position = pos;
+            cam.transform.rotation = Quaternion.Euler(-3f, 0f, 0f); // near-level, slight up
+            cam.fieldOfView = 62f;
         }
 
         // SKY BENCH (EP 2026-07-19: "packet vi köpte har en skybox — gratis kan vara sämre").

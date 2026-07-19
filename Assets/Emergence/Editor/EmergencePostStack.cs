@@ -18,7 +18,12 @@ namespace Emergence.Editor
         const string ProfilePath = "Assets/Emergence/WorldDressing/EmergencePost.asset";
 
         [MenuItem("Emergence/P1 Dressing/Post - Apply URP stack (ACES/bloom)")]
-        public static void Apply()
+        public static void ApplyMenu() => Apply("day");
+
+        // Per-phase grade (fable-5's TD-026 finding: noon contrast crushes the blue hour).
+        // Dusk/night LIFT exposure + drop contrast so the settlement stays legible UNDER the
+        // one warm point, without flattening the "blue world" identity.
+        public static void Apply(string phase = "day")
         {
             var profile = AssetDatabase.LoadAssetAtPath<VolumeProfile>(ProfilePath);
             if (profile == null)
@@ -42,9 +47,12 @@ namespace Emergence.Editor
             bloom.scatter.Override(0.62f);
             bloom.tint.Override(new Color(1f, 0.94f, 0.85f)); // warm, so fire glow reads warm
 
+            bool dim = phase == "dusk" || phase == "night";
+            float exposure = phase == "dusk" ? 0.35f : phase == "night" ? 0.15f : 0.0f;
+            float contrast = dim ? 4f : 8f;
             var color = profile.Add<ColorAdjustments>(true);
-            color.postExposure.Override(0.0f);
-            color.contrast.Override(8f);
+            color.postExposure.Override(exposure);
+            color.contrast.Override(contrast);
             color.saturation.Override(4f);   // painterly, not cartoon-saturated (sobriety)
 
             var vig = profile.Add<Vignette>(true);
