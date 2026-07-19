@@ -13,7 +13,7 @@ echo %date% %time% queue start > "%LOG%"
 :waitlock
 if exist "%PROJECT%\Temp\UnityLockfile" (
   echo %date% %time% waiting for editor to quit... >> "%LOG%"
-  timeout /t 5 /nobreak > nul
+  ping -n 6 127.0.0.1 > nul
   goto waitlock
 )
 
@@ -32,9 +32,7 @@ echo %date% %time% player smoke exit code %SMOKERC% >> "%LOG%"
 :done
 echo %date% %time% queue done build=%BUILDRC% smoke=%SMOKERC% >> "%LOG%"
 echo build=%BUILDRC% smoke=%SMOKERC% > "%PROJECT%\Builds\queue-result.txt"
-endlocal
-
-rem --- post-build: push to GitHub (git installed on Windows 2026-07-19) ---
 cd /d "%PROJECT%"
 git push origin main >> "%LOG%" 2>&1
 echo %date% %time% git push exit %ERRORLEVEL% >> "%LOG%"
+endlocal

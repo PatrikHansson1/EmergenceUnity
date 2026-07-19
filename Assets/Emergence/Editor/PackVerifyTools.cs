@@ -156,6 +156,25 @@ namespace Emergence.Editor
             WriteEvidence("texture-budget.txt", body);
         }
 
+
+        // Row 7: Quaternius rigs + clips, programmatic
+        [MenuItem("Emergence/Pack Verify/6. Quaternius Rig Report")]
+        public static void QuaterniusRigReport()
+        {
+            var sb = new StringBuilder();
+            var guids = AssetDatabase.FindAssets("t:Model", new[] { "Assets/Quaternius" });
+            foreach (var g in guids)
+            {
+                var path = AssetDatabase.GUIDToAssetPath(g);
+                var clips = AssetDatabase.LoadAllAssetsAtPath(path).OfType<AnimationClip>()
+                    .Where(c => !c.name.StartsWith("__preview__")).ToList();
+                var hasRig = AssetDatabase.LoadAllAssetsAtPath(path).OfType<Avatar>().Any();
+                sb.AppendLine($"{Path.GetFileName(path)}: clips={clips.Count} avatar={hasRig} [{string.Join(", ", clips.Select(c => c.name).Take(15))}]");
+            }
+            Debug.Log("[PackVerify] Quaternius:\n" + sb);
+            WriteEvidence("quaternius-rigs.txt", sb.ToString());
+        }
+
         private static void WriteEvidence(string file, string body)
         {
             Directory.CreateDirectory(EvidenceDir);

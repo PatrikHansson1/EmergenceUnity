@@ -60,12 +60,22 @@ namespace Emergence.Editor
             var src = Path.Combine(Application.dataPath, "Emergence", "Engine");
             var dst = Path.Combine(Application.dataPath, "StreamingAssets", "Emergence");
             Directory.CreateDirectory(Path.Combine(dst, "harness"));
-            File.Copy(Path.Combine(src, "emergence-engine.js"), Path.Combine(dst, "emergence-engine.js"), true);
-            File.Copy(Path.Combine(src, "ENGINE-SHA.txt"), Path.Combine(dst, "ENGINE-SHA.txt"), true);
-            File.Copy(Path.Combine(src, "harness", "harness.js"), Path.Combine(dst, "harness", "harness.js"), true);
-            File.Copy(Path.Combine(src, "harness", "prelude-hypot.js"), Path.Combine(dst, "harness", "prelude-hypot.js"), true);
+            CopyForce(Path.Combine(src, "emergence-engine.js"), Path.Combine(dst, "emergence-engine.js"));
+            CopyForce(Path.Combine(src, "ENGINE-SHA.txt"), Path.Combine(dst, "ENGINE-SHA.txt"));
+            CopyForce(Path.Combine(src, "harness", "harness.js"), Path.Combine(dst, "harness", "harness.js"));
+            CopyForce(Path.Combine(src, "harness", "prelude-hypot.js"), Path.Combine(dst, "harness", "prelude-hypot.js"));
             AssetDatabase.Refresh();
             Debug.Log("[BuildScript] StreamingAssets synced from Assets/Emergence/Engine/");
+        }
+
+
+        // Mount-materialized files can carry the Windows read-only attribute; File.Copy(overwrite)
+        // both fails on read-only destinations AND propagates the attribute. Normalize both sides.
+        private static void CopyForce(string src, string dst)
+        {
+            if (File.Exists(dst)) File.SetAttributes(dst, FileAttributes.Normal);
+            File.Copy(src, dst, true);
+            File.SetAttributes(dst, FileAttributes.Normal);
         }
 
         [MenuItem("Emergence/Build/Create Bootstrap Scene")]
