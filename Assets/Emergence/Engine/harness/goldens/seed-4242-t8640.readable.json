@@ -1,0 +1,1814 @@
+{
+ "seed": 4242,
+ "events": [
+  {
+   "tick": 0,
+   "day": 1,
+   "year": 1,
+   "type": "start",
+   "txt": "🌍 Four humans wake in an untouched world: <b>Eira</b>, <b>Ask</b>, <b>Embla</b>, <b>Torv</b>. They know nothing — but they can observe everything. What will they create?"
+  },
+  {
+   "tick": 96,
+   "day": 5,
+   "year": 1,
+   "type": "observed",
+   "txt": "👁️ <b>Eira</b> noticed that grass fibers hold when twisted. An idea begins to form.",
+   "obs": "fibersTwist",
+   "agent": 1,
+   "x": 29.65199461177797,
+   "y": 18.228433820926195
+  },
+  {
+   "tick": 116,
+   "day": 6,
+   "year": 1,
+   "type": "season",
+   "txt": "❄️ The first winter has come. The world turns white and hard, and the nights grow long. Fire is no longer comfort — it is life."
+  },
+  {
+   "tick": 120,
+   "day": 6,
+   "year": 1,
+   "type": "tech",
+   "txt": "🪢 <b>Eira</b> twisted grass fibers into something strong — <b>Eira's twine</b> (Rope) has been invented! <i>Makes it possible to bind parts together.</i>",
+   "tech": "rope",
+   "agent": 1,
+   "x": 25.039809370018343,
+   "y": 20.514886907653203
+  },
+  {
+   "tick": 134,
+   "day": 6,
+   "year": 1,
+   "type": "failed",
+   "txt": "<b>Eira</b> tried something with stone — and failed. But failure teaches.",
+   "agent": 1
+  },
+  {
+   "tick": 143,
+   "day": 7,
+   "year": 1,
+   "type": "tech",
+   "txt": "🔪 <b>Eira</b> struck two stones together and kept the sharp shard — <b>Eira's knife</b> (Sharpened stone) has been invented! <i>Faster gathering of everything.</i>",
+   "tech": "sharp",
+   "agent": 1,
+   "x": 24.472573396735704,
+   "y": 18.485084180449075
+  },
+  {
+   "tick": 143,
+   "day": 7,
+   "year": 1,
+   "type": "custom",
+   "txt": "🌿 <b>Eira</b> began carving a sign into a flat stone when something new is made — no one told them to. Others may follow. <i>(Carving a sign into a flat stone)</i>",
+   "custom": "c1",
+   "agent": 1,
+   "x": 24.472573396735704,
+   "y": 18.485084180449075,
+   "label": "A CUSTOM APPEARS"
+  },
+  {
+   "tick": 163,
+   "day": 8,
+   "year": 2,
+   "type": "tech",
+   "txt": "🗡️ <b>Eira</b> lashed a sharp point to a long shaft — <b>Eira's hunting spear</b> (Spear) has been invented! <i>Humans are prey no longer. Deer can be hunted — food even in winter.</i>",
+   "tech": "spear",
+   "agent": 1,
+   "x": 25.860188825880055,
+   "y": 17.18393234806967
+  },
+  {
+   "tick": 163,
+   "day": 8,
+   "year": 2,
+   "type": "epithet",
+   "txt": "✨ From that day on, <b>Eira</b> was known as <b>Eira the Spearmaker</b>.",
+   "agent": 1,
+   "x": 25.860188825880055,
+   "y": 17.18393234806967
+  },
+  {
+   "tick": 163,
+   "day": 8,
+   "year": 2,
+   "type": "custom",
+   "txt": "🌿 <b>Eira</b> began painting a mark on the hut wall when something new is made — no one told them to. Others may follow. <i>(Painting a mark on the hut wall)</i>",
+   "custom": "c2",
+   "agent": 1,
+   "x": 25.860188825880055,
+   "y": 17.18393234806967,
+   "label": "A CUSTOM APPEARS"
+  },
+  {
+   "tick": 171,
+   "day": 8,
+   "year": 2,
+   "type": "tech",
+   "txt": "🪓 <b>Eira</b> bound a hard edge to a wooden shaft — <b>Eira's cleaver</b> (Axe) has been invented! <i>Twice as fast logging. Required to build huts.</i>",
+   "tech": "axe",
+   "agent": 1,
+   "x": 25.723172254194385,
+   "y": 17.253061241199198
+  },
+  {
+   "tick": 258,
+   "day": 12,
+   "year": 2,
+   "type": "observed",
+   "txt": "👁️ <b>Torv</b> noticed that grass fibers hold when twisted. An idea begins to form.",
+   "obs": "fibersTwist",
+   "agent": 4,
+   "x": 29.76034721684609,
+   "y": 19.776842882944543
+  },
+  {
+   "tick": 272,
+   "day": 12,
+   "year": 2,
+   "type": "tech",
+   "txt": "🔥 <b>Eira</b> rubbed sticks together until a spark caught the tinder — <b>Eira's blaze</b> (Fire) has been invented! <i>Warmth at night. Opens the path to pottery and smithing.</i>",
+   "tech": "fire",
+   "agent": 1,
+   "x": 22.34946778100192,
+   "y": 19.114345612861957
+  },
+  {
+   "tick": 289,
+   "day": 13,
+   "year": 3,
+   "type": "tech",
+   "txt": "🛞 <b>Eira</b> watched a log roll and understood something great — <b>Eira's pulley</b> (The Wheel) has been invented! <i>The foundation of mills, carts — and everything that spins.</i>",
+   "tech": "wheel",
+   "agent": 1,
+   "x": 21.436898296606067,
+   "y": 18.62274836131113
+  },
+  {
+   "tick": 334,
+   "day": 15,
+   "year": 3,
+   "type": "tech",
+   "txt": "🏹 <b>Eira</b> bent a young branch with a cord and felt it fight back — <b>Eira's birchbow</b> (Bow) has been invented! <i>The hunt no longer needs closeness. Deer fall at a distance.</i>",
+   "tech": "bow",
+   "agent": 1,
+   "x": 17.099195955175784,
+   "y": 16.221755821946427
+  },
+  {
+   "tick": 378,
+   "day": 17,
+   "year": 3,
+   "type": "tech",
+   "txt": "🛖 <b>Eira</b> raised logs against each other into a shelter — <b>Eira's home</b> (Hut) has been invented! <i>Shelter and warmth at night. Three huts close together become a village.</i>",
+   "tech": "hut",
+   "agent": 1,
+   "x": 20.51106787397697,
+   "y": 20.426183772201593
+  },
+  {
+   "tick": 425,
+   "day": 18,
+   "year": 3,
+   "type": "tech",
+   "txt": "🌾 <b>Eira</b> let the wheel drive stones that ground grain — <b>Eira's crusher</b> (Mill) has been invented! <i>The village can process food — famine recedes.</i>",
+   "tech": "mill",
+   "agent": 1,
+   "x": 18.844801629710915,
+   "y": 15.6776527997562
+  },
+  {
+   "tick": 434,
+   "day": 19,
+   "year": 4,
+   "type": "hut",
+   "txt": "🛖 <b>Eira</b> built a hut.",
+   "x": 18.586295487037717,
+   "y": 15.27404604858068
+  },
+  {
+   "tick": 441,
+   "day": 19,
+   "year": 4,
+   "type": "taught",
+   "txt": "<b>Eira</b> taught <b>Torv</b> the secret of Eira's pulley. The knowledge spreads.",
+   "tech": "wheel"
+  },
+  {
+   "tick": 513,
+   "day": 22,
+   "year": 4,
+   "type": "taught",
+   "txt": "<b>Eira</b> taught <b>Torv</b> the secret of Eira's birchbow. The knowledge spreads.",
+   "tech": "bow"
+  },
+  {
+   "tick": 530,
+   "day": 23,
+   "year": 4,
+   "type": "tech",
+   "txt": "🏺 <b>Torv</b> placed shaped clay in the fire and found it hard as stone — <b>Torv's vessel</b> (Pottery) has been invented! <i>Food can be stored — hunger bites less.</i>",
+   "tech": "pottery",
+   "agent": 4,
+   "x": 25.358713571819475,
+   "y": 17.605095955732864
+  },
+  {
+   "tick": 548,
+   "day": 24,
+   "year": 4,
+   "type": "tech",
+   "txt": "🧱 <b>Torv</b> built a stone chamber that gathered the heat of the fire — <b>Torv's burnoven</b> (Kiln) has been invented! <i>Heat enough to melt what hides in ore and sand.</i>",
+   "tech": "kiln",
+   "agent": 4,
+   "x": 27.90151331996085,
+   "y": 17.468390499171473
+  },
+  {
+   "tick": 572,
+   "day": 25,
+   "year": 4,
+   "type": "tech",
+   "txt": "🌱 <b>Torv</b> pressed spilled seeds into turned soil and waited — <b>Torv's tilling</b> (Farming) has been invented! <i>Food that returns every year. The village roots itself.</i>",
+   "tech": "farming",
+   "agent": 4,
+   "x": 32.44688616165924,
+   "y": 19.149474434534977
+  },
+  {
+   "tick": 584,
+   "day": 25,
+   "year": 5,
+   "type": "field",
+   "txt": "🌱 <b>Torv</b> has turned the soil — the valley's first field lies open to the sky.",
+   "agent": 4,
+   "x": 31,
+   "y": 19
+  },
+  {
+   "tick": 586,
+   "day": 25,
+   "year": 5,
+   "type": "hut",
+   "txt": "🛖 <b>Torv</b> built a hut.",
+   "x": 32.35861290743897,
+   "y": 19.210399124858984
+  },
+  {
+   "tick": 608,
+   "day": 26,
+   "year": 5,
+   "type": "taught",
+   "txt": "<b>Torv</b> taught <b>Embla</b> the secret of Eira's hunting spear. The knowledge spreads.",
+   "tech": "spear"
+  },
+  {
+   "tick": 620,
+   "day": 27,
+   "year": 5,
+   "type": "taught",
+   "txt": "<b>Eira</b> taught <b>Ask</b> the secret of Eira's hunting spear. The knowledge spreads.",
+   "tech": "spear"
+  },
+  {
+   "tick": 628,
+   "day": 27,
+   "year": 5,
+   "type": "tech",
+   "txt": "📜 <b>Torv</b> carved signs into clay so knowledge could outlive its owner — <b>Torv's memory-marks</b> (Writing) has been invented! <i>Knowledge spreads to all — and to generations to come.</i>",
+   "tech": "writing",
+   "agent": 4,
+   "x": 31.113636833540415,
+   "y": 19.183399663084224
+  },
+  {
+   "tick": 628,
+   "day": 27,
+   "year": 5,
+   "type": "epithet",
+   "txt": "✨ From that day on, <b>Torv</b> was known as <b>Torv the Rememberer</b>.",
+   "agent": 4,
+   "x": 31.113636833540415,
+   "y": 19.183399663084224
+  },
+  {
+   "tick": 668,
+   "day": 29,
+   "year": 5,
+   "type": "field",
+   "txt": "🌾 <b>Torv the Rememberer</b> brings in the harvest from Torv's field. Winter holds less fear now.",
+   "agent": 4,
+   "x": 31,
+   "y": 19
+  },
+  {
+   "tick": 693,
+   "day": 30,
+   "year": 5,
+   "type": "hunt",
+   "txt": "🗡️ <b>Eira the Spearmaker</b> brought down a deer in the deep of winter. Tonight, no one goes hungry.",
+   "agent": 1,
+   "x": 27.842092221163306,
+   "y": 11.872971493353145
+  },
+  {
+   "tick": 699,
+   "day": 30,
+   "year": 5,
+   "type": "taught",
+   "txt": "<b>Torv</b> taught <b>Ask</b> the secret of Eira's birchbow. The knowledge spreads.",
+   "tech": "bow"
+  },
+  {
+   "tick": 738,
+   "day": 32,
+   "year": 6,
+   "type": "observed",
+   "txt": "👁️ <b>Embla</b> noticed that grass fibers hold when twisted. An idea begins to form.",
+   "obs": "fibersTwist",
+   "agent": 3,
+   "x": 38.74078021148821,
+   "y": 15.706587236858956
+  },
+  {
+   "tick": 755,
+   "day": 32,
+   "year": 6,
+   "type": "failed",
+   "txt": "<b>Embla</b> tried something with wood and fiber — and failed. But failure teaches.",
+   "agent": 3
+  },
+  {
+   "tick": 787,
+   "day": 34,
+   "year": 6,
+   "type": "child",
+   "txt": "👶 <b>Ask</b> and <b>Torv</b> have had a child, <b>Liv</b> — generation 2. They inherit traits from both.",
+   "agent": 5,
+   "x": 17.251972814798233,
+   "y": 14.277840671710702
+  },
+  {
+   "tick": 796,
+   "day": 34,
+   "year": 6,
+   "type": "hut",
+   "txt": "🛖 <b>Ask</b> built a hut.",
+   "x": 16.555266981529662,
+   "y": 15.580607153848364
+  },
+  {
+   "tick": 1005,
+   "day": 43,
+   "year": 7,
+   "type": "imitated",
+   "txt": "<b>Embla</b> has begun painting a mark on the hut wall when something new is made, the way Eira does. The custom spreads.",
+   "custom": "c2"
+  },
+  {
+   "tick": 1152,
+   "day": 49,
+   "year": 9,
+   "type": "season",
+   "txt": "🌸 Spring returns. The survivors count each other, and begin again."
+  },
+  {
+   "tick": 1217,
+   "day": 51,
+   "year": 9,
+   "type": "child",
+   "txt": "👶 <b>Eira</b> and <b>Embla</b> have had a child, <b>Sten</b> — generation 2. They inherit traits from both.",
+   "agent": 6,
+   "x": 36.42298649921677,
+   "y": 14.761131170079048
+  },
+  {
+   "tick": 1224,
+   "day": 52,
+   "year": 9,
+   "type": "hut",
+   "txt": "🛖 <b>Embla</b> built a hut.",
+   "x": 34.84399589896468,
+   "y": 14.695369345922675
+  },
+  {
+   "tick": 1254,
+   "day": 53,
+   "year": 9,
+   "type": "taught",
+   "txt": "<b>Ask</b> taught <b>Liv</b> the secret of Torv's vessel. The knowledge spreads.",
+   "tech": "pottery"
+  },
+  {
+   "tick": 1279,
+   "day": 54,
+   "year": 9,
+   "type": "tech",
+   "txt": "⚒️ <b>Ask</b> watched gleaming metal run from the glowing ore — <b>Ask's forgework</b> (Iron smithing) has been invented! <i>Metal — an entirely new material.</i>",
+   "tech": "smithing",
+   "agent": 2,
+   "x": 22.66428473882205,
+   "y": 17.384695576892653
+  },
+  {
+   "tick": 1279,
+   "day": 54,
+   "year": 9,
+   "type": "epithet",
+   "txt": "✨ From that day on, <b>Ask</b> was known as <b>Ask the Ironhand</b>.",
+   "agent": 2,
+   "x": 22.66428473882205,
+   "y": 17.384695576892653
+  },
+  {
+   "tick": 1306,
+   "day": 55,
+   "year": 10,
+   "type": "child",
+   "txt": "👶 <b>Ask</b> and <b>Torv</b> have had a child, <b>Ylva</b> — generation 2. They inherit traits from both.",
+   "agent": 7,
+   "x": 20.219798104456622,
+   "y": 16.18394711617809
+  },
+  {
+   "tick": 1381,
+   "day": 58,
+   "year": 10,
+   "type": "tech",
+   "txt": "⛏️ <b>Torv</b> forged the iron into an edge that never dulled — <b>Torv's plough</b> (Metal tools) has been invented! <i>Three times faster work.</i>",
+   "tech": "metaltools",
+   "agent": 4,
+   "x": 20.18371216496918,
+   "y": 13.882500987406083
+  },
+  {
+   "tick": 1433,
+   "day": 60,
+   "year": 10,
+   "type": "hunt",
+   "txt": "🗡️ <b>Ask the Ironhand</b> brought down a deer in the deep of winter. Tonight, no one goes hungry.",
+   "agent": 2,
+   "x": 24.590502638764722,
+   "y": 7.904920225820406
+  },
+  {
+   "tick": 1440,
+   "day": 61,
+   "year": 11,
+   "type": "season",
+   "txt": "🌸 Spring returns. The survivors count each other, and begin again."
+  },
+  {
+   "tick": 1617,
+   "day": 68,
+   "year": 12,
+   "type": "observed",
+   "txt": "👁️ <b>Ylva</b> noticed that spilled seeds sprout where they fall. An idea begins to form.",
+   "obs": "seedsSprout",
+   "agent": 7,
+   "x": 37.970130402386346,
+   "y": 3.8707884676251525
+  },
+  {
+   "tick": 1736,
+   "day": 73,
+   "year": 13,
+   "type": "field",
+   "txt": "🌱 <b>Embla</b> has turned the soil — a new field lies open to the sky.",
+   "agent": 3,
+   "x": 25,
+   "y": 4
+  },
+  {
+   "tick": 1745,
+   "day": 73,
+   "year": 13,
+   "type": "taught",
+   "txt": "<b>Ask</b> taught <b>Liv</b> the secret of Ask's forgework. The knowledge spreads.",
+   "tech": "smithing"
+  },
+  {
+   "tick": 1770,
+   "day": 75,
+   "year": 13,
+   "type": "taught",
+   "txt": "<b>Ask</b> taught <b>Liv</b> the secret of Torv's plough. The knowledge spreads.",
+   "tech": "metaltools"
+  },
+  {
+   "tick": 1817,
+   "day": 76,
+   "year": 13,
+   "type": "child",
+   "txt": "👶 <b>Embla</b> and <b>Torv</b> have had a child, <b>Bjorn</b> — generation 2. They inherit traits from both.",
+   "agent": 8,
+   "x": 27.65383280411767,
+   "y": 6.349567940948593
+  },
+  {
+   "tick": 1827,
+   "day": 77,
+   "year": 13,
+   "type": "field",
+   "txt": "🌾 <b>Embla</b> brings in the harvest from Embla's field. Winter holds less fear now.",
+   "agent": 3,
+   "x": 25,
+   "y": 4
+  },
+  {
+   "tick": 1841,
+   "day": 77,
+   "year": 13,
+   "type": "taught",
+   "txt": "<b>Liv</b> taught <b>Sten</b> the secret of Torv's burnoven. The knowledge spreads.",
+   "tech": "kiln"
+  },
+  {
+   "tick": 1888,
+   "day": 79,
+   "year": 14,
+   "type": "field",
+   "txt": "🌱 <b>Eira the Spearmaker</b> has turned the soil — a new field lies open to the sky.",
+   "agent": 1,
+   "x": 42,
+   "y": 5
+  },
+  {
+   "tick": 1926,
+   "day": 81,
+   "year": 14,
+   "type": "taught",
+   "txt": "<b>Embla</b> taught <b>Bjorn</b> the secret of Eira's home. The knowledge spreads.",
+   "tech": "hut"
+  },
+  {
+   "tick": 1942,
+   "day": 82,
+   "year": 14,
+   "type": "death",
+   "txt": "<b>Torv the Rememberer</b> starved to death. Much knowledge died with them — unless someone learned in time.",
+   "agent": 4,
+   "x": 31.173544357001433,
+   "y": 10.371728619909316,
+   "cause": "starvation"
+  },
+  {
+   "tick": 1942,
+   "day": 82,
+   "year": 14,
+   "type": "customLost",
+   "txt": "🍂 Eira carving a sign into a flat stone when something new is made until the end. No one else ever took it up. It died quietly, as most things do.",
+   "custom": "c1"
+  },
+  {
+   "tick": 1988,
+   "day": 84,
+   "year": 14,
+   "type": "season",
+   "txt": "❄️ A hard winter grips the world. The old will remember it; not all the young will see spring."
+  },
+  {
+   "tick": 2016,
+   "day": 85,
+   "year": 15,
+   "type": "season",
+   "txt": "🌸 Spring returns. The survivors count each other, and begin again."
+  },
+  {
+   "tick": 2088,
+   "day": 88,
+   "year": 15,
+   "type": "observed",
+   "txt": "👁️ <b>Bjorn</b> noticed that struck stone breaks into sharp shards. An idea begins to form.",
+   "obs": "sharpShards",
+   "agent": 8,
+   "x": 37.08747416397499,
+   "y": 2.9089561119661322
+  },
+  {
+   "tick": 2093,
+   "day": 88,
+   "year": 15,
+   "type": "taught",
+   "txt": "<b>Embla</b> taught <b>Ask</b> the secret of Torv's tilling. The knowledge spreads.",
+   "tech": "farming"
+  },
+  {
+   "tick": 2109,
+   "day": 89,
+   "year": 15,
+   "type": "taught",
+   "txt": "<b>Liv</b> taught <b>Ylva</b> the secret of Eira's crusher. The knowledge spreads.",
+   "tech": "mill"
+  },
+  {
+   "tick": 2116,
+   "day": 89,
+   "year": 15,
+   "type": "taught",
+   "txt": "<b>Eira</b> taught <b>Sten</b> the secret of Torv's tilling. The knowledge spreads.",
+   "tech": "farming"
+  },
+  {
+   "tick": 2118,
+   "day": 89,
+   "year": 15,
+   "type": "taught",
+   "txt": "<b>Embla</b> taught <b>Bjorn</b> the secret of Torv's vessel. The knowledge spreads.",
+   "tech": "pottery"
+  },
+  {
+   "tick": 2143,
+   "day": 90,
+   "year": 15,
+   "type": "taught",
+   "txt": "<b>Embla</b> taught <b>Sten</b> the secret of Eira's twine. The knowledge spreads.",
+   "tech": "rope"
+  },
+  {
+   "tick": 2160,
+   "day": 91,
+   "year": 16,
+   "type": "season",
+   "txt": "🌸 Spring returns. The survivors count each other, and begin again."
+  },
+  {
+   "tick": 2168,
+   "day": 91,
+   "year": 16,
+   "type": "field",
+   "txt": "🌱 <b>Ask the Ironhand</b> has turned the soil — a new field lies open to the sky.",
+   "agent": 2,
+   "x": 42,
+   "y": 2
+  },
+  {
+   "tick": 2168,
+   "day": 91,
+   "year": 16,
+   "type": "field",
+   "txt": "🌱 <b>Sten</b> has turned the soil — a new field lies open to the sky.",
+   "agent": 6,
+   "x": 35,
+   "y": 4
+  },
+  {
+   "tick": 2192,
+   "day": 92,
+   "year": 16,
+   "type": "field",
+   "txt": "🌱 <b>Liv</b> has turned the soil — a new field lies open to the sky.",
+   "agent": 5,
+   "x": 42,
+   "y": 3
+  },
+  {
+   "tick": 2227,
+   "day": 94,
+   "year": 16,
+   "type": "taught",
+   "txt": "<b>Embla</b> taught <b>Bjorn</b> the secret of Eira's birchbow. The knowledge spreads.",
+   "tech": "bow"
+  },
+  {
+   "tick": 2302,
+   "day": 97,
+   "year": 16,
+   "type": "taught",
+   "txt": "<b>Ask</b> taught <b>Sten</b> the secret of Torv's plough. The knowledge spreads.",
+   "tech": "metaltools"
+  },
+  {
+   "tick": 2304,
+   "day": 97,
+   "year": 17,
+   "type": "season",
+   "txt": "🌸 Spring returns. The survivors count each other, and begin again."
+  },
+  {
+   "tick": 2592,
+   "day": 109,
+   "year": 19,
+   "type": "season",
+   "txt": "🌸 Spring returns. The survivors count each other, and begin again."
+  },
+  {
+   "tick": 2600,
+   "day": 109,
+   "year": 19,
+   "type": "field",
+   "txt": "🌱 <b>Bjorn</b> has turned the soil — a new field lies open to the sky.",
+   "agent": 8,
+   "x": 41,
+   "y": 7
+  },
+  {
+   "tick": 2776,
+   "day": 116,
+   "year": 20,
+   "type": "tech",
+   "txt": "🫙 <b>Embla</b> melted sand and found something transparent — <b>Embla's clearstone</b> (Glass) has been invented! <i>A material no one could have imagined.</i>",
+   "tech": "glass",
+   "agent": 3,
+   "x": 36.713439269344484,
+   "y": 7.468689738830079
+  },
+  {
+   "tick": 2820,
+   "day": 118,
+   "year": 20,
+   "type": "moved",
+   "txt": "<b>Liv</b> moved into an abandoned hut."
+  },
+  {
+   "tick": 2822,
+   "day": 118,
+   "year": 20,
+   "type": "field",
+   "txt": "🌾 <b>Bjorn</b> brings in the harvest from Bjorn's field. Winter holds less fear now.",
+   "agent": 8,
+   "x": 41,
+   "y": 7
+  },
+  {
+   "tick": 2835,
+   "day": 119,
+   "year": 20,
+   "type": "observed",
+   "txt": "👁️ <b>Sten</b> noticed that hot sand turns glassy. An idea begins to form.",
+   "obs": "sandGlints",
+   "agent": 6,
+   "x": 33.6041558009071,
+   "y": 9.012416500514712
+  },
+  {
+   "tick": 3118,
+   "day": 131,
+   "year": 22,
+   "type": "taught",
+   "txt": "<b>Eira</b> taught <b>Sten</b> the secret of Embla's clearstone. The knowledge spreads.",
+   "tech": "glass"
+  },
+  {
+   "tick": 3312,
+   "day": 139,
+   "year": 24,
+   "type": "season",
+   "txt": "🌸 Spring returns. The survivors count each other, and begin again."
+  },
+  {
+   "tick": 3403,
+   "day": 143,
+   "year": 24,
+   "type": "field",
+   "txt": "🌾 <b>Embla</b> brings in the harvest from Embla's field. Winter holds less fear now.",
+   "agent": 3,
+   "x": 25,
+   "y": 4
+  },
+  {
+   "tick": 3456,
+   "day": 145,
+   "year": 25,
+   "type": "season",
+   "txt": "🌸 Spring returns. The survivors count each other, and begin again."
+  },
+  {
+   "tick": 3473,
+   "day": 145,
+   "year": 25,
+   "type": "sharing",
+   "txt": "🍞 <b>Eira</b> shared food with <b>Bjorn</b>. Those who keep the same ways do not let each other starve.",
+   "x": 29.612979033032495,
+   "y": 8.920304573472754
+  },
+  {
+   "tick": 3572,
+   "day": 150,
+   "year": 25,
+   "type": "field",
+   "txt": "🌾 <b>Eira the Spearmaker</b> brings in the harvest from Eira's field. Winter holds less fear now.",
+   "agent": 1,
+   "x": 42,
+   "y": 5
+  },
+  {
+   "tick": 3584,
+   "day": 150,
+   "year": 25,
+   "type": "hut",
+   "txt": "🛖 <b>Sten</b> built a hut.",
+   "x": 25.898888182976375,
+   "y": 6.6236668509572505
+  },
+  {
+   "tick": 3605,
+   "day": 151,
+   "year": 26,
+   "type": "child",
+   "txt": "👶 <b>Sten</b> and <b>Embla</b> have had a child, <b>Saga</b> — generation 3. They inherit traits from both.",
+   "agent": 9,
+   "x": 26.620948269368238,
+   "y": 6.603325634370722
+  },
+  {
+   "tick": 3622,
+   "day": 152,
+   "year": 26,
+   "type": "death",
+   "txt": "<b>Bjorn</b> starved to death. Much knowledge died with them — unless someone learned in time.",
+   "agent": 8,
+   "x": 31.39133546803164,
+   "y": 10.434419173505262,
+   "cause": "starvation"
+  },
+  {
+   "tick": 3622,
+   "day": 152,
+   "year": 26,
+   "type": "custom",
+   "txt": "🌿 <b>Liv</b> began believing the deep iron angers the ancestors — no one told them to. Others may follow. <i>(The belief that the deep iron angers the ancestors)</i>",
+   "custom": "c3",
+   "agent": 5,
+   "x": 28.34331966962792,
+   "y": 11.675501821989835,
+   "label": "A BELIEF TAKES ROOT"
+  },
+  {
+   "tick": 3684,
+   "day": 154,
+   "year": 26,
+   "type": "child",
+   "txt": "👶 <b>Ask</b> and <b>Ylva</b> have had a child, <b>Rune</b> — generation 3. They inherit traits from both.",
+   "agent": 10,
+   "x": 33.82784897471676,
+   "y": 14.700169092920914
+  },
+  {
+   "tick": 3752,
+   "day": 157,
+   "year": 27,
+   "type": "field",
+   "txt": "🌱 <b>Saga</b> has turned the soil — a new field lies open to the sky.",
+   "agent": 9,
+   "x": 29,
+   "y": 6
+  },
+  {
+   "tick": 3788,
+   "day": 159,
+   "year": 27,
+   "type": "taught",
+   "txt": "<b>Embla</b> taught <b>Saga</b> the secret of Eira's blaze. The knowledge spreads.",
+   "tech": "fire"
+  },
+  {
+   "tick": 3881,
+   "day": 162,
+   "year": 27,
+   "type": "taught",
+   "txt": "<b>Sten</b> taught <b>Saga</b> the secret of Torv's plough. The knowledge spreads.",
+   "tech": "metaltools"
+  },
+  {
+   "tick": 4164,
+   "day": 174,
+   "year": 29,
+   "type": "child",
+   "txt": "👶 <b>Liv</b> and <b>Ask</b> have had a child, <b>Freja</b> — generation 3. They inherit traits from both.",
+   "agent": 11,
+   "x": 35.15068009179456,
+   "y": 14.566504747313203
+  },
+  {
+   "tick": 4176,
+   "day": 175,
+   "year": 30,
+   "type": "season",
+   "txt": "🌸 Spring returns. The survivors count each other, and begin again."
+  },
+  {
+   "tick": 4239,
+   "day": 177,
+   "year": 30,
+   "type": "taught",
+   "txt": "<b>Liv</b> taught <b>Rune</b> the secret of Eira's knife. The knowledge spreads.",
+   "tech": "sharp"
+  },
+  {
+   "tick": 4250,
+   "day": 178,
+   "year": 30,
+   "type": "child",
+   "txt": "👶 <b>Embla</b> and <b>Sten</b> have had a child, <b>Kare</b> — generation 3. They inherit traits from both.",
+   "agent": 12,
+   "x": 35.98098653158327,
+   "y": 10.480241011057304
+  },
+  {
+   "tick": 4275,
+   "day": 179,
+   "year": 30,
+   "type": "death",
+   "txt": "<b>Eira the Spearmaker</b> starved to death. Much knowledge died with them — unless someone learned in time.",
+   "agent": 1,
+   "x": 33.877002099901254,
+   "y": 7.690516794220461,
+   "cause": "starvation"
+  },
+  {
+   "tick": 4275,
+   "day": 179,
+   "year": 30,
+   "type": "custom",
+   "txt": "🌿 <b>Embla</b> began burning a twig at the grave — no one told them to. Others may follow. <i>(Burning a twig at the grave)</i>",
+   "custom": "c4",
+   "agent": 3,
+   "x": 36.37102649792518,
+   "y": 10.148679977125656,
+   "label": "A CUSTOM APPEARS"
+  },
+  {
+   "tick": 4283,
+   "day": 179,
+   "year": 30,
+   "type": "field",
+   "txt": "🌾 <b>Saga</b> brings in the harvest from Saga's field. Winter holds less fear now.",
+   "agent": 9,
+   "x": 29,
+   "y": 6
+  },
+  {
+   "tick": 4320,
+   "day": 181,
+   "year": 31,
+   "type": "season",
+   "txt": "🌸 Spring returns. The survivors count each other, and begin again."
+  },
+  {
+   "tick": 4403,
+   "day": 184,
+   "year": 31,
+   "type": "taught",
+   "txt": "<b>Embla</b> taught <b>Kare</b> the secret of Eira's hunting spear. The knowledge spreads.",
+   "tech": "spear"
+  },
+  {
+   "tick": 4451,
+   "day": 186,
+   "year": 31,
+   "type": "taught",
+   "txt": "<b>Ask</b> taught <b>Rune</b> the secret of Eira's pulley. The knowledge spreads.",
+   "tech": "wheel"
+  },
+  {
+   "tick": 4464,
+   "day": 187,
+   "year": 32,
+   "type": "season",
+   "txt": "🌸 Spring returns. The survivors count each other, and begin again."
+  },
+  {
+   "tick": 4464,
+   "day": 187,
+   "year": 32,
+   "type": "quirk",
+   "txt": "🙂 <b>Embla</b> stops at the same strange stone every day, and looks at it. It began the year Bjorn died. It has not stopped since.",
+   "agent": 3,
+   "x": 38.20878062805757,
+   "y": 10.473286465619207
+  },
+  {
+   "tick": 4476,
+   "day": 187,
+   "year": 32,
+   "type": "custom",
+   "txt": "🌿 <b>Ask</b> began planting a seed by a flat stone — no one told them to. Others may follow. <i>(Planting a seed by a flat stone)</i>",
+   "custom": "c5",
+   "agent": 2,
+   "x": 34.55027664557353,
+   "y": 14.631047372707911,
+   "label": "A CUSTOM APPEARS"
+  },
+  {
+   "tick": 4482,
+   "day": 188,
+   "year": 32,
+   "type": "imitated",
+   "txt": "<b>Ylva</b> has begun believing the deep iron angers the ancestors, the way Liv does. The custom spreads.",
+   "custom": "c3"
+  },
+  {
+   "tick": 4499,
+   "day": 188,
+   "year": 32,
+   "type": "taught",
+   "txt": "<b>Saga</b> taught <b>Kare</b> the secret of Torv's tilling. The knowledge spreads.",
+   "tech": "farming"
+  },
+  {
+   "tick": 4504,
+   "day": 188,
+   "year": 32,
+   "type": "field",
+   "txt": "🌱 <b>Kare</b> has turned the soil — a new field lies open to the sky.",
+   "agent": 12,
+   "x": 38,
+   "y": 7
+  },
+  {
+   "tick": 4532,
+   "day": 190,
+   "year": 32,
+   "type": "taught",
+   "txt": "<b>Liv</b> taught <b>Rune</b> the secret of Eira's home. The knowledge spreads.",
+   "tech": "hut"
+  },
+  {
+   "tick": 4558,
+   "day": 191,
+   "year": 32,
+   "type": "taught",
+   "txt": "<b>Saga</b> taught <b>Kare</b> the secret of Eira's blaze. The knowledge spreads.",
+   "tech": "fire"
+  },
+  {
+   "tick": 4580,
+   "day": 192,
+   "year": 32,
+   "type": "season",
+   "txt": "❄️ A hard winter grips the world. The old will remember it; not all the young will see spring."
+  },
+  {
+   "tick": 4691,
+   "day": 196,
+   "year": 33,
+   "type": "child",
+   "txt": "👶 <b>Liv</b> and <b>Ylva</b> have had a child, <b>Idun</b> — generation 3. They inherit traits from both.",
+   "agent": 13,
+   "x": 33.96738659560544,
+   "y": 14.752437544105097
+  },
+  {
+   "tick": 4719,
+   "day": 197,
+   "year": 33,
+   "type": "taught",
+   "txt": "<b>Rune</b> taught <b>Idun</b> the secret of Eira's crusher. The knowledge spreads.",
+   "tech": "mill"
+  },
+  {
+   "tick": 4896,
+   "day": 205,
+   "year": 35,
+   "type": "season",
+   "txt": "🌸 Spring returns. The survivors count each other, and begin again."
+  },
+  {
+   "tick": 4929,
+   "day": 206,
+   "year": 35,
+   "type": "taught",
+   "txt": "<b>Ylva</b> taught <b>Idun</b> the secret of Torv's vessel. The knowledge spreads.",
+   "tech": "pottery"
+  },
+  {
+   "tick": 4975,
+   "day": 208,
+   "year": 35,
+   "type": "taught",
+   "txt": "<b>Ask</b> taught <b>Rune</b> the secret of Ask's forgework. The knowledge spreads.",
+   "tech": "smithing"
+  },
+  {
+   "tick": 4975,
+   "day": 208,
+   "year": 35,
+   "type": "taught",
+   "txt": "<b>Liv</b> taught <b>Freja</b> the secret of Eira's twine. The knowledge spreads.",
+   "tech": "rope"
+  },
+  {
+   "tick": 5026,
+   "day": 210,
+   "year": 35,
+   "type": "conversion",
+   "txt": "<b>Ask</b> has left Planting a seed by a flat stone for The belief that the deep iron angers the ancestors. Minds change; so do worlds.",
+   "custom": "c3",
+   "from": "c5"
+  },
+  {
+   "tick": 5040,
+   "day": 211,
+   "year": 36,
+   "type": "season",
+   "txt": "🌸 Spring returns. The survivors count each other, and begin again."
+  },
+  {
+   "tick": 5045,
+   "day": 211,
+   "year": 36,
+   "type": "taught",
+   "txt": "<b>Ylva</b> taught <b>Idun</b> the secret of Eira's pulley. The knowledge spreads.",
+   "tech": "wheel"
+  },
+  {
+   "tick": 5184,
+   "day": 217,
+   "year": 37,
+   "type": "season",
+   "txt": "🌸 Spring returns. The survivors count each other, and begin again."
+  },
+  {
+   "tick": 5328,
+   "day": 223,
+   "year": 38,
+   "type": "quirk",
+   "txt": "🙂 <b>Sten</b> has begun collecting round stones. No one knows why. It began the year Eira the Spearmaker died. It has not stopped since.",
+   "agent": 6,
+   "x": 24.909571285505017,
+   "y": 20.98317550239898
+  },
+  {
+   "tick": 5354,
+   "day": 224,
+   "year": 38,
+   "type": "child",
+   "txt": "👶 <b>Liv</b> and <b>Ylva</b> have had a child, <b>Halvar</b> — generation 3. They inherit traits from both.",
+   "agent": 14,
+   "x": 34.76392716479422,
+   "y": 14.780252151677075
+  },
+  {
+   "tick": 5382,
+   "day": 225,
+   "year": 38,
+   "type": "taught",
+   "txt": "<b>Freja</b> taught <b>Idun</b> the secret of Eira's blaze. The knowledge spreads.",
+   "tech": "fire"
+  },
+  {
+   "tick": 5472,
+   "day": 229,
+   "year": 39,
+   "type": "season",
+   "txt": "🌸 Spring returns. The survivors count each other, and begin again."
+  },
+  {
+   "tick": 5561,
+   "day": 232,
+   "year": 39,
+   "type": "taught",
+   "txt": "<b>Liv</b> taught <b>Halvar</b> the secret of Eira's twine. The knowledge spreads.",
+   "tech": "rope"
+  },
+  {
+   "tick": 5592,
+   "day": 234,
+   "year": 39,
+   "type": "observed",
+   "txt": "👁️ <b>Halvar</b> noticed that logs roll. An idea begins to form.",
+   "obs": "logsRoll",
+   "agent": 14,
+   "x": 34.849434441465256,
+   "y": 15.222053584038155
+  },
+  {
+   "tick": 5640,
+   "day": 236,
+   "year": 40,
+   "type": "moved",
+   "txt": "<b>Saga</b> moved into an abandoned hut."
+  },
+  {
+   "tick": 5760,
+   "day": 241,
+   "year": 41,
+   "type": "season",
+   "txt": "🌸 Spring returns. The survivors count each other, and begin again."
+  },
+  {
+   "tick": 5761,
+   "day": 241,
+   "year": 41,
+   "type": "death",
+   "txt": "<b>Embla</b> died of old age at 58. Much knowledge died with them — unless someone learned in time.",
+   "agent": 3,
+   "x": 37.83793161165526,
+   "y": 10.344644484964366,
+   "cause": "age"
+  },
+  {
+   "tick": 5761,
+   "day": 241,
+   "year": 41,
+   "type": "moved",
+   "txt": "<b>Ylva</b> moved into an abandoned hut."
+  },
+  {
+   "tick": 5761,
+   "day": 241,
+   "year": 41,
+   "type": "customLost",
+   "txt": "🍂 Ask planting a seed by a flat stone until the end. No one else ever took it up. It died quietly, as most things do.",
+   "custom": "c5"
+  },
+  {
+   "tick": 5904,
+   "day": 247,
+   "year": 42,
+   "type": "season",
+   "txt": "🌸 Spring returns. The survivors count each other, and begin again."
+  },
+  {
+   "tick": 6049,
+   "day": 253,
+   "year": 43,
+   "type": "hut",
+   "txt": "🛖 <b>Rune</b> built a hut.",
+   "x": 37.40457459293349,
+   "y": 15.819449942691643
+  },
+  {
+   "tick": 6049,
+   "day": 253,
+   "year": 43,
+   "type": "epithet",
+   "txt": "✨ From that day on, <b>Rune</b> was known as <b>Rune the Founder</b>.",
+   "agent": 10,
+   "x": 37.40457459293349,
+   "y": 15.819449942691643
+  },
+  {
+   "tick": 6049,
+   "day": 253,
+   "year": 43,
+   "type": "village",
+   "txt": "🏘️ Three huts have become more — <b>Runehaven</b> has been founded! A village born of nothing but cooperation.",
+   "village": "Runehaven",
+   "x": 37.40457459293349,
+   "y": 15.819449942691643
+  },
+  {
+   "tick": 6056,
+   "day": 253,
+   "year": 43,
+   "type": "field",
+   "txt": "🌱 <b>Ylva</b> has turned the soil — a new field lies open to the sky.",
+   "agent": 7,
+   "x": 37,
+   "y": 16
+  },
+  {
+   "tick": 6078,
+   "day": 254,
+   "year": 43,
+   "type": "child",
+   "txt": "👶 <b>Saga</b> and <b>Sten</b> have had a child, <b>Signe</b> — generation 4. They inherit traits from both.",
+   "agent": 15,
+   "x": 21.25907139471116,
+   "y": 18.687672115862963
+  },
+  {
+   "tick": 6080,
+   "day": 254,
+   "year": 43,
+   "type": "field",
+   "txt": "🌱 <b>Rune the Founder</b> has turned the soil — a new field lies open to the sky.",
+   "agent": 10,
+   "x": 40,
+   "y": 14
+  },
+  {
+   "tick": 6139,
+   "day": 257,
+   "year": 43,
+   "type": "child",
+   "txt": "👶 <b>Ylva</b> and <b>Rune</b> have had a child, <b>Vidar</b> — generation 4. They inherit traits from both.",
+   "agent": 16,
+   "x": 36.229516226833084,
+   "y": 14.644312560177763
+  },
+  {
+   "tick": 6192,
+   "day": 259,
+   "year": 44,
+   "type": "tradition",
+   "txt": "🏘️ In Runehaven, painting a mark on the hut wall when something new is made is now simply what one does. <b>Painting a mark on the hut wall</b> has become a tradition.",
+   "custom": "c2",
+   "x": 37.40457459293349,
+   "y": 15.819449942691643
+  },
+  {
+   "tick": 6192,
+   "day": 259,
+   "year": 44,
+   "type": "tradition",
+   "txt": "🏘️ In Runehaven, believing the deep iron angers the ancestors is now simply what one does. <b>The belief that the deep iron angers the ancestors</b> has become a tradition.",
+   "custom": "c3",
+   "x": 37.40457459293349,
+   "y": 15.819449942691643
+  },
+  {
+   "tick": 6239,
+   "day": 261,
+   "year": 44,
+   "type": "taught",
+   "txt": "<b>Saga</b> taught <b>Signe</b> the secret of Eira's pulley. The knowledge spreads.",
+   "tech": "wheel"
+  },
+  {
+   "tick": 6344,
+   "day": 265,
+   "year": 45,
+   "type": "field",
+   "txt": "🌱 <b>Signe</b> has turned the soil — a new field lies open to the sky.",
+   "agent": 15,
+   "x": 27,
+   "y": 18
+  },
+  {
+   "tick": 6389,
+   "day": 267,
+   "year": 45,
+   "type": "taught",
+   "txt": "<b>Rune</b> taught <b>Freja</b> the secret of Embla's clearstone. The knowledge spreads.",
+   "tech": "glass"
+  },
+  {
+   "tick": 6394,
+   "day": 267,
+   "year": 45,
+   "type": "hut",
+   "txt": "🛖 <b>Freja</b> built a hut.",
+   "x": 33.62961046223578,
+   "y": 14.953075299914273
+  },
+  {
+   "tick": 6415,
+   "day": 268,
+   "year": 45,
+   "type": "imitated",
+   "txt": "<b>Freja</b> has begun burning a twig at the grave, the way Rune does. The custom spreads.",
+   "custom": "c4"
+  },
+  {
+   "tick": 6420,
+   "day": 268,
+   "year": 45,
+   "type": "taught",
+   "txt": "<b>Saga</b> taught <b>Halvar</b> the secret of Torv's memory-marks. The knowledge spreads.",
+   "tech": "writing"
+  },
+  {
+   "tick": 6477,
+   "day": 271,
+   "year": 45,
+   "type": "imitated",
+   "txt": "<b>Sten</b> has begun believing the deep iron angers the ancestors, the way Saga does. The custom spreads.",
+   "custom": "c3"
+  },
+  {
+   "tick": 6480,
+   "day": 271,
+   "year": 46,
+   "type": "tradition",
+   "txt": "🏘️ In Runehaven, burning a twig at the grave is now simply what one does. <b>Burning a twig at the grave</b> has become a tradition.",
+   "custom": "c4",
+   "x": 37.40457459293349,
+   "y": 15.819449942691643
+  },
+  {
+   "tick": 6523,
+   "day": 273,
+   "year": 46,
+   "type": "taught",
+   "txt": "<b>Idun</b> taught <b>Halvar</b> the secret of Embla's clearstone. The knowledge spreads.",
+   "tech": "glass"
+  },
+  {
+   "tick": 6546,
+   "day": 274,
+   "year": 46,
+   "type": "imitated",
+   "txt": "<b>Ylva</b> has begun burning a twig at the grave, the way Liv does. The custom spreads.",
+   "custom": "c4"
+  },
+  {
+   "tick": 6550,
+   "day": 274,
+   "year": 46,
+   "type": "taught",
+   "txt": "<b>Idun</b> taught <b>Halvar</b> the secret of Torv's plough. The knowledge spreads.",
+   "tech": "metaltools"
+  },
+  {
+   "tick": 6591,
+   "day": 275,
+   "year": 46,
+   "type": "taught",
+   "txt": "<b>Ask</b> taught <b>Vidar</b> the secret of Eira's blaze. The knowledge spreads.",
+   "tech": "fire"
+  },
+  {
+   "tick": 6653,
+   "day": 278,
+   "year": 47,
+   "type": "taught",
+   "txt": "<b>Idun</b> taught <b>Vidar</b> the secret of Embla's clearstone. The knowledge spreads.",
+   "tech": "glass"
+  },
+  {
+   "tick": 6730,
+   "day": 281,
+   "year": 47,
+   "type": "hut",
+   "txt": "🛖 <b>Idun</b> built a hut.",
+   "x": 36.26377685155074,
+   "y": 16.41611540371289
+  },
+  {
+   "tick": 6768,
+   "day": 283,
+   "year": 48,
+   "type": "season",
+   "txt": "🌸 Spring returns. The survivors count each other, and begin again."
+  },
+  {
+   "tick": 6785,
+   "day": 283,
+   "year": 48,
+   "type": "child",
+   "txt": "👶 <b>Rune</b> and <b>Ylva</b> have had a child, <b>Tuva</b> — generation 4. They inherit traits from both.",
+   "agent": 17,
+   "x": 35.65988780578666,
+   "y": 14.52761429149092
+  },
+  {
+   "tick": 6800,
+   "day": 284,
+   "year": 48,
+   "type": "field",
+   "txt": "🌱 <b>Idun</b> has turned the soil — a new field lies open to the sky.",
+   "agent": 13,
+   "x": 39,
+   "y": 15
+  },
+  {
+   "tick": 7010,
+   "day": 293,
+   "year": 49,
+   "type": "field",
+   "txt": "🌾 <b>Idun</b> brings in the harvest from Idun's field. Winter holds less fear now.",
+   "agent": 13,
+   "x": 39,
+   "y": 15
+  },
+  {
+   "tick": 7141,
+   "day": 298,
+   "year": 50,
+   "type": "taught",
+   "txt": "<b>Ylva</b> taught <b>Tuva</b> the secret of Eira's cleaver. The knowledge spreads.",
+   "tech": "axe"
+  },
+  {
+   "tick": 7168,
+   "day": 299,
+   "year": 50,
+   "type": "field",
+   "txt": "🌾 <b>Ylva</b> brings in the harvest from Ylva's field. Winter holds less fear now.",
+   "agent": 7,
+   "x": 37,
+   "y": 16
+  },
+  {
+   "tick": 7172,
+   "day": 300,
+   "year": 50,
+   "type": "season",
+   "txt": "❄️ A hard winter grips the world. The old will remember it; not all the young will see spring."
+  },
+  {
+   "tick": 7200,
+   "day": 301,
+   "year": 51,
+   "type": "season",
+   "txt": "🌸 Spring returns. The survivors count each other, and begin again."
+  },
+  {
+   "tick": 7266,
+   "day": 304,
+   "year": 51,
+   "type": "child",
+   "txt": "👶 <b>Liv</b> and <b>Rune</b> have had a child, <b>Alve</b> — generation 4. They inherit traits from both.",
+   "agent": 18,
+   "x": 33.68359412783371,
+   "y": 14.539898420214396
+  },
+  {
+   "tick": 7302,
+   "day": 305,
+   "year": 51,
+   "type": "imitated",
+   "txt": "<b>Signe</b> has begun believing the deep iron angers the ancestors, the way Ask does. The custom spreads.",
+   "custom": "c3"
+  },
+  {
+   "tick": 7344,
+   "day": 307,
+   "year": 52,
+   "type": "season",
+   "txt": "🌸 Spring returns. The survivors count each other, and begin again."
+  },
+  {
+   "tick": 7352,
+   "day": 307,
+   "year": 52,
+   "type": "field",
+   "txt": "🌱 <b>Freja</b> has turned the soil — a new field lies open to the sky.",
+   "agent": 11,
+   "x": 26,
+   "y": 18
+  },
+  {
+   "tick": 7362,
+   "day": 308,
+   "year": 52,
+   "type": "taught",
+   "txt": "<b>Halvar</b> taught <b>Alve</b> the secret of Eira's home. The knowledge spreads.",
+   "tech": "hut"
+  },
+  {
+   "tick": 7373,
+   "day": 308,
+   "year": 52,
+   "type": "observed",
+   "txt": "👁️ <b>Alve</b> noticed that spilled seeds sprout where they fall. An idea begins to form.",
+   "obs": "seedsSprout",
+   "agent": 18,
+   "x": 36.98133982002435,
+   "y": 15.726699125179465
+  },
+  {
+   "tick": 7394,
+   "day": 309,
+   "year": 52,
+   "type": "hut",
+   "txt": "🛖 <b>Halvar</b> built a hut.",
+   "x": 35.477327567002874,
+   "y": 17.68193429704963
+  },
+  {
+   "tick": 7428,
+   "day": 310,
+   "year": 52,
+   "type": "child",
+   "txt": "👶 <b>Freja</b> and <b>Sten</b> have had a child, <b>Ronja</b> — generation 4. They inherit traits from both.",
+   "agent": 19,
+   "x": 22.992044824507303,
+   "y": 19.263888617781856
+  },
+  {
+   "tick": 7496,
+   "day": 313,
+   "year": 53,
+   "type": "field",
+   "txt": "🌱 <b>Ronja</b> has turned the soil — a new field lies open to the sky.",
+   "agent": 19,
+   "x": 26,
+   "y": 13
+  },
+  {
+   "tick": 7725,
+   "day": 323,
+   "year": 54,
+   "type": "field",
+   "txt": "🌾 <b>Kare</b> brings in the harvest from Kare's field. Winter holds less fear now.",
+   "agent": 12,
+   "x": 38,
+   "y": 7
+  },
+  {
+   "tick": 7776,
+   "day": 325,
+   "year": 55,
+   "type": "season",
+   "txt": "🌸 Spring returns. The survivors count each other, and begin again."
+  },
+  {
+   "tick": 7862,
+   "day": 328,
+   "year": 55,
+   "type": "taught",
+   "txt": "<b>Freja</b> taught <b>Ronja</b> the secret of Eira's hunting spear. The knowledge spreads.",
+   "tech": "spear"
+  },
+  {
+   "tick": 7901,
+   "day": 330,
+   "year": 55,
+   "type": "taught",
+   "txt": "<b>Freja</b> taught <b>Ronja</b> the secret of Eira's crusher. The knowledge spreads.",
+   "tech": "mill"
+  },
+  {
+   "tick": 8060,
+   "day": 337,
+   "year": 56,
+   "type": "child",
+   "txt": "👶 <b>Freja</b> and <b>Sten</b> have had a child, <b>Sixten</b> — generation 4. They inherit traits from both.",
+   "agent": 20,
+   "x": 27.49342417810169,
+   "y": 14.498399744229872
+  },
+  {
+   "tick": 8088,
+   "day": 338,
+   "year": 57,
+   "type": "field",
+   "txt": "🌱 <b>Halvar</b> has turned the soil — a new field lies open to the sky.",
+   "agent": 14,
+   "x": 5,
+   "y": 16
+  },
+  {
+   "tick": 8116,
+   "day": 339,
+   "year": 57,
+   "type": "observed",
+   "txt": "👁️ <b>Signe</b> noticed that logs roll. An idea begins to form.",
+   "obs": "logsRoll",
+   "agent": 15,
+   "x": 34.65472669434442,
+   "y": 15.842749323755907
+  },
+  {
+   "tick": 8120,
+   "day": 339,
+   "year": 57,
+   "type": "hut",
+   "txt": "🛖 <b>Signe</b> built a hut.",
+   "x": 34.885248715064364,
+   "y": 15.502223253589527
+  },
+  {
+   "tick": 8168,
+   "day": 341,
+   "year": 57,
+   "type": "taught",
+   "txt": "<b>Halvar</b> taught <b>Sixten</b> the secret of Eira's twine. The knowledge spreads.",
+   "tech": "rope"
+  },
+  {
+   "tick": 8177,
+   "day": 341,
+   "year": 57,
+   "type": "hut",
+   "txt": "🛖 <b>Vidar</b> built a hut.",
+   "x": 36.10114201839345,
+   "y": 15.98107007760429
+  },
+  {
+   "tick": 8240,
+   "day": 344,
+   "year": 58,
+   "type": "child",
+   "txt": "👶 <b>Ylva</b> and <b>Saga</b> have had a child, <b>Maja</b> — generation 4. They inherit traits from both.",
+   "agent": 21,
+   "x": 37.28575016172872,
+   "y": 14.616203640543793
+  },
+  {
+   "tick": 8240,
+   "day": 344,
+   "year": 58,
+   "type": "field",
+   "txt": "🌱 <b>Vidar</b> has turned the soil — a new field lies open to the sky.",
+   "agent": 16,
+   "x": 40,
+   "y": 15
+  },
+  {
+   "tick": 8269,
+   "day": 345,
+   "year": 58,
+   "type": "taught",
+   "txt": "<b>Vidar</b> taught <b>Maja</b> the secret of Eira's pulley. The knowledge spreads.",
+   "tech": "wheel"
+  },
+  {
+   "tick": 8457,
+   "day": 353,
+   "year": 59,
+   "type": "field",
+   "txt": "🌾 <b>Vidar</b> brings in the harvest from Vidar's field. Winter holds less fear now.",
+   "agent": 16,
+   "x": 40,
+   "y": 15
+  },
+  {
+   "tick": 8519,
+   "day": 356,
+   "year": 60,
+   "type": "taught",
+   "txt": "<b>Rune</b> taught <b>Maja</b> the secret of Eira's hunting spear. The knowledge spreads.",
+   "tech": "spear"
+  },
+  {
+   "tick": 8592,
+   "day": 359,
+   "year": 60,
+   "type": "field",
+   "txt": "🌾 <b>Ylva</b> brings in the harvest from Ylva's field. Winter holds less fear now.",
+   "agent": 7,
+   "x": 37,
+   "y": 16
+  },
+  {
+   "tick": 8629,
+   "day": 360,
+   "year": 60,
+   "type": "child",
+   "txt": "👶 <b>Signe</b> and <b>Idun</b> have had a child, <b>Loke</b> — generation 5. They inherit traits from both.",
+   "agent": 22,
+   "x": 19.37352402503355,
+   "y": 19.551159403444185
+  }
+ ],
+ "dna": {
+  "seed": 4242,
+  "years": 61,
+  "dna": {
+   "Curious": 34,
+   "Social": 32,
+   "Diligent": 34
+  },
+  "population": 18,
+  "maxPop": 18,
+  "generations": 5,
+  "knowledgeCount": 16,
+  "knowledgeMax": 17,
+  "villages": [
+   "Runehaven"
+  ],
+  "births": 18,
+  "talks": 1180,
+  "deaths": {
+   "starvation": 3,
+   "cold": 0,
+   "age": 1,
+   "wolves": 0
+  },
+  "knowledgeLosses": 0,
+  "rediscoveries": 0,
+  "failedExperiments": 11,
+  "observations": 37,
+  "customsCount": 5,
+  "traditions": [
+   "Painting a mark on the hut wall",
+   "The belief that the deep iron angers the ancestors",
+   "Burning a twig at the grave"
+  ],
+  "taboos": [],
+  "beliefs": [
+   "The belief that the deep iron angers the ancestors"
+  ],
+  "conversions": 2,
+  "hunts": 2,
+  "harshWinters": 3,
+  "reformations": 0,
+  "worldview": "none",
+  "tabooBreaks": 0,
+  "religions": [],
+  "legends": [
+   "Eira Eira the Spearmaker.",
+   "Torv Torv the Rememberer.",
+   "Ask Ask the Ironhand.",
+   "Rune Rune the Founder."
+  ],
+  "milestones": {
+   "⚙️ Rope": "year 1",
+   "⚙️ Sharpened stone": "year 1",
+   "⚙️ Spear": "year 2",
+   "⚙️ Axe": "year 2",
+   "⚙️ Fire": "year 2",
+   "⚙️ The Wheel": "year 3",
+   "⚙️ Bow": "year 3",
+   "⚙️ Hut": "year 3",
+   "⚙️ Mill": "year 3",
+   "⚙️ Pottery": "year 4",
+   "⚙️ Kiln": "year 4",
+   "⚙️ Farming": "year 4",
+   "⚙️ Writing": "year 5",
+   "👶 First child": "year 6",
+   "⚙️ Iron smithing": "year 9",
+   "⚙️ Metal tools": "year 10",
+   "⚙️ Glass": "year 20",
+   "🏘️ First village": "year 43",
+   "🌿 First tradition": "year 44"
+  },
+  "status": "Alive in year 61"
+ }
+}
