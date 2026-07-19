@@ -22,6 +22,39 @@ namespace Emergence.Editor
         [MenuItem("Emergence/P1 Dressing/RUN AUDITION - Dusk one-warm-point (4242)")]
         public static void RunDuskWorld() => Run(WS("world-4242-y120-dusk.json"), "winter", "dusk4242", starDome: true);
 
+        // TD-028: ground-level closeup to actually SEE the villagers + tech anchors (the doc camera
+        // is too high — 1.7m people are ~2px at 55m). Stand near the biggest village, eye height.
+        [MenuItem("Emergence/P1 Dressing/RUN PEOPLE CLOSEUP (villagers + tech)")]
+        public static void RunPeopleCloseup()
+        {
+            var json = WS("world-777-y120.json");
+            if (!File.Exists(json)) { Debug.LogError("[Closeup] missing " + json); return; }
+            WorldDresser.Build(json);
+            var S = JsonUtility.FromJson<WorldState>(File.ReadAllText(json));
+            if (S.villages == null || S.villages.Length == 0) { Debug.LogError("[Closeup] no villages"); return; }
+            var v = S.villages[0];
+            float ts = WorldDresser.TileSize;
+            var t = Terrain.activeTerrain;
+            Vector3 vp = new Vector3(v.x * ts, 0f, (S.H - 1 - v.y) * ts);
+            if (t != null) vp.y = t.SampleHeight(vp) + t.transform.position.y;
+            var cam = Camera.main;
+            Vector3 pos = vp + new Vector3(7f, 0f, -20f);
+            if (t != null) pos.y = t.SampleHeight(pos) + t.transform.position.y + 2.5f;
+            cam.transform.position = pos;
+            cam.transform.LookAt(vp + Vector3.up * 1.3f);
+            cam.fieldOfView = 55f;
+
+            EmergencePostStack.Remove();
+            EmergenceLightRig.Apply("spring", "day");
+            Cap("people-closeup-noon-nopost");
+            EmergencePostStack.Apply("day");
+            Cap("people-closeup-noon");
+            EmergenceLightRig.Apply("spring", "dusk");
+            EmergencePostStack.Apply("dusk");
+            Cap("people-closeup-dusk");
+            Debug.Log("[Closeup] villager/tech closeups written");
+        }
+
         static void Run(string jsonPath, string season, string tag, bool starDome = false)
         {
             if (!File.Exists(jsonPath)) { Debug.LogError($"[Audition] missing {jsonPath}"); return; }

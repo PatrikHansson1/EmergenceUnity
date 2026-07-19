@@ -42,6 +42,11 @@ namespace Emergence.Editor
         public const float SmokeScale = 0.6f;        // msVFX smoke is billowy — thin it to a chimney plume
         public const float SmokeRoofLift = 4.2f;     // above the house roof
         public const int   SmokeNearFireTiles = 3;   // huts this close to a burning fire get chimney smoke
+        // TD-028 characters + tech anchors (the studio's OWN rendered GLBs, EP directive)
+        public const float VillagerScale = 1f;   // GLBs authored ~1.7m; tune after first import
+        public const float TechAnchorScale = 1f;
+        const string CharDir = "Assets/Emergence/Models/characters/";
+        const string TechDir = "Assets/Emergence/Models/tech/";
 
         // ---- deterministic presentation hash (the engine's own pattern; NEVER sim RNG) ----
         static uint Hash(int x, int y, int salt) { unchecked { uint h = (uint)(x * 73856093 ^ y * 19349663 ^ salt * 83492791); h ^= h >> 13; h *= 2246822519; h ^= h >> 16; return h; } }
@@ -76,6 +81,8 @@ namespace Emergence.Editor
             PlaceFires(S, root.transform);
             PlaceFields(S, root.transform);
             PlaceNature(S, root.transform);
+            PlaceAgents(S, root.transform);       // the studio's own rendered villagers (EP directive)
+            PlaceTechAnchors(S, root.transform);  // forge/mill/kiln/well — fills the D-062 pack gap
             EmergenceLightRig.Apply(S.season, "day");
             Debug.Log("[Dresser] world built — iterate grammar/density from here (menu re-runs are idempotent: fresh scene each time)");
         }
@@ -205,6 +212,56 @@ namespace Emergence.Editor
                 go.transform.rotation = Quaternion.Euler(0, Hash(hx, hy, 22) % 4 * 90 + (Hash(hx, hy, 23) % 21 - 10), 0); // grid-ish with jitter — grammar iterates
                 go.name = $"hut_{h.owner}";
             }
+        }
+
+        // TD-028: a villager per living soul — the studio's OWN toon-rendered GLBs (glTFast import).
+        // Age from a.age, gender by position hash (presentation-only, D-078 rule 4 — never sim RNG).
+        static void PlaceAgents(WorldState S, Transform root)
+        {
+            var parent = new GameObject("Agents").transform; parent.SetParent(root, true);
+            int placed = 0;
+            foreach (var a in S.agents)
+            {
+                string band = a.age < 14 ? "child" : a.age > 55 ? "elder" : "adult";
+                bool female = (Hash((int)a.x, (int)a.y, a.id) & 1u) == 0u;
+                string nm = band == "child" ? (female ? "villager-child-f" : "villager-child")
+                          : band == "elder" ? (female ? "villager-elder-f" : "villager-elder")
+                          : (female ? "villager-f" : "villager");
+                var pf = AssetDatabase.LoadAssetAtPath<GameObject>(CharDir + nm + ".glb");
+                if (pf == null) continue; // glTFast not imported yet — dressing still succeeds
+                var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, parent);
+                go.transform.position = Ground(S, a.x, a.y, 0f);
+                go.transform.rotation = Quaternion.Euler(0f, Hash((int)a.x, (int)a.y, a.id + 7) % 360u, 0f);
+                go.transform.localScale = Vector3.one * VillagerScale;
+                go.name = $"agent_{a.id}_{a.name}";
+                placed++;
+            }
+            Debug.Log($"[Dresser] placed {placed}/{S.agents.Length} villagers" + (placed == 0 ? " (0 — glTFast not imported yet?)" : ""));
+        }
+
+        // TD-028: forge/mill/kiln/well as COMPOSED markers (D-062), not scatter. v1: a well at each
+        // village + one hash-picked craft anchor offset from centre. (Engine tech-per-village export
+        // is a later refinement; for now every village reads as a settled place with a well + a craft.)
+        static void PlaceTechAnchors(WorldState S, Transform root)
+        {
+            var parent = new GameObject("TechAnchors").transform; parent.SetParent(root, true);
+            var well = AssetDatabase.LoadAssetAtPath<GameObject>(TechDir + "well.glb");
+            string[] craft = { "forge", "mill", "kiln" };
+            foreach (var v in S.villages)
+            {
+                if (well != null) Anchor(well, S, v.x, v.y, parent);
+                var cName = craft[Hash((int)v.x, (int)v.y, 3) % (uint)craft.Length];
+                var c = AssetDatabase.LoadAssetAtPath<GameObject>(TechDir + cName + ".glb");
+                if (c != null) Anchor(c, S, v.x + 2.2f, v.y + 1.4f, parent);
+            }
+        }
+
+        static void Anchor(GameObject pf, WorldState S, float x, float y, Transform parent)
+        {
+            var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, parent);
+            go.transform.position = Ground(S, x, y, 0f);
+            go.transform.rotation = Quaternion.Euler(0f, Hash((int)x, (int)y, 5) % 360u, 0f);
+            go.transform.localScale = Vector3.one * TechAnchorScale;
         }
 
         // TD-025 audition: Vefects fire = THE warm point; msVFX smoke = chimney plumes on huts
