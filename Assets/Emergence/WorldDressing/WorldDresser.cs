@@ -223,21 +223,56 @@ namespace Emergence.Editor
 
         static void PlaceFields(WorldState S, Transform root)
         {
+            // Composition grammar v1.5: fields are ENCLOSURES, not confetti.
+            // Adjacent field tiles form a cluster; the fence follows the cluster's
+            // OUTER edges only, with one hash-picked gate opening per cluster.
             var parent = new GameObject("Fields").transform; parent.SetParent(root, true);
             var fence = FindPrefab("P_PROP_fence_v01_01");
-            foreach (var f in S.fields)
+            var gate = FindPrefab("P_PROP_fence_door_gate") ?? fence;
+            if (fence == null || S.fields.Length == 0) return;
+
+            var fieldSet = new HashSet<(int, int)>(S.fields.Select(f => (Mathf.RoundToInt(f.x), Mathf.RoundToInt(f.y))));
+            // cluster by flood fill
+            var seen = new HashSet<(int, int)>();
+            foreach (var start in fieldSet)
             {
-                int fx = Mathf.RoundToInt(f.x), fy = Mathf.RoundToInt(f.y);
-                if (fence == null) continue;
-                // v1 grammar: fence the field's tile edge sparsely (full plot grammar comes with iteration)
-                for (int side = 0; side < 4; side++)
+                if (seen.Contains(start)) continue;
+                var cluster = new List<(int, int)>();
+                var stack = new Stack<(int, int)>(); stack.Push(start); seen.Add(start);
+                while (stack.Count > 0)
                 {
-                    if (Hash(fx, fy, 31 + side) % 3 == 0) continue; // gaps — hand-built feel
-                    var go = (GameObject)PrefabUtility.InstantiatePrefab(fence, parent);
-                    float half = TileSize * 0.45f;
+                    var c = stack.Pop(); cluster.Add(c);
+                    foreach (var n in new[] { (c.Item1 + 1, c.Item2), (c.Item1 - 1, c.Item2), (c.Item1, c.Item2 + 1), (c.Item1, c.Item2 - 1) })
+                        if (fieldSet.Contains(n) && seen.Add(n)) stack.Push(n);
+                }
+                // outer edges of the cluster
+                var edges = new List<(int x, int y, int side)>(); // side: 0=+z(N) 1=+x(E) 2=-z(S) 3=-x(W)
+                foreach (var (cx, cy) in cluster)
+                {
+                    if (!fieldSet.Contains((cx, cy - 1))) edges.Add((cx, cy, 0)); // sim -y => world +z
+                    if (!fieldSet.Contains((cx + 1, cy))) edges.Add((cx, cy, 1));
+                    if (!fieldSet.Contains((cx, cy + 1))) edges.Add((cx, cy, 2));
+                    if (!fieldSet.Contains((cx - 1, cy))) edges.Add((cx, cy, 3));
+                }
+                if (edges.Count == 0) continue;
+                int gateIdx = (int)(Hash(cluster[0].Item1, cluster[0].Item2, 61) % (uint)edges.Count);
+                for (int e = 0; e < edges.Count; e++)
+                {
+                    var (ex, ey, side) = edges[e];
+                    float half = TileSize * 0.5f;
                     Vector3 off = side == 0 ? new Vector3(0, 0, half) : side == 1 ? new Vector3(half, 0, 0) : side == 2 ? new Vector3(0, 0, -half) : new Vector3(-half, 0, 0);
-                    go.transform.position = Ground(S, f.x, f.y) + off;
-                    go.transform.rotation = Quaternion.Euler(0, side % 2 == 0 ? 0 : 90, 0);
+                    float yRot = side % 2 == 0 ? 0f : 90f;
+                    var prefab = e == gateIdx ? gate : fence;
+                    // fill the 8 m edge with segments along its direction
+                    int segs = e == gateIdx ? 1 : 3;
+                    for (int k = 0; k < segs; k++)
+                    {
+                        float t = segs == 1 ? 0f : (k - (segs - 1) * 0.5f) * (TileSize / segs);
+                        Vector3 along = side % 2 == 0 ? new Vector3(t, 0, 0) : new Vector3(0, 0, t);
+                        var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, parent);
+                        go.transform.position = Ground(S, ex, ey) + off + along;
+                        go.transform.rotation = Quaternion.Euler(0, yRot, 0);
+                    }
                 }
             }
         }
