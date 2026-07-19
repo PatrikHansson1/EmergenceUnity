@@ -47,6 +47,8 @@ namespace Emergence.Editor
         public const float TechAnchorScale = 0.3f;  // GLBs are big at 1 (well = giant staircase) — tuned down
         const string CharDir = "Assets/Emergence/Models/characters/";
         const string TechDir = "Assets/Emergence/Models/tech/";
+        const string NatureDir = "Assets/Emergence/Models/nature/";
+        public const float AnimalScale = 1f;   // deer/wolf GLBs — tune after first import
 
         // ---- deterministic presentation hash (the engine's own pattern; NEVER sim RNG) ----
         static uint Hash(int x, int y, int salt) { unchecked { uint h = (uint)(x * 73856093 ^ y * 19349663 ^ salt * 83492791); h ^= h >> 13; h *= 2246822519; h ^= h >> 16; return h; } }
@@ -83,6 +85,7 @@ namespace Emergence.Editor
             PlaceNature(S, root.transform);
             PlaceAgents(S, root.transform);       // the studio's own rendered villagers (EP directive)
             PlaceTechAnchors(S, root.transform);  // forge/mill/kiln/well — fills the D-062 pack gap
+            PlaceAnimals(S, root.transform);      // the studio's own deer/wolf GLBs (animal upgrade)
             EmergenceLightRig.Apply(S.season, "day");
             Debug.Log("[Dresser] world built — iterate grammar/density from here (menu re-runs are idempotent: fresh scene each time)");
         }
@@ -216,6 +219,10 @@ namespace Emergence.Editor
 
         // TD-028: a villager per living soul — the studio's OWN toon-rendered GLBs (glTFast import).
         // Age from a.age, gender by position hash (presentation-only, D-078 rule 4 — never sim RNG).
+        static bool Working(string task) => task != null && (task.Contains("work") || task.Contains("forg")
+            || task.Contains("tend") || task.Contains("build") || task.Contains("mill") || task.Contains("craft")
+            || task.Contains("bak") || task.Contains("smith") || task.Contains("dig") || task.Contains("chop"));
+
         static void PlaceAgents(WorldState S, Transform root)
         {
             var parent = new GameObject("Agents").transform; parent.SetParent(root, true);
@@ -224,19 +231,48 @@ namespace Emergence.Editor
             {
                 string band = a.age < 14 ? "child" : a.age > 55 ? "elder" : "adult";
                 bool female = (Hash((int)a.x, (int)a.y, a.id) & 1u) == 0u;
+                // adults working at a task use the -work pose variant; children/elders have none
+                string suffix = (band == "adult" && Working(a.task)) ? "-work" : "";
                 string nm = band == "child" ? (female ? "villager-child-f" : "villager-child")
                           : band == "elder" ? (female ? "villager-elder-f" : "villager-elder")
-                          : (female ? "villager-f" : "villager");
+                          : (female ? "villager-f" : "villager") + suffix;
                 var pf = AssetDatabase.LoadAssetAtPath<GameObject>(CharDir + nm + ".glb");
+                if (pf == null && suffix != "") pf = AssetDatabase.LoadAssetAtPath<GameObject>(CharDir + (female ? "villager-f" : "villager") + ".glb");
                 if (pf == null) continue; // glTFast not imported yet — dressing still succeeds
                 var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, parent);
                 go.transform.position = Ground(S, a.x, a.y, 0f);
-                go.transform.rotation = Quaternion.Euler(0f, Hash((int)a.x, (int)a.y, a.id + 7) % 360u, 0f);
                 go.transform.localScale = Vector3.one * VillagerScale;
+                // face the nearest hut (a lived-in reading, less random) — orientation is presentation-only
+                WorldHut nh = null; float nb = float.MaxValue;
+                foreach (var h in S.huts) { float d = (h.x - a.x) * (h.x - a.x) + (h.y - a.y) * (h.y - a.y); if (d < nb) { nb = d; nh = h; } }
+                if (nh != null && nb > 0.01f) { var t = Ground(S, nh.x, nh.y, 0f); t.y = go.transform.position.y; go.transform.LookAt(t); }
+                else go.transform.rotation = Quaternion.Euler(0f, Hash((int)a.x, (int)a.y, a.id + 7) % 360u, 0f);
                 go.name = $"agent_{a.id}_{a.name}";
                 placed++;
             }
             Debug.Log($"[Dresser] placed {placed}/{S.agents.Length} villagers" + (placed == 0 ? " (0 — glTFast not imported yet?)" : ""));
+        }
+
+        // TD-029: the studio's own deer/wolf GLBs at the sim's animal positions (retires the
+        // low-poly Quaternius question the EP raised). Positions are the sim's — documentary truth.
+        static void PlaceAnimals(WorldState S, Transform root)
+        {
+            if (S.animals == null || S.animals.Length == 0) return;
+            var parent = new GameObject("Animals").transform; parent.SetParent(root, true);
+            int placed = 0;
+            foreach (var an in S.animals)
+            {
+                string nm = an.type == "wolf" ? "wolf" : "deer";
+                var pf = AssetDatabase.LoadAssetAtPath<GameObject>(NatureDir + nm + ".glb");
+                if (pf == null) continue;
+                var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, parent);
+                go.transform.position = Ground(S, an.x, an.y, 0f);
+                go.transform.rotation = Quaternion.Euler(0f, Hash((int)an.x, (int)an.y, an.id) % 360u, 0f);
+                go.transform.localScale = Vector3.one * AnimalScale;
+                go.name = $"{an.type}_{an.id}";
+                placed++;
+            }
+            Debug.Log($"[Dresser] placed {placed}/{S.animals.Length} animals (own deer/wolf GLBs)");
         }
 
         // TD-028: forge/mill/kiln/well as COMPOSED markers (D-062), not scatter. v1: a well at each
