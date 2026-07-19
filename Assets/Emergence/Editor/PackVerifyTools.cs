@@ -19,7 +19,10 @@ namespace Emergence.Editor
     {
         private const string EvidenceDir = @"C:\Users\patri\Dropbox\Emergence\45-UNITY\evidence\pack-verify";
         // Pack roots as imported (packs stay byte-identical to import — plan §4 principle)
-        private static readonly string[] PackRoots = { "Assets/Fantastic Village Pack", "Assets/FANTASTIC - Village Pack", "Assets/Polyart", "Assets/Quaternius" };
+        private static readonly string[] PackRoots = { "Assets/Fantastic Village Pack", "Assets/FANTASTIC - Village Pack", "Assets/Polyart", "Assets/Quaternius",
+            // free-assets audition batch 2026-07-19 (TD-025)
+            "Assets/Vefects", "Assets/msVFX_Free Smoke Effects Pack", "Assets/PolyOne", "Assets/UpDraftArt", "Assets/AllSkyFree",
+            "Assets/Bitgem", "Assets/Houidisoft technology", "Assets/Procedural Water Shader", "Assets/Staggart Creations" };
 
         private static string[] ExistingRoots() =>
             PackRoots.Where(AssetDatabase.IsValidFolder).ToArray();
@@ -183,3 +186,5 @@ namespace Emergence.Editor
     }
 }
 #endif
+
+// touch: audition-roots v2 (force recompile 2026-07-19)

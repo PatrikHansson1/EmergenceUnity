@@ -13,3 +13,4 @@ MemoryCaptures/
 .vs/
 .idea/
 crashlytics-build.properties
+_incoming/
