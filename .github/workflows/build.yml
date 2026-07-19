@@ -1,0 +1,30 @@
+# EMERGENCE — GameCI (BUILD-AUTOMATION §3). Tests BEFORE build: determinism is the CI's soul.
+# Trigger is workflow_dispatch-only until the EP adds UNITY_LICENSE/UNITY_EMAIL/UNITY_PASSWORD
+# secrets (§4) — then switch `on:` to [push, workflow_dispatch].
+name: Build EmergenceUnity
+on: [workflow_dispatch]
+jobs:
+  golden-then-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+      - uses: actions/cache@v4
+        with:
+          path: Library
+          key: Library-${{ hashFiles('Packages/manifest.json') }}
+      # Golden-master gate as the test step (menu method, batchmode entry)
+      - uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: StandaloneWindows64
+          unityVersion: 6000.5.4f1
+          buildMethod: Emergence.Editor.BuildScript.BuildWindows
+      - uses: actions/upload-artifact@v4
+        with:
+          name: EmergenceUnity-Win64
+          path: Builds/EmergenceUnity
