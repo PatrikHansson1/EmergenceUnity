@@ -1,0 +1,15 @@
+# Unity standard (UNITY-PROJECT-PLAN §6)
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]serSettings/
+MemoryCaptures/
+*.csproj
+*.sln
+*.user
+.vs/
+.idea/
+crashlytics-build.properties
