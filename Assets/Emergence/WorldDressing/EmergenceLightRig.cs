@@ -88,7 +88,28 @@ namespace Emergence.Editor
                     if (season == "winter") { sun.intensity = 1.15f; RenderSettings.ambientLight = new Color32(88, 96, 112, 255); }
                     break;
             }
-            Debug.Log($"[LightRig] {season}/{phase} applied (flat ambient; sky={(sky ? skyName : "none")}; decoupled-clock law: presentation time, never sim time)");
+            // TD-034 (showcase recipe): Dreamscape's Demo runs FOG — it is a big part of why their
+            // meadow reads deep and painterly while ours read flat. Linear, gentle, per phase; the
+            // day color is the Demo's own (0.635, 0.82, 1.0). Backdrop-only depth cue — ambient
+            // object lighting stays the flat D-069 calibration above.
+            RenderSettings.fog = true;
+            RenderSettings.fogMode = FogMode.Linear;
+            switch (phase)
+            {
+                case "dusk":
+                    RenderSettings.fogColor = new Color(0.28f, 0.33f, 0.46f); // blue-hour haze, in-register with the ambient
+                    RenderSettings.fogStartDistance = 130f; RenderSettings.fogEndDistance = 750f;
+                    break;
+                case "night":
+                    RenderSettings.fogColor = new Color(0.15f, 0.19f, 0.30f);
+                    RenderSettings.fogStartDistance = 110f; RenderSettings.fogEndDistance = 650f;
+                    break;
+                default:
+                    RenderSettings.fogColor = new Color(0.635f, 0.82f, 1.0f);  // the Demo's exact day fog
+                    RenderSettings.fogStartDistance = 180f; RenderSettings.fogEndDistance = 950f;
+                    break;
+            }
+            Debug.Log($"[LightRig] {season}/{phase} applied (flat ambient; sky={(sky ? skyName : "none")}; fog {RenderSettings.fogStartDistance}-{RenderSettings.fogEndDistance}; decoupled-clock law: presentation time, never sim time)");
         }
     }
 }

@@ -16,6 +16,19 @@ namespace Emergence.Editor
             Process.Start(psi);
             UnityEngine.Debug.Log("[PushBranch] push started (see Logs/git-push.log)");
         }
+
+        // TD-034: mount-side git commit times out (slow bridge FS) — commit from Windows.
+        // Message comes from a FILE (Logs/commitmsg-current.txt) so cmd.exe never parses <>()
+        // in the trailer as shell redirection (that silently ate the first attempt).
+        [MenuItem("Emergence/Tools/Git Commit ALL + Push (Windows-side)")]
+        public static void CommitAllAndPush()
+        {
+            var psi = new ProcessStartInfo("cmd.exe",
+                "/c cd /d C:\\Dev\\EmergenceUnity && git add -A && git commit -F Logs\\commitmsg-current.txt && git push -u origin HEAD > Logs\\git-commitpush.log 2>&1")
+            { CreateNoWindow = true, UseShellExecute = false };
+            Process.Start(psi);
+            UnityEngine.Debug.Log("[PushBranch] commit+push started (see Logs/git-commitpush.log)");
+        }
     }
 }
 #endif
