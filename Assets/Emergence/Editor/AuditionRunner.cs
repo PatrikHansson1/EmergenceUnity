@@ -67,6 +67,39 @@ namespace Emergence.Editor
             Debug.Log("[Closeup] villager/tech closeups written");
         }
 
+        // ---- TD-037: THE HEADLESS AUDITION RUNNER (the accelerator) ----
+        // Called via `-executeMethod Emergence.Editor.AuditionRunner.BatchAll` from batch-audition.bat
+        // (batchmode WITH graphics so the camera can render). Replaces the whole interactive loop
+        // (focus editor -> ctrl+r -> menu click -> screenshot -> wait -> re-approve grants) with ONE
+        // detached run that dresses + captures every key shot headless and writes to the evidence dir
+        // (which is on Dropbox, so it syncs — no git needed for captures). Zero computer-use per cycle.
+        public static void BatchAll()
+        {
+            int rc = 0;
+            try
+            {
+                Debug.Log("[BatchAudition] start (batchMode=" + Application.isBatchMode + ")");
+                RunNoonWorld();       // 777: noon + dusk, post OFF/ON
+                RunPeopleCloseup();   // eye-level villager shot (the lushness judge)
+                RunCodexDemo();       // the discovery-driven slice (town vs hamlet)
+                Debug.Log("[BatchAudition] DONE — captures in " + EvidenceDir);
+            }
+            catch (System.Exception ex) { Debug.LogError("[BatchAudition] FAILED: " + ex); rc = 1; }
+            if (Application.isBatchMode) EditorApplication.Exit(rc);
+        }
+
+        // one-click trigger from the open editor: spawns the detached bat (which waits for the lock,
+        // then runs BatchAll headless). Mirrors the Build queue pattern.
+        [MenuItem("Emergence/Build/Queue Batchmode Audition (headless captures)")]
+        public static void QueueBatchAudition()
+        {
+            var bat = Path.Combine(@"C:\Dev\EmergenceUnity\Tools", "batch-audition.bat");
+            var psi = new System.Diagnostics.ProcessStartInfo("cmd.exe", "/c \"" + bat + "\"")
+            { CreateNoWindow = true, UseShellExecute = false };
+            System.Diagnostics.Process.Start(psi);
+            Debug.Log("[BatchAudition] queued — see Builds\\batch-audition.log (bat waits for the editor lock)");
+        }
+
         static void Run(string jsonPath, string season, string tag, bool starDome = false)
         {
             if (!File.Exists(jsonPath)) { Debug.LogError($"[Audition] missing {jsonPath}"); return; }
@@ -111,70 +144,6 @@ namespace Emergence.Editor
             cam.transform.position = pos;
             cam.transform.rotation = Quaternion.Euler(-3f, 0f, 0f); // near-level, slight up
             cam.fieldOfView = 62f;
-        }
-
-        // TD-035 WATER RE-AUDITION (pack-utilization audit P0): TD-027b benched only FREE waters —
-        // the paid pack's own lake (MI_Water_MeadowsLake) was never in the ring. Same lake shot,
-        // shore camera at eye height, post ON: Dreamscape vs PolyOne. EP's eye decides (D-075).
-        [MenuItem("Emergence/P1 Dressing/RUN WATER RE-AUDITION (Dreamscape vs PolyOne, lake shot)")]
-        public static void RunWaterReaudition()
-        {
-            var json = WS("world-777-y120.json");
-            if (!File.Exists(json)) { Debug.LogError("[WaterRe] missing " + json); return; }
-            WorldDresser.Build(json);
-            var S = JsonUtility.FromJson<WorldState>(File.ReadAllText(json));
-            // densest water tile = the lake heart
-            int bw = -1, bx = 0, by = 0;
-            for (int y = 0; y < S.H; y++)
-                for (int x = 0; x < S.W; x++)
-                {
-                    if (S.tileTypes[y * S.W + x] != 'w') continue;
-                    int n = 0;
-                    for (int dy = -4; dy <= 4; dy++)
-                        for (int dx = -4; dx <= 4; dx++)
-                        {
-                            int xx = x + dx, yy = y + dy;
-                            if (xx >= 0 && yy >= 0 && xx < S.W && yy < S.H && S.tileTypes[yy * S.W + xx] == 'w') n++;
-                        }
-                    if (n > bw) { bw = n; bx = x; by = y; }
-                }
-            if (bw < 0) { Debug.LogError("[WaterRe] no water tiles in world"); return; }
-            float ts = WorldDresser.TileSize;
-            var t = Terrain.activeTerrain;
-            Vector3 lake = new Vector3(bx * ts, 0f, (S.H - 1 - by) * ts);
-            if (t != null) lake.y = t.SampleHeight(lake) + t.transform.position.y;
-            var cam = Camera.main;
-            // close + slightly elevated: the lake is CARVED below the terrain lip, so a distant
-            // eye-height camera sees only the lip (first framing missed the water entirely)
-            Vector3 pos = lake + new Vector3(0f, 0f, -3.5f * ts);
-            if (t != null) pos.y = t.SampleHeight(pos) + t.transform.position.y + 5.0f;
-            cam.transform.position = pos;
-            cam.transform.LookAt(lake + Vector3.down * 0.8f);
-            cam.fieldOfView = 55f;
-            EmergenceLightRig.Apply("spring", "day");
-            EmergencePostStack.Apply("day");
-            SetWaterMaterial("MI_Water_MeadowsLake");   // the paid pack's own lake
-            Cap("waterre-dreamscape");
-            SetWaterMaterial("M_Shader Water");          // PolyOne (TD-027b's free winner)
-            Cap("waterre-polyone");
-            Debug.Log($"[WaterRe] lake at tile ({bx},{by}) density {bw} — 2 same-shot captures written");
-        }
-
-        static void SetWaterMaterial(string exact)
-        {
-            Material m = null;
-            foreach (var g in AssetDatabase.FindAssets($"t:Material {exact}"))
-            {
-                var p = AssetDatabase.GUIDToAssetPath(g);
-                if (Path.GetFileNameWithoutExtension(p) == exact) { m = AssetDatabase.LoadAssetAtPath<Material>(p); break; }
-            }
-            if (m == null) { Debug.LogWarning("[WaterRe] material not found: " + exact); return; }
-            var water = GameObject.Find("Water");
-            if (water == null) { Debug.LogWarning("[WaterRe] no Water parent in scene"); return; }
-            int n = 0;
-            foreach (var mr in water.GetComponentsInChildren<MeshRenderer>())
-                if (mr.gameObject.name == "w") { mr.sharedMaterial = m; n++; }
-            Debug.Log($"[WaterRe] {exact} applied to {n} lake quads");
         }
 
         // SKY BENCH (EP 2026-07-19: "packet vi köpte har en skybox — gratis kan vara sämre").
@@ -229,10 +198,6 @@ namespace Emergence.Editor
         {
             var cam = Camera.main;
             if (cam == null) { Debug.LogError("[Audition] no Camera.main — dress first"); return; }
-            // TD-034 root cause 4: ASYNC shader compilation renders uncompiled variants as NOTHING in a
-            // one-shot manual Camera.Render() — the meadow existed live in the Game view but vanished in
-            // captures until its variants happened to be warm. Force sync compilation for captures.
-            ShaderUtil.allowAsyncCompilation = false;
             // force particle systems (Vefects fire, msVFX smoke) to a mid-animation frame — they
             // do not animate in edit mode, so a raw capture would show empty emitters.
             foreach (var ps in Object.FindObjectsByType<ParticleSystem>(FindObjectsSortMode.None))
@@ -241,8 +206,7 @@ namespace Emergence.Editor
             const int w = 2560, h = 1440;
             var rt = new RenderTexture(w, h, 24);
             cam.targetTexture = rt;
-            cam.Render(); // warm-up render: first manual render after a scene build has missed freshly
-            cam.Render(); // instantiated renderers (the TD-034 meadow) — render twice, capture the second
+            cam.Render();
             RenderTexture.active = rt;
             var tex = new Texture2D(w, h, TextureFormat.RGB24, false);
             tex.ReadPixels(new Rect(0, 0, w, h), 0, 0);
