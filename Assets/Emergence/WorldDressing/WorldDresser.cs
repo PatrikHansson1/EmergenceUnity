@@ -410,9 +410,18 @@ namespace Emergence.Editor
         {
             var parent = new GameObject("Huts").transform; parent.SetParent(root, true);
             var yardParent = new GameObject("Yards").transform; yardParent.SetParent(root, true);
+            var ageParent = new GameObject("HutAge").transform; ageParent.SetParent(root, true);
             var greens = VillageGreens(S);
             var yardProps = YardPropNames.Select(FindPrefab).Where(p => p != null).ToArray();
-            int yardCount = 0;
+            // TD-031 v2.2: TIME made visible. Age each hut by its OWNER's generation (sim state) —
+            // old huts (founder generations, the settled heart) grow overgrown/mossy; new huts (later
+            // generations, the expanding edge) carry fresh raw timber. Expansion rings become legible.
+            var mossProps = FindPrefabs("Prefab_Bush").Where(p => p != null && !p.name.Contains("Flower")).Take(3).ToArray();
+            var freshProps = new[] { "P_PROP_foundation_wood_01", "P_PROP_foundation_wood_03", "P_PROP_board_01", "P_PROP_board_02", "P_PROP_cart_wheel_small" }
+                .Select(FindPrefab).Where(p => p != null).ToArray();
+            var genOf = new Dictionary<string, int>(); int maxGen = 1;
+            if (S.agents != null) foreach (var a in S.agents) { if (!string.IsNullOrEmpty(a.name)) genOf[a.name] = a.gen; if (a.gen > maxGen) maxGen = a.gen; }
+            int yardCount = 0, ageMarks = 0;
             for (int i = 0; i < S.huts.Length; i++)
             {
                 var h = S.huts[i];
@@ -427,8 +436,44 @@ namespace Emergence.Editor
                 go.transform.localScale = Vector3.one * HouseScale; // v2: pack houses are oversized at 1
                 go.name = $"hut_{h.owner}";
                 yardCount += PlaceYard(S, go, h, hx, hy, yaw, yardProps, yardParent);
+                int og = genOf.TryGetValue(h.owner, out var gg) ? gg : maxGen;
+                float ageFrac = maxGen > 1 ? 1f - og / (float)maxGen : 0.5f; // 1 = oldest (founder), 0 = newest edge
+                ageMarks += PlaceHutAge(S, h, hx, hy, ageFrac, mossProps, freshProps, ageParent);
             }
-            Debug.Log($"[Dresser] {S.huts.Length} houses (scale {HouseScale}) + {yardCount} yard props (v2 grammar)");
+            Debug.Log($"[Dresser] {S.huts.Length} houses (scale {HouseScale}) + {yardCount} yard props + {ageMarks} age marks (v2.2 grammar, maxGen {maxGen})");
+        }
+
+        // TD-031 v2.2: one hut's age marks — old huts overgrow (moss/bush), new huts show fresh timber.
+        static int PlaceHutAge(WorldState S, WorldHut h, int hx, int hy, float ageFrac, GameObject[] moss, GameObject[] fresh, Transform parent)
+        {
+            int placed = 0;
+            if (ageFrac > 0.55f && moss.Length > 0) // OLD — the settled, overgrown heart
+            {
+                int n = 1 + (int)(Hash(hx, hy, 81) % 2u);
+                for (int k = 0; k < n; k++)
+                {
+                    var pf = moss[Hash(hx, hy, 82 + k) % (uint)moss.Length];
+                    var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, parent);
+                    float ox = (Hash01(hx, hy, 83 + k) - 0.5f) * 4.5f, oz = (Hash01(hx, hy, 84 + k) - 0.5f) * 4.5f;
+                    go.transform.position = GroundW(P(S, h.x, h.y) + new Vector3(ox, 0, oz));
+                    go.transform.rotation = Quaternion.Euler(0, Hash(hx, hy, 85 + k) % 360u, 0);
+                    go.transform.localScale = Vector3.one * (0.4f + Hash01(hx, hy, 86 + k) * 0.3f);
+                    go.name = $"overgrowth_{h.owner}_{k}";
+                    placed++;
+                }
+            }
+            else if (ageFrac < 0.28f && fresh.Length > 0) // NEW — fresh raw timber at the expanding edge
+            {
+                var pf = fresh[Hash(hx, hy, 87) % (uint)fresh.Length];
+                var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, parent);
+                float ox = (Hash01(hx, hy, 88) - 0.5f) * 3.5f, oz = (Hash01(hx, hy, 89) - 0.5f) * 3.5f;
+                go.transform.position = GroundW(P(S, h.x, h.y) + new Vector3(ox, 0, oz));
+                go.transform.rotation = Quaternion.Euler(0, Hash(hx, hy, 90) % 360u, 0);
+                go.transform.localScale = Vector3.one * (0.7f + Hash01(hx, hy, 91) * 0.3f);
+                go.name = $"freshbuild_{h.owner}";
+                placed++;
+            }
+            return placed;
         }
 
         // each village's GREEN = the centroid of the huts assigned to it (nearest village) — the local
