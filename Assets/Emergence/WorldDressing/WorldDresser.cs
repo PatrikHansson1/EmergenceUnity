@@ -92,6 +92,7 @@ namespace Emergence.Editor
             PlaceFires(S, root.transform);
             PlaceFields(S, root.transform);
             PlaceNature(S, root.transform);
+            PlaceWorkMarks(S, root.transform);    // TD-031 v2.2b: quarry scars at depleted stone tiles (Materials layer)
             PlaceAgents(S, root.transform);       // the studio's own rendered villagers (EP directive)
             PlaceTechAnchors(S, root.transform);  // forge/mill/kiln/well — fills the D-062 pack gap
             PlaceAnimals(S, root.transform);      // the studio's own deer/wolf GLBs (animal upgrade)
@@ -100,6 +101,38 @@ namespace Emergence.Editor
         }
 
         static char Tile(WorldState S, int x, int y) => S.tileTypes[y * S.W + x];
+        static int TileN(WorldState S, int x, int y) => (S.tileN != null && y * S.W + x < S.tileN.Length) ? S.tileN[y * S.W + x] : 9;
+
+        // TD-031 v2.2b: work-marks — "stone is visible where stone is won" (grammar §2, Materials). A stone
+        // tile the people have QUARRIED (low tileN = harvested) gets a bare-earth scar decal + worked-stone
+        // props. Documentary-honest: low n IS worked stone in the sim. Hash-placed, RNG-neutral (D-078 r4).
+        static void PlaceWorkMarks(WorldState S, Transform root)
+        {
+            var parent = new GameObject("WorkMarks").transform; parent.SetParent(root, true);
+            var stoneProps = new[] { "P_PROP_stone_01", "P_PROP_stone_02", "P_PROP_wall_stone_small_01", "P_PROP_wall_stone_small_02", "Coal Pile" }
+                .Select(FindPrefab).Where(p => p != null).ToArray();
+            if (stoneProps.Length == 0) return;
+            var scarMat = GroundMat("Layer_Dirt", new Color(0.44f, 0.36f, 0.26f));
+            int marks = 0;
+            for (int y = 0; y < S.H; y++)
+                for (int x = 0; x < S.W; x++)
+                    if (Tile(S, x, y) == 's' && TileN(S, x, y) <= 3 && Hash01(x, y, 95) < 0.6f) // a quarried-out stone tile
+                    {
+                        Decal(S, parent, scarMat, x, y, TileSize * 0.9f, 0.05f, $"quarryscar_{marks}");
+                        int n = 1 + (int)(Hash(x, y, 96) % 2u);
+                        for (int k = 0; k < n; k++)
+                        {
+                            var pf = stoneProps[Hash(x, y, 97 + k) % (uint)stoneProps.Length];
+                            var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, parent);
+                            float ox = (Hash01(x, y, 98 + k) - 0.5f) * 4f, oz = (Hash01(x, y, 99 + k) - 0.5f) * 4f;
+                            go.transform.position = GroundW(P(S, x, y) + new Vector3(ox, 0, oz));
+                            go.transform.rotation = Quaternion.Euler(0, Hash(x, y, 100 + k) % 360u, 0);
+                            go.transform.localScale = Vector3.one * (0.7f + Hash01(x, y, 101 + k) * 0.5f);
+                        }
+                        marks++;
+                    }
+            Debug.Log($"[Dresser] {marks} quarry work-marks at depleted stone tiles (v2.2b)");
+        }
         static Vector3 P(WorldState S, float x, float y, float h = 0) => new Vector3(x * TileSize, h, (S.H - 1 - y) * TileSize); // sim y -> world -z (map reads like the sim's screen)
         static Vector3 Ground(WorldState S, float x, float y, float lift = 0)
         {
