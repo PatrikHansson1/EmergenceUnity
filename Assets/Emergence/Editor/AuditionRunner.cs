@@ -19,6 +19,9 @@ namespace Emergence.Editor
         [MenuItem("Emergence/P1 Dressing/RUN AUDITION - Noon world (777-y120)")]
         public static void RunNoonWorld() => Run(WS("world-777-y120.json"), "spring", "noon777");
 
+        [MenuItem("Emergence/P1 Dressing/RUN CODEX DEMO (town vs hamlet, discovery-driven)")]
+        public static void RunCodexDemo() => Run(WS("world-codex-demo.json"), "spring", "codexdemo");
+
         [MenuItem("Emergence/P1 Dressing/RUN AUDITION - Dusk one-warm-point (4242)")]
         public static void RunDuskWorld() => Run(WS("world-4242-y120-dusk.json"), "winter", "dusk4242", starDome: true);
 

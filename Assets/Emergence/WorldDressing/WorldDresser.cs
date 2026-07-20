@@ -25,8 +25,13 @@ namespace Emergence.Editor
     [Serializable] public class WorldHut { public float x, y; public string owner; public bool free; }
     [Serializable] public class WorldFire { public float x, y; public float fuel; }
     [Serializable] public class WorldField { public float x, y; public int stage; public string owner; }
-    [Serializable] public class WorldVillage { public float x, y; public string name; }
+    // TD-033: villages now carry their development profile (aggregate of members' knowledge + beliefs +
+    // demographics) so the codex can place objects by DISCOVERY. Old exports lack these → default 0/null → safe.
+    [Serializable] public class WorldVillage { public float x, y; public string name; public int pop, maxGen, avgAge, crafts; public string cosmos; public string[] knows; public string[] beliefs; }
     [Serializable] public class WorldAnimal { public int id; public string type; public float x, y; }
+    // TD-033: the object codex — discovery-driven placement. JsonUtility-friendly flat schema.
+    [Serializable] public class CodexEntry { public string id, prefab, category, requiresTech, requiresCustom, desc, placement; public int era, minPop, minCrafts, minGen, count; public float scale; }
+    [Serializable] public class Codex { public CodexEntry[] objects; }
     [Serializable] public class WorldState
     {
         public string engineVersion; public int seed, years, tick; public bool ended; public string season;
@@ -38,6 +43,8 @@ namespace Emergence.Editor
     public static class WorldDresser
     {
         public const float TileSize = 8f;          // meters per sim tile (Producer knob)
+        public const float GrassPerTile = 0.8f;    // TD-032: Dreamscape waving grass clumps per open-grass tile (the meadow look — EP: "gräset syns inte / vajar inte"). ~0.8×5725 g-tiles ≈ 4.6k clumps; tune up if the editor handles it
+        public const float GrassScale = 1.3f;      // Dreamscape grass clumps read a touch small at 1 in our scale
         public const float TreesPerForestTile = 0.9f;  // density budgets (AD/Producer iterate)
         public const float RocksPerStoneTile = 0.9f;
         public const float BushesPerBerryTile = 1.1f;
@@ -85,9 +92,18 @@ namespace Emergence.Editor
             cam.fieldOfView = 55f;
             camGo.transform.position = new Vector3(S.W * TileSize * 0.5f, 55f, (S.H * TileSize * 0.5f) - 90f);
             camGo.transform.rotation = Quaternion.Euler(28f, 0f, 0f);
+            // TD-032: a directional WindZone so the pack foliage (Dreamscape grass, Village flags/leaves) actually sways
+            var windGo = new GameObject("Wind");
+            var wind = windGo.AddComponent<WindZone>();
+            wind.mode = WindZoneMode.Directional; wind.windMain = 0.5f; wind.windTurbulence = 0.4f;
+            wind.windPulseMagnitude = 0.5f; wind.windPulseFrequency = 0.15f;
+            windGo.transform.rotation = Quaternion.Euler(0f, 35f, 0f);
+            windGo.transform.SetParent(root.transform, true);
             BuildTerrain(S, root.transform);
             BuildWater(S, root.transform);
             PlaceGroundFeatures(S, root.transform); // TD-031 terrain pass: field soil + desire-line paths as mesh decals (URP won't render the terrain splat)
+            // PlaceGrass DISABLED — scatter stopgap was sparse + had a magenta sub-material; proper lush grass = terrain-detail P0 pass (audit). Method kept.
+            // PlaceGrass(S, root.transform);
             PlaceHuts(S, root.transform);         // TD-031 v2: houses face the green (scaled) + lived-in yards per house
             PlaceFires(S, root.transform);
             PlaceFields(S, root.transform);
@@ -95,6 +111,7 @@ namespace Emergence.Editor
             PlaceWorkMarks(S, root.transform);    // TD-031 v2.2b: quarry scars at depleted stone tiles (Materials layer)
             PlaceAgents(S, root.transform);       // the studio's own rendered villagers (EP directive)
             PlaceTechAnchors(S, root.transform);  // forge/mill/kiln/well — fills the D-062 pack gap
+            PlaceCodexObjects(S, root.transform); // TD-033: discovery-driven objects (mill/tablets/star-banner/market by village development)
             PlaceAnimals(S, root.transform);      // the studio's own deer/wolf GLBs (animal upgrade)
             EmergenceLightRig.Apply(S.season, "day");
             Debug.Log("[Dresser] world built — iterate grammar/density from here (menu re-runs are idempotent: fresh scene each time)");
@@ -401,6 +418,39 @@ namespace Emergence.Editor
             var col = q.GetComponent<Collider>(); if (col != null) UnityEngine.Object.DestroyImmediate(col);
         }
 
+        // TD-032: THE MEADOW — scatter Dreamscape's own waving grass clumps (Foliage wind shadergraph,
+        // LOD'd) densely across the open grassland. This is the treatment their reference/showcase scenes
+        // use and we never did — we'd only used their tree/rock prefabs. Answers EP: "gräset syns inte /
+        // vajar inte i vinden". Hash-placed, RNG-neutral (D-078 r4). Skips tilled fields; grass on 'g' tiles.
+        static void PlaceGrass(WorldState S, Transform root)
+        {
+            var parent = new GameObject("Grass").transform; parent.SetParent(root, true);
+            var grass = new[] { "Prefab_Grass_Group_01", "Prefab_Grass_Group_02", "Prefab_Grass_01", "Prefab_Grass_02", "Prefab_Grass_03" }
+                .Select(FindPrefab).Where(p => p != null).ToArray();
+            if (grass.Length == 0) { Debug.LogWarning("[Dresser] no Dreamscape grass prefabs found — meadow skipped"); return; }
+            var fieldSet = new HashSet<(int, int)>();
+            if (S.fields != null) foreach (var f in S.fields) fieldSet.Add((Mathf.RoundToInt(f.x), Mathf.RoundToInt(f.y)));
+            int placed = 0;
+            for (int y = 0; y < S.H; y++)
+                for (int x = 0; x < S.W; x++)
+                {
+                    if (Tile(S, x, y) != 'g') continue;         // open grassland only
+                    if (fieldSet.Contains((x, y))) continue;    // not on tilled soil
+                    int count = Mathf.FloorToInt(GrassPerTile) + (Hash01(x, y, 111) < GrassPerTile - Mathf.Floor(GrassPerTile) ? 1 : 0);
+                    for (int i = 0; i < count; i++)
+                    {
+                        var pf = grass[Hash(x, y, 112 + i) % (uint)grass.Length];
+                        var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, parent);
+                        float jx = Hash01(x, y, 113 + i) - 0.5f, jy = Hash01(x, y, 114 + i) - 0.5f;
+                        go.transform.position = Ground(S, x + jx, y + jy, 0f);
+                        go.transform.rotation = Quaternion.Euler(0f, Hash(x, y, 115 + i) % 360u, 0f);
+                        go.transform.localScale = Vector3.one * (0.8f + Hash01(x, y, 116 + i) * 0.5f) * GrassScale;
+                        placed++;
+                    }
+                }
+            Debug.Log($"[Dresser] {placed} Dreamscape grass clumps (waving foliage) across the open meadow");
+        }
+
         static void PlaceGroundFeatures(WorldState S, Transform root)
         {
             var parent = new GameObject("GroundFeatures").transform; parent.SetParent(root, true);
@@ -410,14 +460,17 @@ namespace Emergence.Editor
             // field soil: one quad per field tile, inside the enclosures
             if (S.fields != null)
                 foreach (var f in S.fields) { Decal(S, parent, fieldMat, f.x, f.y, TileSize * 0.98f, 0.06f, $"fieldsoil_{fields}"); fields++; }
-            // desire-line paths: overlapping quads stepped along hut->green + village->village
+            // TD-032 (EP: paths were "tråkiga" + use pack content): village STREETS in Dreamscape
+            // COBBLESTONE (hut->green — the trodden centre), inter-village TRAILS in worn DIRT.
+            var cobbleMat = GroundMat("Layer_Cobblestone", new Color(0.55f, 0.53f, 0.50f));
             var greens = VillageGreens(S);
-            var segs = new List<(Vector2 a, Vector2 b)>();
+            var streets = new List<(Vector2 a, Vector2 b)>();
             foreach (var h in S.huts)
             {
                 int vi = NearestVillageIdx(S, h.x, h.y);
-                segs.Add((new Vector2(h.x, h.y), (vi >= 0 && vi < greens.Length) ? greens[vi] : new Vector2(h.x, h.y)));
+                streets.Add((new Vector2(h.x, h.y), (vi >= 0 && vi < greens.Length) ? greens[vi] : new Vector2(h.x, h.y)));
             }
+            var trails = new List<(Vector2 a, Vector2 b)>();
             if (S.villages != null)
                 for (int i = 0; i < S.villages.Length; i++)
                 {
@@ -428,15 +481,23 @@ namespace Emergence.Editor
                         float d = (S.villages[i].x - S.villages[j].x) * (S.villages[i].x - S.villages[j].x) + (S.villages[i].y - S.villages[j].y) * (S.villages[i].y - S.villages[j].y);
                         if (d < bd) { bd = d; nj = j; }
                     }
-                    if (nj > i) segs.Add((new Vector2(S.villages[i].x, S.villages[i].y), new Vector2(S.villages[nj].x, S.villages[nj].y)));
+                    if (nj > i) trails.Add((new Vector2(S.villages[i].x, S.villages[i].y), new Vector2(S.villages[nj].x, S.villages[nj].y)));
                 }
+            path += LayPath(S, parent, streets, cobbleMat, 3.0f, "street", path);
+            path += LayPath(S, parent, trails, dirtMat, 3.8f, "trail", path);
+            Debug.Log($"[Dresser] ground decals: {fields} field-soil + {path} path quads (cobblestone streets + dirt trails)");
+        }
+
+        static int LayPath(WorldState S, Transform parent, List<(Vector2 a, Vector2 b)> segs, Material mat, float w, string tag, int start)
+        {
+            int n = 0;
             foreach (var (a, b) in segs)
             {
                 float len = Vector2.Distance(a, b);
                 int steps = Mathf.Max(1, Mathf.CeilToInt(len * 2f));
-                for (int s = 0; s <= steps; s++) { var p = Vector2.Lerp(a, b, s / (float)steps); Decal(S, parent, dirtMat, p.x, p.y, 3.4f, 0.08f, $"path_{path}"); path++; }
+                for (int s = 0; s <= steps; s++) { var p = Vector2.Lerp(a, b, s / (float)steps); Decal(S, parent, mat, p.x, p.y, w, 0.08f, $"{tag}_{start + n}"); n++; }
             }
-            Debug.Log($"[Dresser] ground decals: {fields} field-soil + {path} path quads (mesh-decal ground; terrain splat won't render)");
+            return n;
         }
 
         static void PlaceHuts(WorldState S, Transform root)
@@ -890,6 +951,68 @@ namespace Emergence.Editor
         {
             var guid = AssetDatabase.FindAssets($"t:Material {name}").FirstOrDefault();
             return guid == null ? null : AssetDatabase.LoadAssetAtPath<Material>(AssetDatabase.GUIDToAssetPath(guid));
+        }
+
+        // TD-033: THE CODEX IN ACTION — read object-codex.json, place each object where its DISCOVERY
+        // predicate is true per village. This is the whole thesis: the world is a readout of what the
+        // civilization has discovered. The dresser no longer hard-codes what a village gets — it asks the codex.
+        static void PlaceCodexObjects(WorldState S, Transform root)
+        {
+            const string codexPath = "Assets/Emergence/Codex/object-codex.json";
+            if (!File.Exists(codexPath)) return;
+            Codex codex;
+            try { codex = JsonUtility.FromJson<Codex>(File.ReadAllText(codexPath)); }
+            catch (Exception ex) { Debug.LogWarning("[Dresser] codex parse failed: " + ex.Message); return; }
+            if (codex?.objects == null || codex.objects.Length == 0 || S.villages == null) return;
+            var parent = new GameObject("CodexObjects").transform; parent.SetParent(root, true);
+            int placed = 0;
+            foreach (var v in S.villages)
+                foreach (var e in codex.objects)
+                {
+                    if (!CodexQualifies(v, e)) continue;
+                    var pf = LoadCodexPrefab(e.prefab);
+                    if (pf == null) continue;
+                    int cnt = Mathf.Max(1, e.count);
+                    for (int k = 0; k < cnt; k++)
+                    {
+                        var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, parent);
+                        var pos = CodexPlacement(v, e, k, cnt);
+                        go.transform.position = GroundW(P(S, pos.x, pos.y));
+                        go.transform.rotation = Quaternion.Euler(0f, Hash(Mathf.RoundToInt(v.x), Mathf.RoundToInt(v.y), e.id.Length + k) % 360u, 0f);
+                        go.transform.localScale = Vector3.one * (e.scale <= 0f ? 1f : e.scale);
+                        go.name = $"codex_{e.id}_{v.name}_{k}";
+                        StripImpostorLods(go);
+                        placed++;
+                    }
+                }
+            Debug.Log($"[Dresser] codex: {placed} discovery-driven objects across {S.villages.Length} villages (the world reads its own development)");
+        }
+
+        static bool CodexQualifies(WorldVillage v, CodexEntry e)
+        {
+            if (!string.IsNullOrEmpty(e.requiresTech) && (v.knows == null || Array.IndexOf(v.knows, e.requiresTech) < 0)) return false;
+            if (!string.IsNullOrEmpty(e.requiresCustom))
+            {
+                if (e.requiresCustom == "cosmos") { if (string.IsNullOrEmpty(v.cosmos)) return false; }
+                else if (v.beliefs == null || Array.IndexOf(v.beliefs, e.requiresCustom) < 0) return false;
+            }
+            return v.pop >= e.minPop && v.crafts >= e.minCrafts && v.maxGen >= e.minGen;
+        }
+
+        static Vector2 CodexPlacement(WorldVillage v, CodexEntry e, int k, int cnt)
+        {
+            float baseAng = (Hash(Mathf.RoundToInt(v.x), Mathf.RoundToInt(v.y), e.id.Length * 7) % 360u) * Mathf.Deg2Rad;
+            float ang = baseAng + (cnt > 1 ? k * (6.2832f / cnt) : 0f);
+            float r = e.placement == "edge" ? 5.0f : e.placement == "green" ? 2.4f : 3.5f;
+            return new Vector2(v.x + Mathf.Cos(ang) * r, v.y + Mathf.Sin(ang) * r);
+        }
+
+        static GameObject LoadCodexPrefab(string name)
+        {
+            if (name.EndsWith(".glb")) return AssetDatabase.LoadAssetAtPath<GameObject>(TechDir + name)
+                                           ?? AssetDatabase.LoadAssetAtPath<GameObject>(NatureDir + name)
+                                           ?? AssetDatabase.LoadAssetAtPath<GameObject>(CharDir + name);
+            return FindPrefab(name);
         }
 
         static GameObject FindPrefab(string name)

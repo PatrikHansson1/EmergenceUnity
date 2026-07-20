@@ -1,0 +1,49 @@
+{
+  "_note": "THE OBJECT CODEX (seed slice, TD-033). Single source of truth: the dresser places each object where its discovery predicate is true per village; the chronicle can read desc. Schema is JsonUtility-friendly (flat fields); the full allOf/anyOf DSL from OBJECT-CODEX-SPEC comes later. requiresTech/requiresCustom empty = no requirement; minPop/minCrafts/minGen = 0 = no threshold.",
+  "objects": [
+    {
+      "id": "star-banner",
+      "prefab": "P_PROP_flag_01",
+      "category": "faith",
+      "era": 3,
+      "requiresTech": "",
+      "requiresCustom": "cosmos",
+      "minPop": 0, "minCrafts": 0, "minGen": 0,
+      "desc": "a banner of the sky-faith — a people who learned to read the stars raise their sign over the green",
+      "placement": "green", "scale": 1.6, "count": 1
+    },
+    {
+      "id": "mill",
+      "prefab": "mill.glb",
+      "category": "craft",
+      "era": 2,
+      "requiresTech": "mill",
+      "requiresCustom": "",
+      "minPop": 6, "minCrafts": 0, "minGen": 0,
+      "desc": "the mill — where the village learned to grind grain, famine receded",
+      "placement": "edge", "scale": 0.35, "count": 1
+    },
+    {
+      "id": "writing-post",
+      "prefab": "P_PROP_signpost_01",
+      "category": "knowledge",
+      "era": 2,
+      "requiresTech": "writing",
+      "requiresCustom": "",
+      "minPop": 5, "minCrafts": 0, "minGen": 0,
+      "desc": "a marked post — a people who have learned to write leave words for those who come after",
+      "placement": "green", "scale": 1.2, "count": 1
+    },
+    {
+      "id": "market",
+      "prefab": "P_PROP_market_shelf_01",
+      "category": "commerce",
+      "era": 3,
+      "requiresTech": "",
+      "requiresCustom": "",
+      "minPop": 12, "minCrafts": 3, "minGen": 0,
+      "desc": "a market stall — where enough hands and crafts gather in one place, goods begin to change hands",
+      "placement": "green", "scale": 1.0, "count": 3
+    }
+  ]
+}
