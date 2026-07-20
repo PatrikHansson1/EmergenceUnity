@@ -87,6 +87,7 @@ namespace Emergence.Editor
             camGo.transform.rotation = Quaternion.Euler(28f, 0f, 0f);
             BuildTerrain(S, root.transform);
             BuildWater(S, root.transform);
+            PlaceGroundFeatures(S, root.transform); // TD-031 terrain pass: field soil + desire-line paths as mesh decals (URP won't render the terrain splat)
             PlaceHuts(S, root.transform);         // TD-031 v2: houses face the green (scaled) + lived-in yards per house
             PlaceFires(S, root.transform);
             PlaceFields(S, root.transform);
@@ -173,6 +174,38 @@ namespace Emergence.Editor
             tgo.name = "Terrain";
             tgo.transform.SetParent(root, true);
             tgo.transform.position = new Vector3(0, -3f, 0);
+            var terrain = tgo.GetComponent<Terrain>();
+            // TD-031 terrain pass: alphamap weights ARE stored (diag) but the shared TerrainLit material
+            // renders only the base layer — force a FRESH material instance bound to this terrain so the
+            // splat keywords/layer-count rebind, enable instanced draw, and rebuild the basemap.
+            string matBefore = terrain.materialTemplate != null ? terrain.materialTemplate.name + "/" + terrain.materialTemplate.shader.name : "NULL";
+            var urpTerrainShader = Shader.Find("Universal Render Pipeline/Terrain/Lit");
+            if (urpTerrainShader != null)
+                terrain.materialTemplate = new Material(urpTerrainShader) { name = "EmergenceTerrainLit" };
+            terrain.drawInstanced = true;
+            data.SetBaseMapDirty();
+            terrain.Flush();
+            // DIAGNOSTIC (written to Logs/terrain-diag.txt so it's readable without the editor UI):
+            // read the alphamap back and count where each layer's weight > 0.5 — this splits
+            // "alphamap not stored" (counts 0) from "stored but not rendered" (counts > 0).
+            var chk = data.GetAlphamaps(0, 0, data.alphamapWidth, data.alphamapHeight);
+            int cf = 0, cd = 0, cg = 0, cgrass = 0;
+            for (int yy = 0; yy < data.alphamapHeight; yy++)
+                for (int xx = 0; xx < data.alphamapWidth; xx++)
+                {
+                    if (chk[yy, xx, liGrass] > 0.5f) cgrass++;
+                    if (data.alphamapLayers > liField && chk[yy, xx, liField] > 0.5f) cf++;
+                    if (data.alphamapLayers > liPath && chk[yy, xx, liPath] > 0.5f) cd++;
+                    if (data.alphamapLayers > liGravel && chk[yy, xx, liGravel] > 0.5f) cg++;
+                }
+            var diag = $"[terrain-diag] terrainLayers={data.terrainLayers.Length} alphamapLayers={data.alphamapLayers} alphaRes={data.alphamapResolution}\n"
+                     + $"material before={matBefore} after={(terrain.materialTemplate != null ? terrain.materialTemplate.name + "/" + terrain.materialTemplate.shader.name : "NULL")}\n"
+                     + $"layers: {string.Join(", ", data.terrainLayers.Select((l, i) => i + ":" + (l != null ? l.name : "null")))}\n"
+                     + $"alphamap cells >0.5  grass={cgrass} field={cf} dirt={cd} gravel={cg} (of {data.alphamapWidth * data.alphamapHeight})\n"
+                     + $"basemapDistance={terrain.basemapDistance} drawInstanced={terrain.drawInstanced}\n";
+            System.IO.Directory.CreateDirectory("Logs");
+            System.IO.File.WriteAllText("Logs/terrain-diag.txt", diag);
+            Debug.Log(diag);
         }
 
         static int AddLayer(List<TerrainLayer> layers, string packLayerName, Color fallback)
@@ -295,6 +328,84 @@ namespace Emergence.Editor
         // village GREEN (the centroid of its own village's huts, where the well/fire commons sits),
         // not a random ±10° grid. A deterministic ±7° jitter keeps it lived-in, not mechanical.
         // Everything from sim data + position hashes — never RNG (D-078 rule 4).
+        // TD-031 terrain pass — GUARANTEED ground rendering via mesh decals. The URP terrain won't
+        // render splat layers beyond base grass on our procedural TerrainData (weights ARE stored, the
+        // TerrainLit material is correct, fresh-material + drawInstanced + basemap-rebuild all no-op —
+        // a URP procedural-terrain quirk). So we lay flat textured QUADS for the ground features, exactly
+        // like the water quads (which render fine): tilled soil in the field enclosures + worn dirt along
+        // the desire lines (hut->green, village->village). Deterministic geometry, textures from the pack
+        // TerrainLayers. y-lift avoids z-fighting with the terrain surface.
+        static Material GroundMat(string layerName, Color fallback)
+        {
+            var sh = Shader.Find("Universal Render Pipeline/Lit");
+            var m = new Material(sh) { name = "GroundDecal_" + layerName };
+            var guid = AssetDatabase.FindAssets($"t:TerrainLayer {layerName}").FirstOrDefault();
+            if (guid != null)
+            {
+                var tl = AssetDatabase.LoadAssetAtPath<TerrainLayer>(AssetDatabase.GUIDToAssetPath(guid));
+                if (tl != null && tl.diffuseTexture != null)
+                {
+                    m.mainTexture = tl.diffuseTexture;
+                    float tsx = tl.tileSize.x > 0.1f ? tl.tileSize.x : 8f, tsy = tl.tileSize.y > 0.1f ? tl.tileSize.y : 8f;
+                    m.mainTextureScale = new Vector2(TileSize / tsx, TileSize / tsy);
+                    m.SetFloat("_Smoothness", 0f);
+                    return m;
+                }
+            }
+            m.color = fallback; m.SetFloat("_Smoothness", 0f);
+            return m;
+        }
+
+        static void Decal(WorldState S, Transform parent, Material mat, float sx, float sy, float size, float lift, string name)
+        {
+            var q = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            q.name = name;
+            q.transform.SetParent(parent, true);
+            q.transform.position = Ground(S, sx, sy, lift);
+            q.transform.rotation = Quaternion.Euler(90f, 0f, 0f); // lie flat, normal +Y
+            q.transform.localScale = new Vector3(size, size, 1f);
+            q.GetComponent<MeshRenderer>().sharedMaterial = mat;
+            var col = q.GetComponent<Collider>(); if (col != null) UnityEngine.Object.DestroyImmediate(col);
+        }
+
+        static void PlaceGroundFeatures(WorldState S, Transform root)
+        {
+            var parent = new GameObject("GroundFeatures").transform; parent.SetParent(root, true);
+            var fieldMat = GroundMat("Layer_farmfield", new Color(0.42f, 0.32f, 0.20f));
+            var dirtMat = GroundMat("Layer_Dirt", new Color(0.46f, 0.36f, 0.24f));
+            int fields = 0, path = 0;
+            // field soil: one quad per field tile, inside the enclosures
+            if (S.fields != null)
+                foreach (var f in S.fields) { Decal(S, parent, fieldMat, f.x, f.y, TileSize * 0.98f, 0.06f, $"fieldsoil_{fields}"); fields++; }
+            // desire-line paths: overlapping quads stepped along hut->green + village->village
+            var greens = VillageGreens(S);
+            var segs = new List<(Vector2 a, Vector2 b)>();
+            foreach (var h in S.huts)
+            {
+                int vi = NearestVillageIdx(S, h.x, h.y);
+                segs.Add((new Vector2(h.x, h.y), (vi >= 0 && vi < greens.Length) ? greens[vi] : new Vector2(h.x, h.y)));
+            }
+            if (S.villages != null)
+                for (int i = 0; i < S.villages.Length; i++)
+                {
+                    int nj = -1; float bd = float.MaxValue;
+                    for (int j = 0; j < S.villages.Length; j++)
+                    {
+                        if (j == i) continue;
+                        float d = (S.villages[i].x - S.villages[j].x) * (S.villages[i].x - S.villages[j].x) + (S.villages[i].y - S.villages[j].y) * (S.villages[i].y - S.villages[j].y);
+                        if (d < bd) { bd = d; nj = j; }
+                    }
+                    if (nj > i) segs.Add((new Vector2(S.villages[i].x, S.villages[i].y), new Vector2(S.villages[nj].x, S.villages[nj].y)));
+                }
+            foreach (var (a, b) in segs)
+            {
+                float len = Vector2.Distance(a, b);
+                int steps = Mathf.Max(1, Mathf.CeilToInt(len * 2f));
+                for (int s = 0; s <= steps; s++) { var p = Vector2.Lerp(a, b, s / (float)steps); Decal(S, parent, dirtMat, p.x, p.y, 3.4f, 0.08f, $"path_{path}"); path++; }
+            }
+            Debug.Log($"[Dresser] ground decals: {fields} field-soil + {path} path quads (mesh-decal ground; terrain splat won't render)");
+        }
+
         static void PlaceHuts(WorldState S, Transform root)
         {
             var parent = new GameObject("Huts").transform; parent.SetParent(root, true);
