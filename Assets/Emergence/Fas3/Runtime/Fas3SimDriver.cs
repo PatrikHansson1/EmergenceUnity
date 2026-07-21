@@ -26,6 +26,7 @@ namespace Emergence.Runtime
 
         public int Tick => _tick;
         public int Year => _year;
+        public int YearTicks => _yearTicks;   // engine YEAR (144), read once at boot
         public bool Finished => _finished;
         public string FinalHash => _finalHash;   // sha256 of the export at targetYear (determinism proof)
         public string LastError => _error;
@@ -53,12 +54,16 @@ dna:''+E.computeDNA(S)})})()";
 
         void Start()
         {
-            // file IO on the main thread; the worker gets plain strings (no Unity APIs off-thread)
+            // file IO on the main thread; the worker gets plain strings (no Unity APIs off-thread).
+            // Engine source: EngineSourcePath already prefers the StreamingAssets 2.3 twin (D-093) and
+            // StreamingAssets is packaged into player builds — so the SAME file drives editor and player
+            // (increment 3b). The prelude likewise: StreamingAssets copy first, editor Engine/ fallback.
             try
             {
                 string engineDir = Path.Combine(Application.dataPath, "Emergence", "Engine");
                 _engineSrc = File.ReadAllText(EmergenceJintHost.EngineSourcePath(engineDir));
-                _preludeSrc = File.ReadAllText(Path.Combine(engineDir, "harness", "prelude-hypot.js"));
+                string saPrelude = Path.Combine(Application.streamingAssetsPath, "Emergence", "harness", "prelude-hypot.js");
+                _preludeSrc = File.ReadAllText(File.Exists(saPrelude) ? saPrelude : Path.Combine(engineDir, "harness", "prelude-hypot.js"));
             }
             catch (Exception e) { _error = "load: " + e.Message; return; }
             _worker = new Thread(Work) { IsBackground = true, Name = "Fas3SimDriver" };

@@ -1,0 +1,16 @@
+EMERGENCE — FAS 3 PLAYER-JINT CADENCE (D-136): the time-strategy number
+generated 2026-07-22 00:33:32
+editor baseline (D-134): 16 t/s flat-out incl. live reconciles; engine YEAR=144 (D-135)
+
+scene saved: Assets/Emergence/Scenes/CadenceScene.unity (empty + Fas3PlayerCadence; engine JS ships via StreamingAssets)
+build: Succeeded, errors=0, sizeMB=112, secs=21
+
+## PLAYER RESULT
+tps avg=19.0 ticks=569 secs=30.0 yearTicks=144 warmup=4 totalTick=576 year=4
+
+## TIME-STRATEGY VERDICT
+player flat-out 19.0 t/s (editor was 16): 1x (24 t/s x1.25 margin) -> DOES NOT HOLD; 4x (96 t/s x1.25) -> DOES NOT HOLD
+EA window 17280 ticks (120y x YEAR 144): flat-out player = 15.2 min; at 1x = 12.0 min; at 4x = 3.0 min
+strategy: even 1x does not hold on player — checkpoint+resimulate becomes the primary cadence strategy.
+
+verdict: GREEN — the player number exists; the time strategy is now a decision, not a guess
