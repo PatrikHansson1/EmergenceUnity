@@ -1,0 +1,16 @@
+EMERGENCE — LIVE RECONCILER demo (Fas 1)
+generated 2026-07-21 08:55:48
+proves: codex objects spawn when the `when` gate holds, de-materialise on loss. Deterministic.
+
+step genesis        villages=5 qualifying-placements=0  diff=+0 -0 =0  placedNow=0  magenta=0
+step growth         villages=5 qualifying-placements=81  diff=+81 -0 =0  placedNow=81  magenta=0
+step loss faith+law villages=5 qualifying-placements=71  diff=+0 -10 =71  placedNow=71  magenta=0
+
+event bus: 172 events (Reports/reconcile-events.txt)
+perf harness: ran on growth scene (Reports/perf-report.txt)
+live-scene magenta (worst step): 0  => GREEN
+
+reading: genesis places ~nothing (no tech/faith/law); growth SPAWNS the qualifying objects;
+loss removes exactly the star-banner (cosmos) + law-stone (harm) — the onLoss path — the rest kept.
+Next increment: drive from a live engine tick-stream (genesis->eras) instead of authored snapshots,
+and wire onLoss:toRuin so lost knowledge leaves a ruin, not just empty ground.

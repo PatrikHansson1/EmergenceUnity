@@ -1,0 +1,15 @@
+EMERGENCE — A6 PLAY-MODE PROBE (Fas 1, increment 3)
+generated 2026-07-21 12:49:32
+real render stats in play mode (after frustum culling + SRP batching) on the open scene —
+the sharp A6 number vs the static census. Read-only (D-078 r4).
+samples=120  (warm-up 30 frames skipped)
+
+metric                 avg        max        budget    verdict
+draw calls             5101      5101       2500      OVER
+set-pass calls         220       220        -         (info)
+triangles (millions)   5,4       -          8         OK
+frame ms / FPS         5199,3    max 5199,3 FPS 0     UNDER
+
+NOTE: numbers reflect the editor Game view at its current resolution on the EP's GPU
+(4070 Ti SUPER reference; min-spec is GTX 1660-class). Use as the calibration anchor for A6;
+if draw calls are OVER, enforce LOD + culling + foliage instancing before Fas 2 adds agents.

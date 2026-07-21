@@ -1,0 +1,25 @@
+verdict: GREEN — all rig-standard characters are Humanoid
+
+EMERGENCE — HUMANOID RIG STANDARD validation (Fas 0, A1/A3)
+generated 2026-07-21 08:37:32
+standard folder: Assets/Emergence/Characters  (imports here are forced Humanoid)
+
+## RIG-STANDARD FOLDER (gate: must be Humanoid)
+  (no models yet)
+
+## LEGACY PLACEHOLDERS (reported only — Fas 2 decides)
+  [!!] villager-child-f-walk.glb  animationType=?  avatar=none
+  [!!] villager-child-f.glb  animationType=?  avatar=none
+  [!!] villager-child-walk.glb  animationType=?  avatar=none
+  [!!] villager-child.glb  animationType=?  avatar=none
+  [!!] villager-elder-f-walk.glb  animationType=?  avatar=none
+  [!!] villager-elder-f.glb  animationType=?  avatar=none
+  [!!] villager-elder-walk.glb  animationType=?  avatar=none
+  [!!] villager-elder.glb  animationType=?  avatar=none
+  [!!] villager-f-walk.glb  animationType=?  avatar=none
+  [!!] villager-f-work.glb  animationType=?  avatar=none
+  [!!] villager-f.glb  animationType=?  avatar=none
+  [!!] villager-walk.glb  animationType=?  avatar=none
+  [!!] villager-work.glb  animationType=?  avatar=none
+  [!!] villager.glb  animationType=?  avatar=none
+

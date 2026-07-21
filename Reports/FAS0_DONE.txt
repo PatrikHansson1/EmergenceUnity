@@ -1,0 +1,6 @@
+FAS 0 GRIND — GREEN  2026-07-21 08:37:30 -> 08:37:32
+  1. AssetIntake:  magenta=0  -> GREEN   (Reports/intake-report.txt)
+  2. PerfHarness:  census written               (Reports/perf-report.txt)
+  3. HumanoidRig:  ran                    (Reports/humanoid-rig-report.txt)
+  4. EventBus:     14 events logged                   (Reports/eventbus-selftest.txt)
+(headless via RUN_FAS0.trigger)

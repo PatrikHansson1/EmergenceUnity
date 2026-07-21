@@ -1,0 +1,9 @@
+DONE 11:22:14
+A/B: C:\Users\patri\Dropbox\Emergence\45-UNITY\evidence\reconciler\splattest-1-NODECALS.png (terrain splat only) vs splattest-2-DECALS.png (plates)
+
+[terrain-diag] terrainLayers=4 alphamapLayers=4 alphaRes=256
+material before=TerrainLit/Universal Render Pipeline/Terrain/Lit after=EmergenceTerrainLit/Universal Render Pipeline/Terrain/Lit
+layers: 0:Layer_Grass, 1:Layer_farmfield, 2:Layer_Dirt, 3:Layer_Rock
+alphamap cells >0.5  grass=58188 field=425 dirt=5318 gravel=1597 (of 65536)
+basemapDistance=1000 drawInstanced=True
+

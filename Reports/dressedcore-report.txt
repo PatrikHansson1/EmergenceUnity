@@ -1,0 +1,20 @@
+EMERGENCE — DRESSED-CORE RECONCILE (Fas 1, increment 3)
+generated 2026-07-21 14:01:54
+the live codex overlay + onLoss:toRuin, running on the FULL dressed core world
+(real terrain + huts + nature) — objects sit among the huts, ruins replace lost structures.
+
+spawn        villages=5  diff=+127 -0 =0  placed=127 ruins=0  magenta=0
+loss         Falkheim: -writing/smithing/mill/temple -cosmos  diff=+0 -5 =122 ruin+4  placed=122 ruins=4  magenta=0  <-- onLoss:toRuin on dressed terrain
+rediscover   diff=+5 -0 =122  placed=127 ruins=0  magenta=0  <-- ruins rebuilt on rediscovery
+look day+post   season=spring  magenta=0  (graded lush locked meadow)
+look dusk+post  season=spring  magenta=0  (signature: blue world, one warm point)
+locked look: applied (light rig + ACES post stack — the real shipping look, A6 measured WITH it)
+
+event bus: 273 events (Reports/dressedcore-events.txt)
+A6 perf: static census on dressed+graded core scene (Reports/perf-report.txt)
+live-scene magenta (worst of 3 passes): 0  => GREEN
+
+Proven: the live overlay + onLoss:toRuin coexist with the full dressing on real terrain —
+codex objects sit among the huts, a ruin replaces each lost built structure, and rediscovery
+raises them again; magenta clean throughout. A6 static census is on the real scene now;
+the sharp play-mode draw-call/GPU-ms sample is the separate play-mode probe (perf-playmode.txt).

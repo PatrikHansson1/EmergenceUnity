@@ -1,0 +1,7 @@
+EMERGENCE — FAS 2 VILLAGER ANIMATOR BUILD (D-123)
+generated 2026-07-21 13:52:22
+
+controller: Assets/Emergence/Fas2/Anim/VillagerAnim.controller (Idle/Walk/Work, default Idle, crossfade from script)
+overrides: 5 (adult-f/child/child-f/elder/elder-f)
+clips duplicated: 14 (loop ON, walk Hips X/Z root-locked)  missing sources: 0
+verdict: GREEN

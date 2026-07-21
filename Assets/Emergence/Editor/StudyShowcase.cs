@@ -33,7 +33,7 @@ namespace Emergence.Editor
                 sb.AppendLine("========== " + tag + " ==========");
 
                 // capture via the scene's own main camera (their framing + lighting + post)
-                var cam = Object.FindFirstObjectByType<Camera>();
+                var cam = Object.FindAnyObjectByType<Camera>();
                 if (cam != null)
                 {
                     var rt = new RenderTexture(2560, 1440, 24);
@@ -49,7 +49,7 @@ namespace Emergence.Editor
                 }
 
                 // terrain — the heart of the look
-                var terrain = Object.FindFirstObjectByType<Terrain>();
+                var terrain = Object.FindAnyObjectByType<Terrain>();
                 if (terrain != null)
                 {
                     var td = terrain.terrainData;
@@ -64,18 +64,18 @@ namespace Emergence.Editor
                 else sb.AppendLine("TERRAIN: none (they may use mesh ground)");
 
                 // post volume
-                var vol = Object.FindFirstObjectByType<Volume>();
+                var vol = Object.FindAnyObjectByType<Volume>();
                 if (vol != null && vol.profile != null)
                     sb.AppendLine($"POST volume '{vol.name}' overrides: {string.Join(", ", vol.profile.components.Select(c => c.GetType().Name))}");
                 else sb.AppendLine("POST: no Volume found");
 
                 // lighting
-                var sun = Object.FindObjectsByType<Light>(FindObjectsSortMode.None).FirstOrDefault(l => l.type == LightType.Directional);
+                var sun = Object.FindObjectsByType<Light>(FindObjectsInactive.Exclude).FirstOrDefault(l => l.type == LightType.Directional);
                 if (sun != null) sb.AppendLine($"SUN: color={sun.color} intensity={sun.intensity} euler={sun.transform.eulerAngles} shadows={sun.shadows}");
                 sb.AppendLine($"ambient: mode={RenderSettings.ambientMode} sky={RenderSettings.ambientSkyColor} fog={RenderSettings.fog} fogColor={RenderSettings.fogColor}");
 
                 // water objects (by name)
-                var waters = Object.FindObjectsByType<Renderer>(FindObjectsSortMode.None)
+                var waters = Object.FindObjectsByType<Renderer>(FindObjectsInactive.Exclude)
                     .Where(r => r.sharedMaterial != null && (r.sharedMaterial.name.ToLower().Contains("water") || r.name.ToLower().Contains("water") || r.name.ToLower().Contains("lake") || r.name.ToLower().Contains("river")))
                     .Select(r => r.name + " [" + (r.sharedMaterial ? r.sharedMaterial.name : "-") + "]").Distinct().Take(10);
                 sb.AppendLine("WATER objects: " + string.Join(", ", waters));

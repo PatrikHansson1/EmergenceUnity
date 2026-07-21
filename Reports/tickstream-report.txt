@@ -1,0 +1,20 @@
+EMERGENCE — ENGINE TICK-STREAM (Fas 1)
+generated 2026-07-21 10:02:46
+the world's own genesis->growth: objects appear as techs/faith/law emerge, and de-materialise
+where the Memory Engine loses a tech. Deterministic (engine 2.3 snapshots, hash placement).
+
+y6   villages=0 pop=0    techsHeld=0    cosmos=0  diff=+0 -0 =0  placed=0 ruins=0  magenta=0
+y15  villages=0 pop=0    techsHeld=0    cosmos=0  diff=+0 -0 =0  placed=0 ruins=0  magenta=0
+y30  villages=0 pop=0    techsHeld=0    cosmos=0  diff=+0 -0 =0  placed=0 ruins=0  magenta=0
+y55  villages=2 pop=22   techsHeld=64   cosmos=2  diff=+28 -0 =0  placed=28 ruins=0  magenta=0
+y85  villages=4 pop=46   techsHeld=119  cosmos=4  diff=+34 -2 =26 ruin+2  placed=60 ruins=2  magenta=0  <-- onLoss:toRuin (Memory Engine leaves a ruin)
+y120 villages=5 pop=98   techsHeld=149  cosmos=5  diff=+31 -4 =56 ruin+1  placed=87 ruins=3  magenta=0  <-- onLoss:toRuin (Memory Engine leaves a ruin)
+
+event bus: 195 events (Reports/tickstream-events.txt)
+perf harness: ran on final scene (Reports/perf-report.txt)
+live-scene magenta (worst): 0  => GREEN
+
+This is the real tick-stream: a world that builds itself, forgets, and leaves ruins where its
+knowledge fell (onLoss:toRuin, D-112) — a lost writing-post/manor becomes rubble, rediscovery rebuilds it.
+Ruin art = Village-pack stand-in until the owned Ancient Ruins pack is imported (bridge item).
+Next (increment 3): reconcile on the FULL dressed core scene + sharp A6 play-mode calibration there.

@@ -149,7 +149,7 @@ namespace Emergence.Editor
         {
             var cam = Camera.main;
             if (cam == null) { Debug.LogError("[Bench] no Camera.main"); return; }
-            foreach (var ps in Object.FindObjectsByType<ParticleSystem>(FindObjectsSortMode.None))
+            foreach (var ps in Object.FindObjectsByType<ParticleSystem>(FindObjectsInactive.Exclude))
                 ps.Simulate(3.0f, true, true);
             const int w = 2560, h = 1440;
             var rt = new RenderTexture(w, h, 24);

@@ -11,7 +11,7 @@ namespace Emergence.Runtime
 {
     public sealed class EmergenceJintHost
     {
-        public const string ExpectedEngineSha = "a06b302b149f1a48efba73c651973e7fd6526576c1a1dcf8077eae33e5b52273"; // ENGINE 2.0.1 (THE WATER FIX, D-081)
+        public const string ExpectedEngineSha = "4f237acffa0cc76e6de29df8abb43db6519705d07b7b8b0439fae45f2dcad18e"; // ENGINE 2.3.1 (Jint-perf flat-array grid, D-095 — output-identical to 2.3.0)
 
         private readonly Jint.Engine _engine;
         public string EngineSha256 { get; }
@@ -51,10 +51,19 @@ namespace Emergence.Runtime
             }
         }
 
+        /// <summary>Resolve the engine source path. 2.3 re-baseline (D-093): the canon Engine/ copy is
+        /// read-only-locked on disk, so the writable 2.3 twin lives in StreamingAssets — prefer it when present.</summary>
+        public static string EngineSourcePath(string engineDir)
+        {
+            var sa = Path.Combine(UnityEngine.Application.streamingAssetsPath, "Emergence", "emergence-engine.js");
+            if (File.Exists(sa)) return sa;
+            return Path.Combine(engineDir, "emergence-engine.js");
+        }
+
         /// <summary>Read engine + prelude (+ optional harness) from a directory laid out like Assets/Emergence/Engine/.</summary>
         public static EmergenceJintHost FromDirectory(string engineDir, bool withHarness)
         {
-            var engine = File.ReadAllText(Path.Combine(engineDir, "emergence-engine.js"));
+            var engine = File.ReadAllText(EngineSourcePath(engineDir));
             var prelude = File.ReadAllText(Path.Combine(engineDir, "harness", "prelude-hypot.js"));
             var harness = withHarness ? File.ReadAllText(Path.Combine(engineDir, "harness", "harness.js")) : null;
             return new EmergenceJintHost(engine, prelude, harness);

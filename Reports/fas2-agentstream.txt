@@ -1,0 +1,20 @@
+EMERGENCE — FAS 2 AGENT TICK-STREAM (D-124)
+generated 2026-07-21 15:19:09
+the population's own history out of engine-2.3 snapshots (seed 8919): souls are born, die,
+grow up and change task — reconciled INCREMENTALLY, then y120 applied LIVE in play mode.
+
+y6   souls=6    diff=+6 -0 aged=0 retask=0 moved=0 =0  magenta=0
+y15  souls=7    diff=+1 -0 aged=1 retask=1 moved=5 =4  magenta=0
+y30  souls=14   diff=+7 -0 aged=2 retask=4 moved=5 =1  magenta=0
+y55  souls=22   diff=+12 -4 aged=6 retask=2 moved=4 =2  magenta=0
+y85  souls=57   diff=+40 -5 aged=12 retask=4 moved=5 =1  magenta=0
+edit-phase magenta worst: 0
+
+## PLAY PHASE (frames=170)
+rehydrated after domain reload: 57 souls (y85 baseline)
+y120 IN PLAY: +75 -21 aged=30 retask=5 moved=6 =1
+task->state invariant: 111/111 agents in (or transitioning to) the expected state, 0 off
+play-phase magenta: 0   evidence: 45-UNITY/evidence/fas2/agentstream-*.png
+event bus: 131 events (Reports/fas2-agentstream-events.txt)
+
+verdict: GREEN — the population lives through time; births/deaths/aging/task changes land live

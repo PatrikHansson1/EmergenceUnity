@@ -20,12 +20,12 @@ namespace Emergence.Editor
 
         private const string TestFounders = "[{name:'Ask the First',traits:{curiosity:0.9,social:0.4,diligence:0.6,conformity:0.3}},{name:'Embla the First'},{traits:{social:0.85}},null]";
         private static readonly (string label, long seed, int ticks, string founders)[] Suite60 =
-            { ("97013", 97013, 8640, null), ("4242", 4242, 8640, null), ("20260718", 20260718, 8640, null), ("4242-founders", 4242, 8640, TestFounders) };
+            { ("97013", 97013, 720, null), ("4242", 4242, 720, null), ("20260718", 20260718, 720, null), ("4242-founders", 4242, 720, TestFounders) };
 
         [MenuItem("Emergence/Golden Master/1. Engine SHA Assert")]
         public static void ShaAssert()
         {
-            var src = File.ReadAllText(Path.Combine(EngineDir, "emergence-engine.js"));
+            var src = File.ReadAllText(EmergenceJintHost.EngineSourcePath(EngineDir));
             var sha = EmergenceJintHost.Sha256Hex(src);
             var recorded = File.ReadAllText(Path.Combine(EngineDir, "ENGINE-SHA.txt")).Trim();
             var ok = string.Equals(sha, recorded, StringComparison.OrdinalIgnoreCase)

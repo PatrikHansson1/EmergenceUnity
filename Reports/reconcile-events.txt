@@ -1,0 +1,173 @@
+# PresentationEventBus log — 172 events
+t2 y120 spring AssetSpawned id=star-banner v0 {placement=green}
+t2 y120 spring Milestone id=star-banner v0 {a banner of the sky-faith — a people who learned to read the stars raise their sign over the green}
+t2 y120 spring AssetSpawned id=law-stone v0 {placement=green}
+t2 y120 spring Milestone id=law-stone v0 {a rune-cut standing stone — after too much blood between kin, this people carved their first law into rock: no more killing your own. The Peace of Kin, made to outlast memory.}
+t2 y120 spring AssetSpawned id=weaving-line v0 {placement=green}
+t2 y120 spring Milestone id=weaving-line v0 {a line of drying cloth — a people who learned to spin thread and weave; wool and linen dry in the wind}
+t2 y120 spring AssetSpawned id=pottery v0 {placement=green}
+t2 y120 spring Milestone id=pottery v0 {fired clay pots — the first craft beyond stone and wood, clay shaped and hardened in the kiln}
+t2 y120 spring AssetSpawned id=pottery v0 {placement=green}
+t2 y120 spring Milestone id=pottery v0 {fired clay pots — the first craft beyond stone and wood, clay shaped and hardened in the kiln}
+t2 y120 spring AssetSpawned id=star-banner v1 {placement=green}
+t2 y120 spring Milestone id=star-banner v1 {a banner of the sky-faith — a people who learned to read the stars raise their sign over the green}
+t2 y120 spring AssetSpawned id=mill v1 {placement=edge}
+t2 y120 spring Milestone id=mill v1 {the mill — where the village learned to grind grain, famine receded}
+t2 y120 spring AssetSpawned id=writing-post v1 {placement=green}
+t2 y120 spring Milestone id=writing-post v1 {a marked post — a people who have learned to write leave words for those who come after}
+t2 y120 spring AssetSpawned id=market v1 {placement=green}
+t2 y120 spring Milestone id=market v1 {a market stall — where enough hands and crafts gather in one place, goods begin to change hands}
+t2 y120 spring AssetSpawned id=market v1 {placement=green}
+t2 y120 spring Milestone id=market v1 {a market stall — where enough hands and crafts gather in one place, goods begin to change hands}
+t2 y120 spring AssetSpawned id=market v1 {placement=green}
+t2 y120 spring Milestone id=market v1 {a market stall — where enough hands and crafts gather in one place, goods begin to change hands}
+t2 y120 spring AssetSpawned id=law-stone v1 {placement=green}
+t2 y120 spring Milestone id=law-stone v1 {a rune-cut standing stone — after too much blood between kin, this people carved their first law into rock: no more killing your own. The Peace of Kin, made to outlast memory.}
+t2 y120 spring AssetSpawned id=temple v1 {placement=green}
+t2 y120 spring Milestone id=temple v1 {a temple raised to the sky-faith — the cosmology that began with one soul watching the stars now has a house and a keeper (real City-Pack grand building).}
+t2 y120 spring AssetSpawned id=manor v1 {placement=edge}
+t2 y120 spring Milestone id=manor v1 {a fine great-house set apart — where a family's fortune outgrew its neighbours', the first inequality takes shape in timber and stone (real City-Pack building).}
+t2 y120 spring AssetSpawned id=forge v1 {placement=edge}
+t2 y120 spring Milestone id=forge v1 {the forge — where this people learned to work metal, the smith's fire never fully dies}
+t2 y120 spring AssetSpawned id=boat v1 {placement=edge}
+t2 y120 spring Milestone id=boat v1 {a rowboat drawn up at the village edge — a people who learned to build hulls and read the water}
+t2 y120 spring AssetSpawned id=cart v1 {placement=green}
+t2 y120 spring Milestone id=cart v1 {a handcart — once the wheel was understood, one back could carry what many had before}
+t2 y120 spring AssetSpawned id=weaving-line v1 {placement=green}
+t2 y120 spring Milestone id=weaving-line v1 {a line of drying cloth — a people who learned to spin thread and weave; wool and linen dry in the wind}
+t2 y120 spring AssetSpawned id=granary-store v1 {placement=edge}
+t2 y120 spring Milestone id=granary-store v1 {stores of grain in barrels — the people learned to keep a surplus against the hungry season}
+t2 y120 spring AssetSpawned id=granary-store v1 {placement=edge}
+t2 y120 spring Milestone id=granary-store v1 {stores of grain in barrels — the people learned to keep a surplus against the hungry season}
+t2 y120 spring AssetSpawned id=granary-store v1 {placement=edge}
+t2 y120 spring Milestone id=granary-store v1 {stores of grain in barrels — the people learned to keep a surplus against the hungry season}
+t2 y120 spring AssetSpawned id=pottery v1 {placement=green}
+t2 y120 spring Milestone id=pottery v1 {fired clay pots — the first craft beyond stone and wood, clay shaped and hardened in the kiln}
+t2 y120 spring AssetSpawned id=pottery v1 {placement=green}
+t2 y120 spring Milestone id=pottery v1 {fired clay pots — the first craft beyond stone and wood, clay shaped and hardened in the kiln}
+t2 y120 spring AssetSpawned id=mason-stones v1 {placement=edge}
+t2 y120 spring Milestone id=mason-stones v1 {cut and dressed stone blocks — masonry, the knowledge of shaping stone to build things meant to last}
+t2 y120 spring AssetSpawned id=mason-stones v1 {placement=edge}
+t2 y120 spring Milestone id=mason-stones v1 {cut and dressed stone blocks — masonry, the knowledge of shaping stone to build things meant to last}
+t2 y120 spring AssetSpawned id=star-banner v2 {placement=green}
+t2 y120 spring Milestone id=star-banner v2 {a banner of the sky-faith — a people who learned to read the stars raise their sign over the green}
+t2 y120 spring AssetSpawned id=mill v2 {placement=edge}
+t2 y120 spring Milestone id=mill v2 {the mill — where the village learned to grind grain, famine receded}
+t2 y120 spring AssetSpawned id=writing-post v2 {placement=green}
+t2 y120 spring Milestone id=writing-post v2 {a marked post — a people who have learned to write leave words for those who come after}
+t2 y120 spring AssetSpawned id=market v2 {placement=green}
+t2 y120 spring Milestone id=market v2 {a market stall — where enough hands and crafts gather in one place, goods begin to change hands}
+t2 y120 spring AssetSpawned id=market v2 {placement=green}
+t2 y120 spring Milestone id=market v2 {a market stall — where enough hands and crafts gather in one place, goods begin to change hands}
+t2 y120 spring AssetSpawned id=market v2 {placement=green}
+t2 y120 spring Milestone id=market v2 {a market stall — where enough hands and crafts gather in one place, goods begin to change hands}
+t2 y120 spring AssetSpawned id=law-stone v2 {placement=green}
+t2 y120 spring Milestone id=law-stone v2 {a rune-cut standing stone — after too much blood between kin, this people carved their first law into rock: no more killing your own. The Peace of Kin, made to outlast memory.}
+t2 y120 spring AssetSpawned id=temple v2 {placement=green}
+t2 y120 spring Milestone id=temple v2 {a temple raised to the sky-faith — the cosmology that began with one soul watching the stars now has a house and a keeper (real City-Pack grand building).}
+t2 y120 spring AssetSpawned id=manor v2 {placement=edge}
+t2 y120 spring Milestone id=manor v2 {a fine great-house set apart — where a family's fortune outgrew its neighbours', the first inequality takes shape in timber and stone (real City-Pack building).}
+t2 y120 spring AssetSpawned id=forge v2 {placement=edge}
+t2 y120 spring Milestone id=forge v2 {the forge — where this people learned to work metal, the smith's fire never fully dies}
+t2 y120 spring AssetSpawned id=boat v2 {placement=edge}
+t2 y120 spring Milestone id=boat v2 {a rowboat drawn up at the village edge — a people who learned to build hulls and read the water}
+t2 y120 spring AssetSpawned id=cart v2 {placement=green}
+t2 y120 spring Milestone id=cart v2 {a handcart — once the wheel was understood, one back could carry what many had before}
+t2 y120 spring AssetSpawned id=weaving-line v2 {placement=green}
+t2 y120 spring Milestone id=weaving-line v2 {a line of drying cloth — a people who learned to spin thread and weave; wool and linen dry in the wind}
+t2 y120 spring AssetSpawned id=granary-store v2 {placement=edge}
+t2 y120 spring Milestone id=granary-store v2 {stores of grain in barrels — the people learned to keep a surplus against the hungry season}
+t2 y120 spring AssetSpawned id=granary-store v2 {placement=edge}
+t2 y120 spring Milestone id=granary-store v2 {stores of grain in barrels — the people learned to keep a surplus against the hungry season}
+t2 y120 spring AssetSpawned id=granary-store v2 {placement=edge}
+t2 y120 spring Milestone id=granary-store v2 {stores of grain in barrels — the people learned to keep a surplus against the hungry season}
+t2 y120 spring AssetSpawned id=pottery v2 {placement=green}
+t2 y120 spring Milestone id=pottery v2 {fired clay pots — the first craft beyond stone and wood, clay shaped and hardened in the kiln}
+t2 y120 spring AssetSpawned id=pottery v2 {placement=green}
+t2 y120 spring Milestone id=pottery v2 {fired clay pots — the first craft beyond stone and wood, clay shaped and hardened in the kiln}
+t2 y120 spring AssetSpawned id=mason-stones v2 {placement=edge}
+t2 y120 spring Milestone id=mason-stones v2 {cut and dressed stone blocks — masonry, the knowledge of shaping stone to build things meant to last}
+t2 y120 spring AssetSpawned id=mason-stones v2 {placement=edge}
+t2 y120 spring Milestone id=mason-stones v2 {cut and dressed stone blocks — masonry, the knowledge of shaping stone to build things meant to last}
+t2 y120 spring AssetSpawned id=star-banner v3 {placement=green}
+t2 y120 spring Milestone id=star-banner v3 {a banner of the sky-faith — a people who learned to read the stars raise their sign over the green}
+t2 y120 spring AssetSpawned id=mill v3 {placement=edge}
+t2 y120 spring Milestone id=mill v3 {the mill — where the village learned to grind grain, famine receded}
+t2 y120 spring AssetSpawned id=writing-post v3 {placement=green}
+t2 y120 spring Milestone id=writing-post v3 {a marked post — a people who have learned to write leave words for those who come after}
+t2 y120 spring AssetSpawned id=law-stone v3 {placement=green}
+t2 y120 spring Milestone id=law-stone v3 {a rune-cut standing stone — after too much blood between kin, this people carved their first law into rock: no more killing your own. The Peace of Kin, made to outlast memory.}
+t2 y120 spring AssetSpawned id=temple v3 {placement=green}
+t2 y120 spring Milestone id=temple v3 {a temple raised to the sky-faith — the cosmology that began with one soul watching the stars now has a house and a keeper (real City-Pack grand building).}
+t2 y120 spring AssetSpawned id=forge v3 {placement=edge}
+t2 y120 spring Milestone id=forge v3 {the forge — where this people learned to work metal, the smith's fire never fully dies}
+t2 y120 spring AssetSpawned id=boat v3 {placement=edge}
+t2 y120 spring Milestone id=boat v3 {a rowboat drawn up at the village edge — a people who learned to build hulls and read the water}
+t2 y120 spring AssetSpawned id=cart v3 {placement=green}
+t2 y120 spring Milestone id=cart v3 {a handcart — once the wheel was understood, one back could carry what many had before}
+t2 y120 spring AssetSpawned id=weaving-line v3 {placement=green}
+t2 y120 spring Milestone id=weaving-line v3 {a line of drying cloth — a people who learned to spin thread and weave; wool and linen dry in the wind}
+t2 y120 spring AssetSpawned id=granary-store v3 {placement=edge}
+t2 y120 spring Milestone id=granary-store v3 {stores of grain in barrels — the people learned to keep a surplus against the hungry season}
+t2 y120 spring AssetSpawned id=granary-store v3 {placement=edge}
+t2 y120 spring Milestone id=granary-store v3 {stores of grain in barrels — the people learned to keep a surplus against the hungry season}
+t2 y120 spring AssetSpawned id=granary-store v3 {placement=edge}
+t2 y120 spring Milestone id=granary-store v3 {stores of grain in barrels — the people learned to keep a surplus against the hungry season}
+t2 y120 spring AssetSpawned id=pottery v3 {placement=green}
+t2 y120 spring Milestone id=pottery v3 {fired clay pots — the first craft beyond stone and wood, clay shaped and hardened in the kiln}
+t2 y120 spring AssetSpawned id=pottery v3 {placement=green}
+t2 y120 spring Milestone id=pottery v3 {fired clay pots — the first craft beyond stone and wood, clay shaped and hardened in the kiln}
+t2 y120 spring AssetSpawned id=mason-stones v3 {placement=edge}
+t2 y120 spring Milestone id=mason-stones v3 {cut and dressed stone blocks — masonry, the knowledge of shaping stone to build things meant to last}
+t2 y120 spring AssetSpawned id=mason-stones v3 {placement=edge}
+t2 y120 spring Milestone id=mason-stones v3 {cut and dressed stone blocks — masonry, the knowledge of shaping stone to build things meant to last}
+t2 y120 spring AssetSpawned id=star-banner v4 {placement=green}
+t2 y120 spring Milestone id=star-banner v4 {a banner of the sky-faith — a people who learned to read the stars raise their sign over the green}
+t2 y120 spring AssetSpawned id=mill v4 {placement=edge}
+t2 y120 spring Milestone id=mill v4 {the mill — where the village learned to grind grain, famine receded}
+t2 y120 spring AssetSpawned id=writing-post v4 {placement=green}
+t2 y120 spring Milestone id=writing-post v4 {a marked post — a people who have learned to write leave words for those who come after}
+t2 y120 spring AssetSpawned id=market v4 {placement=green}
+t2 y120 spring Milestone id=market v4 {a market stall — where enough hands and crafts gather in one place, goods begin to change hands}
+t2 y120 spring AssetSpawned id=market v4 {placement=green}
+t2 y120 spring Milestone id=market v4 {a market stall — where enough hands and crafts gather in one place, goods begin to change hands}
+t2 y120 spring AssetSpawned id=market v4 {placement=green}
+t2 y120 spring Milestone id=market v4 {a market stall — where enough hands and crafts gather in one place, goods begin to change hands}
+t2 y120 spring AssetSpawned id=law-stone v4 {placement=green}
+t2 y120 spring Milestone id=law-stone v4 {a rune-cut standing stone — after too much blood between kin, this people carved their first law into rock: no more killing your own. The Peace of Kin, made to outlast memory.}
+t2 y120 spring AssetSpawned id=temple v4 {placement=green}
+t2 y120 spring Milestone id=temple v4 {a temple raised to the sky-faith — the cosmology that began with one soul watching the stars now has a house and a keeper (real City-Pack grand building).}
+t2 y120 spring AssetSpawned id=manor v4 {placement=edge}
+t2 y120 spring Milestone id=manor v4 {a fine great-house set apart — where a family's fortune outgrew its neighbours', the first inequality takes shape in timber and stone (real City-Pack building).}
+t2 y120 spring AssetSpawned id=forge v4 {placement=edge}
+t2 y120 spring Milestone id=forge v4 {the forge — where this people learned to work metal, the smith's fire never fully dies}
+t2 y120 spring AssetSpawned id=boat v4 {placement=edge}
+t2 y120 spring Milestone id=boat v4 {a rowboat drawn up at the village edge — a people who learned to build hulls and read the water}
+t2 y120 spring AssetSpawned id=cart v4 {placement=green}
+t2 y120 spring Milestone id=cart v4 {a handcart — once the wheel was understood, one back could carry what many had before}
+t2 y120 spring AssetSpawned id=weaving-line v4 {placement=green}
+t2 y120 spring Milestone id=weaving-line v4 {a line of drying cloth — a people who learned to spin thread and weave; wool and linen dry in the wind}
+t2 y120 spring AssetSpawned id=granary-store v4 {placement=edge}
+t2 y120 spring Milestone id=granary-store v4 {stores of grain in barrels — the people learned to keep a surplus against the hungry season}
+t2 y120 spring AssetSpawned id=granary-store v4 {placement=edge}
+t2 y120 spring Milestone id=granary-store v4 {stores of grain in barrels — the people learned to keep a surplus against the hungry season}
+t2 y120 spring AssetSpawned id=granary-store v4 {placement=edge}
+t2 y120 spring Milestone id=granary-store v4 {stores of grain in barrels — the people learned to keep a surplus against the hungry season}
+t2 y120 spring AssetSpawned id=pottery v4 {placement=green}
+t2 y120 spring Milestone id=pottery v4 {fired clay pots — the first craft beyond stone and wood, clay shaped and hardened in the kiln}
+t2 y120 spring AssetSpawned id=pottery v4 {placement=green}
+t2 y120 spring Milestone id=pottery v4 {fired clay pots — the first craft beyond stone and wood, clay shaped and hardened in the kiln}
+t2 y120 spring AssetSpawned id=mason-stones v4 {placement=edge}
+t2 y120 spring Milestone id=mason-stones v4 {cut and dressed stone blocks — masonry, the knowledge of shaping stone to build things meant to last}
+t2 y120 spring AssetSpawned id=mason-stones v4 {placement=edge}
+t2 y120 spring Milestone id=mason-stones v4 {cut and dressed stone blocks — masonry, the knowledge of shaping stone to build things meant to last}
+t3 y120 spring AssetRemoved id=star-banner v0 {onLoss}
+t3 y120 spring AssetRemoved id=law-stone v0 {onLoss}
+t3 y120 spring AssetRemoved id=star-banner v1 {onLoss}
+t3 y120 spring AssetRemoved id=law-stone v1 {onLoss}
+t3 y120 spring AssetRemoved id=star-banner v2 {onLoss}
+t3 y120 spring AssetRemoved id=law-stone v2 {onLoss}
+t3 y120 spring AssetRemoved id=star-banner v3 {onLoss}
+t3 y120 spring AssetRemoved id=law-stone v3 {onLoss}
+t3 y120 spring AssetRemoved id=star-banner v4 {onLoss}
+t3 y120 spring AssetRemoved id=law-stone v4 {onLoss}

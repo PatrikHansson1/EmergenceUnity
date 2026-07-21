@@ -1,0 +1,84 @@
+EMERGENCE — CODEX COVERAGE (D-121, anti-orphan)
+generated 2026-07-21 13:00:59
+codex entries: 29  (26 unique prefabs referenced, 3 told-not-shown)
+project assets (prefab/glb/fbx): 2803
+OVERALL COVERAGE: 26/2803 = 0,9%  |  ORPHANS: 2777  |  DANGLING: 0
+
+## DANGLING (codex → missing asset) — MUST be 0
+  none ✓
+
+## COVERAGE PER PACK (referenced / total)
+     7/1500    0,5%  Fantastic City Pack
+    13/978     1,3%  Fantastic Village Pack
+     3/258     1,2%  Polyart
+     0/21      0,0%  Vefects
+     3/20     15,0%  Emergence
+     0/12      0,0%  Quaternius
+     0/8       0,0%  UpDraftArt
+     0/4       0,0%  msVFX_Free Smoke Effects Pack
+     0/2       0,0%  PolyOne
+
+## ORPHANS (asset with no codex entry) — 2777 total, first 60:
+  · Emergence/deer
+  · Emergence/kiln
+  · Emergence/villager
+  · Emergence/villager-child
+  · Emergence/villager-child-f
+  · Emergence/villager-child-f-walk
+  · Emergence/villager-child-walk
+  · Emergence/villager-elder
+  · Emergence/villager-elder-f
+  · Emergence/villager-elder-f-walk
+  · Emergence/villager-elder-walk
+  · Emergence/villager-f
+  · Emergence/villager-f-walk
+  · Emergence/villager-f-work
+  · Emergence/villager-walk
+  · Emergence/villager-work
+  · Emergence/wolf
+  · Fantastic City Pack/BLD_03_16x8_Ext_01
+  · Fantastic City Pack/BLD_03_16x8_Ext_02
+  · Fantastic City Pack/BLD_03_16x8_Ext_03
+  · Fantastic City Pack/BLD_03_16x8_Ext_04
+  · Fantastic City Pack/BLD_03_16x8_Ext_05
+  · Fantastic City Pack/BLD_03_16x8_Ext_06
+  · Fantastic City Pack/BLD_03_16x8_Ext_07
+  · Fantastic City Pack/BLD_03_16x8_Ext_08
+  · Fantastic City Pack/BLD_03_16x8_Ext_09
+  · Fantastic City Pack/BLD_03_16x8_Ext_10
+  · Fantastic City Pack/BLD_03_16x8_Ext_11
+  · Fantastic City Pack/BLD_03_16x8_Ext_Arch_02
+  · Fantastic City Pack/BLD_03_16x8_Int_01
+  · Fantastic City Pack/BLD_03_16x8_Int_02
+  · Fantastic City Pack/BLD_03_16x8_Int_03
+  · Fantastic City Pack/BLD_03_16x8_Int_04
+  · Fantastic City Pack/BLD_03_16x8_Int_Alchemy_01
+  · Fantastic City Pack/BLD_03_16x8_Int_Bakery_01
+  · Fantastic City Pack/BLD_03_16x8_Int_Bar_01
+  · Fantastic City Pack/BLD_03_16x8_Int_Bar_02
+  · Fantastic City Pack/BLD_03_16x8_Int_Tavern_01
+  · Fantastic City Pack/BLD_03_16x8_Int_Woodworking
+  · Fantastic City Pack/BLD_03_4x4_Ext_01
+  · Fantastic City Pack/BLD_03_8x8_Ext_01
+  · Fantastic City Pack/BLD_03_8x8_Ext_Arch_01
+  · Fantastic City Pack/BLD_03_L_Ext_02
+  · Fantastic City Pack/BLD_03_L_Ext_03
+  · Fantastic City Pack/BLD_03_L_Ext_04
+  · Fantastic City Pack/BLD_03_L_Ext_05
+  · Fantastic City Pack/BLD_03_L_Ext_06
+  · Fantastic City Pack/BLD_03_L_Ext_07
+  · Fantastic City Pack/BLD_03_L_Int_01
+  · Fantastic City Pack/BLD_03_L_Int_02
+  · Fantastic City Pack/BLD_03_L_Int_Blacksmith
+  · Fantastic City Pack/BLD_03_L_Int_Tavern_01
+  · Fantastic City Pack/BLD_03_L_Int_Tavern_02
+  · Fantastic City Pack/BLD_03_T_Ext_01
+  · Fantastic City Pack/BLD_03_T_Ext_02
+  · Fantastic City Pack/BLD_03_T_Ext_03
+  · Fantastic City Pack/BLD_03_T_Int_01
+  · Fantastic City Pack/BLD_03_T_Int_Tailor
+  · Fantastic City Pack/COMP_Base_03_16x8_door_01_01
+  · Fantastic City Pack/COMP_Base_03_16x8_door_01_02
+
+Reading: dangling MUST be 0 (broken codex pointers). Orphans are the un-indexed backlog —
+the codex fill-pass shrinks this over time; a high-value orphan is a candidate for a new codex row.

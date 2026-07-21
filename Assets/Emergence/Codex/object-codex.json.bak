@@ -1,0 +1,115 @@
+{
+  "_note": "THE OBJECT CODEX (seed slice, TD-033 + D-096 new-force rows). Single source of truth: the dresser places each object where its discovery predicate is true per village; the chronicle can read desc. Schema is JsonUtility-friendly (flat fields); the full allOf/anyOf DSL from OBJECT-CODEX-SPEC comes later. requiresTech/requiresCustom empty = no requirement; minPop/minCrafts/minGen = 0 = no threshold. D-096: rows below the market make Engine 2.3's new forces visible in the body — the emergent LAW (Peace of Kin), the sky-TEMPLE, and WEALTH/inequality. NOTE: law-stone uses a real rune-rock; temple/manor use house prefabs as stand-ins — Unity-TD must render-verify (magenta=0, scale, placement) before trusting them.",
+  "objects": [
+    {
+      "id": "star-banner",
+      "prefab": "P_PROP_flag_01",
+      "category": "faith",
+      "era": 3,
+      "requiresTech": "",
+      "requiresCustom": "cosmos",
+      "minPop": 0, "minCrafts": 0, "minGen": 0,
+      "desc": "a banner of the sky-faith — a people who learned to read the stars raise their sign over the green",
+      "placement": "green", "scale": 1.6, "count": 1
+    },
+    {
+      "id": "mill",
+      "prefab": "mill.glb",
+      "category": "craft",
+      "era": 2,
+      "requiresTech": "mill",
+      "requiresCustom": "",
+      "minPop": 6, "minCrafts": 0, "minGen": 0,
+      "desc": "the mill — where the village learned to grind grain, famine receded",
+      "placement": "edge", "scale": 0.35, "count": 1
+    },
+    {
+      "id": "writing-post",
+      "prefab": "P_PROP_signpost_01",
+      "category": "knowledge",
+      "era": 2,
+      "requiresTech": "writing",
+      "requiresCustom": "",
+      "minPop": 5, "minCrafts": 0, "minGen": 0,
+      "desc": "a marked post — a people who have learned to write leave words for those who come after",
+      "placement": "green", "scale": 1.2, "count": 1
+    },
+    {
+      "id": "market",
+      "prefab": "P_PROP_market_shelf_01",
+      "category": "commerce",
+      "era": 3,
+      "requiresTech": "",
+      "requiresCustom": "",
+      "minPop": 12, "minCrafts": 3, "minGen": 0,
+      "desc": "a market stall — where enough hands and crafts gather in one place, goods begin to change hands",
+      "placement": "green", "scale": 1.0, "count": 3
+    },
+    {
+      "id": "law-stone",
+      "prefab": "Prefab_RuneRock_01",
+      "category": "law",
+      "era": 3,
+      "requiresTech": "",
+      "requiresCustom": "harm",
+      "minPop": 0, "minCrafts": 0, "minGen": 0,
+      "desc": "a rune-cut standing stone — after too much blood between kin, this people carved their first law into rock: no more killing your own. The Peace of Kin, made to outlast memory.",
+      "placement": "green", "scale": 1.3, "count": 1
+    },
+    {
+      "id": "temple",
+      "prefab": "P_BLD_house_11",
+      "category": "faith",
+      "era": 4,
+      "requiresTech": "temple",
+      "requiresCustom": "",
+      "minPop": 8, "minCrafts": 0, "minGen": 0,
+      "desc": "a temple raised to the sky-faith — the cosmology that began with one soul watching the stars now has a house and a keeper. (stand-in prefab: needs a proper temple asset)",
+      "placement": "green", "scale": 1.15, "count": 1
+    },
+    {
+      "id": "manor",
+      "prefab": "P_BLD_house_14",
+      "category": "wealth",
+      "era": 3,
+      "requiresTech": "",
+      "requiresCustom": "",
+      "minPop": 16, "minCrafts": 6, "minGen": 3,
+      "desc": "a fine house set apart — where a family's fortune outgrew its neighbours' over generations, the first inequality takes shape in timber and stone. (wealth proxy: large, many-crafted, old village — a true wealth predicate awaits the engine exporting per-agent holdings)",
+      "placement": "edge", "scale": 1.35, "count": 1
+    },
+    {
+      "id": "forge",
+      "prefab": "forge.glb",
+      "category": "craft",
+      "era": 3,
+      "requiresTech": "smithing",
+      "requiresCustom": "",
+      "minPop": 6, "minCrafts": 0, "minGen": 0,
+      "desc": "the forge — where this people learned to work metal, the smith's fire never fully dies",
+      "placement": "edge", "scale": 0.4, "count": 1
+    },
+    {
+      "id": "scholar-scroll",
+      "prefab": "P_PROP_scroll",
+      "category": "knowledge",
+      "era": 4,
+      "requiresTech": "scholarship",
+      "requiresCustom": "",
+      "minPop": 8, "minCrafts": 0, "minGen": 0,
+      "desc": "a scholar's scroll — beyond mere writing, this people now reasons about the world and sets its knowledge down to be argued with",
+      "placement": "green", "scale": 1.0, "count": 1
+    },
+    {
+      "id": "boat",
+      "prefab": "P_PROP_rowboat",
+      "category": "craft",
+      "era": 3,
+      "requiresTech": "sailing",
+      "requiresCustom": "",
+      "minPop": 5, "minCrafts": 0, "minGen": 0,
+      "desc": "a rowboat drawn up at the village edge — a people who learned to build hulls and read the water",
+      "placement": "edge", "scale": 1.0, "count": 1
+    }
+  ]
+}

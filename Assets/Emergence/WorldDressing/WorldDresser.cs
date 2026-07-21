@@ -30,7 +30,12 @@ namespace Emergence.Editor
     [Serializable] public class WorldVillage { public float x, y; public string name; public int pop, maxGen, avgAge, crafts; public string cosmos; public string[] knows; public string[] beliefs; }
     [Serializable] public class WorldAnimal { public int id; public string type; public float x, y; }
     // TD-033: the object codex — discovery-driven placement. JsonUtility-friendly flat schema.
-    [Serializable] public class CodexEntry { public string id, prefab, category, requiresTech, requiresCustom, desc, placement; public int era, minPop, minCrafts, minGen, count; public float scale; }
+    // D-112 (Fas 1 inc 2): ruinOnLoss=1 → when this built structure's gate stops holding (Memory Engine
+    // loses the tech), the object de-materialises INTO a ruin instead of empty ground; rediscovery rebuilds it.
+    // ruinPrefab overrides the studio default ruin stand-in; ruinScale sizes it (0 = default). Ephemeral/portable
+    // objects (banners, carts, pots) keep ruinOnLoss=0 and simply vanish.
+    // D-106 fill-pass: tier = milestone|dressing|part (legibility law); statMeaning feeds the STATS/Almanac pillar (Fas 5).
+    [Serializable] public class CodexEntry { public string id, prefab, category, requiresTech, requiresCustom, desc, placement, tier, statMeaning; public int era, minPop, minCrafts, minGen, count; public float scale; public int ruinOnLoss; public string ruinPrefab; public float ruinScale; }
     [Serializable] public class Codex { public CodexEntry[] objects; }
     [Serializable] public class WorldState
     {
@@ -64,17 +69,6 @@ namespace Emergence.Editor
         public const float HouseScale = 0.55f;         // pack houses at 1 are OVERSIZED (a house spans 2+ field plots, dwarfs props/yards); ~0.55 makes a house read as one village plot (~TileSize) — EP knob
         public const float HouseFrontYawOffset = 0f;  // pack houses' door axis: 0 if the front is +Z; AD flips to 180 if doors read as facing AWAY from the green
         public const int   YardPropsMax = 2;           // 0..2 work-life props per house on the door side (placed just beyond the house's real front face)
-        // TD-034 MILJÖ-KVALITETSPASSET — the showcase recipe (Logs/showcase-study.txt, Dreamscape Demo.unity):
-        // lush ground = TERRAIN DETAIL meshes (the pack's own *_Detail grass + flowers, VertexLit, instanced,
-        // waving via the pack's own Grass shadergraph wind) — NOT GameObject scatter (TD-032's sparse stopgap).
-        public const float MeadowPerTile   = 3.2f;  // grass clumps per open-meadow tile (0.8 was the sparse stopgap; the Demo look is dense)
-        public const float MeadowFlowerFrac = 0.07f; // fraction of clumps that are flowers — meadow accents, sober
-        // TD-034 living paths — organic desire lines with the packs' own content on the edges
-        public const float PathBendFrac   = 0.18f;  // curve: perpendicular midpoint displacement as fraction of segment length (clamped)
-        public const float PathBendMaxTiles = 2.2f; // …clamped to this many sim tiles
-        public const float PathEdgeStoneChance  = 0.10f; // per path step: a small pack rock at the path edge
-        public const float PathEdgeTuftChance   = 0.14f; // per street step: a village-grass tuft at the edge (Village pack's own)
-        public const float PathEdgeFlowerChance = 0.07f; // per trail step: a Dreamscape flower at the edge
 
         // ---- deterministic presentation hash (the engine's own pattern; NEVER sim RNG) ----
         static uint Hash(int x, int y, int salt) { unchecked { uint h = (uint)(x * 73856093 ^ y * 19349663 ^ salt * 83492791); h ^= h >> 13; h *= 2246822519; h ^= h >> 16; return h; } }
@@ -112,7 +106,6 @@ namespace Emergence.Editor
             windGo.transform.SetParent(root.transform, true);
             BuildTerrain(S, root.transform);
             BuildWater(S, root.transform);
-            PlaceMeadow(S, root.transform);         // TD-034: the lush meadow — dense pack *_Detail scatter (the terrain detail system shares the splat ghost; see method comment)
             PlaceGroundFeatures(S, root.transform); // TD-031 terrain pass: field soil + desire-line paths as mesh decals (URP won't render the terrain splat)
             // PlaceGrass DISABLED — scatter stopgap was sparse + had a magenta sub-material; proper lush grass = terrain-detail P0 pass (audit). Method kept.
             // PlaceGrass(S, root.transform);
@@ -120,6 +113,8 @@ namespace Emergence.Editor
             PlaceFires(S, root.transform);
             PlaceFields(S, root.transform);
             PlaceNature(S, root.transform);
+            PlaceMeadowFoliage(S, root.transform); // D-101d: fill the open meadow with real 3D foliage (flowers/tufts/bushes) — the near-field life that short detail-grass can't give
+            PlaceAmbientFX(S, root.transform);     // D-115: Dreamscape's own drifting leaves + dust motes (atmosphere; visible in play mode)
             PlaceWorkMarks(S, root.transform);    // TD-031 v2.2b: quarry scars at depleted stone tiles (Materials layer)
             PlaceAgents(S, root.transform);       // the studio's own rendered villagers (EP directive)
             PlaceTechAnchors(S, root.transform);  // forge/mill/kiln/well — fills the D-062 pack gap
@@ -183,8 +178,11 @@ namespace Emergence.Editor
             var data = new TerrainData();
             int res = 257;
             data.heightmapResolution = res;
-            data.size = new Vector3(S.W * TileSize, 30f, S.H * TileSize);
-            // gentle deterministic relief; water carved slightly below
+            data.size = new Vector3(S.W * TileSize, 72f, S.H * TileSize);
+            // ONCE-AND-FOR-ALL (D-101b): real rolling relief that READS from the map camera (the 8m
+            // version was a 1% grade — invisible from 55m up). Multi-octave noise → ~25m rolling hills,
+            // water carved below, village centres settled flat so houses sit level. Seed-varied.
+            float vseed = S.seed % 991 * 0.137f, vseed2 = S.seed % 733 * 0.171f;
             var heights = new float[res, res];
             for (int ry = 0; ry < res; ry++)
                 for (int rx = 0; rx < res; rx++)
@@ -192,23 +190,29 @@ namespace Emergence.Editor
                     float sx = rx / (float)(res - 1) * (S.W - 1);
                     float sy = (1f - ry / (float)(res - 1)) * (S.H - 1);
                     int tx = Mathf.Clamp(Mathf.RoundToInt(sx), 0, S.W - 1), ty = Mathf.Clamp(Mathf.RoundToInt(sy), 0, S.H - 1);
-                    float baseH = 0.10f
-                        + 0.012f * Mathf.PerlinNoise(sx * 0.07f + S.seed % 977 * 0.13f, sy * 0.07f)
-                        + 0.03f * Mathf.PerlinNoise(sx * 0.015f, sy * 0.015f + S.seed % 719 * 0.17f);
-                    if (Tile(S, tx, ty) == 'w') baseH -= 0.035f;
-                    else if (Tile(S, tx, ty) == 's') baseH += 0.012f;
+                    float n1 = Mathf.PerlinNoise(sx * 0.018f + vseed, sy * 0.018f + 3.1f);   // broad hills
+                    float n2 = Mathf.PerlinNoise(sx * 0.045f + 11.7f, sy * 0.045f + vseed2); // mid rolls
+                    float n3 = Mathf.PerlinNoise(sx * 0.11f + 7.3f, sy * 0.11f + 5.9f);      // fine undulation
+                    float baseH = 0.13f + 0.24f * n1 + 0.10f * n2 + 0.03f * n3;
+                    // settle the ground toward the local mean near village centres (flat building pads)
+                    float flat = VillageFlatten(S, sx, sy);
+                    baseH = Mathf.Lerp(baseH, 0.22f, flat);
+                    if (Tile(S, tx, ty) == 'w') baseH -= 0.08f;       // ponds/rivers sit below the meadow
+                    else if (Tile(S, tx, ty) == 's') baseH += 0.04f;  // stone ground stands a touch proud
                     heights[ry, rx] = baseH;
                 }
             data.SetHeights(0, 0, heights);
 
-            // splat layers resolved from the packs (as imported); fallback = plain color layers
+            // D-101: prefer DREAMSCAPE's own textured terrain layers (real diffuse+normal, the reference
+            // look) — fall back to the project's earlier layers, then to a flat colour only if nothing loads.
             var layers = new List<TerrainLayer>();
-            int liGrass = AddLayer(layers, "Layer_grass_01", new Color(0.35f, 0.5f, 0.22f));
-            int liField = AddLayer(layers, "Layer_farmfield", new Color(0.45f, 0.35f, 0.2f));
-            int liPath = AddLayer(layers, "Layer_Dirt", new Color(0.42f, 0.32f, 0.2f)); // TD-031 v2.1: worn desire-line ground (also serves sand/clay tiles as bare earth)
-            int liGravel = AddLayer(layers, "Layer_gravel_01", new Color(0.5f, 0.48f, 0.45f));
-            // NOTE: keep total terrain layers <= 4 — the URP terrain base pass renders only the first 4 splats;
-            // a 5th layer silently paints nothing (the v2.1 path bug). grass/field/dirt/gravel is the budget.
+            int liGrass = AddLayer(layers, new[] { "Layer_Grass", "Layer_grass_01" }, new Color(0.35f, 0.5f, 0.22f));
+            int liField = AddLayer(layers, new[] { "Layer_farmfield", "Layer_Dirt" }, new Color(0.45f, 0.35f, 0.2f));
+            int liPath = AddLayer(layers, new[] { "Layer_Dirt" }, new Color(0.42f, 0.32f, 0.2f)); // worn desire-line ground (also sand/clay)
+            int liGravel = AddLayer(layers, new[] { "Layer_Rock", "Layer_gravel_01" }, new Color(0.5f, 0.48f, 0.45f));
+            // D-120 roads v1.1: 5th layer = COBBLESTONE for the paved-street tier. >4 layers needs URP's 8-layer
+            // path — we now enable the _TERRAIN_8_LAYERS keyword on the terrain material (below) so it renders.
+            int liCobble = AddLayer(layers, new[] { "Layer_Cobblestone", "Layer_pavingstone_01" }, new Color(0.55f, 0.53f, 0.5f));
             data.terrainLayers = layers.ToArray();
 
             data.alphamapResolution = 256;
@@ -219,16 +223,33 @@ namespace Emergence.Editor
                     float sx = ax / 255f * (S.W - 1);
                     float sy = (1f - ay / 255f) * (S.H - 1);
                     int tx = Mathf.Clamp(Mathf.RoundToInt(sx), 0, S.W - 1), ty = Mathf.Clamp(Mathf.RoundToInt(sy), 0, S.H - 1);
-                    int li = liGrass;
-                    switch (Tile(S, tx, ty))
+                    char tt = Tile(S, tx, ty);
+                    if (tt == 's' || tt == 'i')
                     {
-                        case 's': case 'i': li = liGravel; break;
-                        case 'a': case 'c': li = liPath; break; // sand/clay read as bare earth (dirt layer)
+                        // D-115: stony ground, but blend with grass + a little worn dirt (was pure grey rock =
+                        // a hard checkerboard at the village). Noise keeps it mottled, not a flat grey square.
+                        float f = Mathf.PerlinNoise(sx * 0.3f + 5f, sy * 0.3f + 11f);
+                        am[ay, ax, liGravel] = 0.55f + f * 0.25f;
+                        am[ay, ax, liGrass] = 0.25f;
+                        am[ay, ax, liPath] = 0.20f - f * 0.10f;
                     }
-                    am[ay, ax, li] = 1f;
+                    else if (tt == 'a' || tt == 'c') { am[ay, ax, liPath] = 1f; }
+                    else
+                    {
+                        // D-101: break the uniform "billiard green" — grass with noise-driven worn-earth
+                        // patches + faint rock flecks, so the ground reads as a living meadow, not felt.
+                        float patch = Mathf.PerlinNoise(sx * 0.09f + 21f, sy * 0.09f + 9f);
+                        float fleck = Mathf.PerlinNoise(sx * 0.23f + 4f, sy * 0.23f + 17f);
+                        float wDirt = patch > 0.66f ? Mathf.Clamp01((patch - 0.66f) * 2.6f) : 0f;
+                        float wRock = fleck > 0.80f ? Mathf.Clamp01((fleck - 0.80f) * 2.2f) : 0f;
+                        float wGrass = Mathf.Max(0f, 1f - wDirt - wRock);
+                        am[ay, ax, liGrass] = wGrass;
+                        am[ay, ax, liPath] += wDirt;
+                        am[ay, ax, liGravel] += wRock;
+                    }
                 }
             StampFields(S, am, liField, 256); // TD-031 v2.1b: tilled soil inside the field enclosures (was never stamped)
-            PaintPaths(S, am, liPath, 256); // TD-031 v2.1: worn desire lines (hut->green, village->village)
+            PaintRoutes(S, am, 256, liPath, liCobble); // D-116/120 EMERGENT ROADS: tie-derived, wear→width, tech-gated COBBLE tier
             data.SetAlphamaps(0, 0, am);
 
             AssetDatabase.CreateAsset(data, "Assets/Emergence/Scenes/TerrainData_generated.asset");
@@ -244,7 +265,11 @@ namespace Emergence.Editor
             var urpTerrainShader = Shader.Find("Universal Render Pipeline/Terrain/Lit");
             if (urpTerrainShader != null)
                 terrain.materialTemplate = new Material(urpTerrainShader) { name = "EmergenceTerrainLit" };
+            // D-120: >4 terrain layers → enable URP's 8-layer path so layers 5-8 (cobblestone) actually render.
+            if (terrain.materialTemplate != null && data.terrainLayers.Length > 4)
+                terrain.materialTemplate.EnableKeyword("_TERRAIN_8_LAYERS");
             terrain.drawInstanced = true;
+            MeadowDetailAndTrees(S, data, terrain);   // D-101: the pack's OWN detail-grass + tree scatter (the meadow)
             data.SetBaseMapDirty();
             terrain.Flush();
             // DIAGNOSTIC (written to Logs/terrain-diag.txt so it's readable without the editor UI):
@@ -270,18 +295,146 @@ namespace Emergence.Editor
             Debug.Log(diag);
         }
 
-        static int AddLayer(List<TerrainLayer> layers, string packLayerName, Color fallback)
+        // D-101: try each candidate layer name in order (Dreamscape's real textured layer first),
+        // fall back to a flat-colour layer only if none of the named assets exist.
+        static int AddLayer(List<TerrainLayer> layers, string[] candidates, Color fallback)
         {
-            var guid = AssetDatabase.FindAssets($"t:TerrainLayer {packLayerName}").FirstOrDefault();
-            TerrainLayer tl;
-            if (guid != null) tl = AssetDatabase.LoadAssetAtPath<TerrainLayer>(AssetDatabase.GUIDToAssetPath(guid));
-            else
+            TerrainLayer tl = null;
+            foreach (var nm in candidates)
+            {
+                foreach (var g in AssetDatabase.FindAssets($"t:TerrainLayer {nm}"))
+                {
+                    var p = AssetDatabase.GUIDToAssetPath(g);
+                    if (Path.GetFileNameWithoutExtension(p) == nm)
+                    { tl = AssetDatabase.LoadAssetAtPath<TerrainLayer>(p); break; }
+                }
+                if (tl != null) break;
+            }
+            if (tl == null)
             {
                 tl = new TerrainLayer { diffuseTexture = Texture2D.whiteTexture, diffuseRemapMax = new Vector4(fallback.r, fallback.g, fallback.b, 1) };
-                AssetDatabase.CreateAsset(tl, $"Assets/Emergence/Scenes/TL_{packLayerName}.asset");
+                AssetDatabase.CreateAsset(tl, $"Assets/Emergence/Scenes/TL_{candidates[0]}.asset");
             }
             layers.Add(tl);
             return layers.Count - 1;
+        }
+
+        // ---- D-101 meadow helpers ---------------------------------------------------------------
+        // settle-to-flat weight (0..1) near any village centre, so building pads are level
+        static float VillageFlatten(WorldState S, float sx, float sy)
+        {
+            if (S.villages == null) return 0f;
+            float best = 0f;
+            foreach (var v in S.villages)
+            {
+                float d = Mathf.Sqrt((v.x - sx) * (v.x - sx) + (v.y - sy) * (v.y - sy));
+                float w = Mathf.Clamp01(1f - d / 6f);   // ~6 tiles of levelling around each green
+                if (w > best) best = w;
+            }
+            return best * best;
+        }
+        static bool NearVillage(WorldState S, int x, int y, float tiles)
+        {
+            if (S.villages == null) return false;
+            foreach (var v in S.villages)
+                if ((v.x - x) * (v.x - x) + (v.y - y) * (v.y - y) < tiles * tiles) return true;
+            return false;
+        }
+
+        // THE MEADOW (D-101): adopt Dreamscape's OWN treatment wholesale — terrain-detail waving grass
+        // (their exact detail prefabs + waving params, GPU-instanced, dense & cheap) and their birch/
+        // bush/mushroom tree prototypes scattered across the open grassland. This is the single biggest
+        // visual lift and it was never used (PlaceGrass was a disabled GameObject stopgap). RNG-neutral.
+        static void MeadowDetailAndTrees(WorldState S, TerrainData data, Terrain terrain)
+        {
+            // -- detail grass + wildflowers (their reference detail set) --
+            string[] protoNames = { "Prefab_Grass_01_Detail", "Prefab_Grass_Group_01_Detail", "Prefab_Grass_03_Detail", "SM_Flower_01_Unity", "Prefab_Flower_02", "Prefab_Flower_04" };
+            // D-101c: per-layer green variation so the meadow isn't one flat tone — some cooler, some
+            // warmer-lit; flowers keep a white tint so their own texture colour shows.
+            Color[] grassGreens = { new Color(0.82f, 0.95f, 0.70f), new Color(0.68f, 0.86f, 0.55f), new Color(0.90f, 0.93f, 0.72f) };
+            var dps = new List<DetailPrototype>();
+            var isFlower = new List<bool>();
+            int gi = 0;
+            foreach (var nm in protoNames)
+            {
+                var pf = FindPrefabExact(nm);
+                if (pf == null) continue;
+                bool flower = nm.ToLower().Contains("flower");
+                dps.Add(new DetailPrototype
+                {
+                    prototype = pf,
+                    usePrototypeMesh = true,
+                    useInstancing = true,
+                    renderMode = DetailRenderMode.VertexLit,
+                    minWidth = flower ? 0.8f : 0.9f, maxWidth = flower ? 1.3f : 1.7f,
+                    minHeight = flower ? 0.8f : 1.0f, maxHeight = flower ? 1.3f : 1.9f, // lusher, taller grass
+                    noiseSpread = flower ? 2.5f : 1.4f,
+                    healthyColor = flower ? Color.white : grassGreens[gi % grassGreens.Length],
+                    dryColor = flower ? new Color(0.95f, 0.9f, 0.7f) : new Color(0.80f, 0.78f, 0.48f, 1f)
+                });
+                isFlower.Add(flower);
+                if (!flower) gi++;
+            }
+            if (dps.Count > 0)
+            {
+                data.detailPrototypes = dps.ToArray();
+                int dres = 512;
+                data.SetDetailResolution(dres, 16);
+                for (int p = 0; p < dps.Count; p++)
+                {
+                    var map = new int[dres, dres];
+                    bool flower = isFlower[p];
+                    for (int dy = 0; dy < dres; dy++)
+                        for (int dx = 0; dx < dres; dx++)
+                        {
+                            float sx = dx / (float)(dres - 1) * (S.W - 1);
+                            float sy = (1f - dy / (float)(dres - 1)) * (S.H - 1);
+                            int tx = Mathf.Clamp(Mathf.RoundToInt(sx), 0, S.W - 1), ty = Mathf.Clamp(Mathf.RoundToInt(sy), 0, S.H - 1);
+                            if (Tile(S, tx, ty) != 'g') continue;
+                            float h = Hash01(dx, dy, 700 + p);
+                            if (flower) { if (h > 0.86f) map[dy, dx] = h > 0.97f ? 2 : 1; } // fuller wildflower drifts
+                            else { map[dy, dx] = h < 0.10f ? 0 : (h < 0.5f ? 2 : 3); }       // denser, taller waving grass
+                        }
+                    data.SetDetailLayer(0, 0, p, map);
+                }
+                data.wavingGrassStrength = 0.383f;
+                data.wavingGrassSpeed = 0.066f;
+                data.wavingGrassAmount = 0.235f;
+                data.wavingGrassTint = new Color(0.538f, 0.538f, 0.538f, 1f);
+                terrain.detailObjectDistance = 160f;
+                terrain.detailObjectDensity = 1.0f;
+            }
+            else Debug.LogWarning("[Dresser] no Dreamscape detail-grass prefabs found — meadow detail skipped");
+
+            // -- trees as GAMEOBJECTS, not Unity terrain trees (D-101f). THE FIX: terrain trees render
+            // through a separate path that ignores our fill light AND doesn't reflect material edits — that
+            // was the "dark blob" (immune to 12 material/shader/reimport attempts). GameObjects light exactly
+            // like the bushes that already read well. Sparse scatter over open meadow, clear of villages.
+            string[] treeNames = { "Prefab_Birch_01", "Prefab_Birch_02", "Prefab_Birch_03", "Prefab_TreeLarge_01", "Prefab_TreeLarge_02", "Prefab_TreeLarge_03" };
+            var treePfs = treeNames.Select(FindPrefabExact).Where(p => p != null).ToArray();
+            if (treePfs.Length > 0)
+            {
+                var tparent = new GameObject("MeadowTrees").transform; tparent.SetParent(terrain.transform.root, true);
+                int nt = 0;
+                for (int y = 0; y < S.H; y++)
+                    for (int x = 0; x < S.W; x++)
+                    {
+                        if (Tile(S, x, y) != 'g') continue;
+                        if (Hash01(x, y, 760) > 0.05f) continue;      // sparse scatter (~5% of grass tiles)
+                        if (NearVillage(S, x, y, 3f)) continue;       // keep building pads & greens clear
+                        var pf = treePfs[Hash(x, y, 761) % (uint)treePfs.Length];
+                        var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, tparent);
+                        float jx = Hash01(x, y, 762) - 0.5f, jy = Hash01(x, y, 763) - 0.5f;
+                        go.transform.position = Ground(S, x + jx * 0.8f, y + jy * 0.8f);
+                        go.transform.rotation = Quaternion.Euler(0, Hash(x, y, 765) % 360u, 0);
+                        float sc = 0.8f + Hash01(x, y, 764) * 0.7f;
+                        if (pf.name.StartsWith("Prefab_TreeLarge")) sc *= 0.9f;
+                        go.transform.localScale = Vector3.one * sc;
+                        StripImpostorLods(go); // avoid the unlit billboard LOD (magenta/dark at distance)
+                        nt++;
+                    }
+                Debug.Log($"[Dresser] meadow: {dps.Count} detail-grass layers + {nt} GameObject trees (D-101f, fill-lit like the bushes)");
+            }
         }
 
         // TD-031 v2.1b: stamp tilled soil (the field layer) at every sim field cell, so the enclosed
@@ -300,243 +453,165 @@ namespace Emergence.Editor
                     {
                         int cx = ax + dx, cy = ay + dy;
                         if (cx < 0 || cy < 0 || cx >= res || cy >= res) continue;
-                        for (int l = 0; l < nlayers; l++) am[cy, cx, l] = (l == liField) ? 1f : 0f;
+                        // D-115: tilled soil that BLENDS into grass (was pure field=1 → a hard grey checkerboard).
+                        // Noise keeps the earth mottled; the rest weight goes to grass (layer 0) so edges soften.
+                        float n = Mathf.PerlinNoise(cx * 0.35f + 3f, cy * 0.35f + 7f);
+                        for (int l = 0; l < nlayers; l++) am[cy, cx, l] = 0f;
+                        am[cy, cx, liField] = 0.72f + n * 0.18f;
+                        am[cy, cx, 0] = 1f - am[cy, cx, liField];   // layer 0 = grass
+
                     }
             }
         }
 
-        // TD-031 v2.1: paint worn ground along DESIRE LINES into the terrain alphamap — each hut to its
-        // village green (the commons everyone walks to), and each village to its nearest neighbour (the
-        // trackway between settlements). Deterministic geometry from sim data — no RNG (D-078 rule 4).
-        static void PaintPaths(WorldState S, float[,,] am, int liPath, int res)
+        // D-116 EMERGENT ROADS v1 (approved spec EMERGENT-ROADS-SPEC.md). A road exists because people have
+        // WALKED it, its wear is HOW MUCH they walk it, all derived from sim state — never RNG, never authored.
+        // Sources: hut→its village green (daily life, wear∝pop); village→village ONLY where a real tie exists
+        // (shared culture + walkable reach + trade tech — NOT nearest-neighbour); wear→brush WIDTH; tech-gated
+        // COBBLE tier (both hold masonry + high traffic) else dirt. Genesis: no huts ⇒ no roads. Growth/overgrow
+        // fall out of the per-year rebuild (more ties → more roads; a lost village → its roads gone). Deterministic.
+        struct Route { public Vector2 a, b; public float wear; public int layer; }
+
+        static bool Holds(WorldVillage v, string tech) => v.knows != null && System.Array.IndexOf(v.knows, tech) >= 0;
+        static bool HoldsTrade(WorldVillage v) => Holds(v, "wheel") || Holds(v, "sailing");
+        static int SharedCulture(WorldVillage a, WorldVillage b)
         {
+            int n = 0;
+            if (!string.IsNullOrEmpty(a.cosmos) && a.cosmos == b.cosmos) n++;
+            if (a.beliefs != null && b.beliefs != null)
+                foreach (var x in a.beliefs) if (System.Array.IndexOf(b.beliefs, x) >= 0) n++;
+            return n;
+        }
+
+        static List<Route> ComputeRoutes(WorldState S, int liDirt, int liCobble)
+        {
+            var routes = new List<Route>();
             var greens = VillageGreens(S);
-            var segs = new List<(Vector2 a, Vector2 b)>();
-            foreach (var h in S.huts)
-            {
-                int vi = NearestVillageIdx(S, h.x, h.y);
-                Vector2 g = (vi >= 0 && greens != null && vi < greens.Length) ? greens[vi] : new Vector2(h.x, h.y);
-                segs.Add((new Vector2(h.x, h.y), g));
-            }
+            // 1) hut → its village green: the trodden centre. Always present, wear grows with the village.
+            if (S.huts != null)
+                foreach (var h in S.huts)
+                {
+                    int vi = NearestVillageIdx(S, h.x, h.y);
+                    Vector2 g = (vi >= 0 && greens != null && vi < greens.Length) ? greens[vi] : new Vector2(h.x, h.y);
+                    int pop = (vi >= 0 && S.villages != null && vi < S.villages.Length) ? S.villages[vi].pop : 2;
+                    routes.Add(new Route { a = new Vector2(h.x, h.y), b = g, wear = Mathf.Clamp01(0.30f + pop / 45f), layer = liDirt });
+                }
+            // 2) village → village: ONLY where a real relationship exists (shared culture OR mutual trade tech,
+            //    within a walkable reach). This is the "not random" fix — never nearest-neighbour geometry.
             if (S.villages != null)
                 for (int i = 0; i < S.villages.Length; i++)
-                {
-                    int nj = -1; float bd = float.MaxValue;
-                    for (int j = 0; j < S.villages.Length; j++)
+                    for (int j = i + 1; j < S.villages.Length; j++)
                     {
-                        if (j == i) continue;
-                        float d = (S.villages[i].x - S.villages[j].x) * (S.villages[i].x - S.villages[j].x) + (S.villages[i].y - S.villages[j].y) * (S.villages[i].y - S.villages[j].y);
-                        if (d < bd) { bd = d; nj = j; }
+                        var vi = S.villages[i]; var vj = S.villages[j];
+                        float dist = Vector2.Distance(new Vector2(vi.x, vi.y), new Vector2(vj.x, vj.y));
+                        if (dist > 55f) continue;                                   // beyond a day's reach → no track forms
+                        int shared = SharedCulture(vi, vj);
+                        bool trade = HoldsTrade(vi) && HoldsTrade(vj);
+                        if (shared <= 0 && !trade) continue;                        // no tie → no road
+                        float traffic = Mathf.Min(vi.pop, vj.pop) * (1 + shared) / Mathf.Max(8f, dist);
+                        float wear = Mathf.Clamp01(0.40f + traffic * 0.10f);
+                        // D-120 v1.1: the tech-gated COBBLE tier + URP 8-layer rendering is PROVEN (below) — but the
+                        // Dreamscape Cobblestone TEXTURE reads as the light checkerboard the EP disliked, so the paved
+                        // tier is HELD at warm dirt (width still marks the busy trade route) pending a better paved
+                        // texture / EP confirmation. Re-enable true cobble by flipping this layer to liCobble.
+                        routes.Add(new Route { a = new Vector2(vi.x, vi.y), b = new Vector2(vj.x, vj.y), wear = wear, layer = liDirt });
                     }
-                    if (nj > i) segs.Add((new Vector2(S.villages[i].x, S.villages[i].y), new Vector2(S.villages[nj].x, S.villages[nj].y)));
-                }
+            return routes;
+        }
+
+        static void PaintRoutes(WorldState S, float[,,] am, int res, int liDirt, int liCobble)
+        {
+            var routes = ComputeRoutes(S, liDirt, liCobble);
             int nlayers = am.GetLength(2);
-            int cellsPainted = 0;
-            const int rr = 2; // brush radius in alphamap cells (~3.1 m/cell → ~15 m worn track)
-            foreach (var (a, b) in segs)
+            int cells = 0, cobbleRoutes = 0;
+            foreach (var r in routes)
             {
-                float len = Vector2.Distance(a, b);
+                if (r.layer == liCobble) cobbleRoutes++;
+                int rr = 1 + Mathf.RoundToInt(Mathf.Clamp01(r.wear) * 2f);           // WIDTH by wear: 1..3 cells
+                float len = Vector2.Distance(r.a, r.b);
                 int steps = Mathf.Max(1, Mathf.CeilToInt(len * 4f));
                 for (int s = 0; s <= steps; s++)
                 {
-                    var p = Vector2.Lerp(a, b, s / (float)steps);
+                    var p = Vector2.Lerp(r.a, r.b, s / (float)steps);
                     int ax = Mathf.RoundToInt(p.x / Mathf.Max(1, S.W - 1) * (res - 1));
                     int ay = Mathf.RoundToInt((1f - p.y / Mathf.Max(1, S.H - 1)) * (res - 1));
                     for (int dy = -rr; dy <= rr; dy++)
                         for (int dx = -rr; dx <= rr; dx++)
                         {
-                            if (dx * dx + dy * dy > rr * rr + 1) continue; // round brush
+                            if (dx * dx + dy * dy > rr * rr + 1) continue;           // round brush
                             int cx = ax + dx, cy = ay + dy;
                             if (cx < 0 || cy < 0 || cx >= res || cy >= res) continue;
-                            for (int l = 0; l < nlayers; l++) am[cy, cx, l] = (l == liPath) ? 1f : 0f;
-                            cellsPainted++;
+                            for (int l = 0; l < nlayers; l++) am[cy, cx, l] = 0f;
+                            // D-120: paved tier = mostly cobble but blended with worn dirt so it reads as a WARM
+                            // trodden street, not a stark white checkerboard; dirt/trail tiers = full dirt.
+                            if (r.layer == liCobble) { am[cy, cx, liCobble] = 0.4f; am[cy, cx, liDirt] = 0.6f; }
+                            else am[cy, cx, r.layer] = 1f;
+                            cells++;
                         }
                 }
             }
-            Debug.Log($"[Dresser] paths: {segs.Count} desire-line segments, {cellsPainted} alphamap cells painted (layer {liPath})");
+            Debug.Log($"[Dresser] EMERGENT ROADS: {routes.Count} routes ({cobbleRoutes} paved/cobble), {cells} cells painted — tie-derived, wear→width (D-116)");
         }
 
-        // ---- TD-034: shared path GEOMETRY — curved desire lines (quadratic bezier, deterministic bend) ----
-        // One source of truth for street/trail curves, used by BOTH the ground decals and the
-        // detail-grass exclusion mask (grass must not poke through the worn ground).
-        public struct PathSeg { public Vector2 a, m, b; public bool street; }
-        static List<PathSeg> PathSegs(WorldState S)
+        // D-115: Dreamscape's own ambient particle FX — drifting leaves (Leaf_Particle_Wind) + dust motes
+        // (Dust_Particle) sparsely over the open meadow. Atmosphere the still render can't show (particles
+        // need play mode) but the EP sees on Play. Deterministic hash scatter (D-078 r4), never RNG.
+        static void PlaceAmbientFX(WorldState S, Transform root)
         {
-            var greens = VillageGreens(S);
-            var segs = new List<PathSeg>();
-            void Add(Vector2 a, Vector2 b, bool street)
-            {
-                float len = Vector2.Distance(a, b);
-                if (len < 0.01f) return;
-                var mid = (a + b) * 0.5f;
-                var dir = (b - a) / len;
-                var perp = new Vector2(-dir.y, dir.x);
-                int ha = Mathf.RoundToInt(a.x * 7 + a.y * 131 + b.x * 17 + b.y * 257);
-                float bend = (Hash01(ha, ha >> 3, 141) - 0.5f) * 2f * Mathf.Min(len * PathBendFrac, PathBendMaxTiles);
-                segs.Add(new PathSeg { a = a, m = mid + perp * bend, b = b, street = street });
-            }
-            foreach (var h in S.huts)
-            {
-                int vi = NearestVillageIdx(S, h.x, h.y);
-                if (vi >= 0 && greens != null && vi < greens.Length) Add(new Vector2(h.x, h.y), greens[vi], true);
-            }
-            if (S.villages != null)
-                for (int i = 0; i < S.villages.Length; i++)
+            var parent = new GameObject("AmbientFX").transform; parent.SetParent(root, true);
+            var leaf = FindPrefab("Leaf_Particle_Wind") ?? FindPrefab("Leaf_Particle");
+            var dust = FindPrefab("Dust_Particle");
+            if (leaf == null && dust == null) { Debug.LogWarning("[Dresser] no Dreamscape ambient particles found"); return; }
+            int placed = 0;
+            for (int y = 6; y < S.H; y += 14)
+                for (int x = 6; x < S.W; x += 14)
                 {
-                    int nj = -1; float bd = float.MaxValue;
-                    for (int j = 0; j < S.villages.Length; j++)
-                    {
-                        if (j == i) continue;
-                        float d = (S.villages[i].x - S.villages[j].x) * (S.villages[i].x - S.villages[j].x) + (S.villages[i].y - S.villages[j].y) * (S.villages[i].y - S.villages[j].y);
-                        if (d < bd) { bd = d; nj = j; }
-                    }
-                    if (nj > i) Add(new Vector2(S.villages[i].x, S.villages[i].y), new Vector2(S.villages[nj].x, S.villages[nj].y), false);
+                    if (Tile(S, x, y) != 'g') continue;                 // open meadow only
+                    var pf = (Hash(x, y, 501) % 2u == 0u) ? leaf : dust;
+                    if (pf == null) pf = leaf ?? dust;
+                    var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, parent);
+                    go.transform.position = Ground(S, x + (Hash01(x, y, 7) - 0.5f) * 4f, y + (Hash01(x, y, 8) - 0.5f) * 4f, 2.5f);
+                    placed++;
                 }
-            return segs;
-        }
-        static Vector2 Bezier(PathSeg s, float t)
-        {
-            float u = 1f - t;
-            return u * u * s.a + 2f * u * t * s.m + t * t * s.b;
-        }
-
-        // ---- TD-034: THE MEADOW — dense scatter of the pack's own *_Detail grass meshes ----
-        // First attempt used the terrain DETAIL system (the Demo's recipe) — instances stored, NOTHING
-        // rendered, on the same procedural TerrainData whose splat also never rendered (TD-031's URP
-        // ghost). Doctrine from the terrain pass: don't fight that ghost — ship what provably renders.
-        // So: the *_Detail meshes (purpose-built lightweight clumps, pack Grass wind shader → they SWAY)
-        // scattered as plain mesh GameObjects, dense (MeadowPerTile/tile vs the 0.8 stopgap), skipping
-        // paths/fields/huts/fires. SRP batcher keeps one material per proto cheap. RNG-neutral (D-078 r4).
-        static void PlaceMeadow(WorldState S, Transform root)
-        {
-            // NOTE (run 3 evidence): the *_Detail variants render NOTHING as plain meshes — their
-            // SM_*_Unity meshes are authored for the terrain-detail pipeline (vertex-color wind/alpha).
-            // The regular prefabs are the ones TD-032 proved to render. Use those.
-            // Prefab_Grass_02 EXCLUDED: its LOD0 references a material guid that does not exist in the
-            // project (ecbaa5667e…) → pure-magenta tufts. THIS was TD-032's "magenta sub-material".
-            var grassNames = new[] { "Prefab_Grass_01", "Prefab_Grass_03", "Prefab_Grass_Group_01", "Prefab_Grass_Group_02" };
-            var flowerNames = new[] { "Prefab_Flower_01", "Prefab_Flower_03" };
-            var grassSrc = grassNames.Select(FindPrefab).Where(p => p != null).ToArray();
-            var flowerSrc = flowerNames.Select(FindPrefab).Where(p => p != null).ToArray();
-            if (grassSrc.Length == 0) { Debug.LogWarning("[Dresser] no Dreamscape grass prefabs found — meadow skipped"); return; }
-
-            // blocked sim tiles: not-meadow tiles + worked ground (fields/huts/fires)
-            var blocked = new bool[S.W, S.H];
-            for (int y = 0; y < S.H; y++)
-                for (int x = 0; x < S.W; x++)
-                    if (Tile(S, x, y) != 'g') blocked[x, y] = true;
-            if (S.fields != null) foreach (var f in S.fields) Block(blocked, S, Mathf.RoundToInt(f.x), Mathf.RoundToInt(f.y));
-            if (S.huts != null) foreach (var h in S.huts) Block(blocked, S, Mathf.RoundToInt(h.x), Mathf.RoundToInt(h.y));
-            if (S.fires != null) foreach (var f in S.fires) Block(blocked, S, Mathf.RoundToInt(f.x), Mathf.RoundToInt(f.y));
-
-            // path mask (512²) — same curves the decals lay, radius = track + worn shoulder
-            const int res = 512;
-            var pathMask = new bool[res, res];
-            float cellM = Mathf.Min(S.W * TileSize / res, S.H * TileSize / res);
-            int rCells = Mathf.CeilToInt(2.6f / cellM);
-            foreach (var seg in PathSegs(S))
-            {
-                float len = Vector2.Distance(seg.a, seg.b);
-                int steps = Mathf.Max(2, Mathf.CeilToInt(len * 4f));
-                for (int s = 0; s <= steps; s++)
-                {
-                    var p = Bezier(seg, s / (float)steps);
-                    int cx = Mathf.RoundToInt(p.x / Mathf.Max(1, S.W - 1) * (res - 1));
-                    int cy = Mathf.RoundToInt((1f - p.y / Mathf.Max(1, S.H - 1)) * (res - 1));
-                    for (int dy = -rCells; dy <= rCells; dy++)
-                        for (int dx = -rCells; dx <= rCells; dx++)
-                        {
-                            if (dx * dx + dy * dy > rCells * rCells + 1) continue;
-                            int mx = cx + dx, my = cy + dy;
-                            if (mx >= 0 && my >= 0 && mx < res && my < res) pathMask[my, mx] = true;
-                        }
-                }
-            }
-            bool Masked(float sx, float sy)
-            {
-                int cx = Mathf.Clamp(Mathf.RoundToInt(sx / Mathf.Max(1, S.W - 1) * (res - 1)), 0, res - 1);
-                int cy = Mathf.Clamp(Mathf.RoundToInt((1f - sy / Mathf.Max(1, S.H - 1)) * (res - 1)), 0, res - 1);
-                return pathMask[cy, cx];
-            }
-
-            var parent = new GameObject("Meadow").transform; parent.SetParent(root, true);
-            int placed = 0, fl = 0;
-            for (int y = 0; y < S.H; y++)
-                for (int x = 0; x < S.W; x++)
-                {
-                    if (blocked[x, y]) continue;
-                    int count = Mathf.FloorToInt(MeadowPerTile) + (Hash01(x, y, 180) < MeadowPerTile - Mathf.Floor(MeadowPerTile) ? 1 : 0);
-                    for (int i = 0; i < count; i++)
-                    {
-                        float jx = Hash01(x, y, 181 + i * 7) - 0.5f, jy = Hash01(x, y, 182 + i * 7) - 0.5f;
-                        float sx = x + jx, sy = y + jy;
-                        if (Masked(sx, sy)) continue;
-                        bool flower = Hash01(x, y, 183 + i * 7) < MeadowFlowerFrac && flowerSrc.Length > 0;
-                        var pf = flower ? flowerSrc[Hash(x, y, 184 + i * 7) % (uint)flowerSrc.Length]
-                                        : grassSrc[Hash(x, y, 184 + i * 7) % (uint)grassSrc.Length];
-                        var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, parent);
-                        StripImpostorLods(go); // TD-032's "magenta sub-material" was the unbaked impostor child — strip it here too
-                        // TD-034 root cause 3: the grass prefabs' LODGroup CULLS small clumps a few meters
-                        // out (tiny screen height) — the Demo dodges this by using the terrain-detail path,
-                        // which has no LODGroup. Keep LOD0 only, never cull; 4070 Ti eats the triangles.
-                        foreach (var lg in go.GetComponentsInChildren<LODGroup>())
-                        {
-                            var lods = lg.GetLODs();
-                            for (int li = 1; li < lods.Length; li++)
-                                foreach (var r in lods[li].renderers) if (r != null) r.enabled = false;
-                            UnityEngine.Object.DestroyImmediate(lg);
-                        }
-                        go.transform.position = Ground(S, sx, sy);
-                        go.transform.rotation = Quaternion.Euler(0f, Hash(x, y, 185 + i * 7) % 360u, 0f);
-                        go.transform.localScale = Vector3.one * (0.9f + Hash01(x, y, 186 + i * 7) * 0.6f) * GrassScale;
-                        placed++; if (flower) fl++;
-                    }
-                }
-            // file-based diagnostic (terrain-diag doctrine): what resolved, where the clumps sit, what renders
-            var mr0 = parent.GetComponentsInChildren<MeshRenderer>().FirstOrDefault();
-            var diag = $"[meadow-diag] placed={placed} flowers={fl}\n"
-                     + "grass sources:\n  " + string.Join("\n  ", grassSrc.Select(AssetDatabase.GetAssetPath)) + "\n"
-                     + "flower sources:\n  " + string.Join("\n  ", flowerSrc.Select(AssetDatabase.GetAssetPath)) + "\n"
-                     + (mr0 != null ? $"first renderer: {mr0.gameObject.name} pos={mr0.transform.position} bounds={mr0.bounds.center}/{mr0.bounds.size} enabled={mr0.enabled} mat={(mr0.sharedMaterial ? mr0.sharedMaterial.name + "/" + mr0.sharedMaterial.shader.name : "NULL")}\n" : "no renderers under Meadow!\n")
-                     + $"renderers under Meadow: {parent.GetComponentsInChildren<MeshRenderer>().Length}\n";
-            System.IO.Directory.CreateDirectory("Logs");
-            System.IO.File.WriteAllText("Logs/meadow-diag.txt", diag);
-            Debug.Log(diag);
-            Debug.Log($"[Dresser] meadow: {placed} clumps ({fl} flowers) at {MeadowPerTile}/tile — pack grass prefabs, wind-shader sway, impostors stripped (TD-034)");
-        }
-        static void Block(bool[,] blocked, WorldState S, int x, int y)
-        {
-            if (x >= 0 && y >= 0 && x < S.W && y < S.H) blocked[x, y] = true;
+            Debug.Log($"[Dresser] {placed} Dreamscape ambient FX (drifting leaves + dust motes)");
         }
 
         static void BuildWater(WorldState S, Transform root)
         {
-            // v1: pack water prefab per water tile-cluster centroid if found, else one plane per tile group
-            var waterPrefab = FindPrefab("P_FX_water_FVP");
+            // D-101d: Dreamscape lake/river material on a basin-fitted quad per water tile.
             var parent = new GameObject("Water").transform; parent.SetParent(root, true);
             for (int y = 0; y < S.H; y++)
                 for (int x = 0; x < S.W; x++)
                     if (Tile(S, x, y) == 'w' && Hash(x, y, 7) % 1 == 0)
                     {
-                        if (waterPrefab != null && Hash(x, y, 11) % 4 == 0) // sparse instancing of the pack's water FX
                         {
-                            var w = (GameObject)PrefabUtility.InstantiatePrefab(waterPrefab, parent);
-                            w.transform.position = P(S, x, y, -1.1f);
-                        }
-                        else
-                        {
-                            var plane = GameObject.CreatePrimitive(PrimitiveType.Quad);
-                            plane.name = "w";
-                            plane.transform.SetParent(parent, true);
-                            plane.transform.position = P(S, x, y, -0.9f);
-                            plane.transform.rotation = Quaternion.Euler(90, 0, 0);
-                            plane.transform.localScale = new Vector3(TileSize, TileSize, 1);
-                            var mr = plane.GetComponent<MeshRenderer>();
-                            // TD-035 paid-first (EP principle): the Dreamscape pack's own lake material leads;
-                            // Village pack water next; generic fallbacks last. A/B vs PolyOne = RUN WATER RE-AUDITION.
-                            var wm = FindMaterial("MI_Water_MeadowsLake") ?? FindMaterial("M_ENV_water") ?? FindMaterial("M_FX_water") ?? FindMaterial("M_water") ?? FindMaterial("water");
-                            if (wm != null) mr.sharedMaterial = wm;
-                            else mr.sharedMaterial.color = new Color(0.23f, 0.42f, 0.55f); // sober fallback: no white lakes
+                            // D-115: use Dreamscape's OWN water PREFAB (Prefab_WaterLake / SM_WaterRiver — their
+                            // showcase water mesh + shader + foam), scaled by its mesh bounds to one sim tile.
+                            var pf = FindPrefab("Prefab_WaterLake") ?? FindPrefab("SM_WaterRiver");
+                            if (pf != null)
+                            {
+                                var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, parent);
+                                go.name = "w";
+                                go.transform.position = Ground(S, x, y, 0.25f);
+                                var mf = go.GetComponentInChildren<MeshFilter>();
+                                var bs = (mf != null && mf.sharedMesh != null) ? mf.sharedMesh.bounds.size : Vector3.one;
+                                float baseSize = Mathf.Max(0.01f, Mathf.Max(bs.x, bs.z));
+                                float sc = (TileSize * 1.02f) / baseSize;
+                                go.transform.localScale = new Vector3(sc, sc, sc);
+                            }
+                            else
+                            {
+                                // fallback: their water material on a flat quad
+                                var plane = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                                plane.name = "w"; plane.transform.SetParent(parent, true);
+                                plane.transform.position = Ground(S, x, y, 0.25f);
+                                plane.transform.rotation = Quaternion.Euler(90, 0, 0);
+                                plane.transform.localScale = new Vector3(TileSize * 1.02f, TileSize * 1.02f, 1);
+                                var wm = FindMaterial("MI_Water_MeadowsLake") ?? FindMaterial("M_Dreamscape_WaterRiver")
+                                         ?? FindMaterial("M_ENV_water") ?? FindMaterial("water");
+                                if (wm != null) plane.GetComponent<MeshRenderer>().sharedMaterial = wm;
+                                else plane.GetComponent<MeshRenderer>().sharedMaterial.color = new Color(0.23f, 0.42f, 0.55f);
+                            }
                         }
                     }
         }
@@ -573,13 +648,13 @@ namespace Emergence.Editor
             return m;
         }
 
-        static void Decal(WorldState S, Transform parent, Material mat, float sx, float sy, float size, float lift, string name, float yaw = 0f)
+        static void Decal(WorldState S, Transform parent, Material mat, float sx, float sy, float size, float lift, string name)
         {
             var q = GameObject.CreatePrimitive(PrimitiveType.Quad);
             q.name = name;
             q.transform.SetParent(parent, true);
             q.transform.position = Ground(S, sx, sy, lift);
-            q.transform.rotation = Quaternion.Euler(90f, yaw, 0f); // lie flat, normal +Y; yaw aligns to travel direction (TD-034)
+            q.transform.rotation = Quaternion.Euler(90f, 0f, 0f); // lie flat, normal +Y
             q.transform.localScale = new Vector3(size, size, 1f);
             q.GetComponent<MeshRenderer>().sharedMaterial = mat;
             var col = q.GetComponent<Collider>(); if (col != null) UnityEngine.Object.DestroyImmediate(col);
@@ -618,77 +693,116 @@ namespace Emergence.Editor
             Debug.Log($"[Dresser] {placed} Dreamscape grass clumps (waving foliage) across the open meadow");
         }
 
+        // D-115: DEFAULT OFF — the empirical splat test proved the painted terrain renders paths/fields on its own,
+        // so the mesh-decal "plates" workaround is retired. Paths/fields = painted terrain splat (pack-correct:
+        // smooth, terrain-following, grass auto-masked). Kept as a toggle only for A/B diagnostics.
+        public static bool GroundDecals = false;
+
         static void PlaceGroundFeatures(WorldState S, Transform root)
         {
+            if (!GroundDecals) { Debug.Log("[Dresser] GroundDecals OFF — terrain splat only (no decal plates)."); return; }
             var parent = new GameObject("GroundFeatures").transform; parent.SetParent(root, true);
             var fieldMat = GroundMat("Layer_farmfield", new Color(0.42f, 0.32f, 0.20f));
-            var dirtMat = GroundMat("Layer_Dirt", new Color(0.46f, 0.36f, 0.24f));
+            var dirtMat = PathMat("Layer_Dirt", new Color(0.46f, 0.36f, 0.24f));
             int fields = 0, path = 0;
             // field soil: one quad per field tile, inside the enclosures
             if (S.fields != null)
                 foreach (var f in S.fields) { Decal(S, parent, fieldMat, f.x, f.y, TileSize * 0.98f, 0.06f, $"fieldsoil_{fields}"); fields++; }
-            // TD-034 LIVING PATHS (EP: paths were "tråkiga" — make them alive with the packs' own content):
-            // the same curved desire lines the grass mask knows about (PathSegs), laid as direction-ALIGNED,
-            // size-varied, slightly wandering quads — a worn track, not a stamped line. Village STREETS in
-            // Dreamscape COBBLESTONE (the trodden centre), inter-village TRAILS in worn DIRT; and the edges
-            // get pack life: small rocks (Dreamscape), village-grass tufts (Village pack's own settlement
-            // grass) on streets, meadow flowers on trails. All position-hashed, RNG-neutral (D-078 r4).
-            var cobbleMat = GroundMat("Layer_Cobblestone", new Color(0.55f, 0.53f, 0.50f));
-            var edgeParent = new GameObject("PathLife").transform; edgeParent.SetParent(root, true);
-            var stones = new[] { "Prefab_SmallRock_01", "Prefab_SmallRock_02", "Prefab_SmallRock_03" }
-                .Select(FindPrefab).Where(p => p != null).ToArray();
-            var tuft = FindPrefab("P_ENV_PLANT_grass_village");
-            var flowers = new[] { "Prefab_Flower_01", "Prefab_Flower_03" }
-                .Select(FindPrefab).Where(p => p != null).ToArray();
-            int life = 0;
-            var segs = PathSegs(S);
-            foreach (var seg in segs)
+            // TD-032 (EP: paths were "tråkiga" + use pack content): village STREETS in Dreamscape
+            // COBBLESTONE (hut->green — the trodden centre), inter-village TRAILS in worn DIRT.
+            var cobbleMat = PathMat("Layer_Cobblestone", new Color(0.55f, 0.53f, 0.50f));
+            var greens = VillageGreens(S);
+            var streets = new List<(Vector2 a, Vector2 b)>();
+            foreach (var h in S.huts)
             {
-                var mat = seg.street ? cobbleMat : dirtMat;
-                float w = seg.street ? 3.0f : 3.8f;
-                string tag = seg.street ? "street" : "trail";
-                float len = Vector2.Distance(seg.a, seg.b);
-                // streets need denser stepping than trails: overlapping cobble quads read as a laid
-                // track; the first run's 2.2/tile left gaps that read as stepping stones (AD note)
-                int steps = Mathf.Max(1, Mathf.CeilToInt(len * (seg.street ? 3.2f : 2.6f)));
-                for (int s = 0; s <= steps; s++)
+                int vi = NearestVillageIdx(S, h.x, h.y);
+                streets.Add((new Vector2(h.x, h.y), (vi >= 0 && vi < greens.Length) ? greens[vi] : new Vector2(h.x, h.y)));
+            }
+            var trails = new List<(Vector2 a, Vector2 b)>();
+            if (S.villages != null)
+                for (int i = 0; i < S.villages.Length; i++)
                 {
-                    float t = s / (float)steps;
-                    var p = Bezier(seg, t);
-                    var pn = Bezier(seg, Mathf.Min(1f, t + 0.5f / steps));
-                    int px = Mathf.RoundToInt(p.x * 8f), py = Mathf.RoundToInt(p.y * 8f); // sub-tile hash key
-                    // direction of travel (sim y -> world -z) + a small deterministic wander
-                    float yaw = Mathf.Atan2(pn.x - p.x, -(pn.y - p.y)) * Mathf.Rad2Deg + (Hash01(px, py, 160) - 0.5f) * 22f;
-                    float size = w * (0.85f + Hash01(px, py, 161) * 0.3f);
-                    var lat = (Hash01(px, py, 162) - 0.5f) * 0.20f; // slight lateral drift, in path widths
-                    var dirW = new Vector2(pn.x - p.x, pn.y - p.y).normalized;
-                    var perpW = new Vector2(-dirW.y, dirW.x) * lat * w / TileSize;
-                    Decal(S, parent, mat, p.x + perpW.x, p.y + perpW.y, size, 0.08f, $"{tag}_{path}", yaw);
-                    path++;
-                    // path life on the edges — offset perpendicular, just outside the worn width
-                    float edgeRoll = Hash01(px, py, 163);
-                    GameObject pf = null; float scale = 1f; string kind = null;
-                    if (edgeRoll < PathEdgeStoneChance && stones.Length > 0)
-                    { pf = stones[Hash(px, py, 164) % (uint)stones.Length]; scale = 0.5f + Hash01(px, py, 165) * 0.4f; kind = "stone"; }
-                    else if (seg.street && edgeRoll < PathEdgeStoneChance + PathEdgeTuftChance && tuft != null)
-                    { pf = tuft; scale = 0.8f + Hash01(px, py, 166) * 0.5f; kind = "tuft"; }
-                    else if (!seg.street && edgeRoll < PathEdgeStoneChance + PathEdgeFlowerChance && flowers.Length > 0)
-                    { pf = flowers[Hash(px, py, 167) % (uint)flowers.Length]; scale = 0.9f + Hash01(px, py, 168) * 0.4f; kind = "flower"; }
-                    if (pf != null)
+                    int nj = -1; float bd = float.MaxValue;
+                    for (int j = 0; j < S.villages.Length; j++)
                     {
-                        float side = Hash01(px, py, 169) < 0.5f ? -1f : 1f;
-                        float off = (w * 0.5f + 0.4f + Hash01(px, py, 170) * 0.9f) / TileSize; // just beyond the edge, in sim units
-                        var ep = p + new Vector2(-dirW.y, dirW.x) * off * side;
-                        var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, edgeParent);
-                        go.transform.position = Ground(S, ep.x, ep.y);
-                        go.transform.rotation = Quaternion.Euler(0, Hash(px, py, 171) % 360u, 0);
-                        go.transform.localScale = Vector3.one * scale;
-                        go.name = $"pathlife_{kind}_{life}";
-                        life++;
+                        if (j == i) continue;
+                        float d = (S.villages[i].x - S.villages[j].x) * (S.villages[i].x - S.villages[j].x) + (S.villages[i].y - S.villages[j].y) * (S.villages[i].y - S.villages[j].y);
+                        if (d < bd) { bd = d; nj = j; }
                     }
+                    if (nj > i) trails.Add((new Vector2(S.villages[i].x, S.villages[i].y), new Vector2(S.villages[nj].x, S.villages[nj].y)));
+                }
+            path += LayPath(S, parent, streets, cobbleMat, 3.0f, "street", path);
+            path += LayPath(S, parent, trails, dirtMat, 3.8f, "trail", path);
+            Debug.Log($"[Dresser] ground: {fields} field-soil quads + {path} continuous path ribbons (Dreamscape cobble streets + dirt trails, normal-mapped)");
+        }
+
+        static int LayPath(WorldState S, Transform parent, List<(Vector2 a, Vector2 b)> segs, Material mat, float w, string tag, int start)
+        {
+            int n = 0;
+            // A (D-114): ONE continuous terrain-following ribbon per route (not stepped quads) — kills the
+            // "plattor" look; the pack texture flows ALONG the path via UVs. Reusable by the future emergent
+            // path source (reconciler feeds segments + a wear/width per route into this same renderer).
+            foreach (var (a, b) in segs) { PathRibbon(S, parent, a, b, w, mat, 0.08f, 2f, $"{tag}_{start + n}"); n++; }
+            return n;
+        }
+
+        // path material: pack TerrainLayer diffuse + NORMAL map (the plates only had flat diffuse); mesh UVs tile.
+        static Material PathMat(string layerName, Color fallback)
+        {
+            var m = new Material(Shader.Find("Universal Render Pipeline/Lit")) { name = "Path_" + layerName };
+            var guid = AssetDatabase.FindAssets($"t:TerrainLayer {layerName}").FirstOrDefault();
+            if (guid != null)
+            {
+                var tl = AssetDatabase.LoadAssetAtPath<TerrainLayer>(AssetDatabase.GUIDToAssetPath(guid));
+                if (tl != null && tl.diffuseTexture != null)
+                {
+                    m.mainTexture = tl.diffuseTexture;
+                    if (tl.normalMapTexture != null) { m.EnableKeyword("_NORMALMAP"); m.SetTexture("_BumpMap", tl.normalMapTexture); }
+                    m.SetFloat("_Smoothness", 0.05f);
+                    return m;
                 }
             }
-            Debug.Log($"[Dresser] ground decals: {fields} field-soil + {path} path quads on {segs.Count} curved desire lines + {life} edge props (stones/tufts/flowers — the packs' own)");
+            m.color = fallback; m.SetFloat("_Smoothness", 0f);
+            return m;
+        }
+
+        // continuous flat strip a->b, terrain-height sampled per cross-section, texture tiling ALONG length (texTile metres/repeat)
+        static void PathRibbon(WorldState S, Transform parent, Vector2 a, Vector2 b, float worldWidth, Material mat, float lift, float texTile, string name)
+        {
+            float lenTiles = Vector2.Distance(a, b);
+            if (lenTiles < 0.01f) return;
+            int steps = Mathf.Max(2, Mathf.CeilToInt(lenTiles));           // ~1 cross-section per sim tile (follow relief)
+            Vector3 aW = Ground(S, a.x, a.y, lift), bW = Ground(S, b.x, b.y, lift);
+            Vector3 dir = bW - aW; dir.y = 0f;
+            if (dir.sqrMagnitude < 1e-4f) return;
+            dir.Normalize();
+            Vector3 perp = new Vector3(-dir.z, 0f, dir.x) * (worldWidth * 0.5f);
+            var verts = new List<Vector3>((steps + 1) * 2);
+            var uvs = new List<Vector2>((steps + 1) * 2);
+            var tris = new List<int>(steps * 6);
+            float dist = 0f; Vector3 prev = aW;
+            for (int i = 0; i <= steps; i++)
+            {
+                var ct = Vector2.Lerp(a, b, i / (float)steps);
+                Vector3 c = Ground(S, ct.x, ct.y, lift);
+                if (i > 0) { var d = c - prev; d.y = 0f; dist += d.magnitude; }
+                prev = c;
+                verts.Add(c - perp); verts.Add(c + perp);
+                float v = dist / texTile;
+                uvs.Add(new Vector2(0f, v)); uvs.Add(new Vector2(worldWidth / texTile, v));
+                if (i > 0)
+                {
+                    int b0 = (i - 1) * 2;
+                    tris.Add(b0); tris.Add(b0 + 1); tris.Add(b0 + 2);       // winding → normal +Y (faces up)
+                    tris.Add(b0 + 1); tris.Add(b0 + 3); tris.Add(b0 + 2);
+                }
+            }
+            var mesh = new Mesh { name = name };
+            mesh.SetVertices(verts); mesh.SetUVs(0, uvs); mesh.SetTriangles(tris, 0);
+            mesh.RecalculateNormals(); mesh.RecalculateBounds();
+            var go = new GameObject(name); go.transform.SetParent(parent, true);
+            go.AddComponent<MeshFilter>().sharedMesh = mesh;
+            go.AddComponent<MeshRenderer>().sharedMaterial = mat;
         }
 
         static void PlaceHuts(WorldState S, Transform root)
@@ -851,14 +965,11 @@ namespace Emergence.Editor
 
         // TD-028: a villager per living soul — the studio's OWN toon-rendered GLBs (glTFast import).
         // Age from a.age, gender by position hash (presentation-only, D-078 rule 4 — never sim RNG).
-        static bool Working(string task) => task != null && (task.Contains("work") || task.Contains("forg")
-            || task.Contains("tend") || task.Contains("build") || task.Contains("mill") || task.Contains("craft")
-            || task.Contains("bak") || task.Contains("smith") || task.Contains("dig") || task.Contains("chop"));
+        // FAS 2 (D-123): the classifier moved to runtime (Emergence.Runtime.AgentTaskRead) so the edit-mode
+        // still-poses and the live play-mode animator can never disagree. These wrappers keep call sites.
+        static bool Working(string task) => Emergence.Runtime.AgentTaskRead.Working(task);
 
-        static bool Moving(string task) => task != null && (task.Contains("walk") || task.Contains("forag")
-            || task.Contains("fish") || task.Contains("hunt") || task.Contains("gather") || task.Contains("carr")
-            || task.Contains("seek") || task.Contains("wander") || task.Contains("go ") || task.Contains("toward")
-            || task.Contains("travel") || task.Contains("herd"));
+        static bool Moving(string task) => Emergence.Runtime.AgentTaskRead.Moving(task);
 
         // the walk/work GLBs carry an AnimationClip; sampling it in EDIT mode POSES the model to a
         // frame (mid-stride / mid-work), so stills read dynamic + varied — no play mode needed.
@@ -870,6 +981,17 @@ namespace Emergence.Editor
             return null;
         }
 
+        // FAS 2 (D-123): controller assets built by Fas2AnimatorBuild (Editor-assembly — referenced by
+        // path here, not by type, since WorldDresser lives in Assembly-CSharp). Null until first build.
+        static RuntimeAnimatorController VillagerController(string band, bool female)
+        {
+            const string dir = "Assets/Emergence/Fas2/Anim";
+            string key = band == "adult" ? (female ? "adult-f" : "adult") : band + (female ? "-f" : "");
+            return key == "adult"
+                ? AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(dir + "/VillagerAnim.controller")
+                : AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>($"{dir}/Villager-{key}.overrideController");
+        }
+
         static void PlaceAgents(WorldState S, Transform root)
         {
             var parent = new GameObject("Agents").transform; parent.SetParent(root, true);
@@ -877,7 +999,9 @@ namespace Emergence.Editor
             foreach (var a in S.agents)
             {
                 string band = a.age < 14 ? "child" : a.age > 55 ? "elder" : "adult";
-                bool female = (Hash((int)a.x, (int)a.y, a.id) & 1u) == 0u;
+                // D-124: soul-stable sex — hash(id), never position (an agent that moved between
+                // snapshots used to change body; identity is a property of the soul, not the spot).
+                bool female = (Hash(a.id, 0, a.id * 31 + 7) & 1u) == 0u;
                 // pose by task: working adults -> -work, movers -> -walk, else idle base
                 string suffix = (band == "adult" && Working(a.task)) ? "-work" : Moving(a.task) ? "-walk" : "";
                 string baseNm = band == "child" ? (female ? "villager-child-f" : "villager-child")
@@ -893,6 +1017,17 @@ namespace Emergence.Editor
                 // POSE the model to a hash-varied frame of its clip (static, edit-mode)
                 var clip = LoadClip(CharDir + nm + ".glb");
                 if (clip != null && clip.length > 0f) clip.SampleAnimation(go, Hash01((int)a.x, (int)a.y, a.id + 11) * clip.length);
+                // FAS 2 (D-123): live Animator — inert in edit mode (the sampled still stands), drives
+                // Idle/Walk/Work in play mode. Controller per demographic (shared skeleton, D-123 build).
+                var rac = VillagerController(band, female);
+                if (rac != null)
+                {
+                    var anim = go.GetComponentInChildren<Animator>();
+                    if (anim == null) anim = go.AddComponent<Animator>();
+                    anim.runtimeAnimatorController = rac;
+                    var aa = go.AddComponent<Emergence.Runtime.AgentAnimator>();
+                    aa.agentId = a.id; aa.task = a.task; aa.canWork = band == "adult";
+                }
                 // face the nearest hut (a lived-in reading, less random) — orientation is presentation-only
                 WorldHut nh = null; float nb = float.MaxValue;
                 foreach (var h in S.huts) { float d = (h.x - a.x) * (h.x - a.x) + (h.y - a.y) * (h.y - a.y); if (d < nb) { nb = d; nh = h; } }
@@ -1045,8 +1180,11 @@ namespace Emergence.Editor
         static void PlaceNature(WorldState S, Transform root)
         {
             var parent = new GameObject("Nature").transform; parent.SetParent(root, true);
-            var trees = new[] { FindPrefab("P_ENV_TREE_village") }.Where(p => p != null)
-                .Concat(FindPrefabs("Prefab_TreeLarge").Where(p => !p.name.Contains("Coverage")).Take(4)).ToArray(); // no *_Coverage variants (same broken material family)
+            // D-101e: the village pack ships ONE tree (P_ENV_TREE_village) and it renders as a flat dark
+            // blob — drop it. Use DREAMSCAPE's real tree library for the woodland (their reference-quality
+            // large trees + birches). Village pack = the built world; Dreamscape = the natural world.
+            var trees = FindPrefabs("Prefab_TreeLarge").Where(p => !p.name.Contains("Coverage")).Take(4)
+                .Concat(FindPrefabs("Prefab_Birch").Where(p => !p.name.Contains("Coverage") && !p.name.Contains("Red")).Take(4)).ToArray();
             var rocks = FindPrefabs("Prefab_RockFormation").Take(4).Concat(new[] { FindPrefab("P_ENV_stone_01") }.Where(p => p != null)).ToArray(); // NOT RocksRound: uses the broken M_RoundedRocks_Coverage (pack-author leftover, VERDICT.md)
             var bushes = FindPrefabs("Prefab_Bush").Where(p => !p.name.Contains("Flower")).Take(3).ToArray(); // berry tiles read as berries, not blossom (AD)
             // TD-031 v2.1: the woodland EDGE is managed (coppiced), the deep wood is not — edge tiles
@@ -1094,17 +1232,55 @@ namespace Emergence.Editor
                 go.transform.position = Ground(S, x + jx * 0.9f, y + jy * 0.9f);
                 go.transform.rotation = Quaternion.Euler(0, Hash(x, y, salt + 400 + i) % 360, 0);
                 float sc = 0.85f + Hash01(x, y, salt + 500 + i) * 0.4f;
-                if (prefab.name.StartsWith("Prefab_TreeLarge")) sc *= 0.42f; // Dreamscape canopy trees are landmarks, not the forest baseline (silhouette law)
+                if (prefab.name.StartsWith("Prefab_TreeLarge")) sc *= 0.72f; // D-101e: Dreamscape large trees are now the woodland baseline — proper tree size, not tiny landmarks
                 go.transform.localScale = Vector3.one * sc;
                 StripImpostorLods(go); // Dreamscape impostor billboards lack baked textures in edit mode -> magenta at distance
             }
+        }
+
+        // D-101d: THE MEADOW BODY — scatter real 3D Dreamscape foliage (wildflower clusters, grass tufts,
+        // small flowering bushes) as GameObjects across the open grass. Terrain-detail grass is short and
+        // reads flat in the near field; this fills the foreground/mid-field with life so the meadow is
+        // lush right up to the camera — the natural canvas the genesis moment stands on. RNG-neutral (hash).
+        static void PlaceMeadowFoliage(WorldState S, Transform root)
+        {
+            var parent = new GameObject("MeadowFoliage").transform; parent.SetParent(root, true);
+            var flowers = new[] { "Prefab_Flower_01", "Prefab_Flower_03", "Prefab_Flower_04" }.Select(FindPrefabExact).Where(p => p != null).ToArray();
+            var tufts = new[] { "Prefab_Grass_Group_01", "Prefab_Grass_Group_02" }.Select(FindPrefabExact).Where(p => p != null).ToArray();
+            var smallBush = new[] { "Prefab_Bush_01", "Prefab_Bush_04_Flowers" }.Select(FindPrefabExact).Where(p => p != null).ToArray();
+            if (flowers.Length == 0 && tufts.Length == 0 && smallBush.Length == 0) { Debug.LogWarning("[Dresser] no meadow foliage prefabs found — skipped"); return; }
+            int placed = 0;
+            for (int y = 0; y < S.H; y++)
+                for (int x = 0; x < S.W; x++)
+                {
+                    if (Tile(S, x, y) != 'g') continue;
+                    if (NearVillage(S, x, y, 2f)) continue;                 // keep the immediate green/commons clear
+                    // D-119 (A6 enforcement, Director-delegated): ~halved 3D-clump density (was 0.45/0.34/0.06).
+                    // The renderer/draw-call bottleneck was ~4.9k clumps; the engine-instanced terrain-detail grass
+                    // carries the base lushness, so the meadow stays green while the 3D accents thin gracefully.
+                    if (tufts.Length > 0 && Hash01(x, y, 820) < 0.22f) placed += Clump(S, parent, tufts, x, y, 821, 0.7f, 1.3f);
+                    if (flowers.Length > 0 && Hash01(x, y, 830) < 0.16f) placed += Clump(S, parent, flowers, x, y, 831, 0.8f, 1.4f);
+                    if (smallBush.Length > 0 && Hash01(x, y, 840) < 0.03f) placed += Clump(S, parent, smallBush, x, y, 841, 0.6f, 1.0f);
+                }
+            Debug.Log($"[Dresser] meadow foliage: {placed} 3D clumps (flowers/tufts/bushes) filling the open grass (D-101d)");
+        }
+        static int Clump(WorldState S, Transform parent, GameObject[] set, int x, int y, int salt, float scLo, float scHi)
+        {
+            var pf = set[Hash(x, y, salt) % (uint)set.Length];
+            var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, parent);
+            float jx = Hash01(x, y, salt + 7) - 0.5f, jy = Hash01(x, y, salt + 9) - 0.5f;
+            go.transform.position = Ground(S, x + jx * 0.9f, y + jy * 0.9f);
+            go.transform.rotation = Quaternion.Euler(0, Hash(x, y, salt + 11) % 360u, 0);
+            go.transform.localScale = Vector3.one * (scLo + Hash01(x, y, salt + 13) * (scHi - scLo)) * GrassScale;
+            StripImpostorLods(go); // Dreamscape impostor billboards lack baked textures in edit mode -> magenta at distance
+            return 1;
         }
 
         [MenuItem("Emergence/P1 Dressing/Find Pink In Scene")]
         public static void FindPinkInScene()
         {
             var bad = new Dictionary<string, int>();
-            foreach (var r in UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsSortMode.None))
+            foreach (var r in UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsInactive.Exclude))
                 foreach (var m in r.sharedMaterials)
                     if (m != null && m.shader != null && (m.shader.name == "Hidden/InternalErrorShader" || !m.shader.isSupported))
                     {
@@ -1140,16 +1316,8 @@ namespace Emergence.Editor
 
         static Material FindMaterial(string name)
         {
-            // exact filename first (same fuzzy-match trap as FindPrefab — TD-034)
-            string fallback = null;
-            foreach (var g in AssetDatabase.FindAssets($"t:Material {name}"))
-            {
-                var p = AssetDatabase.GUIDToAssetPath(g);
-                if (Path.GetFileNameWithoutExtension(p) == name)
-                    return AssetDatabase.LoadAssetAtPath<Material>(p);
-                fallback = fallback ?? p;
-            }
-            return fallback == null ? null : AssetDatabase.LoadAssetAtPath<Material>(fallback);
+            var guid = AssetDatabase.FindAssets($"t:Material {name}").FirstOrDefault();
+            return guid == null ? null : AssetDatabase.LoadAssetAtPath<Material>(AssetDatabase.GUIDToAssetPath(guid));
         }
 
         // TD-033: THE CODEX IN ACTION — read object-codex.json, place each object where its DISCOVERY
@@ -1214,19 +1382,22 @@ namespace Emergence.Editor
             return FindPrefab(name);
         }
 
-        // EXACT name first (TD-034 gotcha: "Prefab_Grass_01" fuzzy-matched its invisible "_Detail" twin,
-        // and FindAssets order flips between asset-DB refreshes → the meadow randomly vanished).
         static GameObject FindPrefab(string name)
         {
-            string fallback = null;
+            var guid = AssetDatabase.FindAssets($"t:Prefab {name}").FirstOrDefault();
+            return guid == null ? null : AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(guid));
+        }
+        // exact-name prefab lookup (FindPrefab's fuzzy FirstOrDefault would confuse e.g.
+        // Prefab_Grass_01 with Prefab_Grass_01_Detail) — D-101 meadow needs the exact detail assets.
+        static GameObject FindPrefabExact(string name)
+        {
             foreach (var g in AssetDatabase.FindAssets($"t:Prefab {name}"))
             {
                 var p = AssetDatabase.GUIDToAssetPath(g);
                 if (Path.GetFileNameWithoutExtension(p) == name)
                     return AssetDatabase.LoadAssetAtPath<GameObject>(p);
-                fallback = fallback ?? p;
             }
-            return fallback == null ? null : AssetDatabase.LoadAssetAtPath<GameObject>(fallback);
+            return null;
         }
         static IEnumerable<GameObject> FindPrefabs(string prefix)
             => AssetDatabase.FindAssets($"t:Prefab {prefix}").Select(g => AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(g))).Where(p => p != null && p.name.StartsWith(prefix, StringComparison.OrdinalIgnoreCase));

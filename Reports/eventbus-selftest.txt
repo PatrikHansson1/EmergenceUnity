@@ -1,0 +1,15 @@
+# PresentationEventBus log — 14 events
+t1 y0 dawn Milestone id=fas0.selftest.first-hearth v0 {cause=fire}
+t1 y0 dawn AssetSpawned id=campfire v0 {placement=green}
+t1 y1 dawn AssetUpgraded id=hut->house v0 {supersedes=hut}
+t1 y2 dawn AssetRemoved id=hut v0 {onLoss=remove}
+t1 y2 dawn AgentActivity id=agent:7 v0 {role=smith;activity=forge}
+t1 y2 dawn Chronicle id=fas0.selftest.chronicle v-1 {story hooks land in Fas 4}
+t1 y2 dawn Audio id=fas0.selftest.audio v-1 {audio hooks land in Fas 6}
+t2 y0 dawn Milestone id=fas0.selftest.first-hearth v0 {cause=fire}
+t2 y0 dawn AssetSpawned id=campfire v0 {placement=green}
+t2 y1 dawn AssetUpgraded id=hut->house v0 {supersedes=hut}
+t2 y2 dawn AssetRemoved id=hut v0 {onLoss=remove}
+t2 y2 dawn AgentActivity id=agent:7 v0 {role=smith;activity=forge}
+t2 y2 dawn Chronicle id=fas0.selftest.chronicle v-1 {story hooks land in Fas 4}
+t2 y2 dawn Audio id=fas0.selftest.audio v-1 {audio hooks land in Fas 6}

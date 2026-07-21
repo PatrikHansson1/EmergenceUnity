@@ -1,0 +1,19 @@
+EMERGENCE — FAS 2 DRESSED-SCENE LIVING POPULATION (D-125)
+generated 2026-07-21 15:42:23
+the static Agents layer retires; Agents_Live owns the people in the dressed core world.
+Scene starts at y85 (the world's own past); y120 lands LIVE in play mode among the huts.
+
+dressed core built; static CodexObjects + Agents layers retired
+codex overlay (y120): diff=+127 -0 =0 placed=127
+agents live   (y85):  diff=+57 -0 aged=0 retask=0 moved=0 =0 souls=57 — among the huts, on terrain height
+edit-phase magenta: 0
+
+## PLAY PHASE (frames=170)
+rehydrated after domain reload: 57 souls (y85 baseline)
+y85 -> y120 IN PLAY on the dressed scene: +75 -21 aged=30 retask=5 moved=6 =1
+task->state invariant: 111/111 in (or transitioning to) expected state, 0 off
+terrain grounding: 111/111 within 0.5u of terrain height
+play-phase magenta: 0   evidence: 45-UNITY/evidence/fas2/dressed-agents-*.png
+event bus: 131 events (Reports/fas2-dressed-agents-events.txt)
+
+verdict: GREEN — the population lives among the huts; real engine history lands live in the dressed body

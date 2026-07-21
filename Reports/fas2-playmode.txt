@@ -1,0 +1,29 @@
+EMERGENCE — FAS 2 PLAY-MODE PROBE (live villager animation, D-123)
+generated 2026-07-21 15:00:40  frames=160
+
+agents with AgentAnimator: 111   (no controller: 0)
+states now:  Idle=33  Walk=78  Work=0
+animation advancing: 7/8 tracked animators moved >5% of a cycle
+root drift (max over 8 tracked, 6 ended in Walk): 0,000 u  (must stay ~0 — sim position is truth)
+    [Walk] drift=0,000u
+    [Walk] drift=0,000u
+    [Idle] drift=0,000u
+    [Walk] drift=0,000u
+    [Walk] drift=0,000u
+    [Walk] drift=0,000u
+    [Walk] drift=0,000u
+    [Idle] drift=0,000u
+
+## DIAG
+diag agent0: id=89 task='heading to berry' canWork=True activeInHierarchy=True
+  animator: enabled=True activeAndEnabled=True init=True speed=1 updateMode=Normal culling=CullUpdateTransforms
+  controller='Villager-adult-f' layers=1 avatar='NULL' avatarValid=False human=False
+  state: hash=2081823275 isIdle=True isWalk=False nt=0,116 len=4,03 clipInfos=1 clip0='adult-f-idle'
+  animatePhysics deltaTime=0,0045 timeScale=1
+diag forced: agent id=104 Play("Walk") issued
+diag pausedAtStart=False  playErrors=0  Time.time=0,83  frameCount=160  gameViewForced=True  stepUsed=False  runInBg=True  drawCalls=5610
+diag forced now: isWalk=True nt=0,084 (issued at t=0,5, now t=0,8)
+
+evidence: 45-UNITY/evidence/fas2/fas2-playmode-live.png   magenta=0
+
+verdict: GREEN — villagers animate live in play mode, root-locked, magenta clean

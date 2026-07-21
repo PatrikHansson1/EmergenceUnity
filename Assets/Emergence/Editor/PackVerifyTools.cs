@@ -113,7 +113,7 @@ namespace Emergence.Editor
 
         public static void CaptureNamed(string name)
         {
-            var cam = Camera.main ?? UnityEngine.Object.FindFirstObjectByType<Camera>();
+            var cam = Camera.main ?? UnityEngine.Object.FindAnyObjectByType<Camera>();
             if (cam == null) { Debug.LogError("[PackVerify] no camera"); return; }
             const int w = 2560, h = 1440;
             var rt = new RenderTexture(w, h, 24);

@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Villager-elder
+  m_Controller: {fileID: 9100000, guid: 26b1fbb5674aad342a7da49d83eec01e, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: dab4a282be04b2d41808d6be8c39460f, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 6e58369c6830c7a47be87ef6825a690a, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 5a662693122b2d149a751f643cf1d3ba, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 5923166eb75d83d449d7629175c4eb82, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 211df3f2b1090b145bb554646dc3b70d, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 6e58369c6830c7a47be87ef6825a690a, type: 2}

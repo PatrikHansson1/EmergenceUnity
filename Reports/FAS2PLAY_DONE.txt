@@ -1,0 +1,2 @@
+DONE 15:00:40 verdict=GREEN agents=111 idle=33 walk=78 work=0 advancing=7 drift=0,000 magenta=0
+see Reports/fas2-playmode.txt

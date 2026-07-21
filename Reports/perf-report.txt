@@ -1,0 +1,16 @@
+EMERGENCE — PERF HARNESS census (Fas 0, A6)
+generated 2026-07-21 14:02:00
+scene: 
+NOTE: static editor census (no play-mode draw-call counts). Budget is PROVISIONAL — Fas 1 calibrates.
+
+metric                     measured     budget     verdict
+active renderers (DC proxy) 12505        2500       OVER
+skinned meshes (agents)    111          150        OK
+unique materials           87           300        OK
+triangles (millions)       17,52        8          OVER
+unique meshes              242          -          (info)
+LODGroups                  2698         -          (info — want heavy meshes LOD'd)
+
+target FPS 60 (min-spec GTX 1660-class; 4070 Ti SUPER reference).
+Fas 1 action: run on a representative dressed village at genesis + growth, record real
+draw calls / SetPass / GPU ms in play mode, then write the calibrated budget into canon.

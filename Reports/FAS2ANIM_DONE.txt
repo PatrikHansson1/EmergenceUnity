@@ -1,0 +1,2 @@
+DONE 13:52:26 verdict=GREEN clips=14 overrides=5
+see Reports/fas2-anim-build.txt

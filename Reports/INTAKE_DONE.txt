@@ -1,0 +1,9 @@
+DONE 01:40:12 placed=7/7 magenta=0
+P_BLD_house_01 OK
+BLD_03_16x8_Ext_01 OK
+BLD_03_L_Ext_01 OK
+P_MOD_CityWall_03_tower OK
+P_MOD_Bridge_03 OK
+COMP_PROP_statue_city_01 OK
+COMP_PROP_marketstall_city_01 OK
+bounds center=(-1.16, 8.18, 0.40) size=(79.27, 26.36, 24.80)

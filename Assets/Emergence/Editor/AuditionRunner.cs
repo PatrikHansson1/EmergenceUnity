@@ -22,6 +22,90 @@ namespace Emergence.Editor
         [MenuItem("Emergence/P1 Dressing/RUN CODEX DEMO (town vs hamlet, discovery-driven)")]
         public static void RunCodexDemo() => Run(WS("world-codex-demo.json"), "spring", "codexdemo");
 
+        // D-101b: build the codex-demo world ONCE, then capture BOTH the map (bird's-eye) shot AND a
+        // ground-level hero shot standing in the meadow looking at the town — the meadow (grass/trees/
+        // fog/warm light) only reads at ground level, so this is where the Dreamscape look is validated.
+        [MenuItem("Emergence/P1 Dressing/RUN CODEX ALL (map + ground hero)")]
+        public static void RunCodexAll()
+        {
+            var json = WS("world-codex-demo.json");
+            if (!File.Exists(json)) { Debug.LogError("[Audition] missing " + json); return; }
+            WorldDresser.Build(json);
+            var S = JsonUtility.FromJson<WorldState>(File.ReadAllText(json));
+
+            EmergencePostStack.Remove();
+            EmergenceLightRig.Apply("spring", "day");
+            Cap("codexdemo-noon-nopost");
+            EmergencePostStack.Apply("day");
+            Cap("codexdemo-noon-post");
+
+            CodexGroundCamera(S);
+            EmergenceLightRig.Apply("spring", "day");
+            EmergencePostStack.Apply("day");
+            Cap("codexdemo-ground-noon");
+            EmergencePostStack.Remove();
+            Cap("codexdemo-ground-noon-nopost");
+
+            // D-101d: the GENESIS / wild-meadow shot — stand in the wilderness far from any village,
+            // eye height, looking across the open land. This is what a new world opens on (empty land,
+            // four souls, nothing built) and the true test of the core natural environment.
+            WildMeadowCamera(S);
+            EmergenceLightRig.Apply("spring", "day");
+            EmergencePostStack.Apply("day");
+            Cap("codexdemo-wild-noon");
+            Debug.Log("[Audition] codex ALL: map + ground hero + wild meadow written");
+        }
+
+        static void WildMeadowCamera(WorldState S)
+        {
+            var cam = Camera.main; if (cam == null) return;
+            var t = Terrain.activeTerrain;
+            float ts = WorldDresser.TileSize;
+            // find the open-grass tile farthest from every village (the deepest wilderness)
+            int bestX = S.W / 2, bestY = S.H / 2; float bestD = -1f;
+            for (int y = 3; y < S.H - 3; y++)
+                for (int x = 3; x < S.W - 3; x++)
+                {
+                    if (S.tileTypes[y * S.W + x] != 'g') continue;
+                    float md = float.MaxValue;
+                    if (S.villages != null)
+                        foreach (var v in S.villages)
+                        {
+                            float d = (v.x - x) * (v.x - x) + (v.y - y) * (v.y - y);
+                            if (d < md) md = d;
+                        }
+                    if (md > bestD) { bestD = md; bestX = x; bestY = y; }
+                }
+            Vector3 stand = new Vector3(bestX * ts, 0f, (S.H - 1 - bestY) * ts);
+            if (t != null) stand.y = t.SampleHeight(stand) + t.transform.position.y + 2.0f;
+            // A (D-101g): look ALONG the day sun's horizontal direction (rot 45,335) so meadow trees show
+            // their SUNLIT side to camera (front-lit) instead of shaded backs. A dark shaded side is correct;
+            // this just frames the flattering side for the hero/genesis shot.
+            Vector3 sunFwd = new Vector3(-0.42f, 0f, 0.91f);   // horizontal forward of the day sun
+            Vector3 look = stand + sunFwd * 120f;
+            if (t != null) look.y = t.SampleHeight(new Vector3(look.x, 0f, look.z)) + t.transform.position.y + 4f;
+            cam.transform.position = stand;
+            cam.transform.LookAt(look);
+            cam.fieldOfView = 62f;
+        }
+
+        static void CodexGroundCamera(WorldState S)
+        {
+            var cam = Camera.main; if (cam == null || S.villages == null || S.villages.Length == 0) return;
+            var t = Terrain.activeTerrain;
+            float ts = WorldDresser.TileSize;
+            WorldVillage town = S.villages[0];
+            foreach (var v in S.villages) if (v.pop > town.pop) town = v;   // the most-developed town
+            Vector3 look = new Vector3(town.x * ts, 0f, (S.H - 1 - town.y) * ts);
+            if (t != null) look.y = t.SampleHeight(look) + t.transform.position.y + 4f;
+            Vector3 dir = new Vector3(0.35f, 0f, -1f).normalized;           // stand out in the meadow
+            Vector3 pos = look + dir * 78f;
+            if (t != null) pos.y = t.SampleHeight(pos) + t.transform.position.y + 2.2f; // ~2m eye height
+            cam.transform.position = pos;
+            cam.transform.LookAt(look);
+            cam.fieldOfView = 58f;
+        }
+
         [MenuItem("Emergence/P1 Dressing/RUN AUDITION - Dusk one-warm-point (4242)")]
         public static void RunDuskWorld() => Run(WS("world-4242-y120-dusk.json"), "winter", "dusk4242", starDome: true);
 
@@ -65,39 +149,6 @@ namespace Emergence.Editor
             EmergencePostStack.Apply("dusk");
             Cap("people-closeup-dusk");
             Debug.Log("[Closeup] villager/tech closeups written");
-        }
-
-        // ---- TD-037: THE HEADLESS AUDITION RUNNER (the accelerator) ----
-        // Called via `-executeMethod Emergence.Editor.AuditionRunner.BatchAll` from batch-audition.bat
-        // (batchmode WITH graphics so the camera can render). Replaces the whole interactive loop
-        // (focus editor -> ctrl+r -> menu click -> screenshot -> wait -> re-approve grants) with ONE
-        // detached run that dresses + captures every key shot headless and writes to the evidence dir
-        // (which is on Dropbox, so it syncs — no git needed for captures). Zero computer-use per cycle.
-        public static void BatchAll()
-        {
-            int rc = 0;
-            try
-            {
-                Debug.Log("[BatchAudition] start (batchMode=" + Application.isBatchMode + ")");
-                RunNoonWorld();       // 777: noon + dusk, post OFF/ON
-                RunPeopleCloseup();   // eye-level villager shot (the lushness judge)
-                RunCodexDemo();       // the discovery-driven slice (town vs hamlet)
-                Debug.Log("[BatchAudition] DONE — captures in " + EvidenceDir);
-            }
-            catch (System.Exception ex) { Debug.LogError("[BatchAudition] FAILED: " + ex); rc = 1; }
-            if (Application.isBatchMode) EditorApplication.Exit(rc);
-        }
-
-        // one-click trigger from the open editor: spawns the detached bat (which waits for the lock,
-        // then runs BatchAll headless). Mirrors the Build queue pattern.
-        [MenuItem("Emergence/Build/Queue Batchmode Audition (headless captures)")]
-        public static void QueueBatchAudition()
-        {
-            var bat = Path.Combine(@"C:\Dev\EmergenceUnity\Tools", "batch-audition.bat");
-            var psi = new System.Diagnostics.ProcessStartInfo("cmd.exe", "/c \"" + bat + "\"")
-            { CreateNoWindow = true, UseShellExecute = false };
-            System.Diagnostics.Process.Start(psi);
-            Debug.Log("[BatchAudition] queued — see Builds\\batch-audition.log (bat waits for the editor lock)");
         }
 
         static void Run(string jsonPath, string season, string tag, bool starDome = false)
@@ -200,7 +251,7 @@ namespace Emergence.Editor
             if (cam == null) { Debug.LogError("[Audition] no Camera.main — dress first"); return; }
             // force particle systems (Vefects fire, msVFX smoke) to a mid-animation frame — they
             // do not animate in edit mode, so a raw capture would show empty emitters.
-            foreach (var ps in Object.FindObjectsByType<ParticleSystem>(FindObjectsSortMode.None))
+            foreach (var ps in Object.FindObjectsByType<ParticleSystem>(FindObjectsInactive.Exclude))
                 ps.Simulate(3.0f, true, true);
 
             const int w = 2560, h = 1440;

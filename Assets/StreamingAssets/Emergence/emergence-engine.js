@@ -81,6 +81,18 @@ const OBS={
   fishGather:{txt:'that fish gather in the shallows'},
   seedsSprout:{txt:'that spilled seeds sprout where they fall'},
   marksRemain:{txt:'that marks pressed in clay remain'},
+  copperGreen:{txt:'that green stone sweats a soft red metal in the fire'},
+  bronzeHard:{txt:'that two soft metals poured together wake up hard'},
+  coalBurns:{txt:'that the black stone burns hotter and longer than wood'},
+  steelKeen:{txt:'that iron worked long in a hotter fire holds a keener edge'},
+  pigmentStains:{txt:'that crushed coloured earth stains a lasting mark'},
+  goldGleams:{txt:'that the yellow metal never dulls and all hands want it'},
+  soundsRing:{txt:'that a struck string and a hollow log ring with a voice'},
+  weightsBalance:{txt:'that things can be counted, matched and made equal'},
+  starsWheel:{txt:'that the stars and seasons turn on a fixed wheel'},
+  herbsHeal:{txt:'that certain leaves ease pain and close a wound'},
+  archStands:{txt:'that stones leant just so hold up more than their own weight'},
+  lensBends:{txt:'that clear glass bends light and makes the small large'},
 };
 
 // ---------- knowledge catalog: rules, never outcomes ----------
@@ -119,12 +131,84 @@ const TECHS=[
  {id:'farming',   icon:'🌱', base:'Farming',         alts:[{wood:1,fiber:2}],                      pre:['pottery'], insights:['seedsSprout'], var:['the first field','seedcraft','tilling'],
    flavor:'pressed spilled seeds into turned soil and waited', effect:'Food that returns every year. The village roots itself.'},
  {id:'writing',   icon:'📜', base:'Writing',         alts:[{clay:2}],                              pre:['pottery'], insights:['marksRemain'], var:['glyphs','memory-marks','script'],
-   flavor:'carved signs into clay so knowledge could outlive its owner', effect:'Knowledge spreads to all — and to generations to come.'},
+   flavor:'carved signs into clay so knowledge could outlive its owner', effect:'Knowledge spreads to all — and to generations to come.', era:2, branch:'cul'},
+ {id:'brick',     icon:'🧱', base:'Brick',           alts:[{clay:3}],                pre:['pottery','kiln'], insights:['heatHardens'], var:['fired brick','mudbrick','block'], era:1, branch:'mat',
+   flavor:'fired shaped clay into blocks that stack true', effect:'Walls that outlast weather — the start of building.'},
+ {id:'well',      icon:'🕳️', base:'Well',            alts:[{stone:3,clay:2}],        pre:['brick'], insights:[], var:['stone well','cistern','draw-well'], era:1, branch:'mat',
+   flavor:'lined a deep pit with stone to hold clean water', effect:'Water without walking to the river — a village can grow inland.'},
+ {id:'granary',   icon:'🏚️', base:'Granary',         alts:[{wood:4,clay:2}],         pre:['farming','pottery'], insights:[], var:['grain store','silo','store-house'], era:1, branch:'mat',
+   flavor:'built a dry raised store so the harvest kept till spring', effect:'Surplus survives winter — the first true wealth.'},
+ {id:'weaving',   icon:'🧶', base:'Weaving',          alts:[{fiber:4}],               pre:['rope'], insights:['fibersTwist'], var:['the loom','woven cloth','warp-craft'], era:2, branch:'mat',
+   flavor:'crossed threads over threads until cloth grew on the frame', effect:'Cloth for warmth and trade — and hands that specialize.'},
+ {id:'copper',    icon:'🟤', base:'Copper',           alts:[{copper:2}],              pre:['kiln'], insights:['copperGreen'], var:['red metal','copperwork','the soft metal'], era:2, branch:'mat',
+   flavor:'coaxed a soft red metal out of green stone in the kiln', effect:'The first metal — soft, but the door to bronze.'},
+ {id:'tin',       icon:'⚪', base:'Tin',              alts:[{tin:2}],                 pre:['kiln'], insights:[], var:['tinwork','the pale metal','white metal'], era:2, branch:'mat',
+   flavor:'smelted a pale metal too soft to be worth much alone', effect:'Useless alone — everything when married to copper.'},
+ {id:'bronze',    icon:'🔶', base:'Bronze',           alts:[{copper:2,tin:1}],        pre:['copper','tin'], insights:['bronzeHard'], var:['bronzecraft','the hard alloy','bell-metal'], era:2, branch:'mat',
+   flavor:'poured copper and tin together and woke a hard new metal', effect:'The Bronze Age. Tools, blades and bells no stone could match.'},
+ {id:'bronzetools',icon:'🛠️', base:'Bronze tools',   alts:[{bronze:1,wood:2}],       pre:['bronze'], insights:[], var:['bronze axe','bronze plough','castings'], era:2, branch:'mat',
+   flavor:'cast bronze into edges that held far longer than stone', effect:'Faster everything — clearing, tilling, building.'},
+ {id:'sailing',   icon:'⛵', base:'Sailing',          alts:[{wood:6,fiber:3}],        pre:['weaving','axe'], insights:[], var:['the boat','the sail','river-craft'], era:2, branch:'mat',
+   flavor:'stretched cloth on a hull and let the wind do the work', effect:'Rivers and coasts become roads — trade and migration by water.'},
+ {id:'coal',      icon:'⚫', base:'Coal',             alts:[{coal:2}],                pre:['kiln'], insights:['coalBurns'], var:['coalcraft','black-stone fire','fuel'], era:3, branch:'mat',
+   flavor:'found the black stone burns hotter than any wood', effect:'Heat enough for steel and, one day, engines.'},
+ {id:'steel',     icon:'🗡️', base:'Steel',           alts:[{iron:2,coal:2}],         pre:['smithing','coal'], insights:['steelKeen'], var:['steelcraft','the keen edge','tempered blade'], era:3, branch:'mat',
+   flavor:'worked iron in a coal-hot fire until it took a keener soul', effect:'The hardest working metal — blades, springs, tools that endure.'},
+ {id:'masonry',   icon:'🧱', base:'Masonry',          alts:[{stone:6}],               pre:['brick'], insights:['archStands'], var:['stonecraft','dry-stone','the mason'], era:3, branch:'mat',
+   flavor:'dressed and fitted stone so it stood without mortar', effect:'Buildings that outlive their builders — the seed of monuments.'},
+ {id:'architecture',icon:'🏛️', base:'Architecture',  alts:[{stone:8,wood:4}],        pre:['masonry'], insights:['archStands'], var:['the arch','the vault','great halls'], era:3, branch:'mat',
+   flavor:'raised the arch, and space opened under stone', effect:'Temples, halls and towers — the shape of a civilization made visible.'},
+ {id:'road',      icon:'🛤️', base:'Road',            alts:[{stone:5}],               pre:['wheel','masonry'], insights:[], var:['paved road','the highway','trackway'], era:3, branch:'mat',
+   flavor:'laid stone in a bed so carts ran true in any weather', effect:'Villages bound together — trade, news and armies move.'},
+ {id:'aqueduct',  icon:'🌉', base:'Aqueduct',         alts:[{stone:8}],               pre:['architecture','well'], insights:[], var:['the channel','water-bridge','conduit'], era:3, branch:'mat',
+   flavor:'carried water across the valley on arches of stone', effect:'Cities freed from the river — population without limit of the well.'},
+ {id:'glassblowing',icon:'🫧', base:'Glassblowing',  alts:[{sand:4}],                pre:['glass','kiln'], insights:[], var:['blown glass','the vessel','clearware'], era:4, branch:'mat',
+   flavor:'blew molten sand into clear vessels thin as a bubble', effect:'Windows, flasks and, one day, lenses.'},
+ {id:'windmill',  icon:'🌬️', base:'Windmill',        alts:[{wood:8,stone:2}],        pre:['mill','architecture'], insights:[], var:['the windmill','sail-mill','tower-mill'], era:4, branch:'mat',
+   flavor:'set great sails to catch the wind and turn the stones', effect:'Grinding and pumping without river or muscle.'},
+ {id:'clock',     icon:'⏳', base:'Mechanical clock', alts:[{bronze:2,wood:2}],       pre:['bronzetools','architecture'], insights:['weightsBalance'], var:['the clockwork','the escapement','tower-clock'], era:4, branch:'mat',
+   flavor:'tamed a falling weight into steady, counted time', effect:'Time itself measured — the first true machine.'},
+ {id:'optics',    icon:'🔎', base:'Optics',           alts:[{sand:3}],                pre:['glassblowing'], insights:['lensBends'], var:['the lens','spectacles','the glass eye'], era:5, branch:'mat',
+   flavor:'ground clear glass until it bent light to the eye', effect:'The small made large, the far made near — the door to science.'},
+ {id:'printpress',icon:'🖨️', base:'Printing press',  alts:[{steel:1,wood:4}],        pre:['printing','bronzetools'], insights:[], var:['the press','movable type','the print-shop'], era:5, branch:'mat',
+   flavor:'set movable letters and pressed a page in a heartbeat', effect:'Knowledge copied a thousandfold — no idea dies again.'},
+ {id:'steam',     icon:'♨️', base:'Steam engine',     alts:[{steel:2,coal:3}],        pre:['steel','clock','optics'], insights:[], var:['the engine','the steam-mill','ironhorse'], era:6, branch:'mat',
+   flavor:'boiled water to force and set iron to move by fire', effect:'Muscle unbound — the Industrial age begins.'},
+ {id:'storytelling',icon:'📖', base:'Storytelling',   alts:[{}],                      pre:[], insights:[], var:['the tale','oral saga','the telling'], era:1, branch:'cul', needsLeisure:true,
+   flavor:'told the day back as a story worth remembering', effect:'The first culture — memory shaped into meaning.'},
+ {id:'song',      icon:'🎵', base:'Music',            alts:[{}],                      pre:['storytelling'], insights:['soundsRing'], var:['the song','the drum','melody'], era:1, branch:'cul', needsLeisure:true,
+   flavor:'found that a struck string and a voice could ring together', effect:'Song at the fire — the root of every art to come.'},
+ {id:'numbers',   icon:'🔢', base:'Counting',         alts:[{}],                      pre:[], insights:['weightsBalance'], var:['tally','number','the count'], era:2, branch:'cul', needsLeisure:true,
+   flavor:'matched pebble to sheep and found number itself', effect:'The world made countable — trade, calendars and mathematics begin.'},
+ {id:'painting',  icon:'🎨', base:'Painting',         alts:[{pigment:2}],             pre:['storytelling'], insights:['pigmentStains'], var:['cave-marks','the mural','pigmentwork'], era:2, branch:'cul', needsLeisure:true,
+   flavor:'ground coloured earth and left an image on the wall', effect:'The world seen, kept and shared — visual art is born.'},
+ {id:'calendar',  icon:'📅', base:'Calendar',         alts:[{}],                      pre:['numbers'], insights:['starsWheel'], var:['the calendar','star-count','the year-wheel'], era:2, branch:'cul', needsLeisure:true,
+   flavor:'counted the stars and seasons into a fixed wheel of days', effect:'The future made plannable — harvest, festival and rite find their day.'},
+ {id:'medicine',  icon:'🌿', base:'Medicine',         alts:[{fiber:2}],               pre:[], insights:['herbsHeal'], var:['herb-lore','the healer','remedies'], era:3, branch:'cul', needsLeisure:true,
+   flavor:'learned which leaves ease pain and close a wound', effect:'Death held off a while — the healer becomes needed.'},
+ {id:'philosophy',icon:'🧠', base:'Philosophy',       alts:[{}],                      pre:['writing'], insights:[], var:['the question','reasoned thought','the argument'], era:3, branch:'cul', needsLeisure:true,
+   flavor:'asked not what the world is but why, and wrote it down', effect:'Reasoned thought — the seed of law, science and doubt.'},
+ {id:'law',       icon:'⚖️', base:'Law',             alts:[{}],                      pre:['writing','numbers'], insights:[], var:['the code','written law','the judgment'], era:3, branch:'cul', needsLeisure:true,
+   flavor:'wrote the customs down so all were judged by one measure', effect:'Custom hardened into law — the institution of justice.'},
+ {id:'coinage',   icon:'🪙', base:'Coinage',          alts:[{gold:1}],                pre:['metaltools','numbers'], insights:['goldGleams'], var:['the coin','minted money','currency'], era:3, branch:'cul', needsLeisure:true,
+   flavor:'stamped a fixed weight of metal all agreed to trust', effect:'Money — value made portable; markets and wealth take shape.'},
+ {id:'school',    icon:'🏫', base:'School',           alts:[{}],                      pre:['writing','numbers'], insights:[], var:['the school','teaching','the lesson'], era:4, branch:'cul', needsLeisure:true,
+   flavor:'set the knowing to teach the young in one place', effect:'Knowledge taught on purpose — learning outlives the teacher.'},
+ {id:'temple',    icon:'⛩️', base:'Temple',           alts:[{stone:6}],               pre:['masonry'], insights:[], var:['the temple','the shrine-hall','sacred house'], era:4, branch:'cul', needsLeisure:true,
+   flavor:'raised a house for the sacred and gathered the faithful in it', effect:'Belief given a home and a keeper — organized religion.'},
+ {id:'scholarship',icon:'📚', base:'Scholarship',     alts:[{}],                      pre:['philosophy','school'], insights:[], var:['the library','learned study','the scholar'], era:4, branch:'cul', needsLeisure:true,
+   flavor:'gathered writings and studied them as a life\'s work', effect:'Knowledge accumulated and compared — the scholar emerges.'},
+ {id:'composition',icon:'🎼', base:'Composition',     alts:[{}],                      pre:['song','writing'], insights:[], var:['written music','the score','the composer'], era:4, branch:'cul', needsLeisure:true,
+   flavor:'wrote music down so a song could outlive its singer', effect:'Music made lasting and grand — the composer, the choir, the hall.'},
+ {id:'university',icon:'🎓', base:'University',        alts:[{stone:8}],               pre:['scholarship','school'], insights:[], var:['the university','the academy','halls of learning'], era:5, branch:'cul', needsLeisure:true,
+   flavor:'joined scholars and students into a lasting house of learning', effect:'Learning institutionalized — the engine of every later age.'},
+ {id:'science',   icon:'🔬', base:'Science',          alts:[{}],                      pre:['philosophy','numbers','optics'], insights:[], var:['the method','experiment','natural philosophy'], era:6, branch:'cul', needsLeisure:true,
+   flavor:'tested the guess against the world and kept only what held', effect:'The method that unlocks everything after — the modern mind.'},
 ];
 const TECH=Object.fromEntries(TECHS.map(t=>[t.id,t]));
-const MATSOURCE={wood:'forest',stone:'stone',fiber:'grass',clay:'clay',iron:'iron',sand:'sand'};
+const MATSOURCE={wood:'forest',stone:'stone',fiber:'grass',clay:'clay',iron:'iron',sand:'sand',copper:'copper',tin:'tin',coal:'coal',gold:'gold',pigment:'pigment'};
 // which observations can occur while gathering which material
-const GATHER_OBS={wood:[['frictionHeat',.10],['logsRoll',.07],['branchBends',.08]],stone:[['sharpShards',.16],['stonesGrind',.06]],fiber:[['fibersTwist',.14]],sand:[['sandGlints',.14]],clay:[],iron:[]};
+const GATHER_OBS={wood:[['frictionHeat',.10],['logsRoll',.07],['branchBends',.08]],stone:[['sharpShards',.16],['stonesGrind',.06],['archStands',.05]],fiber:[['fibersTwist',.14]],sand:[['sandGlints',.14],['lensBends',.05]],clay:[['pigmentStains',.06]],iron:[['oreMelts',.10],['steelKeen',.05]],copper:[['copperGreen',.16],['bronzeHard',.06]],tin:[['bronzeHard',.10]],coal:[['coalBurns',.16]],gold:[['goldGleams',.16]],pigment:[['pigmentStains',.18]]};
 const NAMES=['Eira','Ask','Embla','Torv','Liv','Sten','Ylva','Bjorn','Saga','Rune','Freja','Kare','Idun','Halvar','Signe','Vidar','Tuva','Alve','Ronja','Sixten','Maja','Loke','Vera','Otto','Selma','Falk','Nanna','Ulv','Disa','Orm'];
 const YEAR=144;
 const SEASONS=['spring','summer','autumn','winter'];
@@ -171,6 +255,20 @@ function ev(S,type,txt,data){
 // ---------- Knowledge Engine ----------
 function gainKnowledge(S,a,id,via,altUsed){
   if(a.knows.has(id))return;
+  // ENGINE 2.1 (D-086) SPECIALIZATION: no one masters everything. A deep craft (smithing, glass, mill,
+  // metal tools) is a life's dedication — a person carries at most DEEP_CAP of them. This caps only
+  // TEACHING (invention is always allowed, so the tree still climbs); it means a craft spreads only to
+  // those with room to master it, so a small hamlet cannot field enough specialists to hold the deep
+  // crafts a town can. Grounded: division of labour needs surplus population (ECONOMY.md; Henrich).
+  if(via==='taught' && DEEP_CRAFTS.has(id)){
+    let deep=0; for(const t of a.knows)if(DEEP_CRAFTS.has(t))deep++;
+    // TRAIT-DRIVEN mastery (EP philosophy): a person's craft capacity EMERGES from aptitude
+    // (diligence = focus/skill, curiosity = breadth), not a hardcoded number. A gifted, curious
+    // person masters several crafts; a low-aptitude one, just one. "Smith" is then a label for whoever
+    // ends up dominated by metalwork — never a role the engine assigns.
+    const cap = 1 + Math.round((a.traits.diligence + a.traits.curiosity) * 1.4); // ~2-4 by aptitude
+    if(deep>=cap)return; // no room to master another craft
+  }
   a.knows.add(id);
   const t=TECH[id];
   let k=S.knowledge[id];
@@ -490,6 +588,9 @@ function makeWorld(S){
     }
   };
   scatter('water','clay',35);scatter('stone','iron',20);
+  // deeper geology (ENGINE 2.1, D-086): ores are LOCAL and scarcer the deeper the era — this is the
+  // world-motor that gates bronze/steel/coin, so worlds differentiate by what the land beneath offers.
+  scatter('stone','copper',14);scatter('stone','tin',9);scatter('stone','coal',12);scatter('stone','gold',5);scatter('clay','pigment',10);
   // loose boulders and patches — the world invites curiosity everywhere
   let placed=0,guard=0;
   const loose=[['stone',25],['sand',12],['clay',10]];
@@ -514,6 +615,11 @@ function makeAgent(S,x,y,parents,founder){
       social:parents?mut((parents[0].traits.social+parents[1].traits.social)/2):R(S,.2,.95),
       diligence:parents?mut((parents[0].traits.diligence+parents[1].traits.diligence)/2):R(S,.3,.95),
       conformity:parents?mut((parents[0].traits.conformity+parents[1].traits.conformity)/2):R(S,.15,.95),
+      dexterity:parents?mut((parents[0].traits.dexterity+parents[1].traits.dexterity)/2):R(S,.15,.95),
+      creativity:parents?mut((parents[0].traits.creativity+parents[1].traits.creativity)/2):R(S,.1,.95),
+      musicality:parents?mut((parents[0].traits.musicality+parents[1].traits.musicality)/2):R(S,.05,.95),
+      empathy:parents?mut((parents[0].traits.empathy+parents[1].traits.empathy)/2):R(S,.1,.95),
+      ambition:parents?mut((parents[0].traits.ambition+parents[1].traits.ambition)/2):R(S,.1,.95),
     },
     parents:parents?[parents[0].name,parents[1].name]:null,
     habit:null,habitShown:false,habitOrigin:null,
@@ -533,7 +639,7 @@ function makeAgent(S,x,y,parents,founder){
   // first four — recorded input, part of the World Code (Contract §1 used as designed).
   if(founder){
     if(founder.name)a.name=String(founder.name).slice(0,24);
-    if(founder.traits)for(const tk of ['curiosity','social','diligence','conformity'])
+    if(founder.traits)for(const tk of ['curiosity','social','diligence','conformity','dexterity','creativity','musicality','empathy','ambition'])
       if(typeof founder.traits[tk]==='number'&&isFinite(founder.traits[tk]))a.traits[tk]=clamp(founder.traits[tk],0.05,0.95);
   }
   S.maxGeneration=Math.max(S.maxGeneration,a.gen);
@@ -584,14 +690,133 @@ function giveEpithet(S,a,ep){
 // ceiling. Berry SITES (grown or regrowing — the land's capacity, not this
 // hour's stock, so winter does not crater it) + tended fields + fishing water.
 function carryingCapacity(S){
-  let sites=0;
-  for(let y=0;y<H;y++)for(let x=0;x<W;x++)if(S.tiles[y][x].t==='berry')sites++;
-  for(const r of S.regrows)if(r.type==='berry')sites++;
-  let cap=10+sites*0.9+S.fields.length*3;
-  if(S.agents.some(a=>!a.dead&&a.knows.has('fishing')))cap+=8;
+  // Engine 2.3 (D-089): cache the O(W*H) berry census per tick, and BOUND the field contribution so
+  // population plateaus at a stable band (fields no longer track population forever = no runaway).
+  if(S._capTick!==S.tick){
+    let sites=0;
+    for(let y=0;y<H;y++)for(let x=0;x<W;x++)if(S.tiles[y][x].t==='berry')sites++;
+    for(const r of S.regrows)if(r.type==='berry')sites++;
+    S._capSites=sites; S._capFish=S.agents.some(a=>!a.dead&&a.knows.has('fishing')); S._capTick=S.tick;
+  }
+  // A STABLE, BOUNDED band (Director call): populous enough to feel alive (~80–140), low enough that
+  // the sim stays fast and can run toward the 6000-year horizon. Land-bounded — no runaway.
+  let cap=10+S._capSites*0.28+Math.min(S.fields.length,24)*1.8;
+  if(S._capFish)cap+=8;
   return Math.floor(cap);
 }
 function worldKnows(S,id){return !!S.knowledge[id]&&S.knowledge[id].status==='alive';}
+// ---------- ENGINE 2.1 (D-086, World-Model Phase 1): knowledge is per COMMUNITY, not global ----------
+// The saturation fix. Two global loopholes made every village converge into one all-knowing state:
+// writing made knowledge heritable EVERYWHERE the moment ANY village wrote, and loss only ever fired
+// when a tech died out GLOBALLY. Re-scoping both to the community makes villages diverge, lets a craft
+// die with its last local carrier (the smith), and makes WRITING the pivotal discovery that defeats
+// mortality. Grounded: Henrich (retention ~ carriers x connectivity) + Rogers (bounded carrier-borne
+// spread). The census below is a pure readout — it consumes no S.rand, so it never forks histories;
+// only the one guard change at birth-inheritance does (a World-Code break, bundled into E2 per D-078).
+const VILLAGE_RADIUS=18; // an agent farther than this from any village is unaffiliated (a wanderer/hermit)
+function villageRaw(S,a){
+  if(!S.villages.length)return null;
+  const px=(a.home?a.home.x:a.x),py=(a.home?a.home.y:a.y);
+  let hv=null,hd=1e9;for(const v of S.villages){const d=Math.hypot(px-v.x,py-v.y);if(d<hd){hd=d;hv=v;}}
+  return hd<=VILLAGE_RADIUS?hv:null;
+}
+// per-tick cache: village assignment is recomputed once per tick (assignVillages) and read O(1)
+function villageOf(S,a){ return a._vil!==undefined ? a._vil : villageRaw(S,a); }
+function assignVillages(S){ for(const a of S.agents){ if(a.dead){a._vil=null;continue;} a._vil=villageRaw(S,a); } }
+// does the agent's community hold this knowledge? (pre-village: the whole small world is one community)
+function groupKnows(S,a,id){
+  const v=villageOf(S,a);
+  if(!v)return worldKnows(S,id);
+  for(const x of S.agents){if(x.dead)continue;if(x.knows.has(id)&&villageOf(S,x)===v)return true;}
+  return false;
+}
+// tech complexity = prerequisite depth (Rope=1 ... Writing and deeper cost more to sustain).
+const _TDEPTH={};
+function techDepth(id){ if(_TDEPTH[id])return _TDEPTH[id]; const t=TECH[id]; return _TDEPTH[id]=1+((t&&t.pre&&t.pre.length)?Math.max(...t.pre.map(techDepth)):0); }
+// ENGINE 2.1 knobs — the Tasmania mechanism (Henrich): a complex craft needs a minimum pool of skilled
+// carriers to survive imperfect transmission; below it, the craft DRIFTS OUT. Writing (external memory)
+// lowers the pool a craft needs — a literate town holds depth a small illiterate hamlet cannot. Tuned
+// on the farm to differentiate WITHOUT collapsing worlds (kill-criterion (d)).
+const KM_BASE=1;         // carriers a depth-1 craft needs to persist in an ILLITERATE community
+const KM_PERDEPTH=1.3;   // extra carriers per depth level (a deep craft needs a real pool of hands)
+const KM_LOSS=0.06;      // per-TICK chance an under-supported craft drifts out of living memory
+const LIT_MIN=3;         // literate members needed to SUSTAIN literacy (scribes teach scribes; below this, a dark age)
+const DEEP_CRAFTS=new Set(["writing","kiln","smithing","glass","mill","metaltools"]); // the workshop crafts a person specializes in — being a scribe competes with being a smith
+// (craft capacity is now trait-driven per agent — see gainKnowledge; DEEP_CRAFTS still names the specialist crafts)
+function carrierNeed(k){ return Math.max(1, Math.round(KM_BASE+(techDepth(k)-1)*KM_PERDEPTH)); }
+
+// per-community knowledge state + LOCAL loss/rediscovery (the smith dies here; the grandchild brings it
+// back). The Memory Engine, made mechanical and DEATH-driven (not random — far less flicker):
+//   A LITERATE town (>= LIT_MIN living scribes) = writing is the library; its knowledge is what it has
+//   EVER held — the record outlives any single carrier (this is what writing DOES).
+//   An ILLITERATE village = its knowledge is only what LIVING members still carry; when the last carrier
+//   of a craft dies, the craft is lost here (the smith), until a visitor reteaches it or it's rediscovered.
+//   Literacy must itself be sustained: below LIT_MIN scribes a town slips into a DARK AGE — it reverts to
+//   living-memory only and its deep crafts (which few hands sustain) drift out. Deep crafts are taught
+//   slowly (transmission fidelity, above), so illiterate/small communities cannot hold the top of the
+//   tree — the Tasmania result. Grounded: Henrich (carriers x connectivity) + Rogers (bounded spread).
+// Pure readout (consumes no S.rand): the only histories-forking changes are the teach-fidelity and the
+// birth-inheritance guard. Run once per year.
+// ENGINE 2.1 (D-086): the WORLD gates the craft (EP's three-motor philosophy — individual x world x
+// society). A craft that consumes a SCARCE resource (iron/sand/clay) can only be SUSTAINED where that
+// resource is locally accessible: no iron in reach -> no smithing here, however clever the people. This
+// is the deepest, most grounded differentiator — geography. Derived from each tech's own material recipe.
+const _SCARCE=new Set(['iron','sand','clay','copper','tin','coal','gold','pigment']);
+// a craft's scarce material need (from its recipe). null = needs no scarce resource (survival/culture tech).
+function techScarceRes(id){ const t=TECH[id]; if(!t||!t.alts||!t.alts.length)return null; for(const m in t.alts[0])if(_SCARCE.has(m))return m; return null; }
+function villageResAccess(S,v){
+  const res=new Set(); // recomputed yearly: captures resource depletion (mined-out ore -> the craft declines)
+  for(let y=Math.max(0,Math.round(v.y-16));y<Math.min(H,v.y+16);y++)for(let x=Math.max(0,Math.round(v.x-16));x<Math.min(W,v.x+16);x++){
+    const t=S.tiles[y][x].t; if(_SCARCE.has(t)&&Math.hypot(x-v.x,y-v.y)<=16)res.add(t);
+  }
+  return res;
+}
+// which crafts can a village SUSTAIN, given its local geology? A craft needs its own scarce material
+// accessible AND all its prerequisite crafts sustainable (prerequisite closure — you cannot hold steel
+// where you cannot hold smithing). Resolved in depth order so prereqs settle first.
+function sustainableCrafts(S,v){
+  const res=villageResAccess(S,v), ok=new Set();
+  const ordered=[...TECHS].sort((a,b)=>techDepth(a.id)-techDepth(b.id));
+  for(const t of ordered){
+    const needRes=techScarceRes(t.id);
+    if(needRes&&!res.has(needRes))continue;               // the land here cannot supply it
+    if(!t.pre.every(p=>ok.has(p)))continue;               // a prerequisite craft is itself unsustainable here
+    ok.add(t.id);
+  }
+  return ok;
+}
+// ENGINE 2.1 (D-086) — the CAUSAL world-gate + per-community memory. Runs yearly. Unlike a census, this
+// MUTATES what people actually know: a village whose land cannot supply a craft (no copper -> no bronze;
+// no coal -> no steel) truly LOSES it from living memory. That is real differentiation, grounded in the
+// world-motor (EP's philosophy: simulate causes, not outcomes). The census/event pass then narrates what
+// was lost/rediscovered. Consumes no S.rand for the readout; the mutation is deterministic.
+function knowledgeRetentionTick(S){
+  for(const v of S.villages){ if(!v.everHeld)v.everHeld=new Set(); if(!v.lostNow)v.lostNow=new Set(); v._mem=[]; v._scribes=0; }
+  for(const a of S.agents){ if(a.dead)continue; const v=villageOf(S,a); if(!v)continue; v._mem.push(a); }
+  for(const v of S.villages){
+    // CAUSAL GATE: the land actually takes the craft out of people's hands. Only ADVANCED crafts
+    // (era >= 2 — bronze, steel, glass, coin...) are world-gated; survival infrastructure (era <= 1:
+    // fire, pottery, farming, hut, mill) is never stripped, so a resource-poor village stays alive and
+    // simple rather than starving. Geography decides how FAR a place climbs, not whether it survives.
+    const sustain=sustainableCrafts(S,v);
+    for(const a of v._mem)for(const k of [...a.knows]) if(techScarceRes(k)!==null && (TECH[k].era||0)>=2 && !sustain.has(k)) a.knows.delete(k);
+    // now recount what living hands hold, and let writing preserve the record
+    for(const a of v._mem)if(a.knows.has('writing'))v._scribes++;
+    const living=new Set(); for(const a of v._mem)for(const k of a.knows)living.add(k);
+    for(const k of living)v.everHeld.add(k);
+    const literate = v._scribes>=LIT_MIN;
+    const holds = literate ? new Set([...v.everHeld].filter(k=>techScarceRes(k)===null||sustain.has(k))) : living;
+    v.holds=[...holds]; v.literate=literate;
+    for(const k of [...v.lostNow]) if(holds.has(k)){ // rediscovered / relearned / re-literate
+      v.lostNow.delete(k); const k2=S.knowledge[k];
+      ev(S,'rediscovered',`💡 In <b>${v.name}</b>, ${k2?k2.name:(TECH[k]?TECH[k].base:k)} is known again — a craft the village had lost returns to living hands.`,{tech:k,x:v.x,y:v.y,village:v.name});
+    }
+    for(const k of v.everHeld) if(!holds.has(k)&&!v.lostNow.has(k)){ // lost here (no local material, or the last carrier died)
+      v.lostNow.add(k); const k2=S.knowledge[k];
+      ev(S,'knowledgeLost',`🕯️ In <b>${v.name}</b>, ${k2?k2.name:(TECH[k]?TECH[k].base:k)} is lost — the land cannot feed the craft, or the last who knew it is gone. Until it is brought back or rediscovered.`,{tech:k,x:v.x,y:v.y,village:v.name});
+    }
+  }
+}
 function tryObserve(S,a,obsId,chance){
   if(a.obs.has(obsId))return;
   if(getLens(S,a)==='empiric')chance*=1.35;
@@ -612,7 +837,18 @@ function canAttempt(S,a,t){
   if(a.knows.has(t.id))return false;
   if(!t.pre.every(p=>a.knows.has(p)))return false;
   if(!t.insights.every(o=>a.obs.has(o)))return false;   // must have SEEN it before imagining it
+  // CULTURE NEEDS LEISURE (ENGINE 2.1, D-086, EP's philosophy): art, music, philosophy, faith-houses,
+  // scholarship cannot arise in a starving village — they need SURPLUS. Only a well-fed person in a
+  // food-secure community has the free time to make them. This is why culture blooms only where the
+  // material base can spare the hands — the society-motor gating the culture branch.
+  if(t.needsLeisure && !hasLeisure(S,a))return false;
   return !!pickAlt(S,a,t);
+}
+// leisure = personal slack AND a surrounding community with food to spare (the surplus that frees hands)
+function hasLeisure(S,a){
+  if(a.hunger<70||a.energy<45||a.warmth<45)return false;
+  let fed=0;for(const o of nearby(S,a,9)){if(o.hunger>65&&++fed>=2)return true;}
+  return false;
 }
 function neededMaterial(S,a){
   for(const t of TECHS){
@@ -642,6 +878,38 @@ function commitTabooBreak(S,a,c,material){
   if(S.rand()<.3){a.customs.delete(c.id);ev(S,'rebel',`<b>${a.name}</b> no longer keeps ${c.name}. A rebel — or the first of a new way.`,{custom:c.id});}
 }
 function nearestOf(list,a){let b=null,bd=1e9;for(const o of list){const d=dist(o,a);if(d<bd){bd=d;b=o;}}return b;}
+// ---------- SPATIAL GRID (Engine 2.3 optimization, D-089) — O(n^2) neighbour scans -> O(local) ----------
+// Built once per tick (agents move <=~1 tile/tick, cells are wide, so tick-stale is negligible AND
+// fully deterministic). nearby()/nearestAgent() return id-SORTED results so every "first-match" and
+// "max/min with first-tie" stays deterministic regardless of grid layout. This is what lets the world
+// hold hundreds of souls (and, with a bounded ceiling, run toward the 6000-year horizon) at speed.
+const CELL=5;
+// FLAT-ARRAY buckets (Engine 2.3.1, D-094 Jint-perf): Jint's Map is ~orders slower than V8's, so the
+// grid uses a plain reused array indexed by cell (Jint handles integer array indexing fast). Output is
+// BYTE-IDENTICAL to the Map version — nearby() finds the same agents and returns them id-sorted — so
+// the goldens/SHA of the SIM are unchanged; only the engine file's own SHA shifts.
+function buildGrid(S){
+  const GW=Math.ceil(W/CELL), GH=Math.ceil(H/CELL);
+  let cells=S._cells;
+  if(!cells||S._gw!==GW||S._gh!==GH){ cells=new Array(GW*GH); S._cells=cells; }
+  for(let i=0;i<cells.length;i++)cells[i]=null;
+  let n=0;
+  for(const a of S.agents){ if(a.dead)continue; n++;
+    const cx=Math.min(GW-1,Math.max(0,Math.floor(a.x/CELL))), cy=Math.min(GH-1,Math.max(0,Math.floor(a.y/CELL)));
+    const key=cy*GW+cx; let arr=cells[key]; if(!arr){arr=[];cells[key]=arr;} arr.push(a); }
+  S._grid=cells; S._gw=GW; S._gh=GH; S._aliveN=n;
+}
+function nearby(S,a,r){
+  const g=S._grid; if(!g){const out=[];for(const o of S.agents)if(o!==a&&!o.dead&&dist(o,a)<r)out.push(o);out.sort((x,y)=>x.id-y.id);return out;}
+  const GW=S._gw, GH=S._gh, ring=Math.ceil(r/CELL), cx=Math.floor(a.x/CELL), cy=Math.floor(a.y/CELL), out=[];
+  for(let dy=-ring;dy<=ring;dy++)for(let dx=-ring;dx<=ring;dx++){
+    const nx=cx+dx, ny=cy+dy; if(nx<0||ny<0||nx>=GW||ny>=GH)continue;
+    const arr=g[ny*GW+nx]; if(!arr)continue;
+    for(const o of arr){ if(o===a||o.dead)continue; if(dist(o,a)<r)out.push(o); } }
+  out.sort((x,y)=>x.id-y.id); return out;
+}
+function nearestAgent(S,a,pred,maxR){ let b=null,bd=1e9;
+  for(const o of nearby(S,a,maxR||30)){ if(pred&&!pred(o))continue; const d=dist(o,a); if(d<bd){bd=d;b=o;} } return b; }
 function nearWarmth(S,a){return S.fires.some(f=>dist(f,a)<2.5)||S.huts.some(h=>dist(h,a)<2);}
 function findNearest(S,ag,type){
   let best=null,bd=1e9;
@@ -697,8 +965,15 @@ function talk(S,a,b){
     }
   }
   let taught=false;
+  // ENGINE 2.1 (D-086): knowledge spreads readily WITHIN a community but rarely crosses to a stranger's
+  // village — a passing wanderer trades a few words, not a craft (Rogers: diffusion needs sustained
+  // contact + homophily; Henrich: connectivity bounds spread). This is what lets distant villages
+  // develop, lose and rediscover INDEPENDENTLY — the source of lasting differentiation. Combined with
+  // transmission fidelity falling by complexity (a deep craft is apprenticeship, not a sentence).
+  const sameVillage = (villageOf(S,a)===villageOf(S,b));
+  const reach = sameVillage ? 1 : 0.06;
   for(const k of a.knows){
-    if(!b.knows.has(k)&&S.rand()<.4){
+    if(!b.knows.has(k)&&S.rand()<(0.5/techDepth(k))*reach){
       gainKnowledge(S,b,k,'taught');taught=true;
       if(S.rand()<.3)ev(S,'taught',`<b>${a.name}</b> taught <b>${b.name}</b> the secret of ${S.knowledge[k]?S.knowledge[k].name:TECH[k].base}. The knowledge spreads.`,{tech:k});
       break;
@@ -708,14 +983,18 @@ function talk(S,a,b){
   if(taught)speak(S,a,pickSay(S,a,'teach'),'teach');
   else if((a.rel[b.id]||0)>70)speak(S,a,pickSay(S,a,'love'),'love');
   else speak(S,a,pickSay(S,a,'small'),'small');
-  if(a.rel[b.id]>60&&b.rel[a.id]>60&&a.age>16&&b.age>16&&a.age<50&&b.age<50
-     &&a.childCd===0&&b.childCd===0&&a.hunger>40&&b.hunger>40&&S.agents.filter(x=>!x.dead).length<carryingCapacity(S) // E1 MALTHUS: the land sets the ceiling (was: hardcoded 42)
-     &&S.rand()<(worldKnows(S,'farming')||worldKnows(S,'fishing')?0.20:0.15)){ // Engine 1.2 (D-050): food security emboldens families
+  if(a.rel[b.id]>45&&b.rel[a.id]>45&&a.age>16&&b.age>16&&a.age<52&&b.age<52
+     &&a.childCd===0&&b.childCd===0&&a.hunger>40&&b.hunger>40&&(S._aliveN||S.agents.filter(x=>!x.dead).length)<carryingCapacity(S) // E1 MALTHUS: the land sets the ceiling (cached alive count)
+     &&S.rand()<(worldKnows(S,'farming')||worldKnows(S,'fishing')?0.26:0.20)){ // TENSION PROTO: births eased for a more populous world (EP request) — rel bar 60→45, fertile window +2y, rate up
     const child=makeAgent(S,a.x,a.y,[a,b]);child.born=S.tick/YEAR;
-    if(worldKnows(S,'writing')){for(const k of a.knows)if(S.rand()<.5)child.knows.add(k);}
+    // ENGINE 2.1 (D-086): writing's durability is now COMMUNITY-local, not global — a child inherits
+    // its parent's knowledge only where the parent's village is literate. Illiterate communities must
+    // re-teach every generation, so a craft can die with its last carrier. This is the differentiation
+    // engine and it makes writing the pivotal discovery (the Memory Engine, D-072's "writing fix").
+    if(groupKnows(S,a,'writing')){for(const k of a.knows)if(S.rand()<.5)child.knows.add(k);}
     S.agents.push(child);S.stats.births++;
     S.maxPop=Math.max(S.maxPop,S.agents.filter(x=>!x.dead).length);
-    {const cd=(worldKnows(S,'farming')||worldKnows(S,'fishing'))?460:600;a.childCd=cd;b.childCd=cd;} // Engine 1.2: secure food shortens the wait
+    {const cd=(worldKnows(S,'farming')||worldKnows(S,'fishing'))?380:520;a.childCd=cd;b.childCd=cd;} // TENSION PROTO: shorter birth spacing for a more populous world (EP request)
     ev(S,'child',`👶 <b>${a.name}</b> and <b>${b.name}</b> have had a child, <b>${child.name}</b> — generation ${child.gen}. They inherit traits from both.`,{agent:child.id,x:a.x,y:a.y});
     maybeEmergeCustom(S,a,'child');
   }
@@ -757,6 +1036,268 @@ function killAgent(S,a,causeKey,causeTxt){
     ev(S,'legend',`🕊️ ${disp(a)} is gone. But someone still ${q.txt.charAt(0).toLowerCase()+q.txt.slice(1).replace(/\.$/,'')}. No one asks why it began.`,{agent:a.id});
   }
 }
+// ===== STAR OBSERVATION -> COSMOLOGY -> RELIGION (EP directive, TD-030 prototype ported into 2.2, D-088) =====
+// A curious soul awake in the dark, away from the fire's glow, sees the lights that do not fall. Watching
+// accrues; writing turns it into star-marks (the 'starsWheel' insight, so the sky-watcher unlocks the
+// CALENDAR); enough watching gives the sky MEANING -> a cosmology belief that spreads + hardens through
+// the culture engine into a sky-faith (and, with masonry, a TEMPLE). RNG-clean (S.rand is sim logic).
+const SKY_NAMES=['the Watchers','the First Fires','the Ancestor-Lights','the Cold Lanterns','the Sky-Wheel','the Star-Herd','the Ever-Watching','the Night-Weavers'];
+const SKY_TXTS=['believing the lights above are the fires of the first people, still watching',
+ 'believing the stars are the eyes of the ancestors, so the dead are never wholly gone',
+ 'believing the sky-wheel turns with the seasons and can be read like tracks in snow',
+ 'believing a great herd walks the night sky, and the living must follow its path'];
+function skyHash(a){let h=2166136261>>>0;const s=(a.name||'')+'|'+a.id;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)>>>0;}return h>>>0;}
+function worldHasTarget(S,t){for(const id in S.customs){const c=S.customs[id];if(c&&c.target===t&&c.status!=='gone')return true;}return false;}
+function customByTarget(S,t){for(const id in S.customs){const c=S.customs[id];if(c&&c.target===t&&c.status==='alive')return c;}return null;}
+// Engine 2.3 (D-089): per-tick cache of the cosmos-target check — starTick calls it for every gazing
+// soul every night, and it was O(customs) each time (customs grow over time = a hidden creeping cost).
+function hasCosmosCached(S){ if(S._cosmoTick!==S.tick){S._cosmo=worldHasTarget(S,'cosmos');S._cosmoTick=S.tick;} return S._cosmo; }
+function starTick(S,a){
+  const night=S.hour>=20||S.hour<4;
+  if(!night||a.sleeping||a.age<12)return;
+  // leisure to look up: a content person (warm, not starving) gazes — a campfire on a clear
+  // night is the image, not someone freezing away from the fire. Surplus enables culture.
+  if(a.warmth<40||a.hunger<35)return;
+  if(S.season==='winter'&&S.winterSeverity>1.6)return;
+  const curio=(a.traits&&a.traits.curiosity)||0.5;
+  if(S.rand()<0.13*curio){
+    a.starGaze=(a.starGaze||0)+1;
+    if(a.starGaze===1)ev(S,'star','✨ <b>'+disp(a)+'</b> lay awake in the dark and watched the lights that do not fall.',{agent:a.id,x:a.x,y:a.y});
+    else if(a.starGaze===4&&S.rand()<.6)ev(S,'star','✨ <b>'+disp(a)+'</b> watches the stars again, night after night. Something is taking shape.',{agent:a.id});
+    if(S.rand()<.25)speak(S,a,'Have you ever counted the stars?','observe');
+    if(a.starGaze>=4)tryObserve(S,a,'starsWheel',0.4);
+    if(a.starGaze>=5&&a.knows.has('writing')&&(a.inv.clay||0)>0&&!a.starMarks){
+      a.starMarks=true;
+      ev(S,'star','📜✨ <b>'+disp(a)+'</b> pressed the pattern of the stars into clay — the first star-marks. Now the sky can be remembered.',{agent:a.id});
+    }
+    if(a.starGaze>=6&&!hasCustomKind(S,a,'belief','cosmos')&&!hasCosmosCached(S)){
+      const h=skyHash(a);
+      const cu=addCustom(S,a,{kind:'belief',lens:'sky',target:'cosmos',slot:'belief:cosmos',name:SKY_NAMES[h%SKY_NAMES.length],txt:SKY_TXTS[(h>>>3)%SKY_TXTS.length],word:'star'});
+      if(cu){cu.religion=true;ev(S,'star','🌌 <b>'+disp(a)+'</b> saw a pattern in the stars and gave it a name — <b>'+cu.name+'</b>. From watching, a cosmology is born: the first faith of the sky.',{agent:a.id,label:'A RELIGION OF THE SKY'});}
+    }
+  }
+  if(hasCustomKind(S,a,'belief','cosmos')&&S.hour===22&&S.rand()<.02){
+    a.task='watching the sky with the others';
+    const nm=(customByTarget(S,'cosmos')||{}).name||'the Watchers';
+    if(S.rand()<.12)ev(S,'star','🌌 Under '+nm+', the people gather in the dark and turn their faces to the stars.',{agent:a.id,x:a.x,y:a.y});
+  }
+}
+
+// ============================================================================
+// TENSION / FRICTION PROTOTYPE (design spike, 2026-07-20) — NOT canon.
+// The EP's four-force model: Resurser × Individer × FRIKTION × Handling.
+// An individual acts to reduce the GAP between how the world IS and how they
+// WISH it were — extended from survival (hunger/cold) to STRIVING (wealth/status).
+// FRICTION rises when goals collide or resources run short (population pressure);
+// where a legitimate path to close the gap is unavailable or costlier than force,
+// coercion becomes an OPTION: theft, brawl, revenge, feud. Violence is a solution
+// to a gap, never a scripted event. Trade and violence are two answers to the same
+// friction — which one depends on personality + scarcity + restraint. Deterministic.
+// Personality is read as PROXIES from the canon traits (a real build would add
+// dedicated aggression/impulse/vindictiveness traits; this spike derives them):
+//   aggression  ~ (1-empathy)*.6 + ambition*.4     greed ~ ambition
+//   impulse-ctrl ~ conformity                       vindictiveness ~ ambition + grudge
+//   fear/avoid   ~ empathy                          honor/prestige ~ ambition
+// ============================================================================
+// TUNING (EP 2026-07-20: "våld ska dyka upp ibland och väldigt sällan wipa hela civilisationer").
+// One place to dial the whole thing up or down. Lower = rarer + less lethal.
+const TUNE={
+  theftRate:      0.04,  // per-tick chance multiplier that a ripe grievance becomes an act (was 0.16)
+  brawlLethalBase:0.010, // chance a resisted theft/raid turns deadly, fists (was 0.03)
+  brawlLethalArm: 0.045, // + this × best weapon (was 0.13) — steel still bites, just far less often
+  warChance:      0.22,  // chance a ripe village tension actually breaks into a raid that year (was 0.50)
+  warHostility:   0.62,  // how ripe it must be first (was 0.50)
+  warParty:       3,     // raiders per war (was 4)
+  warLethalBase:  0.05,  // per-clash death chance in a raid, fists (was 0.15)
+  warLethalArm:   0.08,  // + this × best weapon (was 0.20)
+  warMaxDead:     2      // a single raid can cost at most this many lives total — no wipeouts
+};
+function wealth(a){let w=0;for(const k in a.inv)w+=a.inv[k]||0;return w;}
+// means of force: a weapon or metal makes coercion viable AND lethal (ties violence to the tech tree).
+function forceMeans(a){
+  if(a.knows.has('steel'))return 1.0;
+  if(a.knows.has('bronze'))return 0.8;
+  if(a.knows.has('spear')||a.knows.has('bow'))return 0.55;
+  if(a.knows.has('sharp'))return 0.3;
+  return 0.12; // fists and stones
+}
+function aggression(a){return clamp((1-a.traits.empathy)*0.6+a.traits.ambition*0.4,0,1);}
+// social restraint: empathy(fear of harm) + impulse control(conformity) + any emerged law/peace-norm.
+function restraintOf(S,a){
+  let r=a.traits.empathy*0.55+a.traits.conformity*0.45;
+  if(hasCustomKind(S,a,'taboo','harm')||hasCustomKind(S,a,'value','peace'))r+=0.4; // an emerged law bites
+  return clamp(r,0,1.3);
+}
+// FRICTION from scarcity: population pressure against the land's ceiling (cached per tick).
+// This is where the D-089 population pressure becomes a DRIVER, not just a perf cost.
+function pressure(S){
+  if(S._pscTick===S.tick)return S._psc;
+  const alive=S._aliveN||S.agents.filter(x=>!x.dead).length, cap=Math.max(1,carryingCapacity(S));
+  S._psc=clamp(alive/cap,0,2); S._pscTick=S.tick; return S._psc;
+}
+// ASPIRATION: an ambitious, satisfied soul hoards a surplus beyond need — the seed of wealth + inequality.
+function aspireTick(S,a){
+  if(a.age<14||a.traits.ambition<0.5)return;
+  if(a.hunger>60&&a.warmth>50&&a.energy>35&&S.rand()<0.05*a.traits.ambition){
+    const kinds=['wood','clay','stone','fiber'];const m=kinds[Math.floor(S.rand()*kinds.length)];
+    a.inv[m]=(a.inv[m]||0)+1; a.hoard=(a.hoard||0)+1; a.task='adding to their store';
+  }
+}
+// CONFLICT: theft / brawl / raid / revenge — a gap closed by force. Returns true if it consumed the tick.
+function conflictTick(S,a){
+  if(a.age<12)return false;
+  const desp=a.hunger<24?1:(a.hunger<38?0.4:0);
+  const myW=wealth(a), fric=pressure(S);
+  let tgt=null,best=0,revenge=false;
+  for(const b of nearby(S,a,4.5)){
+    if(b.age<10)continue;
+    const grudge=(a.rel[b.id]||0)<-55?1:0;
+    const foodGap=desp&&b.hunger>62?1:0;
+    const wGap=wealth(b)-myW;
+    const score=foodGap*70+(wGap>4?wGap:0)+grudge*85;
+    if(score>best){best=score;tgt=b;revenge=grudge&&!foodGap&&wGap<=4;}
+  }
+  if(!tgt)return false;
+  const slack=a.hunger>55&&a.warmth>45&&a.energy>30;
+  const greed=slack&&a.traits.ambition>0.55?(a.traits.ambition-0.5):0;
+  const restraint=restraintOf(S,a), agg=aggression(a);
+  // GROUP IDENTITY: kin (same village) are shielded by the Peace of Kin; a stranger is fair game.
+  const kin=villageOf(S,a)===villageOf(S,tgt)?0.22:-0.06; // raiding your own is far harder than raiding "them"
+  // drive to use force = pull of the gap, lifted by aggression/means/friction, minus restraint.
+  let drive=0;
+  if(desp)          drive=0.85*desp+agg*0.2-restraint*0.45-kin;
+  else if(revenge)  drive=0.65+a.traits.ambition*0.2-restraint*0.35-kin;         // honor/vindictiveness overrides more
+  else if(greed>0)  drive=greed*0.7+agg*0.3+forceMeans(a)*0.2-restraint*0.65-kin; // predation on the richer
+  drive*=(0.7+0.6*fric); // FRICTION: scarcity makes every gap sharper
+  if(drive<=0)return false;
+  if(S.rand()>clamp(drive,0,1)*TUNE.theftRate)return false;                   // occasional, weighted by drive
+  // --- THE ACT ---
+  const kind=desp&&tgt.hunger>62?'steal-food':revenge?'revenge':'raid';
+  const armedMe=forceMeans(a), armedYou=forceMeans(tgt);
+  const meStr=armedMe+a.traits.dexterity*0.5, youStr=armedYou+tgt.traits.dexterity*0.5;
+  let outcome;
+  if(kind==='steal-food'){
+    const took=Math.min(28,Math.max(10,tgt.hunger-30));
+    tgt.hunger=clamp(tgt.hunger-took,0,140); a.hunger=clamp(a.hunger+took*0.8,0,140);
+    a.task='taking food by force'; outcome='took food';
+  } else {
+    const kinds=Object.keys(tgt.inv).filter(k=>tgt.inv[k]>0);
+    if(kinds.length){const m=kinds[Math.floor(S.rand()*kinds.length)];const q=Math.min(tgt.inv[m],1+Math.floor(S.rand()*3));tgt.inv[m]-=q;a.inv[m]=(a.inv[m]||0)+q;outcome='seized goods';}
+    else outcome='found little';
+    a.task=kind==='revenge'?'settling a score':'raiding a neighbour';
+  }
+  tgt.rel[a.id]=(tgt.rel[a.id]||0)-45; a.rel[tgt.id]=(a.rel[tgt.id]||0)-10; // the victim remembers
+  S.stats.thefts=(S.stats.thefts||0)+1;
+  ev(S,'violence',`⚔️ <b>${disp(a)}</b> ${outcome==='took food'?'wrenched food from':'set upon'} <b>${disp(tgt)}</b>${kind==='revenge'?' — an old score':''}.`,{agent:a.id,x:a.x,y:a.y,cause:kind});
+  // resistance -> a real fight; the MEANS decides lethality (a stone-age scuffle rarely kills; steel does).
+  const resists=(kind!=='steal-food')||tgt.traits.ambition>0.5||S.rand()<0.5;
+  if(resists){
+    S.stats.brawls=(S.stats.brawls||0)+1;
+    a.energy=clamp(a.energy-12,0,100); tgt.energy=clamp(tgt.energy-12,0,100);
+    const lethal=TUNE.brawlLethalBase+TUNE.brawlLethalArm*Math.max(armedMe,armedYou);
+    if(S.rand()<lethal){
+      const loser=(meStr+S.rand()*0.4)<(youStr+S.rand()*0.4)?a:tgt, killer=loser===a?tgt:a;
+      const healer=S.agents.some(h=>!h.dead&&h!==loser&&dist(h,loser)<5&&h.knows.has('medicine'));
+      if(healer&&S.rand()<0.5){
+        loser.energy=clamp(loser.energy-25,0,100);
+        ev(S,'violence',`🩹 <b>${disp(killer)}</b> left <b>${disp(loser)}</b> bleeding — a healer's hands held death off.`,{agent:loser.id,x:loser.x,y:loser.y});
+      }else{
+        killAgent(S,loser,'violence',`was killed by <b>${disp(killer)}</b> in a fight`);
+        killer.kills=(killer.kills||0)+1;
+        // the killing seeds a FEUD: everyone who loved the fallen now hates the killer (blodshämnd)
+        for(const w of S.agents){if(w.dead||w===killer)continue;if(dist(w,loser)<7&&(w.rel[loser.id]||0)>30)w.rel[killer.id]=(w.rel[killer.id]||0)-75;}
+        S.stats.killings=(S.stats.killings||0)+1;
+        // INSTITUTION AS RESPONSE: recurring blood in one place breeds a norm against harm (proto-law).
+        maybeEmergeCustom(S,killer,'death','violence');
+        if((S.stats.killings||0)>=3&&S.rand()<0.5)seedHarmTaboo(S,killer);
+      }
+    }
+  }
+  if(kind==='revenge')S.stats.revenges=(S.stats.revenges||0)+1;
+  return true;
+}
+// justice emerges as an answer to recurring violence: a village-borne taboo against harming your own.
+function seedHarmTaboo(S,a){
+  if(hasCustomKind(S,a,'taboo','harm'))return;
+  const c=addCustom(S,a,{kind:'taboo',lens:'law',target:'harm',slot:'taboo:harm',name:'The Peace of Kin',txt:'that spilling the blood of your own is forbidden',word:'peace'});
+  if(c)ev(S,'violence',`⚖️ After too much blood, the people of <b>${disp(a)}</b>'s village bind themselves to a rule: <b>The Peace of Kin</b> — no more killing your own.`,{agent:a.id,x:a.x,y:a.y,label:'A LAW IS BORN'});
+}
+
+// TRADE — the peaceful twin of the raid: the SAME friction (I lack X, you hold it) resolved by
+// EXCHANGE instead of force. Cooperation wins when personality + ties + low scarcity favour it.
+// Positive-sum: both leave better, a bond forms (rel up), goods cross village lines. The fork
+// "cooperate vs fight" is now real — both are answers to the same gap.
+function tryTrade(S,a){
+  if(a.age<14)return false;
+  const need=neededMaterial(S,a); if(!need||(a.inv[need]||0)>=2)return false;
+  let b=null;
+  for(const o of nearby(S,a,5)){ if(o.age<12)continue; if((o.inv[need]||0)>=2){b=o;break;} }
+  if(!b)return false;
+  let give=null;
+  for(const m in a.inv){ if(m!==need&&a.inv[m]>=2&&(b.inv[m]||0)<2){give=m;break;} }
+  const offerFood=!give&&a.hunger>85&&b.hunger<70;
+  if(!give&&!offerFood)return false;
+  const cross=villageOf(S,a)!==villageOf(S,b);
+  const coop=a.traits.empathy*0.4+a.traits.social*0.35+((a.rel[b.id]||0)>0?0.2:0)-aggression(a)*0.3-pressure(S)*0.2;
+  if(coop<=0.15||S.rand()>clamp(coop,0,1)*0.5)return false;
+  const q=1+Math.floor(S.rand()*2);
+  if(give){const gq=Math.min(a.inv[give],q);a.inv[give]-=gq;b.inv[give]=(b.inv[give]||0)+gq;}
+  else{a.hunger=clamp(a.hunger-15,0,140);b.hunger=clamp(b.hunger+15,0,140);}
+  const tq=Math.min(b.inv[need],q);b.inv[need]-=tq;a.inv[need]=(a.inv[need]||0)+tq;
+  a.rel[b.id]=(a.rel[b.id]||0)+15;b.rel[a.id]=(b.rel[a.id]||0)+15; // a bond forms — trade partners rarely raid each other
+  a.task='trading';S.stats.trades=(S.stats.trades||0)+1;
+  if(S.rand()<0.05)ev(S,'trade',`🤝 <b>${disp(a)}</b> and <b>${disp(b)}</b> struck a fair trade${cross?' across village lines':''}.`,{agent:a.id,x:a.x,y:a.y});
+  return true;
+}
+// WAR — the top rung. Individual violence flows along identity lines (kin vs stranger); when a
+// village is FOOD-STRESSED, a neighbour holds a surplus, and grievance across the line has piled
+// up, its armed cross the border as ONE. Organised violence needs what a brawl doesn't: group
+// identity (village), a contested need (scarcity vs surplus), and the means to organise. Yearly.
+function warTick(S){
+  // feuds COOL with time — grudges fade toward forgiveness so vendettas don't spiral forever — AND we
+  // FORGET THE DEAD here: rel dicts otherwise fill with dead ids forever (unbounded memory = a hidden
+  // per-year cost that grew even at constant population). Pruning keeps them ~O(living), bounding time.
+  const aliveIds=new Set(); for(const a of S.agents)if(!a.dead)aliveIds.add(a.id);
+  for(const a of S.agents){ if(a.dead)continue;
+    const kk=Object.keys(a.rel);                              // snapshot keys — deleting during for-in
+    for(let i=0;i<kk.length;i++){ const k=kk[i];              // is engine-defined; this stays Node≡Jint
+      if(!aliveIds.has(+k)){ delete a.rel[k]; continue; }     // the dead are forgotten
+      if(a.rel[k]<0)a.rel[k]=Math.min(0,a.rel[k]+4);          // and feuds cool toward peace
+    } }
+  const vs=S.villages.filter(v=>!v.dead); if(vs.length<2)return;
+  const info=new Map();
+  for(const v of vs)info.set(v,{ppl:[],hungry:0,armed:0,wealth:0});
+  for(const a of S.agents){ if(a.dead||a.age<14)continue; const v=villageOf(S,a); if(!v||!info.has(v))continue;
+    const I=info.get(v); I.ppl.push(a); if(a.hunger<45)I.hungry++; if(forceMeans(a)>=0.5)I.armed++; I.wealth+=wealth(a); }
+  const fric=pressure(S); // scarcity: the land contested. This is where war is born.
+  for(const A of vs){ const IA=info.get(A); if(!IA||IA.ppl.length<3)continue;
+    const stress=Math.max(IA.hungry/IA.ppl.length, fric-0.5); // hungry now, OR the land is over-full
+    for(const B of vs){ if(B===A)continue; const IB=info.get(B); if(!IB||IB.ppl.length<1)continue; if(dist(A,B)>55)continue;
+      let grud=0; for(const x of IA.ppl)for(const y of IB.ppl)if((x.rel[y.id]||0)<-40)grud++;
+      const surplus=IB.wealth-IA.wealth, might=IA.armed-IB.armed;
+      // war = a hungry/crowded village + a neighbour worth taking + the means, OR a blood-feud boiling over
+      const hostility=stress*0.7+(surplus>6?0.3:0)+(grud>1?0.35:0);
+      if(IA.armed<2||might<-2||hostility<TUNE.warHostility)continue;
+      if(S.rand()>TUNE.warChance)continue; // ripe tension only sometimes breaks into a raid
+      const party=IA.ppl.filter(a=>forceMeans(a)>=0.4).slice(0,TUNE.warParty);
+      const defenders=IB.ppl.slice().sort((x,y)=>forceMeans(y)-forceMeans(x));
+      let deadA=0,deadB=0,loot=0;
+      for(const raider of party){
+        const def=defenders.find(d=>!d.dead)||null;
+        if(def){ for(const m in def.inv){ if(def.inv[m]>0){ raider.inv[m]=(raider.inv[m]||0)+def.inv[m]; loot+=def.inv[m]; def.inv[m]=0; } }
+          const rs=forceMeans(raider)+raider.traits.dexterity*0.5, ds=forceMeans(def)+def.traits.dexterity*0.5;
+          const lethal=TUNE.warLethalBase+TUNE.warLethalArm*Math.max(forceMeans(raider),forceMeans(def));
+          if(S.rand()<lethal){ const loser=(rs+S.rand()*0.4)<(ds+S.rand()*0.4)?raider:def, enemy=loser===raider?def:raider;
+            killAgent(S,loser,'violence',`fell in the raid on ${B.name}`); if(loser===raider)deadA++;else deadB++;
+            for(const w of S.agents){if(w.dead)continue;if((w.rel[loser.id]||0)>30)w.rel[enemy.id]=(w.rel[enemy.id]||0)-60;} } } // war deepens the feud
+      }
+      S.stats.wars=(S.stats.wars||0)+1;
+      ev(S,'violence',`🔥⚔️ Driven by a failing harvest, the people of <b>${A.name}</b> fell upon <b>${B.name}</b> — a raid for grain and goods.${(deadA+deadB)>0?' '+(deadA+deadB)+' lay dead ('+deadB+' of '+B.name+', '+deadA+' of '+A.name+').':' They took what they could carry.'}`,{x:A.x,y:A.y,label:'WAR'});
+      return; // one war per year keeps it momentous
+    }
+  }
+}
+
 function agentTick(S,a){
   const night=S.hour<5||S.hour>21;
   const winter=S.season==='winter';
@@ -765,7 +1306,7 @@ function agentTick(S,a){
   const coldDrain=winter?2.2*S.winterSeverity+0.6:S.season==='summer'?1.6:2.2;
   if(night){
     if(nearWarmth(S,a))a.warmth+=2.5;
-    else if(S.agents.some(o=>o!==a&&!o.dead&&dist(o,a)<1.4))a.warmth+=Math.max(0.2,0.9-(winter?0.4*(S.winterSeverity-1):0));
+    else if(nearby(S,a,1.4).length>0)a.warmth+=Math.max(0.2,0.9-(winter?0.4*(S.winterSeverity-1):0));
     else a.warmth-=coldDrain;
   } else a.warmth+=winter?0.6:1.5;
   a.hunger=clamp(a.hunger,0,100+(a.knows.has('pottery')?40:0));
@@ -782,6 +1323,10 @@ function agentTick(S,a){
     return;
   }
   const child=a.age<14;
+
+  // TENSION PROTO: the SAME friction resolves as trade OR force. Try the peaceful path first
+  // (cooperation-inclined souls trade), then force (conflictTick); aspiration hoards a surplus.
+  if(!child){ if(tryTrade(S,a))return; if(conflictTick(S,a))return; aspireTick(S,a); }
 
   // the world is observed simply by being lived in
   if(S.tick%3===0&&!a.dead){
@@ -836,11 +1381,11 @@ function agentTick(S,a){
     const f=nearestOf(S.fires.concat(S.huts),a);
     if(f&&dist(f,a)<25){moveToward(S,a,f);a.task='seeking warmth';if(S.rand()<.05)speak(S,a,pickSay(S,a,'cold'),'cold');return;}
     if(a.knows.has('fire')&&(a.inv.wood||0)>=2){a.inv.wood-=2;S.fires.push({x:a.x,y:a.y,fuel:600});a.task='lighting a fire';S.bgDirty=true;return;}
-    const buddy=nearestOf(S.agents.filter(o=>o!==a&&!o.dead),a);
+    const buddy=nearestAgent(S,a,null,30);
     if(buddy&&dist(buddy,a)>1.2){moveToward(S,a,buddy);a.task='huddling for warmth';return;}
   }
-  if(night&&hasCustomKind(S,a,'value','night')&&!S.agents.some(o=>o!==a&&!o.dead&&dist(o,a)<3)){
-    const buddy2=nearestOf(S.agents.filter(o=>o!==a&&!o.dead),a);
+  if(night&&hasCustomKind(S,a,'value','night')&&nearby(S,a,3).length===0){
+    const buddy2=nearestAgent(S,a,null,30);
     if(buddy2){moveToward(S,a,buddy2);a.task='keeping the rule of the shared fire';return;}
   }
   // the fire cult keeps a flame burning even when warm
@@ -849,13 +1394,14 @@ function agentTick(S,a){
   }
   if(a.energy<15)a.sleeping=true;
   if(a.sleeping){a.task='sleeping';a.energy+=4;if(a.energy>=80)a.sleeping=false;else return;}
+  starTick(S,a); // ENGINE 2.2 (D-088): stars -> cosmology -> sky-faith; star-gazing unlocks the calendar
   if(S.tick%8===0&&a.hunger>45&&maybeTill(S,a))return; // Engine 1.1: spring tilling when not starving
 
   // dusk gathering customs: more talk, faster spread (culture drives knowledge)
   if(S.hour===20&&!child){
     const g=hasCustomKind(S,a,'gathering');
     if(g){
-      const f=nearestOf(S.fires,a)||nearestOf(S.agents.filter(o=>o!==a&&!o.dead),a);
+      const f=nearestOf(S.fires,a)||nearestAgent(S,a,null,40);
       if(f&&dist(f,a)>2){moveToward(S,a,f);a.task='joining the evening '+(g.word||'song');return;}
       a.talkCd=0;
     }else if(S.rand()<.004){maybeEmergeCustom(S,a,'dusk');}
@@ -889,7 +1435,7 @@ function agentTick(S,a){
     const slack=a.hunger>55&&a.warmth>45&&a.energy>30;
     // INNOVATION NEEDS SURPLUS: surplus energy -> specialization -> experiments.
     // Not the smartest villages invent — the ones with food to spare.
-    let fed=0;for(const o of S.agents){if(!o.dead&&o!==a&&o.hunger>60&&dist(o,a)<8&&++fed>=3)break;}
+    let fed=0;for(const o of nearby(S,a,8)){if(o.hunger>60&&++fed>=3)break;}
     const attempt=(slack||a.inspired>0)?TECHS.find(t=>canAttempt(S,a,t)&&!t.alts.every(alt=>Object.keys(alt).some(m=>isTaboo(S,a,m)))):null;
     if(attempt&&(S.rand()<(a.traits.curiosity*.5+(a.inspired>0?.5:0))*(1+.12*fed))){
       a.expTech=attempt;a.expAlt=pickAlt(S,a,attempt);a.expT=6;return;
@@ -905,7 +1451,7 @@ function agentTick(S,a){
     const other=S.agents.find(o=>o!==a&&!o.dead&&dist(o,a)<3.5&&(o.talkCd||0)<=0);
     if(other&&(a.social<70||S.rand()<.2)){talk(S,a,other);return;}
     if(a.social<55){
-      const near=nearestOf(S.agents.filter(o=>o!==a&&!o.dead),a);
+      const near=nearestAgent(S,a,null,40);
       if(near){moveToward(S,a,near);a.task='seeking company';return;}
     }
   }
@@ -1057,7 +1603,7 @@ function fieldsTick(S){
 function maybeTill(S,a){
   if(!a.knows.has('farming')||S.season!=='spring')return false;
   if(S.fields.some(f=>f.owner===a.name))return false;
-  if(S.fields.length>=Math.max(3,S.agents.filter(x=>!x.dead).length))return false;
+  if(S.fields.length>=Math.max(3,S._aliveN||S.agents.filter(x=>!x.dead).length))return false;
   const ax=Math.round(a.x),ay=Math.round(a.y);
   for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const x=ax+dx,y=ay+dy;
     if(x<1||y<1||x>=W-1||y>=H-1)continue;const t=S.tiles[y][x];
@@ -1071,6 +1617,8 @@ function maybeTill(S,a){
 function tickWorld(S){
   if(S.ended)return;
   S.tick++;S.hour=(S.hour+1)%24;if(S.hour===0)S.day++;
+  assignVillages(S); // ENGINE 2.1 (D-086): cache village membership once per tick (O(1) lookups after)
+  buildGrid(S);      // ENGINE 2.3 (D-089): spatial hash for O(local) neighbour scans + alive count cache
   fieldsTick(S);
   S.someoneDied=false;
   for(const a of S.agents)if(!a.dead)agentTick(S,a);
@@ -1096,6 +1644,8 @@ function tickWorld(S){
   }
   animalsTick(S);
   if(S.tick%YEAR===0)cultureYearTick(S);
+  if(S.tick%YEAR===0)warTick(S); // TENSION PROTO: village-scale organised violence (the war rung)
+  if(S.tick%YEAR===0)knowledgeRetentionTick(S); // ENGINE 2.1 (D-086): per-community knowledge census + local loss/rediscovery (yearly; pure readout)
   for(const f of S.fires)f.fuel--;
   S.fires=S.fires.filter(f=>f.fuel>0);
   for(let i=S.regrows.length-1;i>=0;i--){
@@ -1106,6 +1656,48 @@ function tickWorld(S){
     S.ended=true;S.endedYear=Math.floor(S.tick/YEAR)+1;
     ev(S,'end',`🕯️ The last human is gone after ${S.endedYear} years. The world stands silent — but the chronicle remembers everything they created.`,{});
   }
+}
+
+
+// ENGINE 2.1 (D-086): a ROLE is an emergent LABEL, never assigned. It reads an individual's dominant
+// knowledge + aptitude + the crafts their community can support — the same person is a smith in an
+// iron valley, a boatwright on a coast, a mere forager where nothing has been discovered (EP philosophy).
+// A role is a LABEL for what an individual became, not a list of what their village knows.
+// Knowledge spreads to (almost) everyone, so gating a role purely on k.has(craft) collapses a
+// whole population onto one high-priority craft (everyone "knows" painting => everyone a painter).
+// Instead: among the crafts this person knows, pick the one their TRAITS make them best at — the
+// EP's law that role emerges from the individual (traits -> drive -> specialization). Pure
+// post-sim labeling: reads a.knows/a.traits only, never S.rand, never mutates — determinism-safe.
+function roleOf(S,a){
+  const k=a.knows, t=a.traits, T=n=>t[n]||0;
+  // relative aptitude: what a person becomes is the craft where their OWN standout trait lies,
+  // not the craft with the globally-biggest number. mean-centre so each individual gravitates to
+  // their personal signature (high musicality -> musician; high dexterity -> smith/weaver). prestige
+  // is a light tiebreak so an advanced craft edges a basic one at equal aptitude. Pure labeling.
+  const keys=['curiosity','social','diligence','conformity','dexterity','creativity','musicality','empathy','ambition'];
+  let mean=0; for(const n of keys)mean+=T(n); mean/=keys.length;
+  const apt=n=>0.5+(T(n)-mean); // ~0.5 at baseline, higher where the person exceeds their own norm
+  const cand=[]; const add=(id,ok,trait,prestige)=>{ if(ok)cand.push([id, apt(trait)+0.12*prestige]); };
+  add('musician',   k.has('composition')||k.has('song'),        'musicality',1.00);
+  add('painter',    k.has('painting'),                          'creativity',0.94);
+  add('scholar',    k.has('science')||k.has('scholarship'),     'curiosity', 1.00);
+  add('philosopher',k.has('philosophy'),                        'curiosity', 0.80);
+  add('teacher',    k.has('university')||k.has('school'),        'empathy',   0.88);
+  add('healer',     k.has('medicine'),                          'empathy',   0.90);
+  add('priest',     k.has('temple')||k.has('monastery'),        'social',    0.84);
+  add('magistrate', k.has('law'),                               'ambition',  0.86);
+  add('merchant',   k.has('coinage'),                           'ambition',  0.84);
+  add('smith',      k.has('steel')||k.has('smithing')||k.has('bronze'), 'dexterity',0.88);
+  add('builder',    k.has('architecture')||k.has('masonry'),    'diligence', 0.82);
+  add('boatwright', k.has('sailing'),                           'dexterity', 0.70);
+  add('weaver',     k.has('weaving'),                           'dexterity', 0.60);
+  add('potter',     k.has('pottery')||k.has('kiln'),            'dexterity', 0.50);
+  add('farmer',     k.has('farming'),                           'diligence', 0.30);
+  add('fisher',     k.has('fishing'),                           'diligence', 0.30);
+  add('hunter',     k.has('spear')||k.has('bow'),               'ambition',  0.30);
+  if(!cand.length)return 'forager';
+  cand.sort((x,y)=>y[1]-x[1]||(x[0]<y[0]?-1:1));
+  return cand[0][0];
 }
 
 // ---------- Civilization DNA ----------
@@ -1274,5 +1866,5 @@ function resimulate(seed,toTick){
   return S;
 }
 
-return {createWorld,tickWorld,computeDNA,resimulate,writeHistory,TECHS,TECH,OBS,QUIRK,W,H,YEAR,SEASONS,VERSION:'2.0.1'};
+return {createWorld,tickWorld,computeDNA,resimulate,writeHistory,roleOf,TECHS,TECH,OBS,QUIRK,W,H,YEAR,SEASONS,VERSION:'2.3.0'};
 });

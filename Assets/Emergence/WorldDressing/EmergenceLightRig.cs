@@ -65,6 +65,19 @@ namespace Emergence.Editor
             }
             else Debug.LogWarning($"[LightRig] skybox '{skyName}' not found — gray horizon (import Staggart Stylized Skyboxes).");
 
+            // D-101e: a soft FILL directional light (no shadows) from opposite the key sun. The pack's
+            // foliage shader responds to DIRECTIONAL light, not ambient — so this is the only thing that
+            // lifts the shaded/back sides of tree canopies out of near-black ("the dark blob"). The sun
+            // stays the key; this just fills. Disabled-ish at night.
+            var fillGo = GameObject.Find("SunFill");
+            if (fillGo == null) fillGo = new GameObject("SunFill");
+            if (!fillGo.TryGetComponent<Light>(out var fill)) fill = fillGo.AddComponent<Light>();
+            fill.type = LightType.Directional;
+            fill.shadows = LightShadows.None;
+            fill.transform.rotation = Quaternion.Euler(28f, 150f, 0f);  // low, roughly opposite the key sun
+            fill.color = new Color(0.72f, 0.82f, 0.88f);                 // cool sky-tinted bounce
+            fill.intensity = phase == "day" ? 0.6f : (phase == "dusk" ? 0.14f : 0.07f);
+
             switch (phase)
             {
                 case "dusk": // the locked identity: a blue world with exactly ONE warm point (fires carry the warmth)
@@ -79,37 +92,32 @@ namespace Emergence.Editor
                     sun.color = new Color(0.6f, 0.7f, 0.95f);
                     RenderSettings.ambientLight = new Color32(48, 58, 84, 255); // lifted from 30,38,58 — dark BLUE snow, not black
                     break;
-                default: // day — the D-069 measured calibration
-                    sun.transform.rotation = Quaternion.Euler(62f, 32f, 28f);
-                    sun.intensity = 1.5f;
-                    sun.color = Color.white;
-                    RenderSettings.ambientLight = new Color32(84, 98, 106, 255);
-                    // winter reads colder even at noon
-                    if (season == "winter") { sun.intensity = 1.15f; RenderSettings.ambientLight = new Color32(88, 96, 112, 255); }
+                default: // day — D-101: matched to Dreamscape's own Demo sun (warm, soft, lower)
+                    sun.transform.rotation = Quaternion.Euler(45f, 335f, 0f);
+                    sun.intensity = 1.3f;
+                    sun.color = new Color(1f, 0.957f, 0.839f);   // their warm daylight
+                    // D-101e: Dreamscape's Demo lights foliage with a BRIGHT sky-filled Trilight ambient
+                    // (their sky ≈ teal-green). Flat dark ambient (the old D-069 Village-pack law) left the
+                    // shaded side of tree canopies near-black — the "dark blob". Sky-fill lifts those tops.
+                    RenderSettings.ambientMode = AmbientMode.Trilight;
+                    RenderSettings.ambientSkyColor = new Color(0.42f, 0.62f, 0.64f);   // soft sky fill on leaf tops
+                    RenderSettings.ambientEquatorColor = new Color(0.44f, 0.50f, 0.44f);
+                    RenderSettings.ambientGroundColor = new Color(0.26f, 0.28f, 0.22f);
+                    if (season == "winter") { sun.intensity = 1.1f; sun.color = new Color(0.96f, 0.97f, 1f); RenderSettings.ambientSkyColor = new Color(0.5f, 0.56f, 0.66f); }
                     break;
             }
-            // TD-034 (showcase recipe): Dreamscape's Demo runs FOG — it is a big part of why their
-            // meadow reads deep and painterly while ours read flat. Linear, gentle, per phase; the
-            // day color is the Demo's own (0.635, 0.82, 1.0). Backdrop-only depth cue — ambient
-            // object lighting stays the flat D-069 calibration above.
+
+            // D-101: atmospheric fog — Dreamscape's Demo uses light-blue fog for depth (kills the hard
+            // green/blue horizon seam, gives distance). Phase-tinted; linear so near objects stay crisp.
             RenderSettings.fog = true;
             RenderSettings.fogMode = FogMode.Linear;
             switch (phase)
             {
-                case "dusk":
-                    RenderSettings.fogColor = new Color(0.28f, 0.33f, 0.46f); // blue-hour haze, in-register with the ambient
-                    RenderSettings.fogStartDistance = 130f; RenderSettings.fogEndDistance = 750f;
-                    break;
-                case "night":
-                    RenderSettings.fogColor = new Color(0.15f, 0.19f, 0.30f);
-                    RenderSettings.fogStartDistance = 110f; RenderSettings.fogEndDistance = 650f;
-                    break;
-                default:
-                    RenderSettings.fogColor = new Color(0.635f, 0.82f, 1.0f);  // the Demo's exact day fog
-                    RenderSettings.fogStartDistance = 180f; RenderSettings.fogEndDistance = 950f;
-                    break;
+                case "dusk": RenderSettings.fogColor = new Color(0.42f, 0.44f, 0.58f); RenderSettings.fogStartDistance = 160f; RenderSettings.fogEndDistance = 1200f; break;
+                case "night": RenderSettings.fogColor = new Color(0.16f, 0.20f, 0.32f); RenderSettings.fogStartDistance = 120f; RenderSettings.fogEndDistance = 950f; break;
+                default: RenderSettings.fogColor = new Color(0.635f, 0.820f, 1.0f); RenderSettings.fogStartDistance = 240f; RenderSettings.fogEndDistance = 1500f; break;
             }
-            Debug.Log($"[LightRig] {season}/{phase} applied (flat ambient; sky={(sky ? skyName : "none")}; fog {RenderSettings.fogStartDistance}-{RenderSettings.fogEndDistance}; decoupled-clock law: presentation time, never sim time)");
+            Debug.Log($"[LightRig] {season}/{phase} applied (flat ambient; sky={(sky ? skyName : "none")}; decoupled-clock law: presentation time, never sim time)");
         }
     }
 }

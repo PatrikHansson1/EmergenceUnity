@@ -1,0 +1,37 @@
+EMERGENCE — A6 GPU-INSTANCING (D-126)
+generated 2026-07-21 16:38:54
+small foliage collapses to instanced draws; the sharp number is play-mode UnityStats below.
+
+dressed y120; static layers retired; codex diff=+127 -0 =0 placed=127; agents souls=111
+foliage renderers enabled before: 8044
+converted: 8044 renderers disabled -> 16 (mesh,mats)-groups, 3286 instances, 2233 cell-batches (cellSize 24u)
+URP asset 'PC_RPAsset': shadowDistance 35 -> 35, cascades 1 -> 1 (saved)
+
+## PLAY PHASE (frames=150, samples=120)
+metric                 avg        max        budget    verdict
+draw calls             3227      7173       2500      OVER
+set-pass calls         222       641        -         (info)
+triangles (millions)   5,1       -          8         OK
+instancer submits/frame: 864   (was ~thousands of renderer draws)
+magenta (2 game-view captures): 0   evidence: 45-UNITY/evidence/fas2/a6inst-*.png
+reference BEFORE this pass: 5101 draw calls (Reports/perf-playmode.txt, 12:49)
+visible-renderer census (frame 60): total=1025, shadow-casting=1016
+     352  World_8919_y120/Huts
+     241  World_8919_y120/Nature
+     148  CodexOverlay_Live/codex_manor_Falkheim_0
+      49  CodexOverlay_Live/codex_temple_Falkheim_0
+      49  CodexOverlay_Live/codex_temple_Ormstead_0
+      25  World_8919_y120/Yards
+      17  World_8919_y120/Animals
+      14  World_8919_y120/HutAge
+      13  World_8919_y120/Water
+       9  World_8919_y120/WorkMarks
+       9  World_8919_y120/AmbientFX
+       6  CodexOverlay_Live/codex_boat_Ormstead_0
+       4  World_8919_y120/TechAnchors
+       3  CodexOverlay_Live/codex_commons-fire_Falkheim_0
+
+note: FPS is not meaningful on an unattended editor (player loop stepped from editor ticks);
+      definitive FPS comes from a player build (open A6 item, D-119).
+
+verdict: CHECK — see numbers above

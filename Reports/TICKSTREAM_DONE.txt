@@ -1,0 +1,2 @@
+DONE 10:02:47 magentaWorst=0 events=195 (headless)
+see Reports/tickstream-report.txt
