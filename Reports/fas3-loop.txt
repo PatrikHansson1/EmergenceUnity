@@ -1,0 +1,15 @@
+EMERGENCE — FAS 3 LIVING-LOOP PROBE (D-133)
+generated 2026-07-21 23:21:45
+engine LIVE from genesis (seed 8919) on a worker thread; pacing is presentation-only.
+
+backdrop dressed from seq-8919-y006 (terrain year-stable); static layers retired
+## PLAY PHASE (frames=17358)
+year snapshots applied live: 6 (two runs to y3, seed 8919)
+pause-freeze: tick 144 == 144 during 1.5s pause -> FROZEN (OK)
+codex live: OK (reconciled every year)
+run A hash (fast, 1 pause): 01917c3ffc4dd6c0d9282684843878069545b3670822bbea7e76c40fd94c2bc2
+run B hash (slow->fast, 2 pauses): 01917c3ffc4dd6c0d9282684843878069545b3670822bbea7e76c40fd94c2bc2
+DETERMINISM: same tick, different pacing -> IDENTICAL (the time law holds)
+magenta: classic=0 tonemapped=0   evidence: 45-UNITY/evidence/fas3/fas3-loop-live.png
+
+verdict: GREEN — the world runs LIVE; time is presentation, truth is the sim's

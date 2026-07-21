@@ -1,0 +1,2 @@
+DONE 23:22:48 verdict=GREEN snapshots=6 hashEq=True pauseFrozen=True magenta=0/0
+see Reports/fas3-loop.txt
