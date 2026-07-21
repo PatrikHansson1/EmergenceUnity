@@ -96,8 +96,10 @@ namespace Emergence.Editor
                         var pos = GroundW(P(S, a.x, a.y));
                         if ((rec.go.transform.position - pos).sqrMagnitude > 0.0001f)
                         {
-                            rec.go.transform.position = pos;
-                            Face(S, a, rec.go);
+                            // v2 (D-129): in play mode the soul WALKS there (heading-facing); edit mode stays instant
+                            var aaMove = rec.go.GetComponent<AgentAnimator>();
+                            if (Application.isPlaying && aaMove != null) aaMove.GlideTo(pos);
+                            else { rec.go.transform.position = pos; Face(S, a, rec.go); }
                             d.moved++;
                         }
                         if (rec.task != a.task)

@@ -1,0 +1,2 @@
+DONE 20:52:52 verdict=GREEN souls=111 gliders=1 arrived=111 transit=0 magenta=0
+see Reports/fas2-move.txt

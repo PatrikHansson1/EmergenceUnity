@@ -47,6 +47,15 @@ namespace Emergence.Runtime
         Animator _anim;
         string _state = "";
 
+        // ---- v2 movement (D-129): between snapshots a soul WALKS to its new sim position ----
+        // The sim still owns the destination (D-078 r4); the glide is presentation-side easing along a
+        // straight, terrain-following line (true desire-lines need the engine's pathUse export — a
+        // Simulation-Architect item). Speed is hash(id)-varied; > MaxGlide reads as a scene cut (teleport).
+        public const float MaxGlide = 60f;
+        Vector3 _glideTarget; bool _transit; float _speed;
+        public bool InTransit => _transit;
+        public float RemainingGlide => _transit ? Vector3.Distance(transform.position, _glideTarget) : 0f;
+
         static uint Hash(uint x) { x ^= x >> 16; x *= 0x7feb352du; x ^= x >> 15; x *= 0x846ca68bu; x ^= x >> 16; return x; }
 
         void Start()
@@ -61,10 +70,43 @@ namespace Emergence.Runtime
         /// <summary>Reconciler-facing: update the task live (crossfades only when the read changes).</summary>
         public void SetTask(string t) { task = t; if (_anim != null) Apply(false); }
 
+        /// <summary>Reconciler-facing (v2, D-129): walk to the new sim position instead of teleporting.</summary>
+        public void GlideTo(Vector3 target)
+        {
+            if (!Application.isPlaying) { transform.position = target; return; }
+            float d = Vector3.Distance(transform.position, target);
+            if (d < 0.05f || d > MaxGlide) { transform.position = target; if (_transit) EndTransit(); return; }
+            _glideTarget = target;
+            _speed = 1.15f + (Hash((uint)agentId * 2654435761u + 41u) & 0xffu) / 255f * 0.35f;   // 1.15–1.50 u/s
+            if (!_transit) { _transit = true; if (_anim != null) Apply(false); }
+        }
+
+        void Update()
+        {
+            if (!_transit) return;
+            if (_anim == null) { transform.position = _glideTarget; _transit = false; return; }
+            var pos = transform.position;
+            var to = _glideTarget - pos; to.y = 0f;
+            float step = _speed * Time.deltaTime;
+            if (to.magnitude <= step) { transform.position = Grounded(_glideTarget); EndTransit(); return; }
+            var dir = to.normalized;
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 6f * Time.deltaTime);
+            transform.position = Grounded(pos + dir * step);
+        }
+
+        void EndTransit() { _transit = false; _state = ""; Apply(false); }   // re-read the task state
+
+        static Vector3 Grounded(Vector3 w)
+        {
+            var t = Terrain.activeTerrain;
+            if (t != null) w.y = t.SampleHeight(w) + t.transform.position.y;
+            return w;
+        }
+
         void Apply(bool hashPhase)
         {
             if (_anim.runtimeAnimatorController == null) return;
-            string s = AgentTaskRead.StateFor(task, canWork);
+            string s = _transit ? "Walk" : AgentTaskRead.StateFor(task, canWork);   // transit overrides the read
             if (s == _state) return;
             _state = s;
             // phase de-sync so 111 villagers don't stride in lockstep — hash(agentId), never sim RNG

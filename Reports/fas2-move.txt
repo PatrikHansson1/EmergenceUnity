@@ -1,0 +1,16 @@
+EMERGENCE — FAS 2 v2-MOVEMENT PROBE (D-129)
+generated 2026-07-21 20:52:38
+souls walk between snapshots (straight, terrain-following glide; pathUse export is a later engine item).
+
+dressed y120; agents live at y85 baseline: +57 -0 aged=0 retask=0 moved=0 =0 souls=57
+
+## PLAY PHASE (frames=548)
+y85 -> y120 live: +75 -21 aged=30 retask=5 moved=6 =1
+frame 40: gliders=1, in Walk=1
+frame 80: still-transit=1, closing=1, stalled=0
+arrival: 111/111 on their sim y120 spot (±0.15u ground-plane), off=0, still-transit=0
+task->state (transit-aware): 111/111; terrain grounding: 111/111
+scene cuts (> 60u relocations, instant by design): 5
+magenta (mid-glide capture): 0   evidence: 45-UNITY/evidence/fas2/move-glide-live.png
+
+verdict: GREEN — souls walk their moves; the sim still owns every destination

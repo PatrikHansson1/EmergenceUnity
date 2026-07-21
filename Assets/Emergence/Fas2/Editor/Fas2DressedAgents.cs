@@ -154,7 +154,7 @@ namespace Emergence.Editor
                         total++;
                         var an = aa.GetComponentInChildren<Animator>();
                         if (an == null || an.runtimeAnimatorController == null) { mismatch++; continue; }
-                        string expect = AgentTaskRead.StateFor(aa.task, aa.canWork);
+                        string expect = aa.InTransit ? "Walk" : AgentTaskRead.StateFor(aa.task, aa.canWork);   // v2 (D-129)
                         bool ok = an.GetCurrentAnimatorStateInfo(0).IsName(expect)
                                || (an.IsInTransition(0) && an.GetNextAnimatorStateInfo(0).IsName(expect));
                         if (ok) match++; else mismatch++;
