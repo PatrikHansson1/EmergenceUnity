@@ -1,2 +1,2 @@
-DONE 21:41:27 verdict=GREEN animals=35 magenta=0
+DONE 23:01:01 verdict=GREEN animals=35 magenta=0
 see Reports/fas2-animals.txt

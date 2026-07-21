@@ -1,2 +1,2 @@
-DONE 21:41:15 verdict=GREEN missing=0
+DONE 23:00:49 verdict=GREEN missing=0
 see Reports/animal-anim-build.txt

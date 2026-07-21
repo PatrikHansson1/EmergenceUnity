@@ -199,17 +199,28 @@ namespace Emergence.Editor
             var layer = GameObject.Find(AgentReconciler.LayerName);
             var pts = new List<Vector3>();
             if (layer != null) foreach (var aa in layer.GetComponentsInChildren<AgentAnimator>()) pts.Add(aa.transform.position);
-            Vector3 center = pts.Count > 0 ? pts[0] : new Vector3(400, 0, 400); int best = -1;
-            foreach (var p in pts)
+            // D-132 (re-review R1, tredje försöket): sluta gissa mot vegetationen — förankra vid BYN.
+            // Byggplattorna hålls trädfria (NearVillage-röjning), så en kamera över byn kan inte hamna i
+            // ett krontak. Motiv = tätaste agent-klustret INOM 16u från en hydda (folket bland stugorna);
+            // fallback = hyddornas medelpunkt.
+            var hutPts = new List<Vector3>();
+            var huts = GameObject.Find("Huts");
+            if (huts != null) foreach (Transform ht in huts.transform) hutPts.Add(ht.position);
+            bool NearHut(Vector3 p) => hutPts.Count == 0 || hutPts.Any(hp => (hp - p).sqrMagnitude < 256f);
+            var villagePts = pts.Where(NearHut).ToList();
+            if (villagePts.Count == 0 && hutPts.Count > 0)
+            { var hc = Vector3.zero; foreach (var hp in hutPts) hc += hp; villagePts.Add(hc / hutPts.Count); }
+            if (villagePts.Count == 0) villagePts = pts.Count > 0 ? pts : new List<Vector3> { new Vector3(400, 0, 400) };
+            Vector3 center = villagePts[0]; int best = -1;
+            foreach (var p in villagePts)
             {
-                int n = pts.Count(q => (q - p).sqrMagnitude < 144f);
+                int n = villagePts.Count(q => (q - p).sqrMagnitude < 144f);
                 if (n > best) { best = n; center = p; }
             }
-            var cluster = pts.Where(q => (q - center).sqrMagnitude < 144f).ToList();
+            var cluster = villagePts.Where(q => (q - center).sqrMagnitude < 144f).ToList();
             if (cluster.Count > 0) { var c = Vector3.zero; foreach (var q in cluster) c += q; center = c / cluster.Count; }
-            float ext = 19f;   // D-131 (grind-review): y085-evidensen togs inne i ett buskage — högre/längre ut
             var prevPos = cam.transform.position; var prevRot = cam.transform.rotation;
-            cam.transform.position = center + new Vector3(ext * 0.5f, ext * 0.62f, -ext * 0.8f);
+            cam.transform.position = center + new Vector3(9f, 11f, -14f);   // 3/4 över den röjda byplattan
             cam.transform.LookAt(center + Vector3.up * 0.8f);
             bool fogWas = RenderSettings.fog; RenderSettings.fog = false;
             const int w = 1600, h = 900;

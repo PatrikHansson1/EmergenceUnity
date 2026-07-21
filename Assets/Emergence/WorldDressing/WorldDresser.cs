@@ -1105,7 +1105,8 @@ namespace Emergence.Editor
             {
                 var sh = Shader.Find("Universal Render Pipeline/Lit");
                 if (sh == null) return;
-                _wolfMat = new Material(sh) { name = "M_WolfTint_D131", color = new Color(0.33f, 0.30f, 0.27f) };
+                // D-132 (re-review A2/R5): 0.33-albedon läste blek gråbeige i direkt sol — mörkare ton
+                _wolfMat = new Material(sh) { name = "M_WolfTint_D131", color = new Color(0.22f, 0.20f, 0.18f) };
                 _wolfMat.SetFloat("_Smoothness", 0.05f);
             }
             foreach (var r in go.GetComponentsInChildren<Renderer>(true))
