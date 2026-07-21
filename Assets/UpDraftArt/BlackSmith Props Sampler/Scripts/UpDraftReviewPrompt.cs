@@ -1,3 +1,6 @@
+// EMERGENCE D-130: editor-only review prompt shipped OUTSIDE an Editor folder — broke the player
+// build (CS0246/CS0234 on UnityEditor types). Guarded, not deleted; zero behaviour change in the editor.
+#if UNITY_EDITOR
 using System;
 using System.Globalization;
 using UnityEditor;
@@ -201,3 +204,4 @@ namespace UpDraftArt.EditorTools
         }
     }
 }
+#endif

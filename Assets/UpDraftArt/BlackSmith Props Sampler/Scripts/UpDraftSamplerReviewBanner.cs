@@ -1,3 +1,6 @@
+// EMERGENCE D-130: editor-only review banner shipped OUTSIDE an Editor folder — broke the player
+// build (CS0246 on UnityEditor types). Guarded, not deleted; zero behaviour change in the editor.
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 
@@ -57,3 +60,4 @@ namespace UpDraftArt.EditorTools
         }
     }
 }
+#endif

@@ -1,0 +1,2 @@
+DONE 21:14:56 verdict=GREEN avgFps=472,2
+see Reports/a6-player-perf.txt

@@ -1,4 +1,4 @@
-A6 OPTIMIZE — 2026-07-21 20:28:15
+A6 OPTIMIZE — 2026-07-21 21:06:49
 foliage renderers shadows OFF: 7437
 shadowDistance: 35 -> 35, cascades -> 1
 static-batched roots: 7 (Huts,Yards,HutAge,WorkMarks,TechAnchors,CodexOverlay_Live,Nature)

@@ -166,6 +166,9 @@ namespace Emergence.Editor
             EditorApplication.EnterPlaymode();
         }
 
+        /// <summary>Public entry for other runners (A6PlayerPerf): convert the OPEN scene's foliage.</summary>
+        public static (int disabled, int groups, int batches, int instances) ConvertOpenScene() => Convert();
+
         static (int disabled, int groups, int batches, int instances) Convert()
         {
             var go = new GameObject("FoliageInstanced");

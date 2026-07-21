@@ -1,0 +1,16 @@
+EMERGENCE — A6 PLAYER PERF (D-130): the definitive FPS number
+generated 2026-07-21 21:06:44
+
+scene: souls=111, foliage converted: 8044 renderers -> 1594 cell-batches (3286 instances, 16 groups)
+camera at village cluster (592.97, 16.72, 129.42), PerfRun added (5s warm-up + 20s sample, yaw 14 deg/s)
+scene saved: Assets/Emergence/Scenes/PerfScene.unity
+build: Succeeded, errors=0, sizeMB=1243, secs=447
+
+## PLAYER RESULT
+EMERGENCE — PLAYER PERF RUN (A6 final verdict, D-130)
+generated 2026-07-21 21:14:54
+resolution 1600x900  vsync=0  frames=9482  sample=20s (5s warm-up)
+frame ms   avg=2,12  median=1,95  p95=2,98  p99=3,41  worst=364,10
+fps        avg=472,2  median=512,8  1%low=293,5
+
+A6 verdict: avg 472,2 fps vs floor 60 -> GREEN (reference GPU 4070 Ti SUPER; min-spec GTX 1660 measurement is a separate later pass)
