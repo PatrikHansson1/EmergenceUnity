@@ -1,0 +1,16 @@
+EMERGENCE — FAS 3 INCREMENT 4 PROBE (D-136/D-137): lookahead buffer + checkpoint grid
+generated 2026-07-22 01:05:29
+one live run, seed 8919, genesis -> y6, bufferMode: producer races, the clock paces.
+
+backdrop terrain from seq-8919-y006; born-from-state layers retired; y6 canon huts=2
+checkpoint grid cleared for seed 8919: C:/Users/patri/AppData/LocalLow/DefaultCompany/EmergenceUnity\Emergence\checkpoints
+## PLAY PHASE (frames=20137)
+pacing: y1 applied at t=21,8s (boundary 6.0s at 1x + boot) -> PACED (OK)
+decouple: paused at applied y1; producer advanced y1 -> y3 (+2) with buffer +2 -> RACING (OK)
+order: applied [1,2,3,4,5,6] -> STRICT 1..6 (OK); live huts 2 == y6 canon 2 -> MATCH (OK)
+grid: 6/6 checkpoints persisted in C:/Users/patri/AppData/LocalLow/DefaultCompany/EmergenceUnity\Emergence\checkpoints
+scrub: J3 rebuilt y3 from disk, huts==0 (OK); J6 returned to canon, huts==2 (OK)
+
+magenta: classic=0 tonemapped=0 (worst frame incl. jump + 4 village angles)   evidence: 45-UNITY/evidence/fas3/fas3-buffer-*.png
+
+verdict: GREEN — the producer races, the player's clock paces; every year lands in order; any produced year re-enters from the grid

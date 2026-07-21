@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using Emergence.Runtime;   // D-137: world model moved to Runtime
 
 namespace Emergence.Editor
 {

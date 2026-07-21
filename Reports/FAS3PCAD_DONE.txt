@@ -1,2 +1,2 @@
-DONE 00:34:37 verdict=GREEN tps=19,0
+DONE 01:08:28 verdict=GREEN tps=19,0
 see Reports/fas3-player-cadence.txt

@@ -1,12 +1,12 @@
 EMERGENCE — FAS 3 PLAYER-JINT CADENCE (D-136): the time-strategy number
-generated 2026-07-22 00:33:32
+generated 2026-07-22 01:07:25
 editor baseline (D-134): 16 t/s flat-out incl. live reconciles; engine YEAR=144 (D-135)
 
 scene saved: Assets/Emergence/Scenes/CadenceScene.unity (empty + Fas3PlayerCadence; engine JS ships via StreamingAssets)
-build: Succeeded, errors=0, sizeMB=112, secs=21
+build: Succeeded, errors=0, sizeMB=630, secs=24
 
 ## PLAYER RESULT
-tps avg=19.0 ticks=569 secs=30.0 yearTicks=144 warmup=4 totalTick=576 year=4
+tps avg=19.0 ticks=571 secs=30.0 yearTicks=144 warmup=4 totalTick=576 year=4
 
 ## TIME-STRATEGY VERDICT
 player flat-out 19.0 t/s (editor was 16): 1x (24 t/s x1.25 margin) -> DOES NOT HOLD; 4x (96 t/s x1.25) -> DOES NOT HOLD

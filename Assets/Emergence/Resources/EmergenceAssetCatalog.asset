@@ -1,0 +1,159 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffa4d609033a23a4693471c0bf016dbb, type: 3}
+  m_Name: EmergenceAssetCatalog
+  m_EditorClassIdentifier: Assembly-CSharp::Emergence.Runtime.EmergenceAssetCatalog
+  prefabs:
+  - name: P_PROP_flag_01
+    prefab: {fileID: 1525057500783216557, guid: 319a3e76f3abd7a43b206990bf62733f, type: 3}
+  - name: mill.glb
+    prefab: {fileID: 8919934127225428127, guid: 16f269505c7ce3244897da36f4009793, type: 3}
+  - name: P_PROP_signpost_01
+    prefab: {fileID: 1618310165938123508, guid: ac82f76def940e141b1e072e746a312f, type: 3}
+  - name: P_PROP_market_shelf_01
+    prefab: {fileID: 3948062172000380339, guid: 6b13403843386944a9a1317f19d0fa75, type: 3}
+  - name: Prefab_RuneRock_01
+    prefab: {fileID: 2921669142860546498, guid: 62827684f2773b04c9a21b55023bf41b, type: 3}
+  - name: BLD_03_16x8_Ext_Arch_01
+    prefab: {fileID: 4074985016414696614, guid: bb6a60f829e09f946a5c609d7ab0394c, type: 3}
+  - name: BLD_03_L_Ext_01
+    prefab: {fileID: 4142231140047830824, guid: 86381e6f2a75c7a41908b38bcb405ae2, type: 3}
+  - name: forge.glb
+    prefab: {fileID: 8919934127225428127, guid: a8bb55d0c03ccd3448c5b8877d4d9094, type: 3}
+  - name: P_PROP_scroll
+    prefab: {fileID: 837259620937065759, guid: 19fe2e3398baa90458c890fb2bb5c3f9, type: 3}
+  - name: P_PROP_rowboat
+    prefab: {fileID: 2086265219946859027, guid: 0254b0f9ed3bbb54687a88a46f5a8504, type: 3}
+  - name: P_PROP_cart_01
+    prefab: {fileID: 6758660250289803375, guid: c7c1d22f58af4214591facb23bcaba24, type: 3}
+  - name: P_PROP_clothesline_01
+    prefab: {fileID: 4946818265098746284, guid: c4f6e404697eb7349bb05ff3af77e013, type: 3}
+  - name: P_PROP_barrel_03
+    prefab: {fileID: 518489810725554595, guid: 81ee253099686f647ab56365aeeeff03, type: 3}
+  - name: P_PROP_PLANT_pot_v1_01
+    prefab: {fileID: 398806270613768478, guid: 0d69fa3600fa7cc4097e932b8516eab7, type: 3}
+  - name: P_PROP_wall_stone_small_01
+    prefab: {fileID: 8368246807289434873, guid: 41a4bea1efb252c4aad5ea2649e5cb08, type: 3}
+  - name: well.glb
+    prefab: {fileID: 8919934127225428127, guid: d05f236f2c86a3845b10ea9c6b2247ab, type: 3}
+  - name: Prefab_Docks
+    prefab: {fileID: 4651159602645118614, guid: 6f9ab3fd6f6bcfe4eaa41b1536e0ef1c, type: 3}
+  - name: COMP_PROP_blacksmith_station_city
+    prefab: {fileID: 6231826952530932228, guid: 28b4f139f9ea1fd4a991164b9e8bb03a, type: 3}
+  - name: COMP_PROP_alchemy_desk_city
+    prefab: {fileID: 4517731200185769165, guid: af2dfd30b817f524f89a7eadb4470f46, type: 3}
+  - name: P_PROP_bottle_04
+    prefab: {fileID: 2041679349197019933, guid: 5c7cb65fdec6a0140a2f04a921b9c0dd, type: 3}
+  - name: P_PROP_bulletinboard_city_01
+    prefab: {fileID: 8855117161862801446, guid: f3a41916cc9caa34cb521128d23cb0fa, type: 3}
+  - name: P_PROP_statue_city_01
+    prefab: {fileID: 5497549704154495164, guid: d4c03a1c35a44114386d2a4e423b97c4, type: 3}
+  - name: P_PROP_barrel_04
+    prefab: {fileID: 3945006696232732720, guid: 00d1b3dc9b5b4b943a45d7e338a0dec4, type: 3}
+  - name: COMP_PROP_crate_city_03
+    prefab: {fileID: 1965231361189708667, guid: 55b8a123f00abd14e8382e31641bc150, type: 3}
+  - name: P_PROP_bench_01
+    prefab: {fileID: 2711560758631186161, guid: b0e5077bcdd916645bfc6e991f0f7572, type: 3}
+  - name: Prefab_Campfire_Unlit
+    prefab: {fileID: 9046428374051729307, guid: 97a710fea04bf0b4ab7b7c36ee526700, type: 3}
+  - name: P_PROP_wall_stone_small_02
+    prefab: {fileID: 5750198853607023804, guid: d18f1adad3bc433448799703bdb56ee5, type: 3}
+  - name: P_BLD_house_01
+    prefab: {fileID: 4566541305947615035, guid: 95faf56cb7779194d8e7f31984ca12ee, type: 3}
+  - name: P_BLD_house_02
+    prefab: {fileID: 6594758141098547608, guid: a9da7ac478dcd484681e0e0871d2dabc, type: 3}
+  - name: P_BLD_house_03
+    prefab: {fileID: 6430176739231093840, guid: 0ebdf157d4a408648be610187ebcd8d6, type: 3}
+  - name: P_BLD_house_04
+    prefab: {fileID: 1631694139904876186, guid: df8bb62ddc295d2409aee3edecf02124, type: 3}
+  - name: P_BLD_house_05
+    prefab: {fileID: 1133361432534587450, guid: ba43096d063f9e141bc66d23a6aad4b6, type: 3}
+  - name: P_BLD_house_06
+    prefab: {fileID: 8681033655019677861, guid: 9fbb4d034a1766c4fbe91c264a5d184e, type: 3}
+  - name: P_BLD_house_07
+    prefab: {fileID: 4399577021877688035, guid: 8930c424f7d0037468691ac2f225bae8, type: 3}
+  - name: P_BLD_house_08
+    prefab: {fileID: 5698364364478304235, guid: 3678c734ae173ef42a03e2f2d3a28010, type: 3}
+  - name: P_BLD_house_09
+    prefab: {fileID: 4411553994677527371, guid: 8c97304454c685d43ae9ddde52a74b0b, type: 3}
+  - name: P_BLD_house_10
+    prefab: {fileID: 2579893728286837626, guid: 28558b5b539a83242834596e8ce73ed3, type: 3}
+  - name: P_BLD_house_11
+    prefab: {fileID: 3626879538450379820, guid: 3eb0fbed7af3f4f4c985580455ed3d39, type: 3}
+  - name: P_BLD_house_12
+    prefab: {fileID: 7197837000303595854, guid: 7a439fd9b3adf9142b5a4384bd84442f, type: 3}
+  - name: P_BLD_house_13
+    prefab: {fileID: 8681033655019677861, guid: c0cacda008ac5324598ff77198b809b2, type: 3}
+  - name: P_PROP_cart_02
+    prefab: {fileID: 8106673767351880195, guid: 8d75aa598155a334bbba4be2b0c1cc7d, type: 3}
+  - name: P_PROP_barrel_01
+    prefab: {fileID: 3402897644945875016, guid: 00e0f5af2fd2f2f48a85afdfad85ac48, type: 3}
+  - name: P_PROP_crate_01
+    prefab: {fileID: 5240462788006214415, guid: bfa26d9d4a2c65541a441db41de7a084, type: 3}
+  - name: P_PROP_crate_03
+    prefab: {fileID: 7570038294095717962, guid: f843dca3045eace41a48c6508b818cb3, type: 3}
+  - name: P_PROP_sack_02
+    prefab: {fileID: 8630674136278851334, guid: 73d8a2aa10fd2e840b580a80b5b9d900, type: 3}
+  - name: P_PROP_sack_05
+    prefab: {fileID: 3573375112432459386, guid: 45271558acf19184dafa94281716439d, type: 3}
+  - name: P_PROP_firepit_woodpile
+    prefab: {fileID: 5926364760295643609, guid: 2fa061b03fd6ed5469408cdf9f9cdf99, type: 3}
+  - name: P_PROP_hay_02
+    prefab: {fileID: 695087458049713834, guid: 0e4cc67b99b021d4db04a26c9ae18d46, type: 3}
+  - name: P_PROP_hay_04
+    prefab: {fileID: 4731626777726773868, guid: 1ba4a7565c68ac6439cf5408cd263c83, type: 3}
+  - name: P_PROP_bucket_01
+    prefab: {fileID: 3599639538761866819, guid: 34047cc28841ca44593947dee396e8e6, type: 3}
+  - name: P_PROP_trough_01
+    prefab: {fileID: 9221700670759350393, guid: fd73157d1c283de4797127fb6af8cb45, type: 3}
+  - name: P_PROP_foundation_wood_01
+    prefab: {fileID: 5854610538743996375, guid: 5148720a29930b04db37f6de1245cd95, type: 3}
+  - name: P_PROP_foundation_wood_03
+    prefab: {fileID: 4762312740641220459, guid: 54101636d97343e479ef66b5254382e6, type: 3}
+  - name: P_PROP_board_01
+    prefab: {fileID: 8904886276359077443, guid: 55f6825c08382af4990cfda6343bd768, type: 3}
+  - name: P_PROP_board_02
+    prefab: {fileID: 8728584993128696057, guid: efab06575e5c59f4db8edbd01e50a69c, type: 3}
+  - name: P_PROP_cart_wheel_small
+    prefab: {fileID: 7452869415572602400, guid: bfe6ec9d46d9d074095689bcd94fe9c0, type: 3}
+  - name: villager
+    prefab: {fileID: 8771091787928289351, guid: b2508b974552e4d4492242ce53a05347, type: 3}
+  - name: villager-f
+    prefab: {fileID: 8771091787928289351, guid: f44769cfccf70bd4c9d489793c98aaff, type: 3}
+  - name: villager-child
+    prefab: {fileID: 8771091787928289351, guid: 972a8ca5a10c8ca448546d6c00efc7cd, type: 3}
+  - name: villager-child-f
+    prefab: {fileID: 8771091787928289351, guid: d27b55ca9cf57a742a11ef1f4ac4242a, type: 3}
+  - name: villager-elder
+    prefab: {fileID: 8771091787928289351, guid: 829c97cb839fb974c8ecefe8cc7e2a0e, type: 3}
+  - name: villager-elder-f
+    prefab: {fileID: 8771091787928289351, guid: 1878358932cd32842a2fa6439aaa7849, type: 3}
+  - name: COMP_PROP_basket_city_01
+    prefab: {fileID: 4716647592940607367, guid: 1193d7d2affac574ebcfe59dec218128, type: 3}
+  controllers:
+  - key: adult
+    controller: {fileID: 9100000, guid: 26b1fbb5674aad342a7da49d83eec01e, type: 2}
+  - key: adult-f
+    controller: {fileID: 22100000, guid: a9ee3f2ad6f319b47950b734ea8c1ebf, type: 2}
+  - key: child
+    controller: {fileID: 22100000, guid: e10905d005bef984593a65af8d16d6fa, type: 2}
+  - key: child-f
+    controller: {fileID: 22100000, guid: 9d6edcc05c78223489be2e51085ba0a1, type: 2}
+  - key: elder
+    controller: {fileID: 22100000, guid: 7de8b229fffaf964b8239511f76056a9, type: 2}
+  - key: elder-f
+    controller: {fileID: 22100000, guid: a36b553aea1872844b49fe9b4849346e, type: 2}
+  codexJson: {fileID: 4900000, guid: 1598ad12beb7e214fb08c8d26721cd42, type: 3}
+  mossPrefabs:
+  - {fileID: 4974463672623675875, guid: 33ecd0ef342d8ee4188c82a8b5761ab5, type: 3}
+  - {fileID: 5648544150296794767, guid: f1acfe97b07f9f54ca6dc5555723aba1, type: 3}
+  - {fileID: 1051078274315369266, guid: ed60867ab2e84f944925106afee949be, type: 3}

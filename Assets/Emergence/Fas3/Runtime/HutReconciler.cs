@@ -4,8 +4,12 @@
 // layer: it READS S.huts and reconciles "Huts_Live" (+ yards + age marks) incrementally — a new hut
 // is RAISED the year the sim builds it, a vanished hut is retired. Mirrors WorldDresser.PlaceHuts
 // EXACTLY (variant/yaw/scale/yard/age grammar, same hash salts) so a live-grown village is identical
-// to a full-build one — WorldDresser.cs stays untouched (its helpers are private), the same
-// co-existence pattern as LiveReconciler (Fas 1) and AgentReconciler (Fas 2).
+// to a full-build one.
+//
+// FAS 3 increment 4 (D-137): PLAYER-RUNTIME REFACTOR. Moved Editor/ -> Runtime/: house variants,
+// yard props, age marks and fresh-build props come from EmergenceAssetCatalog (Resources) — the moss
+// list is captured by the catalog build IN the editor query's order, so age-mark picks stay
+// hash-identical to WorldDresser's. Instantiation is plain Object.Instantiate.
 //
 // Determinism (D-078 r4): reads state only; every placement decision is Hash(hx,hy,salt) — never
 // sim-RNG. Identity = the hut's tile (huts don't move in the sim); owner changes rename in place.
@@ -13,16 +17,13 @@
 // gaze director can look without touching editor types); each loss -> AssetRemoved.
 // Limitation (logged D-134): age marks are computed at raise time from that year's generations and
 // are not re-aged retroactively; fires/fields/smoke stay static dressing (a later increment).
-#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
-using Emergence.Runtime;
 
-namespace Emergence.Editor
+namespace Emergence.Runtime
 {
     public sealed class HutReconciler
     {
@@ -36,7 +37,6 @@ namespace Emergence.Editor
 
         sealed class Rec { public GameObject house; public readonly List<GameObject> extras = new(); public string owner; }
         readonly Dictionary<string, Rec> _huts = new();
-        readonly Dictionary<string, GameObject> _prefabCache = new();
         int _tick; bool _firstHutSeen;
 
         public int Count => _huts.Count;
@@ -69,8 +69,8 @@ namespace Emergence.Editor
             foreach (var key in _huts.Keys.Where(k => !desired.ContainsKey(k)).ToList())
             {
                 var rec = _huts[key];
-                if (rec.house != null) UnityEngine.Object.DestroyImmediate(rec.house);
-                foreach (var e in rec.extras) if (e != null) UnityEngine.Object.DestroyImmediate(e);
+                if (rec.house != null) LiveReconciler.Retire(rec.house);
+                foreach (var e in rec.extras) if (e != null) LiveReconciler.Retire(e);
                 _huts.Remove(key);
                 d.lost++;
                 PresentationEventBus.Publish(new PresentationEvent(
@@ -118,8 +118,8 @@ namespace Emergence.Editor
         {
             foreach (var r in _huts.Values)
             {
-                if (r.house != null) UnityEngine.Object.DestroyImmediate(r.house);
-                foreach (var e in r.extras) if (e != null) UnityEngine.Object.DestroyImmediate(e);
+                if (r.house != null) LiveReconciler.Retire(r.house);
+                foreach (var e in r.extras) if (e != null) LiveReconciler.Retire(e);
             }
             _huts.Clear();
             _firstHutSeen = false;
@@ -129,12 +129,14 @@ namespace Emergence.Editor
         Rec Raise(WorldState S, WorldHut h, string key, Vector2[] greens, Dictionary<string, int> genOf, int maxGen)
         {
             var rec = new Rec { owner = h.owner };
+            var cat = EmergenceAssetCatalog.Load();
+            if (cat == null) { Debug.LogWarning("[HutReconciler] no asset catalog — run BUILD ASSET CATALOG"); return rec; }
             int hx = Mathf.RoundToInt(h.x), hy = Mathf.RoundToInt(h.y);
             int variant = 1 + (int)(Hash(hx, hy, 21) % 13);                  // same salt/range as PlaceHuts
-            var prefab = FindPrefab($"P_BLD_house_{variant:00}") ?? FindPrefab("P_BLD_house_01");
+            var prefab = cat.Prefab($"P_BLD_house_{variant:00}") ?? cat.Prefab("P_BLD_house_01");
             if (prefab == null) { Debug.LogWarning("[HutReconciler] no house prefab found"); return rec; }
 
-            var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, Layer(LayerName));
+            var go = UnityEngine.Object.Instantiate(prefab, Layer(LayerName));
             go.transform.position = GroundW(P(S, h.x, h.y));
             float yaw = HouseYaw(S, h, greens, hx, hy);
             go.transform.rotation = Quaternion.Euler(0, yaw, 0);
@@ -142,17 +144,17 @@ namespace Emergence.Editor
             go.name = $"hut_{h.owner}";
             rec.house = go;
 
-            PlaceYard(S, go, h, hx, hy, yaw, rec);
+            PlaceYard(S, go, h, hx, hy, yaw, rec, cat);
             int og = genOf.TryGetValue(h.owner ?? "", out var gg) ? gg : maxGen;
             float ageFrac = maxGen > 1 ? 1f - og / (float)maxGen : 0.5f;
-            PlaceHutAge(S, h, hx, hy, ageFrac, rec);
+            PlaceHutAge(S, h, hx, hy, ageFrac, rec, cat);
             return rec;
         }
 
         // mirror of WorldDresser.PlaceYard (same salts 71..74)
-        void PlaceYard(WorldState S, GameObject house, WorldHut h, int hx, int hy, float yaw, Rec rec)
+        void PlaceYard(WorldState S, GameObject house, WorldHut h, int hx, int hy, float yaw, Rec rec, EmergenceAssetCatalog cat)
         {
-            var props = YardPropNames.Select(FindPrefab).Where(p => p != null).ToArray();
+            var props = YardPropNames.Select(cat.Prefab).Where(p => p != null).ToArray();
             if (props.Length == 0) return;
             var rot = Quaternion.Euler(0, yaw, 0);
             var fwd = rot * Vector3.forward; var right = rot * Vector3.right;
@@ -169,7 +171,7 @@ namespace Emergence.Editor
             for (int k = 0; k < count; k++)
             {
                 var pf = props[Hash(hx, hy, 72 + k) % (uint)props.Length];
-                var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, Layer(YardLayerName));
+                var go = UnityEngine.Object.Instantiate(pf, Layer(YardLayerName));
                 float lateral = (Hash01(hx, hy, 73 + k) - 0.5f) * 3.0f;
                 go.transform.position = GroundW(basePos + fwd * front + right * lateral);
                 go.transform.rotation = Quaternion.Euler(0, Hash(hx, hy, 74 + k) % 360u, 0);
@@ -179,17 +181,18 @@ namespace Emergence.Editor
         }
 
         // mirror of WorldDresser.PlaceHutAge (same salts 81..91)
-        void PlaceHutAge(WorldState S, WorldHut h, int hx, int hy, float ageFrac, Rec rec)
+        void PlaceHutAge(WorldState S, WorldHut h, int hx, int hy, float ageFrac, Rec rec, EmergenceAssetCatalog cat)
         {
             if (ageFrac > 0.55f)
             {
-                var moss = FindPrefabs("Prefab_Bush").Where(p => p != null && !p.name.Contains("Flower")).Take(3).ToArray();
+                // moss list captured by CatalogBuild in the editor query's exact order (parity with WorldDresser)
+                var moss = cat.mossPrefabs.Where(p => p != null).ToArray();
                 if (moss.Length == 0) return;
                 int n = 1 + (int)(Hash(hx, hy, 81) % 2u);
                 for (int k = 0; k < n; k++)
                 {
                     var pf = moss[Hash(hx, hy, 82 + k) % (uint)moss.Length];
-                    var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, Layer(AgeLayerName));
+                    var go = UnityEngine.Object.Instantiate(pf, Layer(AgeLayerName));
                     float ox = (Hash01(hx, hy, 83 + k) - 0.5f) * 4.5f, oz = (Hash01(hx, hy, 84 + k) - 0.5f) * 4.5f;
                     go.transform.position = GroundW(P(S, h.x, h.y) + new Vector3(ox, 0, oz));
                     go.transform.rotation = Quaternion.Euler(0, Hash(hx, hy, 85 + k) % 360u, 0);
@@ -200,11 +203,10 @@ namespace Emergence.Editor
             }
             else if (ageFrac < 0.28f)
             {
-                var fresh = new[] { "P_PROP_foundation_wood_01", "P_PROP_foundation_wood_03", "P_PROP_board_01", "P_PROP_board_02", "P_PROP_cart_wheel_small" }
-                    .Select(FindPrefab).Where(p => p != null).ToArray();
+                var fresh = FreshBuildNames.Select(cat.Prefab).Where(p => p != null).ToArray();
                 if (fresh.Length == 0) return;
                 var pf = fresh[Hash(hx, hy, 87) % (uint)fresh.Length];
-                var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, Layer(AgeLayerName));
+                var go = UnityEngine.Object.Instantiate(pf, Layer(AgeLayerName));
                 float ox = (Hash01(hx, hy, 88) - 0.5f) * 3.5f, oz = (Hash01(hx, hy, 89) - 0.5f) * 3.5f;
                 go.transform.position = GroundW(P(S, h.x, h.y) + new Vector3(ox, 0, oz));
                 go.transform.rotation = Quaternion.Euler(0, Hash(hx, hy, 90) % 360u, 0);
@@ -218,6 +220,9 @@ namespace Emergence.Editor
             "P_PROP_cart_01","P_PROP_cart_02","P_PROP_barrel_01","P_PROP_barrel_03","P_PROP_crate_01",
             "P_PROP_crate_03","P_PROP_sack_02","P_PROP_sack_05","P_PROP_firepit_woodpile","P_PROP_hay_02",
             "P_PROP_hay_04","P_PROP_bucket_01","P_PROP_trough_01"
+        };
+        static readonly string[] FreshBuildNames = {
+            "P_PROP_foundation_wood_01","P_PROP_foundation_wood_03","P_PROP_board_01","P_PROP_board_02","P_PROP_cart_wheel_small"
         };
 
         // ---- mirrors of WorldDresser's private geometry/lookup helpers ----
@@ -264,20 +269,6 @@ namespace Emergence.Editor
             return Hash(hx, hy, 22) % 4 * 90 + jitter;
         }
 
-        GameObject FindPrefab(string name)
-        {
-            if (_prefabCache.TryGetValue(name, out var hit)) return hit;
-            var guid = AssetDatabase.FindAssets($"t:Prefab {name}").FirstOrDefault();
-            var pf = guid == null ? null : AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(guid));
-            _prefabCache[name] = pf;
-            return pf;
-        }
-
-        static IEnumerable<GameObject> FindPrefabs(string prefix)
-            => AssetDatabase.FindAssets($"t:Prefab {prefix}")
-                .Select(g => AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(g)))
-                .Where(p => p != null && p.name.StartsWith(prefix, StringComparison.OrdinalIgnoreCase));
-
         static Transform Layer(string name)
         {
             var existing = GameObject.Find(name);
@@ -297,4 +288,3 @@ namespace Emergence.Editor
         static float Hash01(int x, int y, int salt) => Hash(x, y, salt) / 4294967295f;
     }
 }
-#endif

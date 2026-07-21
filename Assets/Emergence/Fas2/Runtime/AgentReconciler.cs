@@ -5,26 +5,26 @@
 // (spawned), a missing soul has DIED (retired), a child GROWS UP (band swap rebuilds the body),
 // a changed `task` re-reads the animation state live (AgentAnimator.SetTask -> crossfade in play
 // mode). Positions are teleported to the sim's truth per snapshot (smooth in-between motion is the
-// v2 `pathUse` work, per D-116). Mirrors PlaceAgents' choices (band/model/scale/facing) the same
-// way LiveReconciler mirrors WorldDresser — the still layer stays untouched.
+// v2 `pathUse` work, per D-116). Mirrors PlaceAgents' choices (band/model/scale/facing).
+//
+// FAS 3 increment 4 (D-137): PLAYER-RUNTIME REFACTOR. Moved Editor/ -> Runtime/: bodies and animator
+// controllers come from EmergenceAssetCatalog (Resources), instantiation is Object.Instantiate.
+// The edit-mode still-pose path (clip sampling) is the ONLY editor-gated remnant (#if UNITY_EDITOR) —
+// it exists for edit-phase probes and never runs in a player.
 //
 // Determinism (D-078 r4): reads state only; sex/phase/rotation are hash(agentId) — soul-stable,
 // never position-dependent, never sim-RNG. Events go on PresentationEventBus (AgentActivity is the
 // channel reserved for exactly this since Fas 0).
-#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
-using Emergence.Runtime;
 
-namespace Emergence.Editor
+namespace Emergence.Runtime
 {
     public sealed class AgentReconciler
     {
         public const string LayerName = "Agents_Live";
-        const string CharDir = "Assets/Emergence/Models/characters/";
         const float TileSize = 8f;   // matches WorldDresser/LiveReconciler
         const float Scale = 1f;      // matches WorldDresser.VillagerScale
 
@@ -66,7 +66,7 @@ namespace Emergence.Editor
             // 1) deaths/departures — placed but no longer in the state
             foreach (var id in _agents.Keys.Where(id => !desired.ContainsKey(id)).ToList())
             {
-                if (_agents[id].go != null) UnityEngine.Object.DestroyImmediate(_agents[id].go);
+                if (_agents[id].go != null) LiveReconciler.Retire(_agents[id].go);
                 _agents.Remove(id);
                 d.died++;
                 PresentationEventBus.Publish(new PresentationEvent(
@@ -83,7 +83,7 @@ namespace Emergence.Editor
                     if (rec.band != band)
                     {
                         // the body changes (child grows up / an adult greys) — rebuild at the same spot
-                        UnityEngine.Object.DestroyImmediate(rec.go);
+                        LiveReconciler.Retire(rec.go);
                         rec.go = Spawn(S, a, band, female, layer, editPose);
                         rec.band = band;
                         d.aged++;
@@ -135,7 +135,7 @@ namespace Emergence.Editor
 
         public void Clear()
         {
-            foreach (var r in _agents.Values) if (r.go != null) UnityEngine.Object.DestroyImmediate(r.go);
+            foreach (var r in _agents.Values) if (r.go != null) LiveReconciler.Retire(r.go);
             _agents.Clear();
         }
 
@@ -145,15 +145,16 @@ namespace Emergence.Editor
             string baseNm = band == "child" ? (female ? "villager-child-f" : "villager-child")
                           : band == "elder" ? (female ? "villager-elder-f" : "villager-elder")
                           : (female ? "villager-f" : "villager");
-            var pf = AssetDatabase.LoadAssetAtPath<GameObject>(CharDir + baseNm + ".glb");
+            var cat = EmergenceAssetCatalog.Load();
+            var pf = cat != null ? cat.Prefab(baseNm) : null;
             if (pf == null) return null;
-            var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, layer);
+            var go = UnityEngine.Object.Instantiate(pf, layer);
             go.transform.position = GroundW(P(S, a.x, a.y));
             go.transform.localScale = Vector3.one * Scale;
             Face(S, a, go);
             go.name = $"agent_{a.id}_{a.name}";
 
-            var rac = VillagerController(band, female);
+            var rac = cat.Controller(band == "adult" ? (female ? "adult-f" : "adult") : band + (female ? "-f" : ""));
             var anim = go.GetComponentInChildren<Animator>();
             if (anim == null) anim = go.AddComponent<Animator>();
             if (rac != null) anim.runtimeAnimatorController = rac;
@@ -174,15 +175,16 @@ namespace Emergence.Editor
         public static void EnsureCarryProp(GameObject go, string task)
         {
             var existing = FindDeep(go.transform, CarryPropName);
-            if (!CarryTask(task)) { if (existing != null) UnityEngine.Object.DestroyImmediate(existing.gameObject); return; }
+            if (!CarryTask(task)) { if (existing != null) LiveReconciler.Retire(existing.gameObject); return; }
             if (existing != null) return;
-            var pf = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Fantastic City Pack/Prefabs/Props/Comps/COMP_PROP_basket_city_01.prefab");
+            var cat = EmergenceAssetCatalog.Load();
+            var pf = cat != null ? cat.Prefab("COMP_PROP_basket_city_01") : null;
             if (pf == null) return;
             Transform mount = null;
             foreach (var t in go.GetComponentsInChildren<Transform>())
                 if (t.name.Contains("Spine")) mount = t;                     // deepest spine joint wins
             if (mount == null) mount = go.transform;
-            var prop = (GameObject)PrefabUtility.InstantiatePrefab(pf);
+            var prop = UnityEngine.Object.Instantiate(pf);
             prop.name = CarryPropName;
             prop.transform.SetParent(mount, false);
             prop.transform.localPosition = new Vector3(0f, 0.05f, 0.28f);    // in front of the torso
@@ -195,34 +197,31 @@ namespace Emergence.Editor
             return null;
         }
 
-        // edit-mode still: sample the task-right clip at a hash phase (parity with the still layer's read)
+        // edit-mode still: sample the task-right clip at a hash phase (parity with the still layer's read).
+        // Editor-only remnant (clip extraction from GLB sub-assets needs AssetDatabase) — probes only, never player.
         static void StillPose(GameObject go, WorldAgent a, string band, bool female)
         {
+#if UNITY_EDITOR
             string suffix = (band == "adult" && AgentTaskRead.Working(a.task)) ? "-work"
                           : AgentTaskRead.Moving(a.task) ? "-walk" : "";
             string baseNm = band == "child" ? (female ? "villager-child-f" : "villager-child")
                           : band == "elder" ? (female ? "villager-elder-f" : "villager-elder")
                           : (female ? "villager-f" : "villager");
-            var clip = LoadClip(CharDir + baseNm + suffix + ".glb") ?? LoadClip(CharDir + baseNm + ".glb");
+            const string charDir = "Assets/Emergence/Models/characters/";
+            var clip = LoadClip(charDir + baseNm + suffix + ".glb") ?? LoadClip(charDir + baseNm + ".glb");
             if (clip != null && clip.length > 0f)
                 clip.SampleAnimation(go, (Hash(a.id, 1, a.id + 11) & 0xffffu) / 65536f * clip.length);
+#endif
         }
 
+#if UNITY_EDITOR
         static AnimationClip LoadClip(string path)
         {
-            foreach (var o in AssetDatabase.LoadAllAssetsAtPath(path))
+            foreach (var o in UnityEditor.AssetDatabase.LoadAllAssetsAtPath(path))
                 if (o is AnimationClip c && !c.name.StartsWith("__preview")) return c;
             return null;
         }
-
-        static RuntimeAnimatorController VillagerController(string band, bool female)
-        {
-            const string dir = "Assets/Emergence/Fas2/Anim";
-            string key = band == "adult" ? (female ? "adult-f" : "adult") : band + (female ? "-f" : "");
-            return key == "adult"
-                ? AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(dir + "/VillagerAnim.controller")
-                : AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>($"{dir}/Villager-{key}.overrideController");
-        }
+#endif
 
         static void Face(WorldState S, WorldAgent a, GameObject go)
         {
@@ -251,4 +250,3 @@ namespace Emergence.Editor
         static uint Hash(int x, int y, int salt) { unchecked { uint h = (uint)(x * 73856093 ^ y * 19349663 ^ salt * 83492791); h ^= h >> 13; h *= 2246822519; h ^= h >> 16; return h; } }
     }
 }
-#endif

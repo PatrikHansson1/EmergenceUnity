@@ -1,0 +1,2 @@
+DONE 01:06:37 verdict=GREEN magenta=0/0
+see Reports/fas3-buffer.txt

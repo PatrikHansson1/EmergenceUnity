@@ -1,37 +1,30 @@
 // EMERGENCE — Fas 1 (D-107 Fas 1 / D-101d): the LIVE RECONCILER core.
 //
-// Fas 0 laid the empty event bus + skeleton. Fas 1 makes the reconciler live: it READS a WorldState
+// Fas 0 laid the empty event bus + skeleton. Fas 1 made the reconciler live: it READS a WorldState
 // and reconciles the Codex OVERLAY (Layer 2) INCREMENTALLY against what is already placed —
 // spawning objects the moment their `when` gate holds, and de-materialising them when it stops
 // (onLoss). This is the mechanism that proves existence-condition C (worlds differentiate; knowledge
 // is lost and rediscovered → objects appear, ruin, and return).
 //
-// It mirrors WorldDresser's placement EXACTLY (CodexQualifies / CodexPlacement / P / GroundW / Hash)
-// so the incremental overlay is identical to the full-build overlay — but WorldDresser.cs is left
-// untouched (those helpers are private), so the two co-exist. Every placement decision is
-// hash-based (never sim-RNG), so the golden master stays GREEN (D-078 r4). Presentation only reads.
+// FAS 3 increment 4 (D-137): PLAYER-RUNTIME REFACTOR. This class moved Editor/ -> Runtime/ and all
+// AssetDatabase/PrefabUtility use is gone: prefabs come from EmergenceAssetCatalog (Resources), the
+// codex json rides in the catalog as a TextAsset, instantiation is plain Object.Instantiate. The
+// placement grammar (CodexQualifies / CodexPlacement / P / GroundW / Hash) is UNCHANGED — same
+// salts, same decisions, in editor and player alike. Every placement decision is hash-based (never
+// sim-RNG), so the golden master stays GREEN (D-078 r4). Presentation only reads.
 //
-// Editor-driven v1, consistent with the existing dressing pipeline. Emits on PresentationEventBus so
-// audio (Fas 6) and story (Fas 4) attach with zero reconciler changes.
-#if UNITY_EDITOR
+// Emits on PresentationEventBus so audio (Fas 6) and story (Fas 4) attach with zero reconciler changes.
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
-using Emergence.Runtime;
 
-namespace Emergence.Editor
+namespace Emergence.Runtime
 {
     public sealed class LiveReconciler
     {
         public const float TileSize = 8f;                    // matches WorldDresser
         const string OverlayName = "CodexOverlay_Live";
-        const string CodexPath   = "Assets/Emergence/Codex/object-codex.json";
-        const string TechDir     = "Assets/Emergence/Models/tech/";
-        const string NatureDir   = "Assets/Emergence/Models/nature/";
-        const string CharDir     = "Assets/Emergence/Models/characters/";
         // D-112: studio default ruin stand-in (Village-pack broken wall-stone, same hand as the huts, render-verified
         // family — mason-stones uses _01). The OWNED "Ancient Ruins" pack swaps in via codex ruinPrefab once imported.
         const string DefaultRuinPrefab = "P_PROP_wall_stone_small_02";
@@ -56,10 +49,11 @@ namespace Emergence.Editor
             var d = new Delta();
             if (S?.villages == null) return d;
 
-            Codex codex;
-            try { codex = JsonUtility.FromJson<Codex>(File.ReadAllText(CodexPath)); }
+            var cat = EmergenceAssetCatalog.Load();
+            Codex codex = null;
+            try { var txt = cat?.CodexText; if (txt != null) codex = JsonUtility.FromJson<Codex>(txt); }
             catch (Exception ex) { Debug.LogWarning("[Reconciler] codex parse failed: " + ex.Message); return d; }
-            if (codex?.objects == null) return d;
+            if (codex?.objects == null) { Debug.LogWarning("[Reconciler] no codex (catalog missing? run BUILD ASSET CATALOG)"); return d; }
 
             var overlay = Overlay();
 
@@ -96,12 +90,12 @@ namespace Emergence.Editor
                 {
                     // swap the fallen structure for rubble at the exact footprint it occupied
                     var pos = go.transform.position; var rot = go.transform.rotation;
-                    UnityEngine.Object.DestroyImmediate(go);
+                    Retire(go);
                     var ruinName = string.IsNullOrEmpty(entry.ruinPrefab) ? DefaultRuinPrefab : entry.ruinPrefab;
-                    var rpf = LoadCodexPrefab(ruinName);
+                    var rpf = cat != null ? cat.Prefab(ruinName) : null;
                     if (rpf != null)
                     {
-                        var rgo = (GameObject)PrefabUtility.InstantiatePrefab(rpf, overlay);
+                        var rgo = UnityEngine.Object.Instantiate(rpf, overlay);
                         rgo.transform.position = pos;
                         rgo.transform.rotation = rot;
                         rgo.transform.localScale = Vector3.one * (entry.ruinScale > 0f ? entry.ruinScale : DefaultRuinScale);
@@ -119,7 +113,7 @@ namespace Emergence.Editor
                 }
                 else
                 {
-                    if (go != null) UnityEngine.Object.DestroyImmediate(go);
+                    if (go != null) Retire(go);
                     d.removed++;
                     PresentationEventBus.Publish(new PresentationEvent(
                         _tick, S.years, S.season, PresentationEventType.AssetRemoved, objId, vi, "onLoss"));
@@ -144,15 +138,15 @@ namespace Emergence.Editor
                 // rediscovery: a ruin marks where this stood and the knowledge has returned → clear it, rebuild
                 if (_ruins.TryGetValue(kv.Key, out var oldRuin))
                 {
-                    if (oldRuin != null) UnityEngine.Object.DestroyImmediate(oldRuin);
+                    if (oldRuin != null) Retire(oldRuin);
                     _ruins.Remove(kv.Key);
                     PresentationEventBus.Publish(new PresentationEvent(
                         _tick, S.years, S.season, PresentationEventType.Milestone, e.id, vi,
                         "rediscovered — the ruin is raised again"));
                 }
-                var pf = LoadCodexPrefab(e.prefab);
+                var pf = cat != null ? cat.Prefab(e.prefab) : null;
                 if (pf == null) continue;
-                var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, overlay);
+                var go = UnityEngine.Object.Instantiate(pf, overlay);
                 var pos = CodexPlacement(v, e, k, cnt);
                 go.transform.position = GroundW(P(S, pos.x, pos.y));
                 go.transform.rotation = Quaternion.Euler(0f, Hash(Mathf.RoundToInt(v.x), Mathf.RoundToInt(v.y), e.id.Length + k) % 360u, 0f);
@@ -173,10 +167,18 @@ namespace Emergence.Editor
 
         public void Clear()
         {
-            foreach (var go in _placed.Values) if (go != null) UnityEngine.Object.DestroyImmediate(go);
+            foreach (var go in _placed.Values) if (go != null) Retire(go);
             _placed.Clear();
-            foreach (var go in _ruins.Values) if (go != null) UnityEngine.Object.DestroyImmediate(go);
+            foreach (var go in _ruins.Values) if (go != null) Retire(go);
             _ruins.Clear();
+        }
+
+        /// <summary>Play mode defers (Destroy); edit mode is immediate — same visible result, both runtime-legal.</summary>
+        internal static void Retire(GameObject go)
+        {
+            if (go == null) return;
+            if (Application.isPlaying) UnityEngine.Object.Destroy(go);
+            else UnityEngine.Object.DestroyImmediate(go);
         }
 
         Transform Overlay()
@@ -219,22 +221,6 @@ namespace Emergence.Editor
 
         static uint Hash(int x, int y, int salt) { unchecked { uint h = (uint)(x * 73856093 ^ y * 19349663 ^ salt * 83492791); h ^= h >> 13; h *= 2246822519; h ^= h >> 16; return h; } }
 
-        static GameObject LoadCodexPrefab(string name)
-        {
-            if (string.IsNullOrWhiteSpace(name)) return null;  // told-not-shown / empty → never match a random prefab
-            if (name.EndsWith(".glb"))
-                return AssetDatabase.LoadAssetAtPath<GameObject>(TechDir + name)
-                    ?? AssetDatabase.LoadAssetAtPath<GameObject>(NatureDir + name)
-                    ?? AssetDatabase.LoadAssetAtPath<GameObject>(CharDir + name);
-            foreach (var g in AssetDatabase.FindAssets($"t:Prefab {name}"))
-            {
-                var p = AssetDatabase.GUIDToAssetPath(g);
-                if (Path.GetFileNameWithoutExtension(p) == name) return AssetDatabase.LoadAssetAtPath<GameObject>(p);
-            }
-            var guid = AssetDatabase.FindAssets($"t:Prefab {name}").FirstOrDefault();
-            return guid == null ? null : AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(guid));
-        }
-
         // strip the unlit billboard/impostor LOD (renders magenta/dark at distance) — matches the pack rule
         static void StripImpostorLods(GameObject go)
         {
@@ -253,4 +239,3 @@ namespace Emergence.Editor
         }
     }
 }
-#endif

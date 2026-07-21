@@ -1,2 +1,2 @@
-DONE 00:07:03 verdict=GREEN huts=2/2 pause=True speed=True gaze=True snapshots=6 magenta=0/0
+DONE 00:58:30 verdict=GREEN huts=2/2 pause=True speed=True gaze=True snapshots=6 magenta=0/0
 see Reports/fas3-inc2.txt
