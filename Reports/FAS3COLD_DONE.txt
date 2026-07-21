@@ -1,0 +1,2 @@
+DONE 00:20:14 verdict=GREEN wilderness=True souls=5/5 gaze=True snapshots=2 magenta=0/0
+see Reports/fas3-coldstart.txt

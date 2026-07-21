@@ -1,0 +1,15 @@
+EMERGENCE — FAS 3 COLD-START PROBE (D-135): the first hour begins at genesis
+generated 2026-07-22 00:19:45
+
+genesis export: engine 2.3.0, YEAR=144 ticks, 100x70, tiles=7000, souls=4, huts=0, fields=0, villages=0
+honest wilderness: YES — no huts/fields/villages, full tile grid
+(note: seq-y006 backdrop era exported YEAR=144; this genesis comes from the LIVE engine, YEAR=144 — no skew)
+dressed from genesis; born-from-state layers retired (they must GROW)
+
+## PLAY PHASE (frames=5409)
+year snapshots applied live from genesis: 2 (target y2)
+souls live: 5 == snapshot 5 -> MATCH (OK)
+gaze: "a soul arrives (agent-1)" angle-to-target 1,8° -> AIMED (OK)
+magenta: classic=0 tonemapped=0   evidence: 45-UNITY/evidence/fas3/fas3-cold-firstsoul.png
+
+verdict: GREEN — the first hour begins in true wilderness; the world grows from nothing under the player's eye
