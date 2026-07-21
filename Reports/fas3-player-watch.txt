@@ -1,0 +1,14 @@
+EMERGENCE — FAS 3 PLAYER WATCH (D-138): the WATCH loop in a real player build
+generated 2026-07-22 01:28:58
+
+foliage instanced: 7291 renderers -> 1448 batches (2601 instances)
+backdrop from seq-8919-y006, born layers retired; y6 canon huts=2
+scene saved: Assets/Emergence/Scenes/WatchScene.unity (gitignored, generated)
+build: Succeeded, errors=0, sizeMB=1192, secs=34
+
+## PLAYER RESULT
+watch huts=2 expected=2 hutsOk=OK order=[1,2,3,4,5,6,J3,J6] orderOk=OK decouple=OK(+2y,buffer+2) scrub=J3:OK(huts=0),J6:OK(huts=2) agents=6 magenta=0/0 year=6 tick=864 COMPLETE
+
+evidence: 45-UNITY/evidence/fas3/fas3-player-watch-y6.png (rendered IN the player)
+
+verdict: GREEN — the WATCH loop runs END-TO-END in a real player: the village is born, the hand holds time, the grid scrubs

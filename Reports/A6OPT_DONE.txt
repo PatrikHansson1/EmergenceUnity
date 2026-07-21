@@ -1,6 +1,6 @@
-A6 OPTIMIZE — 2026-07-21 21:06:49
-foliage renderers shadows OFF: 7437
+A6 OPTIMIZE — 2026-07-22 01:29:01
+foliage renderers shadows OFF: 7319
 shadowDistance: 35 -> 35, cascades -> 1
-static-batched roots: 7 (Huts,Yards,HutAge,WorkMarks,TechAnchors,CodexOverlay_Live,Nature)
-active renderers now: 12505
+static-batched roots: 3 (WorkMarks,TechAnchors,Nature)
+active renderers now: 9846
 NEXT: drop RUN_PERFPLAY.trigger to measure play-mode draw calls/FPS after these levers.
