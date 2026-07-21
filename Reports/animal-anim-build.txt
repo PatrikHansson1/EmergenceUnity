@@ -1,0 +1,7 @@
+EMERGENCE — FAS 2 ANIMAL ANIMATOR BUILD (D-128)
+generated 2026-07-21 20:44:08
+
+controller: Assets/Emergence/Fas2/Anim/AnimalAnim-deer.controller (Idle/Idle2/Sniff/Graze/Walk/Gallop, default Idle)
+override: Assets/Emergence/Fas2/Anim/AnimalAnim-wolf.overrideController (6 clip swaps)
+missing source clips: 0
+verdict: GREEN

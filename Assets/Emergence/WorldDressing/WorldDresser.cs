@@ -1041,6 +1041,11 @@ namespace Emergence.Editor
 
         // TD-029: the studio's own deer/wolf GLBs at the sim's animal positions (retires the
         // low-poly Quaternius question the EP raised). Positions are the sim's — documentary truth.
+        // D-128 (SD-delegated look call): the own GLBs are STATIC (0 skins/clips) — a documentary of a
+        // LIVING world needs living fauna, so the rigged Quaternius set (Idle/Graze/Sniff…) replaces
+        // them, scale-matched to the GLB silhouettes. Revert = AnimatedAnimals=false (one line).
+        public static bool AnimatedAnimals = true;
+
         static void PlaceAnimals(WorldState S, Transform root)
         {
             if (S.animals == null || S.animals.Length == 0) return;
@@ -1049,16 +1054,52 @@ namespace Emergence.Editor
             foreach (var an in S.animals)
             {
                 string nm = an.type == "wolf" ? "wolf" : "deer";
-                var pf = AssetDatabase.LoadAssetAtPath<GameObject>(NatureDir + nm + ".glb");
-                if (pf == null) continue;
-                var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, parent);
+                GameObject go = null;
+                if (AnimatedAnimals)
+                {
+                    var rigged = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Quaternius/FBX/" + (nm == "wolf" ? "Wolf" : "Deer") + ".fbx");
+                    var glb = AssetDatabase.LoadAssetAtPath<GameObject>(NatureDir + nm + ".glb");
+                    if (rigged != null)
+                    {
+                        go = (GameObject)PrefabUtility.InstantiatePrefab(rigged, parent);
+                        // scale parity with the retired GLB silhouette (bounds height), so herd scale reads unchanged
+                        float scale = AnimalScale;
+                        if (glb != null)
+                        {
+                            float hGlb = BoundsHeight(glb), hRig = BoundsHeight(rigged);
+                            if (hGlb > 0.01f && hRig > 0.01f) scale = AnimalScale * (hGlb / hRig);
+                        }
+                        go.transform.localScale = Vector3.one * scale;
+                        var aa = go.AddComponent<Emergence.Runtime.AnimalAnimator>();
+                        aa.animalId = an.id; aa.type = nm;
+                        var anim = go.GetComponentInChildren<Animator>() ?? go.AddComponent<Animator>();
+                        // controller by PATH (AnimalAnimBuild is Editor-assembly, same rule as VillagerController)
+                        anim.runtimeAnimatorController = nm == "wolf"
+                            ? AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>("Assets/Emergence/Fas2/Anim/AnimalAnim-wolf.overrideController")
+                            : AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>("Assets/Emergence/Fas2/Anim/AnimalAnim-deer.controller");
+                    }
+                }
+                if (go == null) // AnimatedAnimals=false, or rigged prefab missing → the static GLB stands
+                {
+                    var pf = AssetDatabase.LoadAssetAtPath<GameObject>(NatureDir + nm + ".glb");
+                    if (pf == null) continue;
+                    go = (GameObject)PrefabUtility.InstantiatePrefab(pf, parent);
+                    go.transform.localScale = Vector3.one * AnimalScale;
+                }
                 go.transform.position = Ground(S, an.x, an.y, 0f);
                 go.transform.rotation = Quaternion.Euler(0f, Hash((int)an.x, (int)an.y, an.id) % 360u, 0f);
-                go.transform.localScale = Vector3.one * AnimalScale;
                 go.name = $"{an.type}_{an.id}";
                 placed++;
             }
-            Debug.Log($"[Dresser] placed {placed}/{S.animals.Length} animals (own deer/wolf GLBs)");
+            Debug.Log($"[Dresser] placed {placed}/{S.animals.Length} animals ({(AnimatedAnimals ? "rigged Quaternius, D-128" : "own static GLBs")})");
+        }
+
+        static float BoundsHeight(GameObject prefab)
+        {
+            var b = new Bounds(); bool first = true;
+            foreach (var r in prefab.GetComponentsInChildren<Renderer>())
+            { if (first) { b = r.bounds; first = false; } else b.Encapsulate(r.bounds); }
+            return first ? 0f : b.size.y;
         }
 
         // TD-028: forge/mill/kiln/well as COMPOSED markers (D-062), not scatter. v1: a well at each

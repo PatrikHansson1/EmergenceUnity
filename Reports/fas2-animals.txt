@@ -1,0 +1,11 @@
+EMERGENCE — FAS 2 LIVING ANIMALS (D-128)
+generated 2026-07-21 20:44:08
+
+dressed y120: animals=35 (deer=30, wolf=5), missing controller=0
+sim animals in snapshot: 35
+
+## PLAY PHASE (frames=130)
+behaviour invariant: 35/35 in valid hash-state (Graze=16, Idle=10, Sniff=5, Idle2=4); off=0, noController=0
+magenta (deer+wolf captures): 0   evidence: 45-UNITY/evidence/fas2/animals-*.png
+
+verdict: GREEN — the fauna lives (deterministic graze/idle reads, no purchases)
