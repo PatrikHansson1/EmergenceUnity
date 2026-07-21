@@ -1,0 +1,300 @@
+// EMERGENCE — FAS 3 increment 2 (D-134): the LIVE HUT RECONCILER — the village is BORN, not loaded.
+//
+// Fas 2's AgentReconciler made the population live; this does the same for the built world's first
+// layer: it READS S.huts and reconciles "Huts_Live" (+ yards + age marks) incrementally — a new hut
+// is RAISED the year the sim builds it, a vanished hut is retired. Mirrors WorldDresser.PlaceHuts
+// EXACTLY (variant/yaw/scale/yard/age grammar, same hash salts) so a live-grown village is identical
+// to a full-build one — WorldDresser.cs stays untouched (its helpers are private), the same
+// co-existence pattern as LiveReconciler (Fas 1) and AgentReconciler (Fas 2).
+//
+// Determinism (D-078 r4): reads state only; every placement decision is Hash(hx,hy,salt) — never
+// sim-RNG. Identity = the hut's tile (huts don't move in the sim); owner changes rename in place.
+// Events: first hut ever -> Milestone; each raise -> AssetSpawned (Data carries world x/z so the
+// gaze director can look without touching editor types); each loss -> AssetRemoved.
+// Limitation (logged D-134): age marks are computed at raise time from that year's generations and
+// are not re-aged retroactively; fires/fields/smoke stay static dressing (a later increment).
+#if UNITY_EDITOR
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using UnityEditor;
+using UnityEngine;
+using Emergence.Runtime;
+
+namespace Emergence.Editor
+{
+    public sealed class HutReconciler
+    {
+        public const string LayerName = "Huts_Live";
+        public const string YardLayerName = "Yards_Live";
+        public const string AgeLayerName = "HutAge_Live";
+        const float TileSize = 8f;                       // matches WorldDresser
+        const float HouseScale = 0.55f;                  // matches WorldDresser.HouseScale
+        const float HouseFrontYawOffset = 0f;            // matches WorldDresser
+        const int YardPropsMax = 2;                      // matches WorldDresser
+
+        sealed class Rec { public GameObject house; public readonly List<GameObject> extras = new(); public string owner; }
+        readonly Dictionary<string, Rec> _huts = new();
+        readonly Dictionary<string, GameObject> _prefabCache = new();
+        int _tick; bool _firstHutSeen;
+
+        public int Count => _huts.Count;
+
+        public struct Delta
+        {
+            public int raised, lost, kept, renamed;
+            public override string ToString() => $"+{raised} -{lost} ={kept}" + (renamed > 0 ? $" renamed={renamed}" : "");
+        }
+
+        /// <summary>Reconcile the live hut layer to this WorldState. Raise + retire + rename only.</summary>
+        public Delta Reconcile(WorldState S)
+        {
+            _tick++;
+            var d = new Delta();
+            if (S?.huts == null) return d;
+
+            // desired set — identity is the hut's tile (stable; sim huts never move). Duplicate
+            // tiles (possible in principle) get a deterministic ordinal by sim array order.
+            var desired = new Dictionary<string, WorldHut>();
+            foreach (var h in S.huts)
+            {
+                string key = Key(h);
+                int n = 0; string k = key;
+                while (desired.ContainsKey(k)) k = key + "#" + (++n);
+                desired[k] = h;
+            }
+
+            // 1) losses — placed but no longer in the state (ruin-leaving is the Codex onLoss lane)
+            foreach (var key in _huts.Keys.Where(k => !desired.ContainsKey(k)).ToList())
+            {
+                var rec = _huts[key];
+                if (rec.house != null) UnityEngine.Object.DestroyImmediate(rec.house);
+                foreach (var e in rec.extras) if (e != null) UnityEngine.Object.DestroyImmediate(e);
+                _huts.Remove(key);
+                d.lost++;
+                PresentationEventBus.Publish(new PresentationEvent(
+                    _tick, S.years, S.season, PresentationEventType.AssetRemoved, "hut:" + key, -1, "hut-lost"));
+            }
+
+            // 2) raises + owner renames
+            var greens = VillageGreens(S);
+            var genOf = new Dictionary<string, int>(); int maxGen = 1;
+            if (S.agents != null)
+                foreach (var a in S.agents) { if (!string.IsNullOrEmpty(a.name)) genOf[a.name] = a.gen; if (a.gen > maxGen) maxGen = a.gen; }
+
+            foreach (var kv in desired)
+            {
+                if (_huts.TryGetValue(kv.Key, out var rec) && rec.house != null)
+                {
+                    if (rec.owner != kv.Value.owner)
+                    {
+                        rec.owner = kv.Value.owner;
+                        rec.house.name = $"hut_{kv.Value.owner}";
+                        d.renamed++;
+                    }
+                    else d.kept++;
+                }
+                else
+                {
+                    _huts[kv.Key] = Raise(S, kv.Value, kv.Key, greens, genOf, maxGen);
+                    d.raised++;
+                    var w = P(S, kv.Value.x, kv.Value.y);
+                    if (!_firstHutSeen)
+                    {
+                        _firstHutSeen = true;
+                        PresentationEventBus.Publish(new PresentationEvent(
+                            _tick, S.years, S.season, PresentationEventType.Milestone, "hut:" + kv.Key, -1, "the first hut"));
+                    }
+                    PresentationEventBus.Publish(new PresentationEvent(
+                        _tick, S.years, S.season, PresentationEventType.AssetSpawned, "hut:" + kv.Key, -1,
+                        string.Format(CultureInfo.InvariantCulture, "hut-raised x={0:F1} z={1:F1}", w.x, w.z)));
+                }
+            }
+            return d;
+        }
+
+        public void Clear()
+        {
+            foreach (var r in _huts.Values)
+            {
+                if (r.house != null) UnityEngine.Object.DestroyImmediate(r.house);
+                foreach (var e in r.extras) if (e != null) UnityEngine.Object.DestroyImmediate(e);
+            }
+            _huts.Clear();
+            _firstHutSeen = false;
+        }
+
+        // ---- one hut, raised exactly the way PlaceHuts would have placed it ----
+        Rec Raise(WorldState S, WorldHut h, string key, Vector2[] greens, Dictionary<string, int> genOf, int maxGen)
+        {
+            var rec = new Rec { owner = h.owner };
+            int hx = Mathf.RoundToInt(h.x), hy = Mathf.RoundToInt(h.y);
+            int variant = 1 + (int)(Hash(hx, hy, 21) % 13);                  // same salt/range as PlaceHuts
+            var prefab = FindPrefab($"P_BLD_house_{variant:00}") ?? FindPrefab("P_BLD_house_01");
+            if (prefab == null) { Debug.LogWarning("[HutReconciler] no house prefab found"); return rec; }
+
+            var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, Layer(LayerName));
+            go.transform.position = GroundW(P(S, h.x, h.y));
+            float yaw = HouseYaw(S, h, greens, hx, hy);
+            go.transform.rotation = Quaternion.Euler(0, yaw, 0);
+            go.transform.localScale = Vector3.one * HouseScale;
+            go.name = $"hut_{h.owner}";
+            rec.house = go;
+
+            PlaceYard(S, go, h, hx, hy, yaw, rec);
+            int og = genOf.TryGetValue(h.owner ?? "", out var gg) ? gg : maxGen;
+            float ageFrac = maxGen > 1 ? 1f - og / (float)maxGen : 0.5f;
+            PlaceHutAge(S, h, hx, hy, ageFrac, rec);
+            return rec;
+        }
+
+        // mirror of WorldDresser.PlaceYard (same salts 71..74)
+        void PlaceYard(WorldState S, GameObject house, WorldHut h, int hx, int hy, float yaw, Rec rec)
+        {
+            var props = YardPropNames.Select(FindPrefab).Where(p => p != null).ToArray();
+            if (props.Length == 0) return;
+            var rot = Quaternion.Euler(0, yaw, 0);
+            var fwd = rot * Vector3.forward; var right = rot * Vector3.right;
+            float front = 2.5f;
+            var rends = house.GetComponentsInChildren<Renderer>();
+            if (rends.Length > 0)
+            {
+                var b = rends[0].bounds;
+                for (int r = 1; r < rends.Length; r++) b.Encapsulate(rends[r].bounds);
+                front = Vector3.Dot(b.extents, new Vector3(Mathf.Abs(fwd.x), 0f, Mathf.Abs(fwd.z))) + 0.9f;
+            }
+            int count = (int)(Hash(hx, hy, 71) % (uint)(YardPropsMax + 1));
+            var basePos = P(S, h.x, h.y);
+            for (int k = 0; k < count; k++)
+            {
+                var pf = props[Hash(hx, hy, 72 + k) % (uint)props.Length];
+                var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, Layer(YardLayerName));
+                float lateral = (Hash01(hx, hy, 73 + k) - 0.5f) * 3.0f;
+                go.transform.position = GroundW(basePos + fwd * front + right * lateral);
+                go.transform.rotation = Quaternion.Euler(0, Hash(hx, hy, 74 + k) % 360u, 0);
+                go.name = $"yard_{h.owner}_{k}";
+                rec.extras.Add(go);
+            }
+        }
+
+        // mirror of WorldDresser.PlaceHutAge (same salts 81..91)
+        void PlaceHutAge(WorldState S, WorldHut h, int hx, int hy, float ageFrac, Rec rec)
+        {
+            if (ageFrac > 0.55f)
+            {
+                var moss = FindPrefabs("Prefab_Bush").Where(p => p != null && !p.name.Contains("Flower")).Take(3).ToArray();
+                if (moss.Length == 0) return;
+                int n = 1 + (int)(Hash(hx, hy, 81) % 2u);
+                for (int k = 0; k < n; k++)
+                {
+                    var pf = moss[Hash(hx, hy, 82 + k) % (uint)moss.Length];
+                    var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, Layer(AgeLayerName));
+                    float ox = (Hash01(hx, hy, 83 + k) - 0.5f) * 4.5f, oz = (Hash01(hx, hy, 84 + k) - 0.5f) * 4.5f;
+                    go.transform.position = GroundW(P(S, h.x, h.y) + new Vector3(ox, 0, oz));
+                    go.transform.rotation = Quaternion.Euler(0, Hash(hx, hy, 85 + k) % 360u, 0);
+                    go.transform.localScale = Vector3.one * (0.4f + Hash01(hx, hy, 86 + k) * 0.3f);
+                    go.name = $"overgrowth_{h.owner}_{k}";
+                    rec.extras.Add(go);
+                }
+            }
+            else if (ageFrac < 0.28f)
+            {
+                var fresh = new[] { "P_PROP_foundation_wood_01", "P_PROP_foundation_wood_03", "P_PROP_board_01", "P_PROP_board_02", "P_PROP_cart_wheel_small" }
+                    .Select(FindPrefab).Where(p => p != null).ToArray();
+                if (fresh.Length == 0) return;
+                var pf = fresh[Hash(hx, hy, 87) % (uint)fresh.Length];
+                var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, Layer(AgeLayerName));
+                float ox = (Hash01(hx, hy, 88) - 0.5f) * 3.5f, oz = (Hash01(hx, hy, 89) - 0.5f) * 3.5f;
+                go.transform.position = GroundW(P(S, h.x, h.y) + new Vector3(ox, 0, oz));
+                go.transform.rotation = Quaternion.Euler(0, Hash(hx, hy, 90) % 360u, 0);
+                go.transform.localScale = Vector3.one * (0.7f + Hash01(hx, hy, 91) * 0.3f);
+                go.name = $"freshbuild_{h.owner}";
+                rec.extras.Add(go);
+            }
+        }
+
+        static readonly string[] YardPropNames = {
+            "P_PROP_cart_01","P_PROP_cart_02","P_PROP_barrel_01","P_PROP_barrel_03","P_PROP_crate_01",
+            "P_PROP_crate_03","P_PROP_sack_02","P_PROP_sack_05","P_PROP_firepit_woodpile","P_PROP_hay_02",
+            "P_PROP_hay_04","P_PROP_bucket_01","P_PROP_trough_01"
+        };
+
+        // ---- mirrors of WorldDresser's private geometry/lookup helpers ----
+        static string Key(WorldHut h) => $"{Mathf.RoundToInt(h.x)}:{Mathf.RoundToInt(h.y)}";
+
+        static Vector2[] VillageGreens(WorldState S)
+        {
+            int n = S.villages?.Length ?? 0;
+            var g = new Vector2[n];
+            if (n == 0) return g;
+            var sum = new Vector2[n]; var cnt = new int[n];
+            foreach (var h in S.huts)
+            {
+                int vi = NearestVillageIdx(S, h.x, h.y);
+                if (vi >= 0) { sum[vi] += new Vector2(h.x, h.y); cnt[vi]++; }
+            }
+            for (int i = 0; i < n; i++) g[i] = cnt[i] > 0 ? sum[i] / cnt[i] : new Vector2(S.villages[i].x, S.villages[i].y);
+            return g;
+        }
+
+        static int NearestVillageIdx(WorldState S, float x, float y)
+        {
+            if (S.villages == null) return -1;
+            int best = -1; float bd = float.MaxValue;
+            for (int i = 0; i < S.villages.Length; i++)
+            {
+                float d = (S.villages[i].x - x) * (S.villages[i].x - x) + (S.villages[i].y - y) * (S.villages[i].y - y);
+                if (d < bd) { bd = d; best = i; }
+            }
+            return best;
+        }
+
+        static float HouseYaw(WorldState S, WorldHut h, Vector2[] greens, int hx, int hy)
+        {
+            float jitter = (Hash(hx, hy, 23) % 15) - 7f;
+            int vi = NearestVillageIdx(S, h.x, h.y);
+            if (vi >= 0 && greens != null && vi < greens.Length)
+            {
+                var hutW = P(S, h.x, h.y); var greenW = P(S, greens[vi].x, greens[vi].y);
+                var d = new Vector2(greenW.x - hutW.x, greenW.z - hutW.z);
+                if (d.sqrMagnitude > 1f)
+                    return Mathf.Atan2(d.x, d.y) * Mathf.Rad2Deg + HouseFrontYawOffset + jitter;
+            }
+            return Hash(hx, hy, 22) % 4 * 90 + jitter;
+        }
+
+        GameObject FindPrefab(string name)
+        {
+            if (_prefabCache.TryGetValue(name, out var hit)) return hit;
+            var guid = AssetDatabase.FindAssets($"t:Prefab {name}").FirstOrDefault();
+            var pf = guid == null ? null : AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(guid));
+            _prefabCache[name] = pf;
+            return pf;
+        }
+
+        static IEnumerable<GameObject> FindPrefabs(string prefix)
+            => AssetDatabase.FindAssets($"t:Prefab {prefix}")
+                .Select(g => AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(g)))
+                .Where(p => p != null && p.name.StartsWith(prefix, StringComparison.OrdinalIgnoreCase));
+
+        static Transform Layer(string name)
+        {
+            var existing = GameObject.Find(name);
+            return existing != null ? existing.transform : new GameObject(name).transform;
+        }
+
+        static Vector3 P(WorldState S, float x, float y, float h = 0) => new Vector3(x * TileSize, h, (S.H - 1 - y) * TileSize);
+
+        static Vector3 GroundW(Vector3 world, float lift = 0)
+        {
+            var t = Terrain.activeTerrain;
+            if (t != null) world.y = t.SampleHeight(world) + t.transform.position.y;
+            return world + Vector3.up * lift;
+        }
+
+        static uint Hash(int x, int y, int salt) { unchecked { uint h = (uint)(x * 73856093 ^ y * 19349663 ^ salt * 83492791); h ^= h >> 13; h *= 2246822519; h ^= h >> 16; return h; } }
+        static float Hash01(int x, int y, int salt) => Hash(x, y, salt) / 4294967295f;
+    }
+}
+#endif

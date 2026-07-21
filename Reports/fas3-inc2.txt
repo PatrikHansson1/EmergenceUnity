@@ -1,0 +1,22 @@
+EMERGENCE — FAS 3 INCREMENT 2 PROBE (D-134): living huts + time UI + cadence + the gaze
+generated 2026-07-22 00:05:55
+one live run, seed 8919, genesis -> y6; all born-from-state layers retired, the world must GROW them.
+
+backdrop terrain from seq-8919-y006 (year-stable); static Huts/Yards/HutAge/Agents/Codex retired; y6 canon huts=2
+## PLAY PHASE (frames=20379)
+year snapshots applied live: 6 (target y6)
+huts BORN live: 2 raised, final live count 2 == y6 canon 2 -> MATCH (OK) (yearly count mismatches: 0)
+pause via UI: tick 288 == 288 after 0.9s -> FROZEN (OK)
+speed via UI: 1x -> 24 t/s OK; 4x -> 96 t/s OK
+gaze: "a soul arrives (agent-1)" angle-to-target 1,8° -> AIMED (OK)
+codex live: OK (reconciled every year)
+UI evidence: fas3-inc2-ui.png (game view incl. HUD)
+
+## CADENCE (the D-133b datapoint)
+flat-out editor-Jint: 288 ticks in 17,9s = 16,0 ticks/s (genesis -> y2, incl. live reconciles)
+EA window ~26000 ticks: flat-out editor-Jint ≈ 27,0 min; at 1x (24 t/s) ≈ 18,1 min; at 4x (96 t/s, if compute allows) ≈ 4,5 min
+finding: editor-Jint (16 t/s) can NOT even hold 1x (24 t/s) and NOT 4x (96 t/s) — real-time speeds need player-build Jint speed and/or checkpoint+resimulate; measure player next.
+
+magenta: classic=0 tonemapped=0 (worst frame of gaze + 4 village angles)   evidence: 45-UNITY/evidence/fas3/fas3-inc2-gaze.png + fas3-inc2-village-{N,E,S,W}.png
+
+verdict: GREEN — the village is BORN live; the player's hand holds presentation time; the eye goes to what was born
