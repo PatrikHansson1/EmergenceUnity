@@ -1,2 +1,2 @@
-DONE 16:39:28 verdict=CHECK dcAvg=3227 dcMax=7173 triM=5,1 submits=864 magenta=0
+DONE 20:28:26 verdict=CHECK dcAvg=3184 dcMax=7070 triM=5,1 submits=766 magenta=0
 see Reports/a6-instancing.txt

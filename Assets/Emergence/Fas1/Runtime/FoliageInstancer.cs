@@ -31,7 +31,7 @@ namespace Emergence.Runtime
         }
 
         public List<Group> groups = new List<Group>();
-        public float cellSize = 24f;   // measured best (24u: dc 3087 vs 64u: 3226 — finer frustum culling wins)
+        public float cellSize = 40f;   // sweep: 24u dc≈3087-3227 (864 submits), 64u dc≈3226 (660) — 40u = EP-requested middle
 
         sealed class Batch
         {

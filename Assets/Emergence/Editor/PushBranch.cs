@@ -29,7 +29,7 @@ namespace Emergence.Editor
                 File.Delete(TriggerPath);
                 var psi = new ProcessStartInfo("cmd.exe",
                     "/c cd /d C:\\Dev\\EmergenceUnity && (if exist .git\\index.lock del /f .git\\index.lock) && " +
-                    "git add -A && git commit -F Logs\\commitmsg-current.txt && git push -u origin HEAD " +
+                    "git add -A & git commit -F Logs\\commitmsg-current.txt & git push -u origin HEAD " +   // unconditional: push retries even when nothing new to commit
                     "> Logs\\git-commitpush.log 2>&1 & git log --oneline -1 >> Logs\\git-commitpush.log 2>&1")
                 { CreateNoWindow = true, UseShellExecute = false };
                 Process.Start(psi);
