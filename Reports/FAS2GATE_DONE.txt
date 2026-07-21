@@ -1,0 +1,2 @@
+DONE 21:39:59 verdict=GREEN WORK: 6 in Work state, 0 off | CARRY: 3 read-right, 0 off, props 3 | A2-mood tempo: 47/47 applied magentaTone=0
+see Reports/fas2-gate-proof.txt

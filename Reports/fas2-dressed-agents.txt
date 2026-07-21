@@ -1,5 +1,5 @@
 EMERGENCE — FAS 2 DRESSED-SCENE LIVING POPULATION (D-125)
-generated 2026-07-21 15:42:23
+generated 2026-07-21 21:40:21
 the static Agents layer retires; Agents_Live owns the people in the dressed core world.
 Scene starts at y85 (the world's own past); y120 lands LIVE in play mode among the huts.
 

@@ -1,2 +1,2 @@
-DONE 15:42:42 verdict=GREEN souls=111 delta=(+75 -21 aged=30 retask=5 moved=6 =1) invariant=111/111 grounded=111 magenta=0
+DONE 21:40:33 verdict=GREEN souls=111 delta=(+75 -21 aged=30 retask=5 moved=6 =1) invariant=111/111 grounded=111 magenta=0
 see Reports/fas2-dressed-agents.txt

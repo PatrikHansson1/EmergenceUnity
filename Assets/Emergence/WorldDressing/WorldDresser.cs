@@ -121,6 +121,7 @@ namespace Emergence.Editor
             PlaceCodexObjects(S, root.transform); // TD-033: discovery-driven objects (mill/tablets/star-banner/market by village development)
             PlaceAnimals(S, root.transform);      // the studio's own deer/wolf GLBs (animal upgrade)
             EmergenceLightRig.Apply(S.season, "day");
+            StripImpostorsSceneWide();   // D-131: kill the distant-magenta class regardless of placement path
             Debug.Log("[Dresser] world built — iterate grammar/density from here (menu re-runs are idempotent: fresh scene each time)");
         }
 
@@ -1070,6 +1071,7 @@ namespace Emergence.Editor
                             if (hGlb > 0.01f && hRig > 0.01f) scale = AnimalScale * (hGlb / hRig);
                         }
                         go.transform.localScale = Vector3.one * scale;
+                        if (nm == "wolf") ApplyWolfTint(go);   // D-131: FBX default was untextured light grey clay
                         var aa = go.AddComponent<Emergence.Runtime.AnimalAnimator>();
                         aa.animalId = an.id; aa.type = nm;
                         var anim = go.GetComponentInChildren<Animator>() ?? go.AddComponent<Animator>();
@@ -1092,6 +1094,26 @@ namespace Emergence.Editor
                 placed++;
             }
             Debug.Log($"[Dresser] placed {placed}/{S.animals.Length} animals ({(AnimatedAnimals ? "rigged Quaternius, D-128" : "own static GLBs")})");
+        }
+
+        // D-131 (grind-review): the wolf FBX resolved to untextured light-grey default material — "grå lera".
+        // Tint into the painted register: dark warm grey-brown body, zero gloss. One shared material per dress.
+        static Material _wolfMat;
+        static void ApplyWolfTint(GameObject go)
+        {
+            if (_wolfMat == null)
+            {
+                var sh = Shader.Find("Universal Render Pipeline/Lit");
+                if (sh == null) return;
+                _wolfMat = new Material(sh) { name = "M_WolfTint_D131", color = new Color(0.33f, 0.30f, 0.27f) };
+                _wolfMat.SetFloat("_Smoothness", 0.05f);
+            }
+            foreach (var r in go.GetComponentsInChildren<Renderer>(true))
+            {
+                var mats = r.sharedMaterials;
+                for (int i = 0; i < mats.Length; i++) mats[i] = _wolfMat;
+                r.sharedMaterials = mats;
+            }
         }
 
         static float BoundsHeight(GameObject prefab)
@@ -1329,6 +1351,66 @@ namespace Emergence.Editor
                         bad[key] = bad.TryGetValue(key, out var n) ? n + 1 : 1;
                     }
             Debug.Log("[Dresser] pink renderers: " + bad.Count + "\n" + string.Join("\n", bad.Select(kv => kv.Value + "x " + kv.Key).Take(30)));
+        }
+
+        // D-131 (grind-review fix): the per-placement strips missed at least one path — review found
+        // TONEMAPPED error-magenta at distance (#FF00FF through ACES ≈ rgb(207,~33,207), under the old
+        // r>220 detector). Kill the whole class: sweep EVERY renderer/LODGroup in the scene once after
+        // dressing. Idempotent; call it last in Build().
+        public static void StripImpostorsSceneWide()
+        {
+            int off = 0, errOff = 0;
+            foreach (var r in UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsInactive.Include))
+            {
+                if (r.GetComponent("ImpostorDataHolder") != null
+                    || r.gameObject.name.IndexOf("impostor", StringComparison.OrdinalIgnoreCase) >= 0
+                    || r.sharedMaterials.Any(m => m != null && m.shader != null && m.shader.name.IndexOf("impostor", StringComparison.OrdinalIgnoreCase) >= 0))
+                { if (r.enabled) { r.enabled = false; off++; } continue; }
+                // D-131b: the review's tonemapped-magenta flecks were the AmbientFX leaf PARTICLES —
+                // M_Leaf_01 ships on a LEGACY built-in particle shader (fileID 210) that URP renders
+                // magenta while isSupported stays true. Rescue, don't kill: swap to URP Particles/Unlit
+                // with color+texture carried over (the leaves are green by design). Unfixable -> disable.
+                if (r is ParticleSystemRenderer)
+                {
+                    var mats = r.sharedMaterials; bool changed = false, dead = false;
+                    for (int i = 0; i < mats.Length; i++)
+                    {
+                        var m = mats[i];
+                        if (m == null || m.shader == null) continue;
+                        string sn = m.shader.name;
+                        bool legacy = sn.StartsWith("Legacy Shaders/") || (sn.StartsWith("Particles/") && !sn.Contains("Universal"))
+                                   || sn == "Hidden/InternalErrorShader" || !m.shader.isSupported;
+                        if (!legacy) continue;
+                        var urp = Shader.Find("Universal Render Pipeline/Particles/Unlit");
+                        if (urp == null) { dead = true; continue; }
+                        var fix = new Material(urp) { name = m.name + "_URPfix_D131b" };
+                        if (m.HasProperty("_Color")) fix.SetColor("_BaseColor", m.GetColor("_Color"));
+                        if (m.HasProperty("_MainTex") && m.GetTexture("_MainTex") != null) fix.SetTexture("_BaseMap", m.GetTexture("_MainTex"));
+                        fix.SetFloat("_Surface", 1f); fix.SetFloat("_Blend", 0f);   // transparent, alpha-blended
+                        fix.renderQueue = 3000;
+                        mats[i] = fix; changed = true;
+                    }
+                    if (changed) { r.sharedMaterials = mats; errOff++; }
+                    else if (dead && r.enabled) { r.enabled = false; errOff++; }
+                    continue;
+                }
+                if (r.sharedMaterials.Any(m => m != null && m.shader != null
+                        && (m.shader.name == "Hidden/InternalErrorShader" || !m.shader.isSupported)))
+                { if (r.enabled) { r.enabled = false; errOff++; } }
+            }
+            foreach (var lg in UnityEngine.Object.FindObjectsByType<LODGroup>(FindObjectsInactive.Include))
+            {
+                var lods = lg.GetLODs();
+                bool IsImp(Renderer r) => r != null && r.sharedMaterials.Any(m => m != null && m.shader != null && m.shader.name.IndexOf("impostor", StringComparison.OrdinalIgnoreCase) >= 0);
+                var keep = lods.Where(l => !l.renderers.Any(IsImp)).ToArray();
+                if (keep.Length > 0 && keep.Length < lods.Length)
+                {
+                    keep[keep.Length - 1].screenRelativeTransitionHeight = 0.005f;
+                    lg.SetLODs(keep);
+                    foreach (var l in lods.Except(keep)) foreach (var r in l.renderers) if (r != null && IsImp(r)) { r.enabled = false; off++; }
+                }
+            }
+            Debug.Log($"[Dresser] scene-wide sweep: {off} impostor + {errOff} error-shader renderers disabled (D-131/D-131b)");
         }
 
         // Impostor LOD levels (Polyart) render magenta without their runtime-baked data.

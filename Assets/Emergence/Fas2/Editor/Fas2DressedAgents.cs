@@ -207,9 +207,9 @@ namespace Emergence.Editor
             }
             var cluster = pts.Where(q => (q - center).sqrMagnitude < 144f).ToList();
             if (cluster.Count > 0) { var c = Vector3.zero; foreach (var q in cluster) c += q; center = c / cluster.Count; }
-            float ext = 14f;
+            float ext = 19f;   // D-131 (grind-review): y085-evidensen togs inne i ett buskage — högre/längre ut
             var prevPos = cam.transform.position; var prevRot = cam.transform.rotation;
-            cam.transform.position = center + new Vector3(ext * 0.5f, ext * 0.45f, -ext * 0.8f);
+            cam.transform.position = center + new Vector3(ext * 0.5f, ext * 0.62f, -ext * 0.8f);
             cam.transform.LookAt(center + Vector3.up * 0.8f);
             bool fogWas = RenderSettings.fog; RenderSettings.fog = false;
             const int w = 1600, h = 900;

@@ -1,0 +1,33 @@
+EMERGENCE — FAS 2 GATE-PROOF (D-131)
+generated 2026-07-21 21:39:46
+FIXTURE-BASED MECHANISM PROOF — clearly labeled presentation unit test, never shipped.
+
+## TASK-VOCABULARY AUDIT (all owned snapshots)
+     4x  "eating" -> Idle
+     1x  "gathering wood" -> Walk
+   120x  "growing up" -> Idle
+    88x  "heading to berry" -> Walk
+    10x  "heading to clay" -> Walk
+    10x  "heading to forest" -> Walk
+    15x  "heading to iron" -> Walk
+    11x  "heading to sand" -> Walk
+    12x  "heading to stone" -> Walk
+    12x  "hunting" -> Walk
+    66x  "searching for clay" -> Walk
+    23x  "searching for tin" -> Walk
+     4x  "seeking company" -> Walk
+    49x  "sleeping" -> Idle
+    12x  "talking" -> Idle
+     3x  "trading" -> Idle
+   116x  "wandering" -> Walk
+  coverage: 17 distinct strings, 100% classified; engine exports work-verbs: NO — engine-lane gap, flagged (Simulation-Architect)
+
+## FIXTURE (unit test — task strings edited on 9 adults, engine-style phrasing)
+souls=111 (+111 -0 aged=0 retask=0 moved=0 =0); fixture: work=6 agents [44,45,46,47,48,49], carry=3 [50,51,52]
+carry props attached (edit phase): 3/3
+
+## PLAY PHASE (frames=120)
+WORK: 6 in Work state, 0 off | CARRY: 3 read-right, 0 off, props 3 | A2-mood tempo: 47/47 applied
+magenta classic=0  TONEMAPPED=0 (hardened detector, D-131)   evidence: gate-work-live.png, gate-carry-live.png
+
+verdict: GREEN — the mechanism works: when the sim says work/carry, the body works/carries

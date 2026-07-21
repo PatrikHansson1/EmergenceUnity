@@ -43,6 +43,11 @@ namespace Emergence.Runtime
         // id->instance map after the enter-playmode domain reload (serialized fields survive it).
         public string band = "adult";
         public bool female;
+        // A2-INTERIM (D-131): the sim's sayAct channel tints the read via animator TEMPO until the
+        // Väg-1 clip set lands (full emotion body-states are purchase-dependent, D-122). Deterministic:
+        // value comes straight from sim state, no RNG. Subtle by design — a hungry soul drags, a soul
+        // in love has spring in the step, ritual slows into gravity.
+        public string sayAct = "";
 
         Animator _anim;
         string _state = "";
@@ -64,11 +69,23 @@ namespace Emergence.Runtime
             if (_anim == null) return;
             _anim.applyRootMotion = false;                                   // sim position is truth
             _anim.cullingMode = AnimatorCullingMode.CullUpdateTransforms;    // A6: off-screen agents cost less
+            _anim.speed = MoodSpeed(sayAct);                                 // A2-interim (D-131)
             Apply(true);
         }
 
         /// <summary>Reconciler-facing: update the task live (crossfades only when the read changes).</summary>
         public void SetTask(string t) { task = t; if (_anim != null) Apply(false); }
+
+        /// <summary>A2-interim (D-131): sim sayAct → animator tempo. Full body-states await the Väg-1 clips.</summary>
+        public void SetMood(string act)
+        {
+            sayAct = act ?? "";
+            if (_anim != null) _anim.speed = MoodSpeed(sayAct);
+        }
+        public static float MoodSpeed(string act) => act switch
+        {
+            "love" => 1.07f, "teach" => 0.96f, "ritual" => 0.90f, "hungry" => 0.86f, _ => 1f
+        };
 
         /// <summary>Reconciler-facing (v2, D-129): walk to the new sim position instead of teleporting.</summary>
         public void GlideTo(Vector3 target)

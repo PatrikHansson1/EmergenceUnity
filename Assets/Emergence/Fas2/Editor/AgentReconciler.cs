@@ -110,6 +110,8 @@ namespace Emergence.Editor
                             {
                                 if (Application.isPlaying) aa.SetTask(a.task);   // live crossfade
                                 else { aa.task = a.task; if (editPose) StillPose(rec.go, a, band, female); }
+                                aa.SetMood(a.sayAct);                            // A2-interim (D-131)
+                                EnsureCarryProp(rec.go, a.task);                 // "bär" (D-131): basket in hand on carry/haul tasks
                             }
                             d.retasked++;
                             PresentationEventBus.Publish(new PresentationEvent(
@@ -157,9 +159,40 @@ namespace Emergence.Editor
             if (rac != null) anim.runtimeAnimatorController = rac;
             var aa = go.AddComponent<AgentAnimator>();
             aa.agentId = a.id; aa.task = a.task; aa.canWork = band == "adult"; aa.band = band; aa.female = female;
+            aa.sayAct = a.sayAct ?? "";                                      // A2-interim (D-131)
+            EnsureCarryProp(go, a.task);                                     // "bär" (D-131)
 
             if (!Application.isPlaying && editPose) StillPose(go, a, band, female);
             return go;
+        }
+
+        // D-131 ("bär"): a soul on a carry/haul task holds a basket — read-right without a carry clip
+        // (the true carry cycle is Väg-1/clip-purchase work; the prop makes the VERB legible now).
+        // Basket = era-neutral (weaving is stone-age canon). Attached under the spine so walk sway carries it.
+        const string CarryPropName = "CarryProp_D131";
+        static bool CarryTask(string task) => task != null && (task.Contains("carr") || task.Contains("haul"));
+        public static void EnsureCarryProp(GameObject go, string task)
+        {
+            var existing = FindDeep(go.transform, CarryPropName);
+            if (!CarryTask(task)) { if (existing != null) UnityEngine.Object.DestroyImmediate(existing.gameObject); return; }
+            if (existing != null) return;
+            var pf = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Fantastic City Pack/Prefabs/Props/Comps/COMP_PROP_basket_city_01.prefab");
+            if (pf == null) return;
+            Transform mount = null;
+            foreach (var t in go.GetComponentsInChildren<Transform>())
+                if (t.name.Contains("Spine")) mount = t;                     // deepest spine joint wins
+            if (mount == null) mount = go.transform;
+            var prop = (GameObject)PrefabUtility.InstantiatePrefab(pf);
+            prop.name = CarryPropName;
+            prop.transform.SetParent(mount, false);
+            prop.transform.localPosition = new Vector3(0f, 0.05f, 0.28f);    // in front of the torso
+            prop.transform.localRotation = Quaternion.identity;
+            prop.transform.localScale = Vector3.one * 0.55f;
+        }
+        static Transform FindDeep(Transform root, string name)
+        {
+            foreach (var t in root.GetComponentsInChildren<Transform>(true)) if (t.name == name) return t;
+            return null;
         }
 
         // edit-mode still: sample the task-right clip at a hash phase (parity with the still layer's read)

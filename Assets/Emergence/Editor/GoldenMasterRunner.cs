@@ -22,6 +22,21 @@ namespace Emergence.Editor
         private static readonly (string label, long seed, int ticks, string founders)[] Suite60 =
             { ("97013", 97013, 720, null), ("4242", 4242, 720, null), ("20260718", 20260718, 720, null), ("4242-founders", 4242, 720, TestFounders) };
 
+        // D-131 (grind-review objection): the 720-tick horizon is the PER-STEP cadence (a full-depth run
+        // is ~30 min — incompatible with "golden GREEN after every build step"). Depth-override lets the
+        // GATE run at full 8640: write the tick count to Reports/GOLDEN_DEPTH.txt, drop the trigger,
+        // delete the file afterwards. Both horizons hash the same engine — depth is coverage, not truth.
+        static int DepthOverride()
+        {
+            try
+            {
+                var p = System.IO.Path.Combine(UnityEngine.Application.dataPath, "..", "Reports", "GOLDEN_DEPTH.txt");
+                if (System.IO.File.Exists(p) && int.TryParse(System.IO.File.ReadAllText(p).Trim(), out var t) && t > 0) return t;
+            }
+            catch { }
+            return 0;
+        }
+
         [MenuItem("Emergence/Golden Master/1. Engine SHA Assert")]
         public static void ShaAssert()
         {
@@ -66,7 +81,8 @@ namespace Emergence.Editor
             ShaAssert();
             report.AppendLine("Engine SHA assert: OK");
             bool green = true;
-            foreach (var (label, seed, ticks, founders) in Suite60) green &= RunOne(label, seed, ticks, founders, report);
+            int depth = DepthOverride();   // D-131: gate runs at full 8640 via Reports/GOLDEN_DEPTH.txt
+            foreach (var (label, seed, ticks, founders) in Suite60) green &= RunOne(label, seed, depth > 0 ? depth : ticks, founders, report);
             report.AppendLine(green ? "VERDICT: GREEN" : "VERDICT: RED — STOP THE LINE (UNITY-BRIDGE-SPEC §5)");
             Write(report);
             Debug.Log("[GoldenMaster] " + (green ? "GREEN" : "RED") + " — report at Reports/golden-report.txt");
