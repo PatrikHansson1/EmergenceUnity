@@ -1,0 +1,21 @@
+EMERGENCE — FAS 5 PROBE: the tab skeleton — Villages live + Souls base
+generated 2026-07-22 23:52:07
+data sources = applied WorldState (read-only) + fixture seq-8919-y055.json (a real engine export, D-131 fixture school)
+
+## PLAY PHASE (frames=16135)
+skeleton: 7 tabs (reference nav), default tab 0==Overview, READY=True (OK)
+villages LIVE (empty branch): rows 0==state 0 @y5 — the young world hides nothing, fakes nothing (OK)
+souls LIVE: rows 6==6, oldest first 'Eira'=='Eira', dossier Eira/26 år/gen 1/'wandering' (OK)
+villages FIXTURE (y055, real export): rows 2==2, pop-DESC order OK, dossier 'Frejahaven' pop 15 gen 4 crafts 32 knows 32 (OK)
+fixture cleared: rows back to runtime truth 0==0 (OK)
+chronicle tab = handoff to the Fas 4 book: almanac closed, book opened=True, tps 24->24 (OK), pause preserved through chain=True (OK)
+souls evidence: OK (end-of-frame backbuffer, nonwhite 100%) -> Reports/fas5-souls.png
+villages evidence: OK (end-of-frame backbuffer, nonwhite 100%) -> Reports/fas5-villages.png
+overview regression after tab traffic: pop 6/6 births 2/2 deaths 0/0 curve 6/6 år 5/5 (OK)
+
+caveat: Souls base sorts by AGE (the reference's wealth sort + roles/traits/bonds await the engine metrics, R2);
+Society/Tech&Memory/Dynasty are honest stubs naming what they await; the populated-villages branch is fixture-proven
+(seq-8919-y055.json, a real engine export through the SAME rebuild path — D-131 school; villages emerge y30-y55 at this seed,
+an 8-minute live sim buys no additional mechanism truth).
+
+verdict: GREEN — the almanac has its skeleton: Villages live, Souls base, honest stubs, the book one tab away

@@ -1,2 +1,2 @@
-DONE 21:42:07 verdict=GREEN records=1 curvePts=6
+DONE 23:54:43 verdict=GREEN records=1 curvePts=6
 see Reports/fas5-almanac.txt
