@@ -1,0 +1,12 @@
+EMERGENCE — FAS 3 PLAYER ONBOARD (D-140): the opening in a real player build
+generated 2026-07-22 09:50:36
+
+proof scene: genesis wilderness (souls=4) + Fas3Onboarding + observer
+build: Succeeded, errors=0, sizeMB=923, secs=27
+
+## PLAYER RESULT
+onboard genesis=OK(y0,souls4/4,huts0) firstHut=OK(y5,gaze4.8deg) firstChild=OK(y1,gaze3.9deg) scrub=J0:OK(genesis re-entered),Jf:OK(y5,huts1) order=[0,1,2,3,4,5,J0,J5] orderOk=OK magenta=0/0 COMPLETE
+
+evidence: 45-UNITY/evidence/fas3/fas3-player-onboard-firsthut.png (rendered IN the player)
+
+verdict: GREEN — the game's opening runs in a real player: wilderness, the first hut under the eye, the grid scrubs to genesis and back

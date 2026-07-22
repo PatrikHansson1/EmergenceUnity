@@ -110,6 +110,11 @@ namespace Emergence.Editor
         // props. Documentary-honest: low n IS worked stone in the sim. Hash-placed, RNG-neutral (D-078 r4).
         static void PlaceWorkMarks(WorldState S, Transform root)
         {
+            // D-140 (genesis honesty, the inc-6 opening frame): a quarry scar SAYS "people worked here".
+            // At genesis low tileN is BORN-poor stone, not quarried stone — nobody has swung a pick. No
+            // settlement (0 huts) ⇒ no work-marks; the wilderness must not carry lies about labor.
+            // (Slope-floating of legit scar decals on terrain steps = separate look-pass item, logged.)
+            if ((S.huts?.Length ?? 0) == 0) { Debug.Log("[Dresser] work-marks skipped — pre-settlement world (genesis honesty, D-140)"); return; }
             var parent = new GameObject("WorkMarks").transform; parent.SetParent(root, true);
             var stoneProps = new[] { "P_PROP_stone_01", "P_PROP_stone_02", "P_PROP_wall_stone_small_01", "P_PROP_wall_stone_small_02", "Coal Pile" }
                 .Select(FindPrefab).Where(p => p != null).ToArray();

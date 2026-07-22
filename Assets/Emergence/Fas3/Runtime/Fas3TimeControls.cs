@@ -25,8 +25,10 @@ namespace Emergence.Runtime
         public Fas3PresentationClock clock;   // auto-found; when present, the buttons steer THIS
         public float EffectiveTps { get; private set; }   // measured, not requested — the honest number
         public int SpeedIndex { get; private set; } = 1;  // 0=paused 1=1× 2=4× 3=max
+        public int ScrubJumps { get; private set; }       // proof counter: timeline jumps performed
 
         double _lastTick; float _windowStart;
+        int _scrubPending = -1; float _scrubShown = -1f;  // D-140: timeline drag state (jump on release)
 
         bool Paused => clock != null ? clock.paused : (Driver() != null && Driver().paused);
 
@@ -66,6 +68,7 @@ namespace Emergence.Runtime
             // measured ticks/s over a 0.5 s window — what the machine actually delivers (presentation-side when clocked)
             double tick = c != null ? c.PresentationTick : d.Tick;
             float t = Time.unscaledTime;
+            if (tick < _lastTick) { _windowStart = t; _lastTick = tick; EffectiveTps = 0f; }   // D-140: a scrub jumped time backwards — restart the window, never report a lie
             if (t - _windowStart >= 0.5f)
             {
                 if (_windowStart > 0f) EffectiveTps = (float)((tick - _lastTick) / (t - _windowStart));
@@ -85,7 +88,10 @@ namespace Emergence.Runtime
         {
             var d = Driver(); if (d == null) return;
             var c = Clock();
-            const int w = 332, h = 58;
+            // D-140: the timeline (scrub) row exists when the clock rides the checkpoint grid
+            bool scrubbable = c != null && d.bufferMode && d.Year >= 1;
+            const int w = 332;
+            int h = scrubbable ? 84 : 58;
             var r = new Rect(12, 12, w, h);
             GUI.Box(r, GUIContent.none);
             string head = c != null
@@ -105,6 +111,22 @@ namespace Emergence.Runtime
                 }
             }
             GUI.backgroundColor = Color.white;
+
+            // D-140: the TIMELINE — drag anywhere in produced history; released -> JumpToYear from the
+            // checkpoint grid (year-grained scrub, D-137). The slider shows presentation year against
+            // the producer's frontier; dragging never touches the sim (the grid re-enters, D-078 r4).
+            if (scrubbable)
+            {
+                float shown = _scrubShown >= 0f ? _scrubShown : c.PresentationYear;
+                float slid = GUI.HorizontalSlider(new Rect(r.x + 10, r.y + 62, w - 66, 16), shown, 0f, d.Year);
+                GUI.Label(new Rect(r.x + w - 52, r.y + 58, 46, 20), $"y{Mathf.RoundToInt(slid)}/{d.Year}");
+                if (Mathf.Abs(slid - shown) > 0.001f) { _scrubShown = slid; _scrubPending = Mathf.RoundToInt(slid); }
+                if (_scrubPending >= 0 && GUIUtility.hotControl == 0)   // released — one jump, not one per dragged year
+                {
+                    int y = _scrubPending; _scrubPending = -1; _scrubShown = -1f;
+                    if (y != c.PresentationYear && c.JumpToYear(y)) ScrubJumps++;   // y0 = genesis; the grid holds y000 in bufferMode
+                }
+            }
         }
     }
 }
