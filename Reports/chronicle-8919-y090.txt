@@ -1,0 +1,123 @@
+KRÖNIKAN — skriven av ingen, allt hände
+seed 8919 · y0..y90 · 120 witnessed entries · exported 2026-07-22 14:40
+------------------------------------------------------------------------
+y  0 [spring] . Eira arrives — a soul steps onto the empty land
+y  0 [spring] . Ask arrives — a soul steps onto the empty land
+y  0 [spring] . Embla arrives — a soul steps onto the empty land
+y  0 [spring] . Torv arrives — a soul steps onto the empty land
+y  1 [spring] * a first child is born — Liv
+y  5 [spring]   Sten is born
+y  5 [spring] * the first hut
+y  5 [spring]   a hut is raised
+y  6 [spring]   a hut is raised
+y 10 [spring]   a hut is raised
+y 11 [spring]   Ylva is born
+y 13 [spring]   a hut is raised
+y 16 [spring]   Bjorn is born
+y 16 [spring]   a hut is raised
+y 17 [spring]   Saga is born
+y 20 [spring]   Rune is born
+y 20 [spring]   a hut is raised
+y 21 [spring]   Freja is born
+y 23 [spring]   Kare is born
+y 27 [spring]   Idun is born
+y 28 [spring]   a hut is raised
+y 29 [spring]   Halvar is born
+y 30 [spring]   a hut is raised
+y 32 [spring]   a hut is raised
+y 33 [spring]   Signe is born
+y 33 [spring]   Vidar is born
+y 35 [spring]   a hut is raised
+y 38 [spring]   Tuva is born
+y 39 [spring]   a hut is raised
+y 40 [spring]   Alve is born
+y 40 [spring]   Ronja is born
+y 40 [spring]   a hut is raised
+y 43 [spring] * death finds the people for the first time — Torv departs
+y 43 [spring]   Sixten is born
+y 43 [spring]   Maja is born
+y 43 [spring]   a hut is raised
+y 45 [spring]   Loke is born
+y 46 [spring]   Rune departs
+y 47 [spring]   a hut is raised
+y 50 [spring]   Ask departs
+y 51 [spring]   Vera is born
+y 51 [spring]   Otto is born
+y 53 [spring]   Embla departs
+y 54 [spring]   Selma is born
+y 54 [spring]   Falk is born
+y 57 [spring]   Eira departs
+y 57 [spring]   Nanna is born
+y 58 [spring]   Liv departs
+y 58 [spring]   Ulv is born
+y 58 [spring]   Disa is born
+y 58 [spring]   Orm is born
+y 58 [spring]   a hut is raised
+y 60 [spring]   Eira II is born
+y 60 [spring]   Ask II is born
+y 61 [spring]   Embla II is born
+y 61 [spring]   Torv II is born
+y 61 [spring]   Liv II is born
+y 62 [spring]   Halvar departs
+y 64 [spring]   Sten II is born
+y 64 [spring]   Ylva II is born
+y 64 [spring]   Bjorn II is born
+y 64 [spring]   Saga II is born
+y 67 [spring]   Rune II is born
+y 67 [spring]   Freja II is born
+y 67 [spring]   Kare II is born
+y 69 [spring]   Idun II is born
+y 70 [spring]   Halvar II is born
+y 70 [spring]   Signe II is born
+y 70 [spring]   a hut is raised
+y 71 [spring]   a hut is raised
+y 73 [spring]   Vidar II is born
+y 74 [spring]   Tuva II is born
+y 74 [spring]   Alve II is born
+y 74 [spring]   a hut is raised
+y 74 [spring]   a hut is raised
+y 75 [spring]   Ronja II is born
+y 75 [spring]   Sixten II is born
+y 77 [spring]   Maja II is born
+y 79 [spring]   a hut is raised
+y 80 [spring]   Freja departs
+y 80 [spring]   Loke II is born
+y 80 [spring]   Vera II is born
+y 80 [spring]   Otto II is born
+y 80 [spring]   Selma II is born
+y 81 [spring]   Falk II is born
+y 81 [spring]   Nanna II is born
+y 81 [spring]   Ulv II is born
+y 82 [spring]   Disa II is born
+y 83 [spring]   Orm II is born
+y 83 [spring]   Eira II is born
+y 83 [spring]   Ask II is born
+y 83 [spring]   Embla II is born
+y 83 [spring]   a hut is raised
+y 83 [spring]   a hut is raised
+y 83 [spring]   a hut is raised
+y 84 [spring]   Torv II is born
+y 84 [spring]   Liv II is born
+y 84 [spring]   a hut is raised
+y 85 [spring]   Sten departs
+y 85 [spring]   Sten II is born
+y 86 [spring]   Ylva departs
+y 86 [spring]   Ylva II is born
+y 86 [spring]   Bjorn II is born
+y 86 [spring]   a hut is raised
+y 87 [spring]   Saga II is born
+y 87 [spring]   Rune II is born
+y 87 [spring]   Freja II is born
+y 88 [spring]   Ulv departs
+y 88 [spring]   Kare II is born
+y 88 [spring]   a hut is raised
+y 89 [spring]   Loke departs
+y 89 [spring]   Disa departs
+y 89 [spring]   Idun II is born
+y 89 [spring]   Halvar II is born
+y 89 [spring]   Signe II is born
+y 89 [spring]   Vidar II is born
+y 89 [spring]   a hut is raised
+y 89 [spring]   a hut is raised
+y 90 [spring]   Saga departs
+y 90 [spring]   a hut is raised
