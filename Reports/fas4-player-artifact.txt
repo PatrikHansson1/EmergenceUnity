@@ -1,0 +1,13 @@
+EMERGENCE — FAS 4 PLAYER ARTIFACT (D-148): the full EA window's chronicle, exported by a real player
+generated 2026-07-22 17:04:18  seed=8919  window=y0..y120
+
+proof scene: genesis wilderness + Fas3Onboarding + Fas4 artifact observer
+build: Succeeded, errors=0, buildDirMB=923, secs=30
+traceability: commit=de9414e9 (refs/heads/audition/free-assets-2026-07-19), Assembly-CSharp.dll mtime=2026-07-22 17:04:47
+
+## PLAYER RESULT
+artifact span=OK(y0..y115,225entries) spine=OK(3stars,child+,hut+,death+) order=OK(nondecreasing yes,dropped0/4096) artifact=OK(225entries) evidence=NEVER eras=6(dawn->stone->bronze->iron->print->mill) ERROR=WATCHDOG
+
+artifacts: 2/3 copied -> Reports/chronicle-8919-y120.txt + Reports/chronicle-8919-y120.html + Reports/fas4-player-artifact-book.png (book png also to 45-UNITY/evidence/fas4)
+
+verdict: CHECK — see player result above

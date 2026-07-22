@@ -1,0 +1,2 @@
+DONE 19:35:01 verdict=CHECK
+see Reports/fas4-player-artifact.txt
