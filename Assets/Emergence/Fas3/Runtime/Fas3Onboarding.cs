@@ -58,6 +58,13 @@ namespace Emergence.Runtime
             if (FindAnyObjectByType<Fas4ChronicleView>() == null)
                 new GameObject("Fas4ChronicleView").AddComponent<Fas4ChronicleView>();
 
+            // the patterns (Fas 5 v0): consumer #4 — the metrics recorder + the Almanac's native
+            // face (Overview). Same pause law as the book; disarms itself if the UI assets are missing
+            if (FindAnyObjectByType<Fas5MetricsRecorder>() == null)
+                new GameObject("Fas5MetricsRecorder").AddComponent<Fas5MetricsRecorder>();
+            if (FindAnyObjectByType<Fas5AlmanacView>() == null)
+                new GameObject("Fas5AlmanacView").AddComponent<Fas5AlmanacView>();
+
             // the eye: rig + gaze on the main camera (idempotent — the scene may already carry them)
             var cam = Camera.main;
             if (cam != null)

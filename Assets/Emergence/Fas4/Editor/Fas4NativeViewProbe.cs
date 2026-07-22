@@ -9,7 +9,9 @@
 //   5. book holds the WHOLE history, newest FIRST (the reference's order), gold year badges;
 //   6. why-expander STUB expands on click (the surface for the ordered engine causes[]);
 //   7. closing the book RESTORES the prior pause state; feed panel returns;
-//   8. evidence PNGs (book + feed) grabbed END-OF-FRAME with the blankness guard (D-142 law).
+//   8. evidence PNGs (book + feed) grabbed END-OF-FRAME with the blankness guard (D-142 law);
+//   9. DISARM branch (gate review 2026-07-22 villkor 2): a view pointed at a bogus PanelSettings
+//      resource disarms itself and the IMGUI v0 panel STANDS — the chronicle never goes dark.
 // Menu: Emergence/Fas4/RUN NATIVE VIEW PROBE.  Headless: drop Reports/RUN_FAS4NATIVE.trigger.
 #if UNITY_EDITOR
 using System;
@@ -44,7 +46,7 @@ namespace Emergence.Editor
         static Fas4ChronicleFeed _feed;
         static Fas4ChronicleView _view;
         static float _tpsBefore, _grabAskedAt;
-        static string _n1 = "", _n2 = "", _n3 = "", _n4 = "", _n5 = "", _n6 = "", _n7 = "", _n8a = "", _n8b = "";
+        static string _n1 = "", _n2 = "", _n3 = "", _n4 = "", _n5 = "", _n6 = "", _n7 = "", _n8a = "", _n8b = "", _n9 = "";
 
         static Fas4NativeViewProbe() { EditorApplication.update += Tick; }
 
@@ -117,7 +119,7 @@ namespace Emergence.Editor
             SessionState.SetFloat(KeyStart, (float)EditorApplication.timeSinceStartup);
             _frames = 0; _phase = 0; _onb = null; _feed = null; _view = null;
             _tpsBefore = 0f; _grabAskedAt = 0f;
-            _n1 = _n2 = _n3 = _n4 = _n5 = _n6 = _n7 = _n8a = _n8b = "";
+            _n1 = _n2 = _n3 = _n4 = _n5 = _n6 = _n7 = _n8a = _n8b = _n9 = "";
             File.WriteAllText(Done, "RUNNING (entering play mode) " + DateTime.Now.ToString("HH:mm:ss") + "\n");
             EditorApplication.EnterPlaymode();
         }
@@ -232,6 +234,29 @@ namespace Emergence.Editor
             {
                 if (_n8b.Length == 0 && Time.unscaledTime - _grabAskedAt < 20f) return;
                 if (_n8b.Length == 0) _n8b = "feed evidence: FAIL (no grab within 20 s)";
+                _phase = 6;
+                return;
+            }
+
+            if (_phase == 6)   // DISARM branch (gate review 2026-07-22, villkor 2): missing UI assets must leave IMGUI v0 standing
+            {
+                _feed.showUI = true;   // arrange: the v0 panel visible, as in a world where the native assets never existed
+                var go = new GameObject("Fas4DisarmProof");
+                var v2 = go.AddComponent<Fas4ChronicleView>();
+                v2.panelSettingsResourceOverride = "Fas4PanelSettings__MISSING__";   // probe seam — bogus resource, real assets untouched
+                _phase = 7;
+                return;
+            }
+
+            if (_phase == 7)   // one frame later: Start has run on the disarm candidate
+            {
+                var go = GameObject.Find("Fas4DisarmProof");
+                var v2 = go != null ? go.GetComponent<Fas4ChronicleView>() : null;
+                bool disarmed = v2 != null && !v2.Ready && !v2.enabled && v2.LastError.Contains("missing");
+                bool imguiStands = _feed.showUI;
+                _n9 = $"disarm branch: bogus PanelSettings resource -> view disarms itself (Ready={(v2 != null && v2.Ready)}, enabled={(v2 != null && v2.enabled)}, error set={(v2 != null && v2.LastError.Length > 0)}), IMGUI v0 STANDS (showUI={imguiStands}) ({(disarmed && imguiStands ? "OK" : "FAIL")})";
+                if (go != null) UnityEngine.Object.Destroy(go);
+                _feed.showUI = false;   // restore: the armed native face owns the surface again
                 _phase = 99;
             }
         }
@@ -242,7 +267,7 @@ namespace Emergence.Editor
             {
                 var sb = new StringBuilder(SessionState.GetString(KeyReport, ""));
                 sb.AppendLine($"## PLAY PHASE (frames={_frames}{(overtime ? ", WATCHDOG cut" : "")})");
-                foreach (var n in new[] { _n1, _n2, _n3, _n4, _n5, _n6, _n7, _n8a, _n8b })
+                foreach (var n in new[] { _n1, _n2, _n3, _n4, _n5, _n6, _n7, _n8a, _n8b, _n9 })
                     sb.AppendLine(n.Length > 0 ? n : "check never reached (FAIL)");
                 sb.AppendLine();
                 sb.AppendLine("caveat: why-expander is a STUB by design (engine causes[] ordered); three scales + LLM prose out of v1 scope.");
@@ -252,7 +277,8 @@ namespace Emergence.Editor
                     && _n5.Contains("(OK)") && _n6.Contains("OK") && !_n6.Contains("FAIL")
                     && _n7.Contains("(OK)")
                     && _n8a.Contains("OK") && !_n8a.Contains("FAIL")
-                    && _n8b.Contains("OK") && !_n8b.Contains("FAIL");
+                    && _n8b.Contains("OK") && !_n8b.Contains("FAIL")
+                    && _n9.Contains("(OK)");
                 sb.AppendLine();
                 sb.AppendLine("verdict: " + (green
                     ? "GREEN — the chronicle has its native face: almanac-styled feed + fullscreen book, honest pause semantics, the why-surface awaits the engine"

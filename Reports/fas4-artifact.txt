@@ -1,14 +1,14 @@
 EMERGENCE — FAS 4 PROBE: the chronicle ARTIFACT (condition B on the full EA window)
-generated 2026-07-22 14:54:42  seed=8919  window=y0..y90
+generated 2026-07-22 20:30:23  seed=8919  window=y0..y90
 the feed witnesses the whole run LIVE; the artifact is its verbatim testimony
 
-## PLAY PHASE (frames=1357923)
+## PLAY PHASE (frames=1362893)
 span: y0..y90, 120 entries witnessed live (OK)
 turning points: 3 ★ (v0 spine: named first child yes, first hut yes, named first death yes) (OK)
 order non-decreasing OK; dropped 0 of capacity 4096 (OK)
 artifact: Reports/chronicle-8919-y090.txt + Reports/chronicle-8919-y090.html, 120 entries each (OK)
 evidence (book @ y90): evidence: OK (end-of-frame backbuffer, nonwhite 100%) -> Reports/fas4-artifact-book.png
-eras witnessed: 1 (spring)
+eras witnessed: 6 (dawn -> stone -> bronze -> iron -> print -> mill)
 
 the retellable spine (every turning point the feed witnessed):
     y1 ★ a first child is born — Liv

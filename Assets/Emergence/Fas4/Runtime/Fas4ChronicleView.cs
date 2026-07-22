@@ -43,6 +43,11 @@ namespace Emergence.Runtime
         static readonly Color ColGold   = new Color32(0xC9, 0xA2, 0x27, 0xFF);
         static readonly Color ColRowTxt = new Color32(0xCD, 0xD7, 0xEA, 0xFF);
 
+        /// <summary>Probe seam (Fas4 gate review 2026-07-22, villkor 2): a non-empty value replaces the
+        /// PanelSettings resource name so the missing-assets DISARM branch can be proven without
+        /// touching the real assets. Empty in production — the shipped path is unchanged.</summary>
+        public string panelSettingsResourceOverride = "";
+
         public bool Ready { get; private set; }
         public bool BookOpen { get; private set; }
         public int FeedRowCount { get; private set; }
@@ -70,10 +75,11 @@ namespace Emergence.Runtime
 
         void Start()
         {
-            var ps = Resources.Load<PanelSettings>(PanelSettingsResource);
+            string resName = string.IsNullOrEmpty(panelSettingsResourceOverride) ? PanelSettingsResource : panelSettingsResourceOverride;
+            var ps = Resources.Load<PanelSettings>(resName);
             if (ps == null)
             {
-                LastError = "PanelSettings resource '" + PanelSettingsResource + "' missing — run Emergence/Fas4/BUILD UI ASSETS; keeping IMGUI v0 panel";
+                LastError = "PanelSettings resource '" + resName + "' missing — run Emergence/Fas4/BUILD UI ASSETS; keeping IMGUI v0 panel";
                 Debug.LogWarning("[Fas4ChronicleView] " + LastError);
                 enabled = false;
                 return;

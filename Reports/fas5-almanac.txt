@@ -1,0 +1,18 @@
+EMERGENCE — FAS 5 PROBE: the Almanac Overview v0 (ANALYZE's first native face)
+generated 2026-07-22 21:41:04
+data source = Fas5MetricsRecorder (consumer #4 on the bus + applied state, read-only)
+
+## PLAY PHASE (frames=16930)
+ready: view READY=True on reused Resources/Fas4PanelSettings, recorder 6 year-records (OK)
+truth: latest pop 6==state 6 @y5==5, births 2==feed 2, deaths 0==feed 0, huts 1==state 1 (OK)
+almanac open: pauses clock OK (was paused=True), tps untouched 24->24 (OK)
+tiles==recorder: pop 6/6 births 2/2 deaths 0/0 huts 1/1 år 5/5 (OK); curve 6 pts to y5 (OK)
+era tile: 'bronze' == WorldEras.Name(2), never the season ('spring') (OK)
+close: prior pause state restored (paused=True, expected True), opener back (OK)
+scrub honesty: J0 -> series trimmed to y0 (1 records, trims 1, suppressed-in-jump 4) (OK)
+disarm branch: bogus resource -> disarms (Ready=False, enabled=False, error set=True), armed view intact=True (OK)
+almanac evidence: OK (end-of-frame backbuffer, nonwhite 100%) -> Reports/fas5-almanac.png
+
+caveat: Overview v0 only — Gini/tech-loss/trade/faith + correlations await the engine metrics export (R2); the Chronicle tab IS the Fas 4 book.
+
+verdict: GREEN — ANALYZE has its first native face: the Overview lives, honest pause + scrub semantics, the pattern-depth awaits the engine

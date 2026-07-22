@@ -234,10 +234,17 @@ namespace Emergence.Editor
             var E = _feed.Entries;
             try
             {
+                // the artifact carries the span truth ITSELF (Fas4 gate review 2026-07-22, villkor 3, same law as the player proof):
+                // the header states the WITNESSED span, never the intended target as if reached
+                int wMaxY = 0; foreach (var e in E) if (e.year > wMaxY) wMaxY = e.year;
+                string spanTruth = wMaxY >= TargetYear
+                    ? $"y0..y{wMaxY} · COMPLETE"
+                    : $"y0..y{wMaxY} of target y{TargetYear} · PARTIAL";
+
                 // ---- txt: the saga, chronological ----
                 var t = new StringBuilder();
                 t.AppendLine("KRÖNIKAN — skriven av ingen, allt hände");
-                t.AppendLine($"seed {Seed} · y0..y{TargetYear} · {E.Count} witnessed entries · exported {DateTime.Now:yyyy-MM-dd HH:mm}");
+                t.AppendLine($"seed {Seed} · {spanTruth} · {E.Count} witnessed entries · exported {DateTime.Now:yyyy-MM-dd HH:mm}");
                 t.AppendLine(new string('-', 72));
                 foreach (var e in E)
                     t.AppendLine($"y{e.year,3} [{e.era}] {(e.salience >= 3 ? "*" : e.salience == 2 ? "." : " ")} {e.text}");
@@ -254,7 +261,7 @@ namespace Emergence.Editor
                  .Append(".e:first-child{border-top:0}.y{color:#c9a227;font-weight:600;width:64px;flex-shrink:0}")
                  .Append(".star{color:#e8eef8;font-weight:600}</style><div class=\"wrap\">")
                  .Append("<h1>Krönikan <span>— seed ").Append(Seed).Append("</span></h1>")
-                 .Append("<div class=\"sub\">skriven av ingen — allt hände · y0..y").Append(TargetYear)
+                 .Append("<div class=\"sub\">skriven av ingen — allt hände · ").Append(spanTruth)
                  .Append(" · ").Append(E.Count).Append(" poster · vittnad live i kroppen</div><div class=\"card\">");
                 foreach (var e in E)
                 {
