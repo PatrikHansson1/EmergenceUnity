@@ -1,10 +1,11 @@
 EMERGENCE — FAS 3 AUDIO PROBE (D-141): the bus speaks (procedural v0)
-generated 2026-07-22 10:05:06
+generated 2026-07-22 11:49:41
 owned audio assets: 3 Vefects fire loops only -> v0 is SYNTHESIZED (wind ambience + chimes), zero purchases
 
-## PLAY PHASE (frames=17358)
+## PLAY PHASE (frames=17162)
 ambience: PLAYING from frame one (OK)
-birth tone: played x1 at applied y0 (OK)
+genesis arrival tone: played x1 at applied y0 — arrival, NOT birth (OK)
+birth tone: played x1 at applied y1, bus first-child y1 (OK)
 milestone chime: played x1 by first-hut year y5 (OK)
 
 caveat: PlayOneShot/isPlaying is the mechanism proof; SPEAKER truth (levels, taste) needs Patrik's ears — logged On Patrik.

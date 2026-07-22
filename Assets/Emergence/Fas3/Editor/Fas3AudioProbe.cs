@@ -32,7 +32,8 @@ namespace Emergence.Editor
         static Fas3Onboarding _onb;
         static Fas3AudioDirector _audio;
         static bool _hutBeat;
-        static string _ambNote = "", _birthNote = "", _hutNote = "";
+        static int _childBusYear = -1;   // gate-review fix: the bus's own first-child year — the tone must match IT
+        static string _ambNote = "", _birthNote = "", _hutNote = "", _arriveNote = "";
 
         static Fas3AudioProbe() { EditorApplication.update += Tick; }
 
@@ -101,8 +102,8 @@ namespace Emergence.Editor
             SessionState.SetString(KeyReport, sb.ToString());
             SessionState.SetInt(KeyPending, 1);
             SessionState.SetFloat(KeyStart, (float)EditorApplication.timeSinceStartup);
-            _frames = 0; _phase = 0; _onb = null; _audio = null; _hutBeat = false;
-            _ambNote = _birthNote = _hutNote = "";
+            _frames = 0; _phase = 0; _onb = null; _audio = null; _hutBeat = false; _childBusYear = -1;
+            _ambNote = _birthNote = _hutNote = _arriveNote = "";
             File.WriteAllText(Done, "RUNNING (entering play mode) " + DateTime.Now.ToString("HH:mm:ss") + "\n");
             EditorApplication.EnterPlaymode();
         }
@@ -110,6 +111,7 @@ namespace Emergence.Editor
         static void OnBusEvent(PresentationEvent e)
         {
             if (e.Type == PresentationEventType.Milestone && e.Data == "the first hut") _hutBeat = true;
+            else if (e.Type == PresentationEventType.AgentActivity && e.Data == "a child is born" && _childBusYear < 0) _childBusYear = e.Year;
         }
 
         static void Drive()
@@ -130,15 +132,22 @@ namespace Emergence.Editor
             if (_ambNote.Length == 0 && _frames > 10)
                 _ambNote = $"ambience: {( _audio.AmbiencePlaying ? "PLAYING from frame one (OK)" : "SILENT (FAIL)")}";
 
-            // first birth beat (y1 in this seed) -> soft tone
+            // genesis arrivals (y0) -> soft tone, counted APART from births (arrival ≠ birth, D-135 honesty)
+            if (_arriveNote.Length == 0 && _audio.ArrivalTonesPlayed > 0)
+                _arriveNote = $"genesis arrival tone: played x{_audio.ArrivalTonesPlayed} at applied y{w.LastAppliedYear} — arrival, NOT birth ({(w.LastAppliedYear == 0 ? "OK" : "FAIL: expected y0")})";
+
+            // first REAL birth -> soft tone; the year must match the bus's own first-child year
             if (_birthNote.Length == 0 && _audio.BirthTonesPlayed > 0)
-                _birthNote = $"birth tone: played x{_audio.BirthTonesPlayed} at applied y{w.LastAppliedYear} (OK)";
+            {
+                bool yearOk = _childBusYear >= 1 && w.LastAppliedYear == _childBusYear;
+                _birthNote = $"birth tone: played x{_audio.BirthTonesPlayed} at applied y{w.LastAppliedYear}, bus first-child y{_childBusYear} ({(yearOk ? "OK" : "FAIL: tone/bus year mismatch")})";
+            }
 
             // first hut milestone -> chime
             if (_hutBeat && _hutNote.Length == 0 && _audio.StingersPlayed > 0)
                 _hutNote = $"milestone chime: played x{_audio.StingersPlayed} by first-hut year y{w.LastAppliedYear} (OK)";
 
-            if (_ambNote.Length > 0 && _birthNote.Length > 0 && _hutNote.Length > 0) _phase = 99;
+            if (_ambNote.Length > 0 && _birthNote.Length > 0 && _hutNote.Length > 0 && _arriveNote.Length > 0) _phase = 99;
             if (w.LastAppliedYear >= 10) _phase = 99;   // safety horizon — report what came
         }
 
@@ -150,11 +159,12 @@ namespace Emergence.Editor
                 var sb = new StringBuilder(SessionState.GetString(KeyReport, ""));
                 sb.AppendLine($"## PLAY PHASE (frames={_frames}{(overtime ? ", WATCHDOG cut" : "")})");
                 sb.AppendLine(_ambNote.Length > 0 ? _ambNote : "ambience: never evaluated (FAIL)");
+                sb.AppendLine(_arriveNote.Length > 0 ? _arriveNote : "genesis arrival tone: NEVER PLAYED (FAIL)");
                 sb.AppendLine(_birthNote.Length > 0 ? _birthNote : "birth tone: NEVER PLAYED (FAIL)");
                 sb.AppendLine(_hutNote.Length > 0 ? _hutNote : "milestone chime: NEVER PLAYED (FAIL)");
                 sb.AppendLine();
                 sb.AppendLine("caveat: PlayOneShot/isPlaying is the mechanism proof; SPEAKER truth (levels, taste) needs Patrik's ears — logged On Patrik.");
-                bool green = _ambNote.Contains("OK") && _birthNote.Contains("OK") && _hutNote.Contains("OK") && !overtime;
+                bool green = _ambNote.Contains("OK") && _birthNote.Contains("(OK)") && _hutNote.Contains("OK") && _arriveNote.Contains("(OK)") && !overtime;
                 sb.AppendLine();
                 sb.AppendLine("verdict: " + (green ? "GREEN — the Fas 0 bus finally speaks: wind under the wilderness, a tone for a birth, a chime for the first hut"
                                                    : "CHECK — see notes above"));

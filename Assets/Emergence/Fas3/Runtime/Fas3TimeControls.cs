@@ -120,12 +120,25 @@ namespace Emergence.Runtime
                 float shown = _scrubShown >= 0f ? _scrubShown : c.PresentationYear;
                 float slid = GUI.HorizontalSlider(new Rect(r.x + 10, r.y + 62, w - 66, 16), shown, 0f, d.Year);
                 GUI.Label(new Rect(r.x + w - 52, r.y + 58, 46, 20), $"y{Mathf.RoundToInt(slid)}/{d.Year}");
-                if (Mathf.Abs(slid - shown) > 0.001f) { _scrubShown = slid; _scrubPending = Mathf.RoundToInt(slid); }
-                if (_scrubPending >= 0 && GUIUtility.hotControl == 0)   // released — one jump, not one per dragged year
-                {
-                    int y = _scrubPending; _scrubPending = -1; _scrubShown = -1f;
-                    if (y != c.PresentationYear && c.JumpToYear(y)) ScrubJumps++;   // y0 = genesis; the grid holds y000 in bufferMode
-                }
+                ScrubStep(slid, GUIUtility.hotControl != 0);
+            }
+        }
+
+        /// <summary>
+        /// The slider's whole semantic, extracted so a probe can drive the SAME code path OnGUI uses
+        /// (gate-review fix 2026-07-22: "drag -> release -> ONE jump" must be proven, not narrated).
+        /// held=true while the mouse drags (values accumulate, NO jump); held=false on release
+        /// (exactly one JumpToYear for the final value). y0 = genesis; the grid holds y000 in bufferMode.
+        /// </summary>
+        public void ScrubStep(float slid, bool held)
+        {
+            var c = Clock(); if (c == null) return;
+            float shown = _scrubShown >= 0f ? _scrubShown : c.PresentationYear;
+            if (held && Mathf.Abs(slid - shown) > 0.001f) { _scrubShown = slid; _scrubPending = Mathf.RoundToInt(slid); }
+            if (!held && _scrubPending >= 0)   // released — one jump, not one per dragged year
+            {
+                int y = _scrubPending; _scrubPending = -1; _scrubShown = -1f;
+                if (y != c.PresentationYear && c.JumpToYear(y)) ScrubJumps++;
             }
         }
     }

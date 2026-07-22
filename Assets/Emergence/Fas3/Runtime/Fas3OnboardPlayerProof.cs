@@ -8,6 +8,7 @@
 // exe, saves an evidence frame (magenta-scanned, D-131 detector), quits.
 // D-078 r4: observes and scrubs through presentation APIs only; the sim is never touched.
 using System;
+using System.Collections;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -23,14 +24,20 @@ namespace Emergence.Runtime
         Fas3Onboarding _onb;
         Fas3GazeDirector _gaze;
         int _phase;
-        bool _hutBeat, _childBeat;
+        bool _hutBeat, _childBeat, _genesisShot;
         int _hutYear = -1, _childYear = -1;
         string _genesis = "", _hutNote = "", _childNote = "", _scrub = "";
+        // gate-review additions (2026-07-22): slider semantics, HUD-in-backbuffer, sustained 1× pacing
+        string _sliderNote = "", _hudNote = "", _paceNote = "";
+        float _hudAskedAt = -1f, _paceStartT = -1f, _maxTps = -1f;
+        int _paceTargetYear = -1, _paceViolations;
         int _magenta = -1, _magentaTone = -1;
         float _hutGazeAt = -1f, _childGazeAt = -1f;
 
         string OutPath => Path.Combine(Application.dataPath, "..", "onboard-player.txt");
         string PngPath => Path.Combine(Application.dataPath, "..", "onboard-player-firsthut.png");
+        string PngGenesisPath => Path.Combine(Application.dataPath, "..", "onboard-player-genesis.png");
+        string PngHudPath => Path.Combine(Application.dataPath, "..", "onboard-player-hud.png");
 
         void OnEnable() { PresentationEventBus.OnEvent += OnBus; }
         void OnDisable() { PresentationEventBus.OnEvent -= OnBus; }
@@ -63,6 +70,9 @@ namespace Emergence.Runtime
                 bool ok = w.LastAppliedYear == 0 && w.AgentCount == expectedGenesisSouls && w.HutCount == 0;
                 _genesis = $"genesis={(ok ? "OK" : "FAIL")}(y{w.LastAppliedYear},souls{w.AgentCount}/{expectedGenesisSouls},huts{w.HutCount})";
             }
+            // gate-review fix: the OPENING FRAME must exist rendered by the PLAYER, not only the editor
+            if (!_genesisShot && _genesis.Length > 0 && w.LastAppliedYear == 0)
+            { _genesisShot = true; CaptureFrame(PngGenesisPath); }
 
             float t = Time.realtimeSinceStartup;
             if (_hutBeat && _hutNote.Length == 0)
@@ -75,7 +85,7 @@ namespace Emergence.Runtime
                         var cam = Camera.main;
                         float ang = cam != null ? Vector3.Angle(cam.transform.forward, (_gaze.Target + Vector3.up * 0.8f) - cam.transform.position) : 99f;
                         _hutNote = $"firstHut={(ang < 15f ? "OK" : "FAIL")}(y{_hutYear},gaze{ang.ToString("F1", CultureInfo.InvariantCulture)}deg)";
-                        CaptureEvidence();
+                        CaptureFrame(PngPath);
                     }
                 }
                 else if (w.LastAppliedYear >= _hutYear + 2)
@@ -99,19 +109,90 @@ namespace Emergence.Runtime
 
             if (_phase == 1 && _hutNote.Length > 0 && _childNote.Length > 0)
             {
-                // the grid, exercised in player: down to GENESIS and back to the frontier
+                // (i) SLIDER SEMANTICS (gate-review fix): drive the SAME ScrubStep path OnGUI uses —
+                // three drag updates, one release, must yield exactly ONE jump (never one per year).
                 int frontier = w.LastAppliedYear;
                 int hutsAtFrontier = w.HutCount;
+                var tc = _onb.Controls;
+                if (tc != null && frontier >= 1)
+                {
+                    int before = tc.ScrubJumps;
+                    int target = Mathf.Max(0, frontier - 1);
+                    tc.ScrubStep(frontier * 0.4f, true);
+                    tc.ScrubStep(frontier * 0.7f, true);
+                    tc.ScrubStep(target, true);
+                    tc.ScrubStep(target, false);
+                    int jumps = tc.ScrubJumps - before;
+                    bool sOk = jumps == 1 && w.LastAppliedYear == target;
+                    _sliderNote = $"slider={(sOk ? "OK" : "FAIL")}(drag x3 -> release -> {jumps} jump, landed y{w.LastAppliedYear})";
+                }
+                else _sliderNote = "slider=FAIL(no Fas3TimeControls in scene)";
+
+                // (ii) HUD IN THE BACKBUFFER (gate-review fix): end-of-frame grab includes IMGUI
+                _hudAskedAt = t;
+                StartCoroutine(CaptureHud());
+
+                // (iii) the grid, exercised in player: down to GENESIS and back to the frontier
                 bool j0 = c.JumpToYear(0);
                 bool j0Ok = j0 && w.LastAppliedYear == 0 && w.HutCount == 0 && w.AgentCount == expectedGenesisSouls;
                 bool jf = c.JumpToYear(frontier);
                 bool jfOk = jf && w.LastAppliedYear == frontier && w.HutCount == hutsAtFrontier;
                 _scrub = $"scrub=J0:{(j0Ok ? "OK" : "FAIL")}(genesis re-entered),Jf:{(jfOk ? "OK" : "FAIL")}(y{frontier},huts{w.HutCount})";
-                Finish("");
+
+                // (iv) SUSTAINED 1× (gate-review fix): run past the buffer horizon — the producer
+                // (~19 t/s) is slower than 1× (24 t/s), so the clock MUST clamp, never overrun truth.
+                _paceTargetYear = frontier + 2;
+                _paceStartT = t; _maxTps = -1f; _paceViolations = 0;
+                if (tc != null) tc.SetSpeed(1);
+                _phase = 2;
+                return;
+            }
+
+            if (_phase == 2)
+            {
+                var tc = _onb.Controls;
+                if (c.PresentationYear > d.Year) _paceViolations++;                    // presentation may NEVER outrun the producer
+                if (tc != null && t - _paceStartT > 1.5f) _maxTps = Mathf.Max(_maxTps, tc.EffectiveTps);   // skip the jump-polluted window
+                if (w.LastAppliedYear >= _paceTargetYear)
+                {
+                    bool pOk = _maxTps > 0f && _paceViolations == 0;
+                    _paceNote = $"pacing={(pOk ? "OK" : "FAIL")}(sustained 1x {t - _paceStartT:F0}s to y{w.LastAppliedYear}, measured max {_maxTps.ToString("F1", CultureInfo.InvariantCulture)} t/s > 0, presentation<=producer violations={_paceViolations})";
+                    if (_hudNote.Length == 0) _hudNote = t - _hudAskedAt > 20f ? "FAIL(no grab within 20s)" : "";   // give the coroutine a beat
+                    if (_hudNote.Length > 0) Finish("");
+                }
             }
         }
 
-        void CaptureEvidence()
+        IEnumerator CaptureHud()
+        {
+            yield return new WaitForEndOfFrame();   // IMGUI has drawn by now — the grab sees the HUD
+            GrabHud();
+        }
+
+        void GrabHud()
+        {
+            try
+            {
+                var tex = ScreenCapture.CaptureScreenshotAsTexture();
+                if (tex == null) { _hudNote = "FAIL(null grab)"; return; }
+                var px = tex.GetPixels32();
+                int nonWhite = 0, dark = 0;
+                foreach (var p in px)
+                {
+                    if (!(p.r > 245 && p.g > 245 && p.b > 245)) nonWhite++;
+                    if (p.r < 90 && p.g < 90 && p.b < 90) dark++;
+                }
+                float nw = nonWhite / (float)px.Length;
+                // blank-guard: the D-137/D-134 "HUD evidence" was a solid white sheet — never again.
+                bool ok = nw > 0.10f && dark > px.Length / 1000;
+                File.WriteAllBytes(PngHudPath, tex.EncodeToPNG());
+                Destroy(tex);
+                _hudNote = $"{(ok ? "OK" : "FAIL(blank)")}(backbuffer incl. IMGUI, nonwhite {(nw * 100f).ToString("F0", CultureInfo.InvariantCulture)}%)";
+            }
+            catch (Exception e) { _hudNote = "FAIL(" + e.Message + ")"; }
+        }
+
+        void CaptureFrame(string path)
         {
             try
             {
@@ -131,8 +212,8 @@ namespace Emergence.Runtime
                     if (p.r > 220 && p.b > 220 && p.g < 80) mag++;
                     else if (Math.Abs(p.r - p.b) < 15 && p.r > 170 && p.g < p.r - 90) tone++;
                 }
-                _magenta = mag; _magentaTone = tone;
-                File.WriteAllBytes(PngPath, tex.EncodeToPNG());
+                _magenta = Math.Max(_magenta, mag); _magentaTone = Math.Max(_magentaTone, tone);   // worst frame of ALL captures
+                File.WriteAllBytes(path, tex.EncodeToPNG());
                 Destroy(tex); Destroy(rt);
             }
             catch { }
@@ -145,8 +226,10 @@ namespace Emergence.Runtime
             string order = _onb != null && _onb.Clock != null ? _onb.Clock.LastAppliedOrder : "";
             bool orderOk = order.StartsWith("0,1,2");
             sb.Append(string.Format(CultureInfo.InvariantCulture,
-                "onboard {0} {1} {2} {3} order=[{4}] orderOk={5} magenta={6}/{7} {8}\n",
-                _genesis, _hutNote, _childNote, _scrub, order, orderOk ? "OK" : "FAIL",
+                "onboard {0} {1} {2} {3} {4} {5} hud={6} order=[{7}] orderOk={8} magenta={9}/{10} {11}\n",
+                _genesis, _hutNote, _childNote, _sliderNote, _scrub, _paceNote,
+                _hudNote.Length > 0 ? _hudNote : "NEVER-GRABBED",
+                order, orderOk ? "OK" : "FAIL",
                 _magenta, _magentaTone, error.Length > 0 ? "ERROR=" + error : "COMPLETE"));
             try { File.WriteAllText(OutPath, sb.ToString()); } catch { }
             Application.Quit();

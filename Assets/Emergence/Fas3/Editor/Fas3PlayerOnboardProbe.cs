@@ -35,6 +35,8 @@ namespace Emergence.Editor
         static string ExePath   => Path.Combine(OutDir, "EmergenceOnboard.exe");
         static string PlayerTxt => Path.Combine(OutDir, "onboard-player.txt");
         static string PlayerPng => Path.Combine(OutDir, "onboard-player-firsthut.png");
+        static string PlayerPngGenesis => Path.Combine(OutDir, "onboard-player-genesis.png");
+        static string PlayerPngHud => Path.Combine(OutDir, "onboard-player-hud.png");
         const string Report     = "Reports/fas3-player-onboard.txt";
         const string Evidence   = @"C:\Users\patri\Dropbox\Emergence\45-UNITY\evidence\fas3";
         const string KeyWaiting = "emg.fas3ponb.waiting", KeyStart = "emg.fas3ponb.start", KeyReport = "emg.fas3ponb.report";
@@ -108,13 +110,21 @@ namespace Emergence.Editor
                 options = BuildOptions.None,
             });
             var s = report.summary;
-            sb.AppendLine($"build: {s.result}, errors={s.totalErrors}, sizeMB={s.totalSize / (1024f * 1024f):F0}, secs={(DateTime.Now - t0).TotalSeconds:F0}");
+            // gate-review fixes (2026-07-22): bind the build to the commit and prove the exe was touched;
+            // totalSize is the whole build DIR (the exe stub itself is small — say so, don't imply otherwise)
+            sb.AppendLine($"build: {s.result}, errors={s.totalErrors}, buildDirMB={s.totalSize / (1024f * 1024f):F0} (exe stub {(File.Exists(ExePath) ? new FileInfo(ExePath).Length / 1024 : -1)} KB), secs={(DateTime.Now - t0).TotalSeconds:F0}");
+            // NOTE: the exe STUB is a generic launcher an incremental build never rewrites — the honest
+            // freshness witness is the game assembly the build DOES rewrite (reviewer objection, D-142).
+            string asmPath = Path.Combine(OutDir, "EmergenceOnboard_Data", "Managed", "Assembly-CSharp.dll");
+            sb.AppendLine($"traceability: commit={GitSha()}, Assembly-CSharp.dll mtime={(File.Exists(asmPath) ? File.GetLastWriteTime(asmPath).ToString("yyyy-MM-dd HH:mm:ss") : "MISSING")} (exe stub is launcher-only, not rewritten incrementally)");
             RestoreScene();
             if (s.result != UnityEditor.Build.Reporting.BuildResult.Succeeded)
             { Fail("player build failed: " + s.result); return; }
 
             try { if (File.Exists(PlayerTxt)) File.Delete(PlayerTxt); } catch {}
             try { if (File.Exists(PlayerPng)) File.Delete(PlayerPng); } catch {}
+            try { if (File.Exists(PlayerPngGenesis)) File.Delete(PlayerPngGenesis); } catch {}
+            try { if (File.Exists(PlayerPngHud)) File.Delete(PlayerPngHud); } catch {}
             Process.Start(new ProcessStartInfo(ExePath, "-screen-fullscreen 0 -screen-width 1600 -screen-height 900")
             { UseShellExecute = true, WorkingDirectory = OutDir });
             SessionState.SetString(KeyReport, sb.ToString());
@@ -138,22 +148,29 @@ namespace Emergence.Editor
                 sb.AppendLine("## PLAYER RESULT");
                 sb.AppendLine(player.Trim());
                 sb.AppendLine();
-                string evNote = "no evidence png from player";
+                string evNote;
                 try
                 {
-                    if (File.Exists(PlayerPng))
+                    Directory.CreateDirectory(Evidence);
+                    int copied = 0;
+                    var pairs = new (string src, string dst)[]
                     {
-                        Directory.CreateDirectory(Evidence);
-                        File.Copy(PlayerPng, Path.Combine(Evidence, "fas3-player-onboard-firsthut.png"), true);
-                        evNote = "evidence: 45-UNITY/evidence/fas3/fas3-player-onboard-firsthut.png (rendered IN the player)";
-                    }
+                        (PlayerPng, "fas3-player-onboard-firsthut.png"),
+                        (PlayerPngGenesis, "fas3-player-onboard-genesis.png"),
+                        (PlayerPngHud, "fas3-player-onboard-hud.png"),
+                    };
+                    foreach (var (src, dst) in pairs)
+                        if (File.Exists(src)) { File.Copy(src, Path.Combine(Evidence, dst), true); copied++; }
+                    evNote = $"evidence: {copied}/3 pngs -> 45-UNITY/evidence/fas3/fas3-player-onboard-{{firsthut,genesis,hud}}.png (rendered IN the player)";
                 }
                 catch (Exception e) { evNote = "evidence copy failed: " + e.Message; }
                 sb.AppendLine(evNote);
 
                 bool green = player.Contains("genesis=OK") && player.Contains("firstHut=OK")
                           && player.Contains("firstChild=OK") && player.Contains("J0:OK") && player.Contains("Jf:OK")
-                          && player.Contains("orderOk=OK") && player.Contains("magenta=0/0") && player.Contains("COMPLETE");
+                          && player.Contains("slider=OK") && player.Contains("pacing=OK") && player.Contains("hud=OK")
+                          && player.Contains("orderOk=OK") && player.Contains("magenta=0/0") && player.Contains("COMPLETE")
+                          && evNote.Contains("3/3");
                 sb.AppendLine();
                 sb.AppendLine("verdict: " + (green ? "GREEN — the game's opening runs in a real player: wilderness, the first hut under the eye, the grid scrubs to genesis and back"
                                                    : "CHECK — see player result above"));
@@ -162,6 +179,23 @@ namespace Emergence.Editor
             }
             catch (Exception e) { Fail("poll: " + e.Message); }
             finally { SessionState.SetInt(KeyWaiting, 0); }
+        }
+
+        static string GitSha()
+        {
+            try
+            {
+                string root = Path.GetDirectoryName(Application.dataPath);
+                string head = File.ReadAllText(Path.Combine(root, ".git", "HEAD")).Trim();
+                if (head.StartsWith("ref: "))
+                {
+                    string refPath = Path.Combine(root, ".git", head.Substring(5).Replace('/', Path.DirectorySeparatorChar));
+                    if (File.Exists(refPath)) return File.ReadAllText(refPath).Trim().Substring(0, 8) + " (" + head.Substring(5) + ")";
+                    return "unresolved-ref " + head.Substring(5);
+                }
+                return head.Substring(0, 8);
+            }
+            catch (Exception e) { return "unknown (" + e.Message + ")"; }
         }
 
         static void RestoreScene()

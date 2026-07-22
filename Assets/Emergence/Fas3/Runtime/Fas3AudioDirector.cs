@@ -23,7 +23,8 @@ namespace Emergence.Runtime
 
         public bool AmbiencePlaying => _amb != null && _amb.isPlaying;
         public int StingersPlayed { get; private set; }
-        public int BirthTonesPlayed { get; private set; }
+        public int BirthTonesPlayed { get; private set; }     // "a child is born" ONLY — genesis honesty (D-135/D-140)
+        public int ArrivalTonesPlayed { get; private set; }   // "a soul arrives" (genesis) — same clip, separate truth
 
         AudioSource _amb, _voice;
         AudioClip _wind, _chime, _soft;
@@ -59,8 +60,11 @@ namespace Emergence.Runtime
             }
             else if (e.Type == PresentationEventType.AgentActivity && (e.Data == "a child is born" || e.Data == "a soul arrives"))
             {
+                // Gate-review fix (2026-07-22): an ARRIVING genesis soul is not a BIRTH — count them
+                // apart so the report can never call a y0 arrival a "birth tone" again. Same soft clip.
                 if (now - _lastStinger < minStingerGap) return;
-                _voice.PlayOneShot(_soft, stingerVolume * 0.7f); BirthTonesPlayed++; _lastStinger = now;
+                _voice.PlayOneShot(_soft, stingerVolume * 0.7f); _lastStinger = now;
+                if (e.Data == "a child is born") BirthTonesPlayed++; else ArrivalTonesPlayed++;
             }
         }
 

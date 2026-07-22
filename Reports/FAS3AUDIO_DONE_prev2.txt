@@ -1,0 +1,2 @@
+DONE 10:06:06 verdict=GREEN stingers=1 births=3
+see Reports/fas3-audio.txt

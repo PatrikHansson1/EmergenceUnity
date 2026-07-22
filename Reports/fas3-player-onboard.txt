@@ -1,12 +1,13 @@
 EMERGENCE — FAS 3 PLAYER ONBOARD (D-140): the opening in a real player build
-generated 2026-07-22 10:08:31
+generated 2026-07-22 11:56:47
 
 proof scene: genesis wilderness (souls=4) + Fas3Onboarding + observer
-build: Succeeded, errors=0, sizeMB=923, secs=19
+build: Succeeded, errors=0, buildDirMB=923 (exe stub 652 KB), secs=15
+traceability: commit=4d11080a (refs/heads/audition/free-assets-2026-07-19), Assembly-CSharp.dll mtime=2026-07-22 11:51:29 (exe stub is launcher-only, not rewritten incrementally)
 
 ## PLAYER RESULT
-onboard genesis=OK(y0,souls4/4,huts0) firstHut=OK(y5,gaze4.7deg) firstChild=OK(y1,gaze3.9deg) scrub=J0:OK(genesis re-entered),Jf:OK(y5,huts1) order=[0,1,2,3,4,5,J0,J5] orderOk=OK magenta=0/0 COMPLETE
+onboard genesis=OK(y0,souls4/4,huts0) firstHut=OK(y5,gaze4.8deg) firstChild=OK(y1,gaze3.9deg) slider=OK(drag x3 -> release -> 1 jump, landed y4) scrub=J0:OK(genesis re-entered),Jf:OK(y5,huts1) pacing=OK(sustained 1x 21s to y7, measured max 24.0 t/s > 0, presentation<=producer violations=0) hud=OK(backbuffer incl. IMGUI, nonwhite 100%) order=[0,1,2,3,4,5,J4,J0,J5,6,7] orderOk=OK magenta=0/0 COMPLETE
 
-evidence: 45-UNITY/evidence/fas3/fas3-player-onboard-firsthut.png (rendered IN the player)
+evidence: 3/3 pngs -> 45-UNITY/evidence/fas3/fas3-player-onboard-{firsthut,genesis,hud}.png (rendered IN the player)
 
 verdict: GREEN — the game's opening runs in a real player: wilderness, the first hut under the eye, the grid scrubs to genesis and back
