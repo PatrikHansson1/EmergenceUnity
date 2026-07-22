@@ -54,6 +54,12 @@ namespace Emergence.Runtime
             if (FindAnyObjectByType<Fas6EraAmbience>() == null)
                 new GameObject("Fas6EraAmbience").AddComponent<Fas6EraAmbience>();
 
+            // the state ear (Fas 6 ink. 2): activity bed + fire point sources from the APPLIED
+            // state — intensity is a pure function of state (fires/huts, season-tinted); hash-based
+            // variation only; reads state, never the sim
+            if (FindAnyObjectByType<Fas6StateAmbience>() == null)
+                new GameObject("Fas6StateAmbience").AddComponent<Fas6StateAmbience>();
+
             // the story (Fas 4 v0): consumer #3 — the chronicle feed, READ's first organ
             if (FindAnyObjectByType<Fas4ChronicleFeed>() == null)
                 new GameObject("Fas4ChronicleFeed").AddComponent<Fas4ChronicleFeed>();

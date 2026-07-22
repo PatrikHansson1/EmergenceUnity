@@ -1,0 +1,19 @@
+EMERGENCE — FAS 6 PROBE: the state ear — pure intensity law + live village rise + fire points
+generated 2026-07-23 01:28:35
+data source = applied WorldState fires/huts/season (read-only; presentation follows applied state — the Almanac's law)
+
+## PLAY PHASE (frames=16719)
+determinism: activity x2 identical + crackle x2 identical=True, activity!=crackle=True (OK)
+pure law: null=0 empty=0 2f+3h=0,960(want 0,960) winter=0,720(want 0,720) (OK)
+genesis silence: fires=0 huts=0 intensityTarget=0 points=0 @y0 (OK)
+village rise: intensity 0,120==pure(S)=True, fires=0 huts=1 points 0==0=True, firstPointPos match=True, bed playing+rising=True @y5 (OK)
+pause honesty: intensity frozen 0,120==0,120 + points frozen 0==0 over 60 frames=True, bed still sounding=True, tps untouched 24->24 (OK)
+fixture 4242-y120-dusk (riktig motor-export, samma Apply-väg): fires=1 season=winter intensity 0,750==pure(S) 0,750 (winter hush end-to-end)=True, points=1>0 ok=True, firstPointPos match=True (OK)
+resume: tps 24==24 (OK) — the ambience never touches the clock
+
+caveat: v1 textures are procedural stand-ins (the purchase-free lane) — real ambience assets swap in on the
+replace-path when the Fas 6 audio purchase lands; speaker truth (levels/taste) = the human ear pass (Patrik).
+fixture honesty: the fire-point/winter branch is proven with world-4242-y120-dusk.json — a REAL engine export
+through the SAME Fas3WorldRuntime.Apply path (D-131/D-152 school); fires are transient in the seed-8919 window.
+
+verdict: GREEN — the ear follows the state: silent wilderness, audible village, honest pause, the clock untouched

@@ -1,2 +1,2 @@
-DONE 01:05:28 verdict=GREEN stingers=1 births=2
+DONE 01:33:14 verdict=GREEN stingers=1 births=2
 see Reports/fas3-audio.txt
