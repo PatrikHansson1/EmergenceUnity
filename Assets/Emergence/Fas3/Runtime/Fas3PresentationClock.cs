@@ -50,7 +50,8 @@ namespace Emergence.Runtime
             int yearTicks = Mathf.Max(1, d.YearTicks);
             while (true)
             {
-                int nextYear = Math.Max(w.LastAppliedYear, 0) + 1;
+                // first apply is GENESIS (year 0) when the driver queued it (bufferMode) — from then on, +1 per year
+                int nextYear = w.LastAppliedYear < 0 ? 0 : w.LastAppliedYear + 1;
                 if ((double)nextYear * yearTicks > PresentationTick) break;   // its boundary isn't reached yet
                 WorldState S = null;
                 var qj = d.TakeYearSnapshot();

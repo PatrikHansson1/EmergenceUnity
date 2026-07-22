@@ -20,8 +20,11 @@ namespace Emergence.Runtime
         public float holdSeconds = 3.5f;
         public float cooldownSeconds = 6f;
         public float approach = 3.0f;       // exponential settle rate
-        public float viewDistance = 11f;    // documentary framing: close, low, slightly above
+        public float viewDistance = 11f;    // documentary framing: close, low, slightly above (soul-sized targets)
         public float viewHeight = 5.5f;
+        // D-139 retake lesson (the inc-6 first-hut frame was all roof): a HUT is ~4x a soul — frame it wider
+        public float hutViewDistance = 19f;
+        public float hutViewHeight = 7.5f;
 
         public bool HasTarget { get; private set; }
         public Vector3 Target { get; private set; }
@@ -36,30 +39,34 @@ namespace Emergence.Runtime
 
         void OnBusEvent(PresentationEvent e)
         {
-            if (Time.unscaledTime < _cooldownUntil) return;
+            // D-139 (onboarding): a hut being RAISED always takes the eye — it bypasses the cooldown.
+            // Births happen every year; a hut is rare and canonical ("byn föds"). Without priority, a
+            // birth in the same/previous year could hold the cooldown exactly when the first hut rises.
+            bool hutPriority = e.Type == PresentationEventType.AssetSpawned && e.Data.StartsWith("hut-raised");
+            if (!hutPriority && Time.unscaledTime < _cooldownUntil) return;
 
             // (Milestone "the first hut" carries no coords — the paired AssetSpawned right after does)
-            if (e.Type == PresentationEventType.AssetSpawned && e.Data.StartsWith("hut-raised"))
+            if (hutPriority)
             {
-                if (TryParseXZ(e.Data, out var p)) Aim(Grounded(p), "a hut is raised (" + e.Id + ")");
+                if (TryParseXZ(e.Data, out var p)) Aim(Grounded(p), "a hut is raised (" + e.Id + ")", hutViewDistance, hutViewHeight);
             }
             else if (e.Type == PresentationEventType.AgentActivity &&
                      (e.Data == "a child is born" || e.Data == "a soul arrives"))
             {
                 var go = FindAgent(e.Id);
-                if (go != null) Aim(go.transform.position, e.Data + " (" + e.Id + ")");
+                if (go != null) Aim(go.transform.position, e.Data + " (" + e.Id + ")", viewDistance, viewHeight);
             }
         }
 
-        void Aim(Vector3 worldPos, string label)
+        void Aim(Vector3 worldPos, string label, float dist, float height)
         {
             Target = worldPos; TargetLabel = label; HasTarget = true; GazeCount++;
             _until = Time.unscaledTime + holdSeconds;
             _cooldownUntil = _until + cooldownSeconds;
-            // keep the camera's current compass direction; come down to eye height at viewDistance
+            // keep the camera's current compass direction; come down to eye height at the target-sized distance
             var back = transform.position - worldPos; back.y = 0f;
             if (back.sqrMagnitude < 0.01f) back = Vector3.back;
-            _wantPos = Grounded(worldPos + back.normalized * viewDistance) + Vector3.up * viewHeight;
+            _wantPos = Grounded(worldPos + back.normalized * dist) + Vector3.up * height;
         }
 
         void LateUpdate()

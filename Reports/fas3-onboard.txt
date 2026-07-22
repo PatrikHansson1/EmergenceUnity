@@ -1,0 +1,15 @@
+EMERGENCE — FAS 3 ONBOARDING PROBE (D-139): the game's actual start, observed
+generated 2026-07-22 09:32:25
+
+genesis: souls=4, huts=0, honest wilderness=YES
+start scene saved: Assets/Emergence/Scenes/OnboardingScene.unity (gitignored, generated — genesis wilderness + Fas3Onboarding)
+## PLAY PHASE (frames=16175) — the scene composed ITSELF; the probe only watched
+genesis: applied y0 at t=6,7s, souls 4==4, huts 0==0 -> TRUE START (OK)
+first hut: y5, gaze "a hut is raised (hut:45:36)" angle 4,7° -> TAKEN (OK)
+first child: y1, gaze "a child is born (agent-5)" angle 3,9° -> TAKEN (OK)
+unbroken: order [0,1,2,3,4,5] ascending from GENESIS (OK); paused ever=False (must be False); one scene, no menu
+HUD honesty: measured 0,0 t/s presentation vs producer flat-out (~19) — presentation never outruns truth; buffer +1y
+
+magenta: classic=0 tonemapped=0 (worst of genesis + first-hut + village frames)   evidence: 45-UNITY/evidence/fas3/fas3-onboard-*.png
+
+verdict: GREEN — the player lands in the body: wilderness, then the first hut, then the first child — one unbroken hour begins

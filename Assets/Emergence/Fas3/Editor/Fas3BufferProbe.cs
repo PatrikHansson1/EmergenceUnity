@@ -193,7 +193,8 @@ namespace Emergence.Editor
                     if (_driver.Finished && _world.LastAppliedYear >= TargetYear)
                     {
                         string order = _clock.LastAppliedOrder;
-                        bool inOrder = order.StartsWith("1,2,3,4,5,6");
+                        // genesis-first (D-138): bufferMode queues y0 as the first snapshot
+                        bool inOrder = order.StartsWith("0,1,2,3,4,5,6") || order.StartsWith("1,2,3,4,5,6");
                         bool hutsOk = _world.HutCount == _hutsExpected;
                         _orderNote = $"order: applied [{order}] -> {(inOrder ? "STRICT 1..6 (OK)" : "OUT OF ORDER (FAIL)")}; live huts {_world.HutCount} == y6 canon {_hutsExpected} -> {(hutsOk ? "MATCH (OK)" : "MISMATCH (FAIL)")}";
                         if (!_evidenceDone) { CaptureEvidence("fas3-buffer-y6"); _evidenceDone = true; }

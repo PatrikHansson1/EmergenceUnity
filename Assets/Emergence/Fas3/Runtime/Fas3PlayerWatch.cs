@@ -149,7 +149,8 @@ namespace Emergence.Runtime
             var sb = new StringBuilder();
             bool hutsOk = expectedFinalHuts < 0 || _world.HutCount == expectedFinalHuts;
             string order = _clock != null ? _clock.LastAppliedOrder : "";
-            bool orderOk = order.StartsWith("1,2,3,4,5,6");
+            // genesis-first (D-138): bufferMode queues y0 as the first snapshot
+            bool orderOk = order.StartsWith("0,1,2,3,4,5,6") || order.StartsWith("1,2,3,4,5,6");
             sb.Append(string.Format(CultureInfo.InvariantCulture,
                 "watch huts={0} expected={1} hutsOk={2} order=[{3}] orderOk={4} {5} {6} agents={7} magenta={8}/{9} year={10} tick={11} {12}\n",
                 _world != null ? _world.HutCount : -1, expectedFinalHuts, hutsOk ? "OK" : "FAIL",

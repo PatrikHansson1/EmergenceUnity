@@ -1,0 +1,2 @@
+DONE 09:29:26 verdict=GREEN hutBeat=True@y5 childBeat=True@y1 magenta=0/0
+see Reports/fas3-onboard.txt

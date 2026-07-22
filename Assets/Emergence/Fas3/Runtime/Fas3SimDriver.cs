@@ -108,6 +108,20 @@ dna:''+E.computeDNA(S)})})()";
                 eng.Execute($"var __seed={seed}; var __S=Emergence.createWorld({seed}); __S.silent=true;");
                 _yearTicks = (int)eng.Evaluate("Emergence.YEAR").AsNumber();
 
+                // D-138/onboarding: in bufferMode the GENESIS state (tick 0, year 0) is a first-class
+                // snapshot — enqueued and checkpointed so the presentation can apply the world's
+                // truth from frame one (the cold start owns the first beat; no backdrop cheat).
+                if (bufferMode)
+                {
+                    string json0 = eng.Evaluate(ExportJs).AsString();
+                    lock (_lock) _queue.Enqueue(json0);
+                    if (_checkpointDir.Length > 0)
+                    {
+                        try { File.WriteAllText(Path.Combine(_checkpointDir, $"seq-{seed}-y000.json"), json0); }
+                        catch (Exception e) { UnityEngine.Debug.LogWarning("[Fas3SimDriver] genesis checkpoint: " + e.Message); }
+                    }
+                }
+
                 var sw = Stopwatch.StartNew();
                 double budget = 0, last = 0;
                 while (!_stop)
