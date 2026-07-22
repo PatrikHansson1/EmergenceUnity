@@ -70,7 +70,7 @@ namespace Emergence.Runtime
                 _agents.Remove(id);
                 d.died++;
                 PresentationEventBus.Publish(new PresentationEvent(
-                    _tick, S.years, S.season, PresentationEventType.AgentActivity, "agent-" + id, -1, "a soul departs"));
+                    _tick, S.years, WorldEras.Name(S.era), PresentationEventType.AgentActivity, "agent-" + id, -1, "a soul departs"));
             }
 
             // 2) births + updates
@@ -88,7 +88,7 @@ namespace Emergence.Runtime
                         rec.band = band;
                         d.aged++;
                         PresentationEventBus.Publish(new PresentationEvent(
-                            _tick, S.years, S.season, PresentationEventType.AgentActivity, "agent-" + a.id, -1,
+                            _tick, S.years, WorldEras.Name(S.era), PresentationEventType.AgentActivity, "agent-" + a.id, -1,
                             band == "adult" ? "comes of age" : "grows old"));
                     }
                     else
@@ -115,7 +115,7 @@ namespace Emergence.Runtime
                             }
                             d.retasked++;
                             PresentationEventBus.Publish(new PresentationEvent(
-                                _tick, S.years, S.season, PresentationEventType.AgentActivity, "agent-" + a.id, -1, "task: " + a.task));
+                                _tick, S.years, WorldEras.Name(S.era), PresentationEventType.AgentActivity, "agent-" + a.id, -1, "task: " + a.task));
                         }
                         else d.kept++;
                     }
@@ -126,7 +126,7 @@ namespace Emergence.Runtime
                     _agents[a.id] = new Rec { go = go, band = band, female = female, task = a.task };
                     d.born++;
                     PresentationEventBus.Publish(new PresentationEvent(
-                        _tick, S.years, S.season, PresentationEventType.AgentActivity, "agent-" + a.id, -1,
+                        _tick, S.years, WorldEras.Name(S.era), PresentationEventType.AgentActivity, "agent-" + a.id, -1,
                         band == "child" ? "a child is born" : "a soul arrives"));
                 }
             }

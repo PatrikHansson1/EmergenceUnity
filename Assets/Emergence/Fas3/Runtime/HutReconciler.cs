@@ -74,7 +74,7 @@ namespace Emergence.Runtime
                 _huts.Remove(key);
                 d.lost++;
                 PresentationEventBus.Publish(new PresentationEvent(
-                    _tick, S.years, S.season, PresentationEventType.AssetRemoved, "hut:" + key, -1, "hut-lost"));
+                    _tick, S.years, WorldEras.Name(S.era), PresentationEventType.AssetRemoved, "hut:" + key, -1, "hut-lost"));
             }
 
             // 2) raises + owner renames
@@ -104,10 +104,10 @@ namespace Emergence.Runtime
                     {
                         _firstHutSeen = true;
                         PresentationEventBus.Publish(new PresentationEvent(
-                            _tick, S.years, S.season, PresentationEventType.Milestone, "hut:" + kv.Key, -1, "the first hut"));
+                            _tick, S.years, WorldEras.Name(S.era), PresentationEventType.Milestone, "hut:" + kv.Key, -1, "the first hut"));
                     }
                     PresentationEventBus.Publish(new PresentationEvent(
-                        _tick, S.years, S.season, PresentationEventType.AssetSpawned, "hut:" + kv.Key, -1,
+                        _tick, S.years, WorldEras.Name(S.era), PresentationEventType.AssetSpawned, "hut:" + kv.Key, -1,
                         string.Format(CultureInfo.InvariantCulture, "hut-raised x={0:F1} z={1:F1}", w.x, w.z)));
                 }
             }

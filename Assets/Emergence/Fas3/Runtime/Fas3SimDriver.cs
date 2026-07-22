@@ -58,7 +58,9 @@ namespace Emergence.Runtime
         // node-exporter parity (minus tiles: the 2.3 flat grid is engine-internal and the dresser
         // doesn't need tiles live — terrain is dressed once from a verified snapshot).
         const string ExportJs = @"(function(){var E=Emergence,S=__S;return JSON.stringify({
-engineVersion:E.VERSION,seed:__seed,years:Math.floor(S.tick/E.YEAR),tick:S.tick,ended:!!S.ended,season:''+S.season,W:E.W,H:E.H,
+engineVersion:E.VERSION,seed:__seed,years:Math.floor(S.tick/E.YEAR),tick:S.tick,ended:!!S.ended,season:''+S.season,
+era:(function(){var m=0;S.agents.forEach(function(a){if(a.dead)return;a.knows.forEach(function(t){var q=E.TECH[t];if(q&&q.era>m)m=q.era})});return m})(),
+W:E.W,H:E.H,
 tileTypes:'',tileN:[],
 agents:S.agents.filter(function(a){return !a.dead}).map(function(a){return {id:a.id,name:''+a.name,x:a.x,y:a.y,age:a.age,gen:a.gen,task:''+a.task,say:''+(a.say||''),sayAct:''+(a.sayAct||''),home:!!a.home}}),
 dead:S.agents.filter(function(a){return a.dead}).length,

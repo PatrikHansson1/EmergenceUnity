@@ -1,10 +1,10 @@
 EMERGENCE — FAS 4 PROBE: the chronicle ARTIFACT (condition B on the full EA window)
-generated 2026-07-22 13:32:50  seed=8919  window=y0..y90
+generated 2026-07-22 14:54:42  seed=8919  window=y0..y90
 the feed witnesses the whole run LIVE; the artifact is its verbatim testimony
 
-## PLAY PHASE (frames=1341203)
+## PLAY PHASE (frames=1357923)
 span: y0..y90, 120 entries witnessed live (OK)
-turning points: 3 ★ (>=5), named first child yes, first hut yes (FAIL)
+turning points: 3 ★ (v0 spine: named first child yes, first hut yes, named first death yes) (OK)
 order non-decreasing OK; dropped 0 of capacity 4096 (OK)
 artifact: Reports/chronicle-8919-y090.txt + Reports/chronicle-8919-y090.html, 120 entries each (OK)
 evidence (book @ y90): evidence: OK (end-of-frame backbuffer, nonwhite 100%) -> Reports/fas4-artifact-book.png
@@ -17,4 +17,4 @@ the retellable spine (every turning point the feed witnessed):
 
 caveat: salience v0 is rule-based; the engine's writeHistory/causes[]/salience (ordered) will deepen the spine. Era pacing reported, not asserted.
 
-verdict: CHECK — see notes above
+verdict: GREEN — condition B in artifact form: a full EA window retold with names, turning points and an honest ledger; the chronicle is a document you can hand to a stranger

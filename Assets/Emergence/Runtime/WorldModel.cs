@@ -30,8 +30,21 @@ namespace Emergence.Runtime
     [Serializable] public class WorldState
     {
         public string engineVersion; public int seed, years, tick; public bool ended; public string season;
+        // D-147: era = max TECH[t].era over living souls' knowledge (derived read-only in the driver's
+        // export JS — the engine is untouched). Old snapshots/checkpoints lack the field → 0 = "dawn".
+        public int era;
         public int W, H; public string tileTypes; public int[] tileN;
         public WorldAgent[] agents; public WorldHut[] huts; public WorldFire[] fires;
         public WorldField[] fields; public WorldVillage[] villages; public WorldAnimal[] animals;
+    }
+
+    /// <summary>D-147: presentation-side era naming — the D-146 finding was that the bus's Era slot
+    /// carried the SEASON ("spring"). These interim names label the derived era index until the
+    /// engine owns era canon officially (ordered: MOTOR-LANE-ORDER-R2-FAS4 §5). Pure labels — no
+    /// state, no RNG (D-078 r4).</summary>
+    public static class WorldEras
+    {
+        static readonly string[] Names = { "dawn", "stone", "bronze", "iron", "mill", "print", "steam" };
+        public static string Name(int era) => era >= 0 && era < Names.Length ? Names[era] : "era-" + era;
     }
 }

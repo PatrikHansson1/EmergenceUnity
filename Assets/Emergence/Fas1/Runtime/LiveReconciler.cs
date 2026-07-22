@@ -106,9 +106,9 @@ namespace Emergence.Runtime
                     }
                     d.removed++;
                     PresentationEventBus.Publish(new PresentationEvent(
-                        _tick, S.years, S.season, PresentationEventType.AssetRemoved, objId, vi, "onLoss:toRuin"));
+                        _tick, S.years, WorldEras.Name(S.era), PresentationEventType.AssetRemoved, objId, vi, "onLoss:toRuin"));
                     PresentationEventBus.Publish(new PresentationEvent(
-                        _tick, S.years, S.season, PresentationEventType.Milestone, objId, vi,
+                        _tick, S.years, WorldEras.Name(S.era), PresentationEventType.Milestone, objId, vi,
                         "the knowledge was lost — where it stood, only a ruin remains"));
                 }
                 else
@@ -116,7 +116,7 @@ namespace Emergence.Runtime
                     if (go != null) Retire(go);
                     d.removed++;
                     PresentationEventBus.Publish(new PresentationEvent(
-                        _tick, S.years, S.season, PresentationEventType.AssetRemoved, objId, vi, "onLoss"));
+                        _tick, S.years, WorldEras.Name(S.era), PresentationEventType.AssetRemoved, objId, vi, "onLoss"));
                 }
             }
 
@@ -131,7 +131,7 @@ namespace Emergence.Runtime
                 {
                     _placed[kv.Key] = null;
                     PresentationEventBus.Publish(new PresentationEvent(
-                        _tick, S.years, S.season, PresentationEventType.Milestone, e.id, vi, "(told-not-shown) " + e.desc));
+                        _tick, S.years, WorldEras.Name(S.era), PresentationEventType.Milestone, e.id, vi, "(told-not-shown) " + e.desc));
                     d.spawned++;
                     continue;
                 }
@@ -141,7 +141,7 @@ namespace Emergence.Runtime
                     if (oldRuin != null) Retire(oldRuin);
                     _ruins.Remove(kv.Key);
                     PresentationEventBus.Publish(new PresentationEvent(
-                        _tick, S.years, S.season, PresentationEventType.Milestone, e.id, vi,
+                        _tick, S.years, WorldEras.Name(S.era), PresentationEventType.Milestone, e.id, vi,
                         "rediscovered — the ruin is raised again"));
                 }
                 var pf = cat != null ? cat.Prefab(e.prefab) : null;
@@ -157,10 +157,10 @@ namespace Emergence.Runtime
                 d.spawned++;
 
                 PresentationEventBus.Publish(new PresentationEvent(
-                    _tick, S.years, S.season, PresentationEventType.AssetSpawned, e.id, vi, "placement=" + e.placement));
+                    _tick, S.years, WorldEras.Name(S.era), PresentationEventType.AssetSpawned, e.id, vi, "placement=" + e.placement));
                 // milestone → carries the chronicle text (Fas 4 consumes this)
                 PresentationEventBus.Publish(new PresentationEvent(
-                    _tick, S.years, S.season, PresentationEventType.Milestone, e.id, vi, e.desc));
+                    _tick, S.years, WorldEras.Name(S.era), PresentationEventType.Milestone, e.id, vi, e.desc));
             }
             return d;
         }
