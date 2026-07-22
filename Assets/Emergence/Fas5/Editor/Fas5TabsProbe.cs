@@ -49,6 +49,7 @@ namespace Emergence.Editor
         static Fas5AlmanacView _view;
         static WorldState _fix;
         static int _liveVillageCount = -1;
+        static int _soulsRowsLive = -1, _villRowsFixture = -1;   // R1 (Fas 5 review): DONE key figures stamped AT MEASUREMENT TIME, never read from view state at finish
         static float _tpsBefore, _grabAskedAt;
         static string _n1 = "", _n2 = "", _n3 = "", _n4 = "", _n5 = "", _n6 = "", _n7 = "", _n8 = "", _n9 = "";
 
@@ -122,7 +123,7 @@ namespace Emergence.Editor
             SessionState.SetInt(KeyPending, 1);
             SessionState.SetFloat(KeyStart, (float)EditorApplication.timeSinceStartup);
             _frames = 0; _phase = 0; _onb = null; _rec = null; _view = null; _fix = null;
-            _liveVillageCount = -1; _tpsBefore = 0f; _grabAskedAt = 0f;
+            _liveVillageCount = -1; _soulsRowsLive = -1; _villRowsFixture = -1; _tpsBefore = 0f; _grabAskedAt = 0f;
             _n1 = _n2 = _n3 = _n4 = _n5 = _n6 = _n7 = _n8 = _n9 = "";
             File.WriteAllText(Done, "RUNNING (entering play mode) " + DateTime.Now.ToString("HH:mm:ss") + "\n");
             EditorApplication.EnterPlaymode();
@@ -192,6 +193,7 @@ namespace Emergence.Editor
                             && _view.SoulDossierGen == oldest.gen
                             && _view.SoulDossierTask == (oldest.task ?? "");
                 _n3 = $"souls LIVE: rows {_view.SoulRowCount}=={expRows}, oldest first '{_view.SoulRowName(0)}'=='{(oldest != null ? oldest.name : "?")}', dossier {_view.SoulDossierName}/{_view.SoulDossierAge} år/gen {_view.SoulDossierGen}/'{_view.SoulDossierTask}' ({(soulsOk ? "OK" : "FAIL")})";
+                _soulsRowsLive = _view.SoulRowCount;   // stamped at the live measurement (review I1)
 
                 var g = new GameObject("Fas5SoulsGrabber").AddComponent<Fas4NativeGrabber>();
                 g.Path = PngSouls; g.OnGrabbed = note => { _n7 = "souls " + note; };
@@ -224,6 +226,7 @@ namespace Emergence.Editor
                            && _view.VillageDossierGen == e0.maxGen && _view.VillageDossierCrafts == e0.crafts
                            && _view.VillageDossierKnows == (e0.knows != null ? e0.knows.Length : 0);
                 bool countOk = _view.VillageRowCount == _fix.villages.Length;
+                _villRowsFixture = _view.VillageRowCount;   // stamped at the fixture measurement (review I1/R1)
                 _n4 = $"villages FIXTURE (y055, real export): rows {_view.VillageRowCount}=={_fix.villages.Length}, pop-DESC order {(orderOk ? "OK" : "FAIL")}, dossier '{_view.VillageDossierName}' pop {_view.VillageDossierPop} gen {_view.VillageDossierGen} crafts {_view.VillageDossierCrafts} knows {_view.VillageDossierKnows} ({(countOk && orderOk && dossOk ? "OK" : "FAIL")})";
 
                 var g = new GameObject("Fas5VillGrabber").AddComponent<Fas4NativeGrabber>();
@@ -288,7 +291,7 @@ namespace Emergence.Editor
                     ? "GREEN — the almanac has its skeleton: Villages live, Souls base, honest stubs, the book one tab away"
                     : "CHECK — see notes above"));
                 File.WriteAllText(Report, sb.ToString());
-                File.WriteAllText(Done, $"DONE {DateTime.Now:HH:mm:ss} verdict={(green ? "GREEN" : "CHECK")} villagesFixture={( _fix != null && _fix.villages != null ? _fix.villages.Length : -1)} soulsRows={(_view != null ? _view.SoulRowCount : -1)}\nsee {Report}\n");
+                File.WriteAllText(Done, $"DONE {DateTime.Now:HH:mm:ss} verdict={(green ? "GREEN" : "CHECK")} villagesFixtureRows={_villRowsFixture} soulsRowsLive={_soulsRowsLive}\nsee {Report}\n");   // key figures are measurement-time stamps, a mirror of the report's OK lines (review R1)
             }
             catch (Exception e) { try { File.WriteAllText(Done, "ERROR finish: " + e.Message + "\n"); } catch {} }
             finally

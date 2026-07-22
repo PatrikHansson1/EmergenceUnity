@@ -139,6 +139,11 @@ namespace Emergence.Runtime
             var w = WorldRt(); return w != null ? w.LastState : null;
         }
 
+        /// <summary>Honest time label for the state-rendering tabs (review I4): when a fixture is
+        /// applied the header must carry the FIXTURE's year with a visible marker — never the
+        /// presentation clock's year next to fixture data.</summary>
+        string StateWhen() => _fixture != null ? "FIXTUR y" + _fixture.years + " (riktig motor-export)" : "år " + TileYear;
+
         // ---------------- public surface (probe + future game UI) ----------------
 
         public void OpenAlmanac()
@@ -234,11 +239,11 @@ namespace Emergence.Runtime
                     _curveHost.MarkDirtyRepaint();
                     break;
                 case TabVillages:
-                    _sub.text = "år " + TileYear + " · byarna som världen själv har grundat — klicka för dossier";
+                    _sub.text = StateWhen() + " · byarna som världen själv har grundat — klicka för dossier";
                     RebuildVillages(S);
                     break;
                 case TabSouls:
-                    _sub.text = "år " + TileYear + " · de " + SoulRowCap + " äldsta själarna — roller · rikedom · egenskaper väntar på motorns metrics (R2)";
+                    _sub.text = StateWhen() + " · de " + SoulRowCap + " äldsta själarna — roller · rikedom · egenskaper väntar på motorns metrics (R2)";
                     RebuildSouls(S);
                     break;
                 default:

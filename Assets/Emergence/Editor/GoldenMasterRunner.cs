@@ -78,7 +78,7 @@ namespace Emergence.Editor
         {
             var report = new StringBuilder();
             report.AppendLine($"GOLDEN MASTER — in-editor (Unity {Application.unityVersion}, {DateTime.Now:yyyy-MM-dd HH:mm})");
-            report.AppendLine($"tree: {GitHeadSha()}");   // D-143 gate remark: the report carries its own commit SHA
+            report.AppendLine($"commit: {GitHeadSha()}");   // D-143 gate remark: the report carries its own commit SHA (label fixed per Fas 5 review I3 — it IS the commit, not the tree object)
             ShaAssert();
             report.AppendLine("Engine SHA assert: OK");
             bool green = true;

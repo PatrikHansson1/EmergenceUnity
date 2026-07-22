@@ -46,6 +46,7 @@ namespace Emergence.Editor
         static Fas5MetricsRecorder _rec;
         static Fas5AlmanacView _view;
         static float _tpsBefore, _grabAskedAt;
+        static int _recordsAtTruth = -1, _curvePtsAtTruth = -1;   // R1 (Fas 5 review): DONE key figures stamped AT MEASUREMENT TIME, never read from view/recorder state at finish
         static string _n1 = "", _n2 = "", _n3 = "", _n4 = "", _n5 = "", _n6 = "", _n7 = "", _n8 = "", _n9 = "";
 
         static Fas5AlmanacProbe() { EditorApplication.update += Tick; }
@@ -118,7 +119,7 @@ namespace Emergence.Editor
             SessionState.SetInt(KeyPending, 1);
             SessionState.SetFloat(KeyStart, (float)EditorApplication.timeSinceStartup);
             _frames = 0; _phase = 0; _p4frames = 0; _onb = null; _feed = null; _rec = null; _view = null;
-            _tpsBefore = 0f; _grabAskedAt = 0f;
+            _tpsBefore = 0f; _grabAskedAt = 0f; _recordsAtTruth = -1; _curvePtsAtTruth = -1;
             _n1 = _n2 = _n3 = _n4 = _n5 = _n6 = _n7 = _n8 = _n9 = "";
             File.WriteAllText(Done, "RUNNING (entering play mode) " + DateTime.Now.ToString("HH:mm:ss") + "\n");
             EditorApplication.EnterPlaymode();
@@ -191,6 +192,7 @@ namespace Emergence.Editor
                             && _view.TileYear == c.PresentationYear;
                 bool curveOk = _view.CurvePointCount == _rec.RecordCount && _view.CurveLastYear == w.LastAppliedYear;
                 _n4 = $"tiles==recorder: pop {_view.TilePop}/{latest.pop} births {_view.TileBirths}/{_rec.TotalBirths} deaths {_view.TileDeaths}/{_rec.TotalDeaths} huts {_view.TileHuts}/{_rec.HutCount} år {_view.TileYear}/{c.PresentationYear} ({(tilesOk ? "OK" : "FAIL")}); curve {_view.CurvePointCount} pts to y{_view.CurveLastYear} ({(curveOk ? "OK" : "FAIL")})";
+                _recordsAtTruth = _rec.RecordCount; _curvePtsAtTruth = _view.CurvePointCount;   // stamped at the truth check (review I2)
 
                 bool eraOk = _view.TileEra == WorldEras.Name(S != null ? S.era : 0) && _view.TileEra != S.season;
                 _n5 = $"era tile: '{_view.TileEra}' == WorldEras.Name({(S != null ? S.era : 0)}), never the season ('{(S != null ? S.season : "?")}') ({(eraOk ? "OK" : "FAIL")})";
@@ -267,7 +269,7 @@ namespace Emergence.Editor
                     ? "GREEN — ANALYZE has its first native face: the Overview lives, honest pause + scrub semantics, the pattern-depth awaits the engine"
                     : "CHECK — see notes above"));
                 File.WriteAllText(Report, sb.ToString());
-                File.WriteAllText(Done, $"DONE {DateTime.Now:HH:mm:ss} verdict={(green ? "GREEN" : "CHECK")} records={(_rec != null ? _rec.RecordCount : -1)} curvePts={(_view != null ? _view.CurvePointCount : -1)}\nsee {Report}\n");
+                File.WriteAllText(Done, $"DONE {DateTime.Now:HH:mm:ss} verdict={(green ? "GREEN" : "CHECK")} recordsAtTruth={_recordsAtTruth} curvePtsAtTruth={_curvePtsAtTruth}\nsee {Report}\n");   // key figures are measurement-time stamps, a mirror of the report's OK lines (review R1)
             }
             catch (Exception e) { try { File.WriteAllText(Done, "ERROR finish: " + e.Message + "\n"); } catch {} }
             finally
