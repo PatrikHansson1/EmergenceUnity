@@ -49,6 +49,10 @@ namespace Emergence.Runtime
             if (FindAnyObjectByType<Fas3AudioDirector>() == null)
                 new GameObject("Fas3AudioDirector").AddComponent<Fas3AudioDirector>();
 
+            // the story (Fas 4 v0): consumer #3 — the chronicle feed, READ's first organ
+            if (FindAnyObjectByType<Fas4ChronicleFeed>() == null)
+                new GameObject("Fas4ChronicleFeed").AddComponent<Fas4ChronicleFeed>();
+
             // the eye: rig + gaze on the main camera (idempotent — the scene may already carry them)
             var cam = Camera.main;
             if (cam != null)

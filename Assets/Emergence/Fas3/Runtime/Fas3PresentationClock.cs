@@ -27,6 +27,12 @@ namespace Emergence.Runtime
         public float ticksPerSecond = 24f;
 
         public double PresentationTick { get; private set; }
+
+        // FAS 4 (ChronicleFeed): TRUE while a JumpToYear is synchronously rebuilding the world from a
+        // checkpoint. The reconcilers re-publish spawn/arrival events for everything they re-materialise —
+        // that burst is RECONSTRUCTION, not newly witnessed history; consumers that keep a chronicle
+        // check this flag and stay silent through it. Presentation-side truth only — D-078 r4.
+        public bool ApplyingJump { get; private set; }
         public int PresentationYear => world != null && world.LastAppliedYear >= 0 ? world.LastAppliedYear : 0;
         public int BufferedYearsAhead => Driver() != null ? Driver().BufferedYears : 0;
         public string LastAppliedOrder => _order;     // "1,2,3,…" — the probe's in-order proof
@@ -79,6 +85,7 @@ namespace Emergence.Runtime
             if (!File.Exists(path)) { LastError = "no checkpoint: " + path; return false; }
             try
             {
+                ApplyingJump = true;
                 var json = File.ReadAllText(path);
                 while (d.TakeYearSnapshot() != null) { }                // drop queued years — the jump owns time now
                 w.ResetWorld();
@@ -88,6 +95,7 @@ namespace Emergence.Runtime
                 return true;
             }
             catch (Exception e) { LastError = "jump: " + e.Message; return false; }
+            finally { ApplyingJump = false; }
         }
     }
 }

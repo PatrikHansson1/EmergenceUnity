@@ -1,0 +1,26 @@
+EMERGENCE — FAS 4 v0 PROBE: the chronicle feed (consumer #3 on the Fas 0 bus)
+generated 2026-07-22 12:28:44
+names = the sim's own WorldAgent.name (state read) — condition B needs a story WITH names
+
+## PLAY PHASE (frames=18934)
+genesis: 4 arrival entries at y0 (bus carried 4), 0 birth entries at y0 (OK)
+first child: y1 (bus y1) salience 3 "a first child is born — Liv" (OK)
+first hut: milestone entry y5 (bus y5) (OK)
+bus mirror: 1 bus milestones, 0 missing from feed (OK); codex-desc milestones in window: 0
+order: entry years non-decreasing (OK), 8 entries, dedupe hits 0
+J0 scrub: trim OK (max year 0, y0 entries 4/4, trims 1); rebuild burst suppressed OK (x4)
+re-witness after J0: birth entry returned at y>=1 with salience 3 (first again — recompute OK)
+evidence: OK (end-of-frame backbuffer incl. feed panel, nonwhite 100%) -> Reports/fas4-chronicle-feed.png
+
+the chronicle's own opening (sampled from the feed):
+    y0 • Eira arrives — a soul steps onto the empty land
+    y0 • Ask arrives — a soul steps onto the empty land
+    y0 • Embla arrives — a soul steps onto the empty land
+    y0 • Torv arrives — a soul steps onto the empty land
+    y1 ★ a first child is born — Liv
+    y5 · Sten is born
+    y5 ★ the first hut
+
+caveat: v0 is the witness — engine-lane writeHistory/causes[]/salience (with R2) makes it an oracle; native view next.
+
+verdict: GREEN — the chronicle speaks: named souls arrive, a first child, a first hut; the book trims and re-witnesses honestly under scrub

@@ -21,6 +21,13 @@ namespace Emergence.Runtime
 
         public int AppliedCount { get; private set; }
         public int LastAppliedYear { get; private set; } = -1;
+
+        // FAS 4 (ChronicleFeed): the last two applied snapshots, exposed READ-ONLY so bus consumers
+        // can resolve sim-given NAMES (WorldAgent.name) at event time. Set BEFORE reconciling so the
+        // synchronous event burst of an Apply can already see the state it derives from; PrevState
+        // serves departures (a departing soul only exists in the previous snapshot). Pure read — D-078 r4.
+        public WorldState LastState { get; private set; }
+        public WorldState PrevState { get; private set; }
         public int HutCount => _huts.Count;
         public int AgentCount => _agents.Count;
         public int CodexPlacedCount => _codex.PlacedCount;
@@ -30,6 +37,7 @@ namespace Emergence.Runtime
         public void Apply(WorldState S)
         {
             if (S == null) return;
+            PrevState = LastState; LastState = S;
             _agents.Reconcile(S, false);
             _huts.Reconcile(S);
             try { _codex.Reconcile(S); LastCodexNote = "ok"; }
@@ -45,6 +53,7 @@ namespace Emergence.Runtime
         {
             _agents.Clear(); _huts.Clear(); _codex.Clear();
             AppliedCount = 0; LastAppliedYear = -1;
+            LastState = null; PrevState = null;
         }
     }
 }
