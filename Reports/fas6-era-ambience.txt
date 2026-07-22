@@ -1,0 +1,14 @@
+EMERGENCE — FAS 6 PROBE: the era ear — deterministic beds + live era shifts
+generated 2026-07-23 01:02:42
+data source = applied WorldState era (read-only; presentation follows applied state — the Almanac's law)
+
+## PLAY PHASE (frames=16734)
+determinism: BedSamples(bronze) x2 identical=True, bronze!=dawn=True (OK)
+live shifts: crossfades 2 (>=2), CurrentEra 2==state.era 2 'bronze' @y5, bed playing=True (OK)
+pause honesty: era frozen 2==2 over 60 frames=True, bed still sounding=True, tps untouched 24->24 (OK)
+resume: tps 24==24 (OK) — the ambience never touches the clock
+
+caveat: v1 beds are procedural stand-ins (the purchase-free lane) — real ambience assets swap in on the
+replace-path when the Fas 6 audio purchase lands; speaker truth (levels/taste) = the human ear pass (Patrik).
+
+verdict: GREEN — the ear follows the eras: deterministic beds, live shifts witnessed, the clock untouched

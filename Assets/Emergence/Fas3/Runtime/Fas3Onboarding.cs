@@ -49,6 +49,11 @@ namespace Emergence.Runtime
             if (FindAnyObjectByType<Fas3AudioDirector>() == null)
                 new GameObject("Fas3AudioDirector").AddComponent<Fas3AudioDirector>();
 
+            // the era ear (Fas 6 ink. 1): ambience beds shift with the APPLIED state's era —
+            // deterministic per-era synthesis, crossfade on shift; reads state, never the sim
+            if (FindAnyObjectByType<Fas6EraAmbience>() == null)
+                new GameObject("Fas6EraAmbience").AddComponent<Fas6EraAmbience>();
+
             // the story (Fas 4 v0): consumer #3 — the chronicle feed, READ's first organ
             if (FindAnyObjectByType<Fas4ChronicleFeed>() == null)
                 new GameObject("Fas4ChronicleFeed").AddComponent<Fas4ChronicleFeed>();
