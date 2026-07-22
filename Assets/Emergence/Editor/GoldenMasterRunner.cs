@@ -78,6 +78,7 @@ namespace Emergence.Editor
         {
             var report = new StringBuilder();
             report.AppendLine($"GOLDEN MASTER — in-editor (Unity {Application.unityVersion}, {DateTime.Now:yyyy-MM-dd HH:mm})");
+            report.AppendLine($"tree: {GitHeadSha()}");   // D-143 gate remark: the report carries its own commit SHA
             ShaAssert();
             report.AppendLine("Engine SHA assert: OK");
             bool green = true;
@@ -116,6 +117,26 @@ namespace Emergence.Editor
             var n = Math.Min(a.Length, b.Length);
             for (int i = 0; i < n; i++) if (a[i] != b[i]) return i;
             return a.Length == b.Length ? -1 : n;
+        }
+
+        /// <summary>D-143 gate remark ("golden report without its own SHA"): resolve HEAD by reading
+        /// .git directly — no process spawn, works headless. (Working-tree dirtiness is NOT claimed
+        /// here — the session protocol's git-status check owns that truth.)</summary>
+        private static string GitHeadSha()
+        {
+            try
+            {
+                string root = Path.Combine(Application.dataPath, "..");
+                string head = File.ReadAllText(Path.Combine(root, ".git", "HEAD")).Trim();
+                string sha = head;
+                if (head.StartsWith("ref: "))
+                {
+                    string refPath = Path.Combine(root, ".git", head.Substring(5).Replace('/', Path.DirectorySeparatorChar));
+                    sha = File.Exists(refPath) ? File.ReadAllText(refPath).Trim() : "unresolved(" + head + ")";
+                }
+                return sha.Length >= 12 ? sha.Substring(0, 12) + (head.StartsWith("ref: ") ? " (" + head.Substring(5) + ")" : "") : sha;
+            }
+            catch (Exception e) { return "unknown (" + e.Message + ")"; }
         }
 
         private static void Write(StringBuilder report)
