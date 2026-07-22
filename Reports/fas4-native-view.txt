@@ -1,0 +1,18 @@
+EMERGENCE — FAS 4 PROBE: the native chronicle view (UI Toolkit, feed/book)
+generated 2026-07-22 12:54:01
+data source = the SAME Fas4ChronicleFeed as v0 (no new truth); styling per almanac reference
+
+## PLAY PHASE (frames=16835)
+ready: view READY=True on Resources/Fas4PanelSettings, IMGUI v0 stood down=True (OK)
+feed rows: 8 rendered / expected 8 of 8 entries (OK)
+filter: vändpunkter -> only ★ rows, 2 shown OK; allt restored OK
+book open: pauses clock OK, tps untouched 24->24 (OK)
+book content: 8/8 entries, newest first y5>=y0 (OK)
+why-expander stub: click row 0 -> visible OK, survives rebuild OK (causes[] ordered in MOTOR-LANE-ORDER-R2-FAS4)
+book close: pause state restored (paused=False), feed panel back (OK)
+book evidence: OK (end-of-frame backbuffer, nonwhite 100%) -> Reports/fas4-native-book.png
+feed evidence: OK (end-of-frame backbuffer, nonwhite 98%) -> Reports/fas4-native-feed.png
+
+caveat: why-expander is a STUB by design (engine causes[] ordered); three scales + LLM prose out of v1 scope.
+
+verdict: GREEN — the chronicle has its native face: almanac-styled feed + fullscreen book, honest pause semantics, the why-surface awaits the engine

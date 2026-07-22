@@ -53,6 +53,11 @@ namespace Emergence.Runtime
             if (FindAnyObjectByType<Fas4ChronicleFeed>() == null)
                 new GameObject("Fas4ChronicleFeed").AddComponent<Fas4ChronicleFeed>();
 
+            // the story's native face (Fas 4): UI Toolkit chronicle view — feed docked right,
+            // book on demand; disarms itself (IMGUI stays) if the UI assets are missing
+            if (FindAnyObjectByType<Fas4ChronicleView>() == null)
+                new GameObject("Fas4ChronicleView").AddComponent<Fas4ChronicleView>();
+
             // the eye: rig + gaze on the main camera (idempotent — the scene may already carry them)
             var cam = Camera.main;
             if (cam != null)
