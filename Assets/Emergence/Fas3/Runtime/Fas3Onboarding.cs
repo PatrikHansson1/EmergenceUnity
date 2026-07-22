@@ -45,6 +45,10 @@ namespace Emergence.Runtime
             Controls = ugo.AddComponent<Fas3TimeControls>();
             Controls.driver = Driver; Controls.clock = Clock;
 
+            // the ear (D-141): the bus's first consumer — procedural v0 ambience + milestone chimes
+            if (FindAnyObjectByType<Fas3AudioDirector>() == null)
+                new GameObject("Fas3AudioDirector").AddComponent<Fas3AudioDirector>();
+
             // the eye: rig + gaze on the main camera (idempotent — the scene may already carry them)
             var cam = Camera.main;
             if (cam != null)

@@ -1,0 +1,12 @@
+EMERGENCE — FAS 3 AUDIO PROBE (D-141): the bus speaks (procedural v0)
+generated 2026-07-22 10:05:06
+owned audio assets: 3 Vefects fire loops only -> v0 is SYNTHESIZED (wind ambience + chimes), zero purchases
+
+## PLAY PHASE (frames=17358)
+ambience: PLAYING from frame one (OK)
+birth tone: played x1 at applied y0 (OK)
+milestone chime: played x1 by first-hut year y5 (OK)
+
+caveat: PlayOneShot/isPlaying is the mechanism proof; SPEAKER truth (levels, taste) needs Patrik's ears — logged On Patrik.
+
+verdict: GREEN — the Fas 0 bus finally speaks: wind under the wilderness, a tone for a birth, a chime for the first hut

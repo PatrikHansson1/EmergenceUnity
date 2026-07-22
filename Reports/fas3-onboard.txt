@@ -1,10 +1,10 @@
 EMERGENCE — FAS 3 ONBOARDING PROBE (D-139): the game's actual start, observed
-generated 2026-07-22 09:48:41
+generated 2026-07-22 10:06:54
 
 genesis: souls=4, huts=0, honest wilderness=YES
 start scene saved: Assets/Emergence/Scenes/OnboardingScene.unity (gitignored, generated — genesis wilderness + Fas3Onboarding)
-## PLAY PHASE (frames=16248) — the scene composed ITSELF; the probe only watched
-genesis: applied y0 at t=7,0s, souls 4==4, huts 0==0 -> TRUE START (OK)
+## PLAY PHASE (frames=16368) — the scene composed ITSELF; the probe only watched
+genesis: applied y0 at t=6,1s, souls 4==4, huts 0==0 -> TRUE START (OK)
 first hut: y5, gaze "a hut is raised (hut:45:36)" angle 4,6° -> TAKEN (OK)
 first child: y1, gaze "a child is born (agent-5)" angle 3,9° -> TAKEN (OK)
 unbroken: order [0,1,2,3,4,5] ascending from GENESIS (OK); paused ever=False (must be False); one scene, no menu

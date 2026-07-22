@@ -1,0 +1,2 @@
+DONE 10:03:48 verdict=CHECK stingers=0 births=3
+see Reports/fas3-audio.txt
