@@ -48,6 +48,7 @@ namespace Emergence.Runtime
         public IReadOnlyList<Entry> Entries => _entries;
         public int TrimCount { get; private set; }             // proof: backward scrubs that trimmed the feed
         public int SuppressedDuringJump { get; private set; }  // proof: rebuild-burst events kept out
+        public int SuppressedDuringFixture { get; private set; } // proof (G-review r1 I2): fixture-injection events kept out
         public int DroppedOldest { get; private set; }
         public int DedupeHits { get; private set; }
 
@@ -73,6 +74,8 @@ namespace Emergence.Runtime
         {
             var c = Clock();
             if (c != null && c.ApplyingJump) { SuppressedDuringJump++; return; }   // reconstruction, not history
+            // G-review r1 I2: a probe's fixture Apply is injection, not witnessed history — the chronicle stays clean
+            if (Fas3WorldRuntime.FixtureInjection) { SuppressedDuringFixture++; return; }
 
             string key = e.Year + "|" + e.Type + "|" + e.Id + "|" + e.Data;
             int salience; string kind, text;

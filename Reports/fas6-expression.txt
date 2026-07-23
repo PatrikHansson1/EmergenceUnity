@@ -1,8 +1,8 @@
 EMERGENCE — FAS 6 PROBE: A2-polish — full tempo law (age × mood, 9 verbs) + social attend-gaze
-generated 2026-07-23 07:02:42
+generated 2026-07-23 09:12:15
 data source = applied WorldState agents' sayAct/age + fires (read-only; presentation follows applied state)
 
-## PLAY PHASE (frames=8015)
+## PLAY PHASE (frames=8147)
 pure law: 9-verb mood table=True, age gains=True, multiplicative=True, social classifier=True (OK)
 live @y2: bodies at law tempo 5/5 (OK)
 fixture y055 (riktig motor-export, samma Apply-väg): law tempo 22/22 (>=20), non-neutral=20>0, social gaze 15/15>0 at mapped neighbor (OK)

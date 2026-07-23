@@ -73,7 +73,8 @@ namespace Emergence.Runtime
         {
             int n = (int)(sr * secs);
             var data = new float[n];
-            var rng = new System.Random(78901);   // fixed — same wind every run, every machine
+            var rng = new System.Random(78901);   // fixed seed — same wind every run IN THIS RUNTIME (G-review r1 I3:
+                                                  // System.Random is implementation-defined across runtimes; replace-path A4)
             float v = 0f;
             for (int i = 0; i < n; i++)
             {

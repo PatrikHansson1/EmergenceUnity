@@ -1,8 +1,8 @@
 EMERGENCE — FAS 6 PROBE: the era ear — deterministic beds + live era shifts
-generated 2026-07-23 01:30:26
+generated 2026-07-23 09:13:07
 data source = applied WorldState era (read-only; presentation follows applied state — the Almanac's law)
 
-## PLAY PHASE (frames=17132)
+## PLAY PHASE (frames=16767)
 determinism: BedSamples(bronze) x2 identical=True, bronze!=dawn=True (OK)
 live shifts: crossfades 2 (>=2), CurrentEra 2==state.era 2 'bronze' @y5, bed playing=True (OK)
 pause honesty: era frozen 2==2 over 60 frames=True, bed still sounding=True, tps untouched 24->24 (OK)

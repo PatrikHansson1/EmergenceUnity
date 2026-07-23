@@ -1,2 +1,2 @@
-DONE 07:03:17 verdict=GREEN liveLaw=5/5 fxLaw=22/22 nonNeutral=20 socialGaze=15/15 coldYaw=11,6 coldSpeed=0,782
+DONE 09:12:52 verdict=GREEN liveLaw=5/5 fxLaw=22/22 nonNeutral=20 socialGaze=15/15 coldYaw=11,6 coldSpeed=0,782
 see Reports/fas6-expression.txt

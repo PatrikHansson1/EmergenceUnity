@@ -234,7 +234,9 @@ namespace Emergence.Editor
                 // fire-point + winter branch, FIXTURE (real engine export) through the SAME apply
                 // path the clock uses — clock still paused, so nothing races the injected state
                 _fixture = JsonUtility.FromJson<WorldState>(File.ReadAllText(FixturePath));
-                w.Apply(_fixture);
+                // G-review r1 I2: injection is reconstruction, not witnessed history — chronicle stays silent
+                Fas3WorldRuntime.FixtureInjection = true;
+                try { w.Apply(_fixture); } finally { Fas3WorldRuntime.FixtureInjection = false; }
                 _phase = 4;
                 return;
             }

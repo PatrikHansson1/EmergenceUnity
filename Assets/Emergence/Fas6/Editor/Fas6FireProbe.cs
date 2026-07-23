@@ -140,7 +140,9 @@ namespace Emergence.Editor
                 _tpsBefore = _onb.Clock.ticksPerSecond;
                 _onb.Clock.paused = true;   // freeze the live stream; fixtures go through the same Apply path
                 _fix = JsonUtility.FromJson<WorldState>(File.ReadAllText(FixtureFire));
-                _onb.World.Apply(_fix);
+                // G-review r1 I2: injection is reconstruction, not witnessed history — chronicle stays silent
+                Fas3WorldRuntime.FixtureInjection = true;
+                try { _onb.World.Apply(_fix); } finally { Fas3WorldRuntime.FixtureInjection = false; }
                 _phase = 1;
                 return;
             }
@@ -185,7 +187,8 @@ namespace Emergence.Editor
                 bool ruleOut = !FireReconciler.NearAnyFire(_fix.fires, f0.x + FireReconciler.SmokeNearFireTiles + 0.5f, f0.y);
                 var staged = JsonUtility.FromJson<WorldState>(File.ReadAllText(FixtureFire));
                 staged.huts[0].x = f0.x + 1f; staged.huts[0].y = f0.y;         // ONE hut moved adjacent, openly
-                w.Apply(staged);
+                Fas3WorldRuntime.FixtureInjection = true;   // I2: injection, chronicle silent
+                try { w.Apply(staged); } finally { Fas3WorldRuntime.FixtureInjection = false; }
                 _n3 = $"smoke rule pure at boundary: in@3={ruleIn} out@3.5={ruleOut} ({(ruleIn && ruleOut ? "OK" : "FAIL")})";
                 _phase = 2;
                 return;
@@ -229,7 +232,8 @@ namespace Emergence.Editor
             {
                 if (_n4b.Length == 0 && Time.unscaledTime - _grabAskedAt < 10f) return;
                 var cold = JsonUtility.FromJson<WorldState>(File.ReadAllText(FixtureCold));
-                w.Apply(cold);
+                Fas3WorldRuntime.FixtureInjection = true;   // I2: injection, chronicle silent
+                try { w.Apply(cold); } finally { Fas3WorldRuntime.FixtureInjection = false; }
                 _phase = 5;
                 return;
             }

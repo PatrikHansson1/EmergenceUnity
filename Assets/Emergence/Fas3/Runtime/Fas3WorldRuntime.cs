@@ -23,6 +23,12 @@ namespace Emergence.Runtime
         public int AppliedCount { get; private set; }
         public int LastAppliedYear { get; private set; } = -1;
 
+        // FAS 6 gate review r1, I2: probes inject fixture snapshots through this SAME Apply path
+        // (data injection, never a logic fork). Injection is reconstruction, NOT witnessed history —
+        // same law as the scrub burst (Fas3PresentationClock.ApplyingJump). Probes set this flag
+        // around a fixture Apply so chronicle-class consumers stay silent; production never sets it.
+        public static bool FixtureInjection;
+
         // FAS 4 (ChronicleFeed): the last two applied snapshots, exposed READ-ONLY so bus consumers
         // can resolve sim-given NAMES (WorldAgent.name) at event time. Set BEFORE reconciling so the
         // synchronous event burst of an Apply can already see the state it derives from; PrevState

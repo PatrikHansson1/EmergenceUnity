@@ -1,5 +1,5 @@
 EMERGENCE — FAS 2 GATE-PROOF (D-131)
-generated 2026-07-23 07:03:52
+generated 2026-07-23 09:14:56
 FIXTURE-BASED MECHANISM PROOF — clearly labeled presentation unit test, never shipped.
 
 ## TASK-VOCABULARY AUDIT (all owned snapshots)

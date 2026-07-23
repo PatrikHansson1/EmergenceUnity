@@ -242,6 +242,8 @@ namespace Emergence.Runtime
         // Social verbs (teach/love/small) face the nearest OTHER soul; cold faces the nearest fire.
         // Sim-space radii (the engine's smalltalk range is close); the animator only yaw-slerps toward
         // the mapped point (presentation-only, D-078 r4 — reads state, never writes back, no RNG).
+        // Replace-path (G-review r1, anm. 4): these are DIRECTOR-CHOSEN presentation constants without
+        // engine backing — when the R2 export carries social reach, Attend reads the export instead.
         public const float SocialRadius = 6f, FireRadius = 12f;   // sim units
         public static bool SocialAct(string act) => act == "teach" || act == "love" || act == "small";
         static void Attend(WorldState S, WorldAgent a, AgentAnimator aa)

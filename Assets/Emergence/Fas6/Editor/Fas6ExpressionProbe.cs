@@ -201,7 +201,9 @@ namespace Emergence.Editor
                 _tpsBefore = c.ticksPerSecond;
                 c.paused = true;   // fixtures ride the SAME Apply path with nothing racing them
                 _fx = JsonUtility.FromJson<WorldState>(File.ReadAllText(FixtureRich));
-                w.Apply(_fx);
+                // G-review r1 I2: injection is reconstruction, not witnessed history — chronicle stays silent
+                Fas3WorldRuntime.FixtureInjection = true;
+                try { w.Apply(_fx); } finally { Fas3WorldRuntime.FixtureInjection = false; }
                 _phase = 2;
                 return;
             }
@@ -253,7 +255,8 @@ namespace Emergence.Editor
                     a.sayAct = "ritual";   // task untouched
                     break;
                 }
-                w.Apply(_fx);
+                Fas3WorldRuntime.FixtureInjection = true;   // I2: injection, chronicle silent
+                try { w.Apply(_fx); } finally { Fas3WorldRuntime.FixtureInjection = false; }
                 _waitFrames = 0;
                 _phase = 3;
                 return;
@@ -275,7 +278,8 @@ namespace Emergence.Editor
                 soul.sayAct = "cold"; soul.x = f0.x + 2f; soul.y = f0.y;   // beside the fire, task untouched
                 _coldId = soul.id;
                 _firePos = Mapped(_fx, f0.x, f0.y);
-                w.Apply(_fx);
+                Fas3WorldRuntime.FixtureInjection = true;   // I2: injection, chronicle silent
+                try { w.Apply(_fx); } finally { Fas3WorldRuntime.FixtureInjection = false; }
                 _waitFrames = 0;
                 _phase = 4;
                 return;

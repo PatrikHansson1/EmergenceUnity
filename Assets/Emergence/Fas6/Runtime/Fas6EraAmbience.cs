@@ -85,7 +85,9 @@ namespace Emergence.Runtime
         {
             int n = (int)(sr * secs);
             var data = new float[n];
-            var rng = new System.Random(52000 + era * 37);     // fixed — same bed every run, every machine
+            var rng = new System.Random(52000 + era * 37);     // fixed seed — same bed every run IN THIS RUNTIME (G-review r1 I3:
+                                                               // System.Random sequence is implementation-defined across runtimes;
+                                                               // replace-path: hash-PRNG or bought layers A4. Never touches sim.)
             float leak = 0.980f + era * 0.002f;                 // dawn = darkest, steam = most open
             float gain = 1.8f + era * 0.12f;
             float v = 0f;
