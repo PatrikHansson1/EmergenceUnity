@@ -20,6 +20,8 @@ namespace Emergence.Runtime
         [Tooltip("-1 = endless (the game). Probes may set a horizon.")]
         public int targetYear = -1;
         public int lookaheadYears = 16;
+        [Tooltip("Fas 7 (save/load): boot with the presentation clock PAUSED — the producer races and checkpoints, but nothing is witnessed until a restorer releases time. Race-free by construction (set before the clock's first Update).")]
+        public bool startPaused;
 
         public Fas3SimDriver Driver { get; private set; }
         public Fas3WorldRuntime World { get; private set; }
@@ -40,6 +42,7 @@ namespace Emergence.Runtime
             Clock = cgo.AddComponent<Fas3PresentationClock>();
             Clock.driver = Driver; Clock.world = World;
             Clock.ticksPerSecond = Fas3TimeControls.BaseTps;   // 1× — the documentary opening pace
+            Clock.paused = startPaused;                        // Fas 7: a restorer owns the release
 
             var ugo = new GameObject("Fas3TimeControls");
             Controls = ugo.AddComponent<Fas3TimeControls>();

@@ -1,0 +1,20 @@
+EMERGENCE — FAS 7 PROBE: save/load A7 sharp — determinism IS the save format (D-137 grid grammar)
+generated 2026-07-23 10:37:34
+save = seed + witnessed year + presentation mode + state-SHA anchor; load = RESIMULATE (grid wiped) + JumpToYear + mode restore
+
+## PLAY PHASE (frames=43031)
+save @y6: file=True, grammar(seed/year/mode/anchor)=True, contSha=4f81ac61a2d5 (OK)
+teardown: composition destroyed, worker stopped, checkpoint grid WIPED (9 files) — load must resimulate (OK)
+THE PROOF: resimulated SHA == continuous SHA == save anchor: True (4f81ac61a2d5) (OK)
+loaded world: y6==6, tick=864, souls=6, huts=2 (OK)
+mode restored: paused=False==False, tps=24==24 (OK)
+chronicle honesty: entries after load=0 (restore witnessed NOTHING; empty-after-load = declared v1 limit) (OK)
+lives on: y7 applied after restore — a load is a running world, not a freeze-frame (OK)
+evidence evidence: OK (end-of-frame backbuffer, nonwhite 99%) -> Reports/fas7-saveload.png
+
+lane honesty: save/load is presentation-side over the deterministic engine — the sim is never
+touched; load resimulates from seed (grid wiped first, worker waited out). Declared v1 limits:
+year-granular (D-137 grid grammar; sub-year = R2-adjacent), chronicle starts empty after load,
+camera pose not saved. Player-vehicle proof = RUN_FAS7PSAVE (same mechanism inside a built player).
+
+verdict: GREEN — save->load reproduces the world exactly (SHA-proven) and the loaded world lives on

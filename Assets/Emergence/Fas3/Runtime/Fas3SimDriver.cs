@@ -47,6 +47,14 @@ namespace Emergence.Runtime
         public string LastError => _error;
         public int BufferedYears { get { lock (_lock) return _queue.Count; } }
         public string CheckpointDir => _checkpointDir;   // set at Start (main thread); worker writes into it
+        // Fas 7 (save/load teardown honesty): TRUE while the worker thread lives. A destroyed driver's
+        // worker may still be inside its current year batch and write ONE more checkpoint — a restorer
+        // that wipes the grid must wait for this to go false, or a stale file could masquerade as a
+        // fresh resimulation. Read-only observability; no behavior change.
+        public bool WorkerAlive => _worker != null && _worker.IsAlive;
+        /// <summary>Fas 7: ask the worker to stop NOW (it exits at the next between-batch check, ≤ one
+        /// year batch away) without waiting for Destroy's deferred OnDestroy. Idempotent, read-side only.</summary>
+        public void StopWorker() { _stop = true; }
 
         volatile int _tick; volatile int _year; volatile bool _finished;
         string _finalHash = ""; string _error = "";

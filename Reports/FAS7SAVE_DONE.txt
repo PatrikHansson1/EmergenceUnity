@@ -1,0 +1,2 @@
+DONE 10:40:06 verdict=GREEN shaMatch=YES sha12=4f81ac61a2d5 savedYear=6 chkDeleted=9 loadedSouls=6 loadedHuts=2 feedNew=0 liveOn=y7
+see Reports/fas7-saveload.txt

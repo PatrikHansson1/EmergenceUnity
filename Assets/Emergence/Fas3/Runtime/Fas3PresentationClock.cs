@@ -56,6 +56,10 @@ namespace Emergence.Runtime
             int yearTicks = Mathf.Max(1, d.YearTicks);
             while (true)
             {
+                // Fas 7 (save/load): pause applies NOTHING — not even genesis, whose boundary (0) is
+                // always <= a frozen PresentationTick. A paused boot (startPaused) witnesses no history
+                // until a restorer releases time; the opening (D-139) boots unpaused and is untouched.
+                if (paused) break;
                 // first apply is GENESIS (year 0) when the driver queued it (bufferMode) — from then on, +1 per year
                 int nextYear = w.LastAppliedYear < 0 ? 0 : w.LastAppliedYear + 1;
                 if ((double)nextYear * yearTicks > PresentationTick) break;   // its boundary isn't reached yet
