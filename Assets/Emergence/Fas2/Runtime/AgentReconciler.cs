@@ -28,7 +28,7 @@ namespace Emergence.Runtime
         const float TileSize = 8f;   // matches WorldDresser/LiveReconciler
         const float Scale = 1f;      // matches WorldDresser.VillagerScale
 
-        sealed class Rec { public GameObject go; public string band; public bool female; public string task; }
+        sealed class Rec { public GameObject go; public string band; public bool female; public string task; public string sayAct; }
         readonly Dictionary<int, Rec> _agents = new();
         int _tick;
 
@@ -51,7 +51,7 @@ namespace Emergence.Runtime
             var layer = GameObject.Find(LayerName);
             if (layer == null) return;
             foreach (var aa in layer.GetComponentsInChildren<AgentAnimator>())
-                _agents[aa.agentId] = new Rec { go = aa.gameObject, band = aa.band, female = aa.female, task = aa.task };
+                _agents[aa.agentId] = new Rec { go = aa.gameObject, band = aa.band, female = aa.female, task = aa.task, sayAct = aa.sayAct };
         }
 
         public Delta Reconcile(WorldState S, bool editPose)
@@ -102,15 +102,14 @@ namespace Emergence.Runtime
                             else { rec.go.transform.position = pos; Face(S, a, rec.go); }
                             d.moved++;
                         }
+                        var aaLive = rec.go.GetComponent<AgentAnimator>();
                         if (rec.task != a.task)
                         {
                             rec.task = a.task;
-                            var aa = rec.go.GetComponent<AgentAnimator>();
-                            if (aa != null)
+                            if (aaLive != null)
                             {
-                                if (Application.isPlaying) aa.SetTask(a.task);   // live crossfade
-                                else { aa.task = a.task; if (editPose) StillPose(rec.go, a, band, female); }
-                                aa.SetMood(a.sayAct);                            // A2-interim (D-131)
+                                if (Application.isPlaying) aaLive.SetTask(a.task);   // live crossfade
+                                else { aaLive.task = a.task; if (editPose) StillPose(rec.go, a, band, female); }
                                 EnsureCarryProp(rec.go, a.task);                 // "bär" (D-131): basket in hand on carry/haul tasks
                             }
                             d.retasked++;
@@ -119,11 +118,27 @@ namespace Emergence.Runtime
                         }
                         else d.kept++;
                     }
+                    // A2-polish (D-159): mood was TASK-CHANGE-GATED — a soul falling in love mid-task
+                    // never got its tempo. Refresh on sayAct change, independent of task; attend-gaze
+                    // recomputed every applied state (pure function of S). OUTSIDE the band-branch on
+                    // purpose (probe finding: the aged-rebuilt body lost gaze/mood until next task change).
+                    var aaExpr = rec.go.GetComponent<AgentAnimator>();
+                    if (aaExpr != null)
+                    {
+                        string act = a.sayAct ?? "";
+                        if (rec.sayAct != act) { rec.sayAct = act; aaExpr.SetMood(act); }
+                        if (Application.isPlaying) Attend(S, a, aaExpr);
+                    }
                 }
                 else
                 {
                     var go = Spawn(S, a, band, female, layer, editPose);
-                    _agents[a.id] = new Rec { go = go, band = band, female = female, task = a.task };
+                    _agents[a.id] = new Rec { go = go, band = band, female = female, task = a.task, sayAct = a.sayAct ?? "" };
+                    if (Application.isPlaying)
+                    {
+                        var aaNew = go.GetComponent<AgentAnimator>();
+                        if (aaNew != null) Attend(S, a, aaNew);                  // A2-polish (D-159)
+                    }
                     d.born++;
                     PresentationEventBus.Publish(new PresentationEvent(
                         _tick, S.years, WorldEras.Name(S.era), PresentationEventType.AgentActivity, "agent-" + a.id, -1,
@@ -222,6 +237,39 @@ namespace Emergence.Runtime
             return null;
         }
 #endif
+
+        // ---- A2-polish (D-159): what does this soul attend to? PURE function of applied state ----
+        // Social verbs (teach/love/small) face the nearest OTHER soul; cold faces the nearest fire.
+        // Sim-space radii (the engine's smalltalk range is close); the animator only yaw-slerps toward
+        // the mapped point (presentation-only, D-078 r4 — reads state, never writes back, no RNG).
+        public const float SocialRadius = 6f, FireRadius = 12f;   // sim units
+        public static bool SocialAct(string act) => act == "teach" || act == "love" || act == "small";
+        static void Attend(WorldState S, WorldAgent a, AgentAnimator aa)
+        {
+            string act = a.sayAct ?? "";
+            if (SocialAct(act) && S.agents != null)
+            {
+                WorldAgent best = null; float bd = SocialRadius * SocialRadius;
+                foreach (var b in S.agents)
+                {
+                    if (b.id == a.id) continue;
+                    float dd = (b.x - a.x) * (b.x - a.x) + (b.y - a.y) * (b.y - a.y);
+                    if (dd < bd) { bd = dd; best = b; }
+                }
+                if (best != null) { aa.SetAttend(GroundW(P(S, best.x, best.y))); return; }
+            }
+            else if (act == "cold" && S.fires != null)
+            {
+                WorldFire best = null; float bd = FireRadius * FireRadius;
+                foreach (var f in S.fires)
+                {
+                    float dd = (f.x - a.x) * (f.x - a.x) + (f.y - a.y) * (f.y - a.y);
+                    if (dd < bd) { bd = dd; best = f; }
+                }
+                if (best != null) { aa.SetAttend(GroundW(P(S, best.x, best.y))); return; }
+            }
+            aa.ClearAttend();
+        }
 
         static void Face(WorldState S, WorldAgent a, GameObject go)
         {

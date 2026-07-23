@@ -1,2 +1,2 @@
-DONE 01:55:16 verdict=GREEN intensityAtCheck=0,120 hutsAtCheck=1 pointsAtFixture=1 intensityAtFixture=0,750
+DONE 07:05:21 verdict=GREEN intensityAtCheck=0,120 hutsAtCheck=1 pointsAtFixture=1 intensityAtFixture=0,750
 see Reports/fas6-state-ambience.txt

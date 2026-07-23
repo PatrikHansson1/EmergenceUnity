@@ -1,8 +1,8 @@
 EMERGENCE — FAS 4 v0 PROBE: the chronicle feed (consumer #3 on the Fas 0 bus)
-generated 2026-07-23 01:55:58
+generated 2026-07-23 07:05:31
 names = the sim's own WorldAgent.name (state read) — condition B needs a story WITH names
 
-## PLAY PHASE (frames=18899)
+## PLAY PHASE (frames=18427)
 genesis: 4 arrival entries at y0 (bus carried 4), 0 birth entries at y0 (OK)
 first child: y1 (bus y1) salience 3 "a first child is born — Liv" (OK)
 first hut: milestone entry y5 (bus y5) (OK)

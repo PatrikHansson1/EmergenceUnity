@@ -183,17 +183,17 @@ namespace Emergence.Editor
                 bool prop = aa.GetComponentsInChildren<Transform>(true).Any(t => t.name == "CarryProp_D131");
                 if (prop) propOk++;
             }
-            // A2-interim spot check: mood tempo applied from sayAct
+            // A2 spot check (D-131 interim → D-159 polish): tempo == the ONE law TempoFor(band, sayAct)
             int moodChecked = 0, moodOk = 0;
             var layer = GameObject.Find(AgentReconciler.LayerName);
             if (layer != null)
                 foreach (var aa in layer.GetComponentsInChildren<AgentAnimator>())
                 {
-                    if (string.IsNullOrEmpty(aa.sayAct) || AgentAnimator.MoodSpeed(aa.sayAct) == 1f) continue;
+                    if (AgentAnimator.TempoFor(aa.band, aa.sayAct) == 1f) continue;
                     var an = aa.GetComponentInChildren<Animator>();
                     if (an == null) continue;
                     moodChecked++;
-                    if (Mathf.Abs(an.speed - AgentAnimator.MoodSpeed(aa.sayAct)) < 0.001f) moodOk++;
+                    if (Mathf.Abs(an.speed - AgentAnimator.TempoFor(aa.band, aa.sayAct)) < 0.001f) moodOk++;
                 }
             return $"WORK: {workOk} in Work state, {workOff} off | CARRY: {carryOk} read-right, {carryOff} off, props {propOk} | A2-mood tempo: {moodOk}/{moodChecked} applied";
         }

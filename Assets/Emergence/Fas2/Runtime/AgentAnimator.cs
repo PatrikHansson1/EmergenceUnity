@@ -69,23 +69,49 @@ namespace Emergence.Runtime
             if (_anim == null) return;
             _anim.applyRootMotion = false;                                   // sim position is truth
             _anim.cullingMode = AnimatorCullingMode.CullUpdateTransforms;    // A6: off-screen agents cost less
-            _anim.speed = MoodSpeed(sayAct);                                 // A2-interim (D-131)
+            _anim.speed = TempoFor(band, sayAct);                            // A2-polish (D-159): age × mood
             Apply(true);
         }
 
         /// <summary>Reconciler-facing: update the task live (crossfades only when the read changes).</summary>
         public void SetTask(string t) { task = t; if (_anim != null) Apply(false); }
 
-        /// <summary>A2-interim (D-131): sim sayAct → animator tempo. Full body-states await the Väg-1 clips.</summary>
+        /// <summary>A2-polish (D-159): sim sayAct → animator tempo. Full body-states await the Väg-1 clips.</summary>
         public void SetMood(string act)
         {
             sayAct = act ?? "";
-            if (_anim != null) _anim.speed = MoodSpeed(sayAct);
+            if (_anim != null) _anim.speed = TempoFor(band, sayAct);
         }
+        // D-159: the FULL engine sayAct vocabulary (9 verbs, audited from the engine's speak() calls —
+        // discovery/ritual/observe/teach/love/small/hungry/cold/fail). Discovery lifts, observe slows
+        // into attention, cold huddles, fail sags; small stays neutral tempo (it gets the social GAZE).
         public static float MoodSpeed(string act) => act switch
         {
-            "love" => 1.07f, "teach" => 0.96f, "ritual" => 0.90f, "hungry" => 0.86f, _ => 1f
+            "discovery" => 1.10f, "love" => 1.07f, "teach" => 0.96f, "observe" => 0.94f,
+            "ritual" => 0.90f, "fail" => 0.90f, "hungry" => 0.86f, "cold" => 0.85f, _ => 1f
         };
+        // D-159: age reads in the gait — a child skips, an elder drags. Multiplicative with mood.
+        public static float AgeGain(string band) => band == "child" ? 1.06f : band == "elder" ? 0.92f : 1f;
+        /// <summary>The ONE tempo law (runtime + gate proof + probe all read THIS): age × mood.</summary>
+        public static float TempoFor(string band, string act) => AgeGain(band) * MoodSpeed(act ?? "");
+
+        // ---- A2-polish (D-159): social attention — the body orients toward what the soul attends ----
+        // teach/love/small face the nearest soul; cold faces the nearest fire. The TARGET is computed by
+        // the reconciler as a PURE function of applied state; this class only yaw-slerps toward it.
+        // Never fights the glide (transit owns heading); edit mode untouched (Face() stands, D-124).
+        Vector3 _attend; bool _hasAttend;
+        public bool HasAttend => _hasAttend;
+        public Vector3 AttendTarget => _attend;
+        public void SetAttend(Vector3 worldPos) { _attend = worldPos; _hasAttend = true; }
+        public void ClearAttend() => _hasAttend = false;
+        /// <summary>Probe-facing: yaw error (deg) between current facing and the attend target.</summary>
+        public float AttendYawError()
+        {
+            if (!_hasAttend) return 0f;
+            var to = _attend - transform.position; to.y = 0f;
+            if (to.sqrMagnitude < 0.0004f) return 0f;
+            return Vector3.Angle(transform.forward, to.normalized);
+        }
 
         /// <summary>Reconciler-facing (v2, D-129): walk to the new sim position instead of teleporting.</summary>
         public void GlideTo(Vector3 target)
@@ -100,7 +126,18 @@ namespace Emergence.Runtime
 
         void Update()
         {
-            if (!_transit) return;
+            if (!_transit)
+            {
+                // A2-polish (D-159): attend-gaze — gentle yaw toward the attention target while stationary
+                if (_hasAttend && Application.isPlaying)
+                {
+                    var att = _attend - transform.position; att.y = 0f;
+                    if (att.sqrMagnitude > 0.0004f)
+                        transform.rotation = Quaternion.Slerp(transform.rotation,
+                            Quaternion.LookRotation(att.normalized), 4f * Time.deltaTime);
+                }
+                return;
+            }
             if (_anim == null) { transform.position = _glideTarget; _transit = false; return; }
             var pos = transform.position;
             var to = _glideTarget - pos; to.y = 0f;
