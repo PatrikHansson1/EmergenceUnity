@@ -1,0 +1,19 @@
+EMERGENCE — FAS 6 PROBE: the living fire layer — the eye catches up with the ear
+generated 2026-07-23 01:52:29
+data source = applied WorldState fires/huts (read-only); grammar = WorldDresser.PlaceFires verbatim (TD-025/D-114/115b)
+
+## PLAY PHASE (frames=7)
+genesis: state fires=0, live layer fires=0 smoke=0 @y0 (OK)
+fixture 4242-y120-dusk (riktig motor-export, samma Apply-väg): live fires 1==1, warm point verbatim (D-114/115b)=True, pos match=True, smoke on raw export=0 (OK)
+smoke rule pure at boundary: in@3=True out@3.5=True (OK) · mekanism-fixtur (EN hydda flyttad intill elden — ingen liggande export bär hydda inom 3 tiles av brinnande eld): smoke 1==1 (>0), fires still 1 (OK)
+evidence A evidence: OK (end-of-frame backbuffer, nonwhite 100%) -> Reports/fas6-fire-a.png
+evidence B evidence: OK (end-of-frame backbuffer, nonwhite 100%) -> Reports/fas6-fire-b.png
+onLoss (seq-8919-y055, 0 fires, samma Apply-väg): live fires 0, smoke 0 (OK)
+resume: tps 24==24 (OK) — the fire layer never touches the clock
+
+fixture honesty: fire/onLoss proven with RAW real exports through the SAME Fas3WorldRuntime.Apply path; the smoke
+materialization uses a MECHANISM fixture (same export, ONE hut moved adjacent — declared above) because no existing
+export carries a hut within range of a burning fire (D-131 Fas2GateProof school). Grammar mirrors WorldDresser.PlaceFires
+verbatim; look/taste of VFX = the human eye pass. PNG guard proves non-blankness only — the fire must be SEEN by a human.
+
+verdict: GREEN — fires now have bodies in the living loop: materialized, warm, smoking, dismantled, the clock untouched

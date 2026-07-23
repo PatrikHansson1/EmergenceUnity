@@ -101,6 +101,21 @@ namespace Emergence.Editor
             foreach (var b in VillagerBodies) wanted.Add(b);
             wanted.Add(Path.GetFileNameWithoutExtension(CarryPropPath));
 
+            // 3b) fires (Fas 6 ink. 3, D-158): FireReconciler's fallback chains — OPTIONAL names
+            // (the dresser tolerates absent variants; a missing chain member is not a defect, so
+            // these resolve into the catalog when present but never count toward `missing`)
+            var optional = new[] { "VFX_Fire_01_Medium", "VFX_Fire_01_Big", "P_FX_fire", "PF_FX_fire", "fire",
+                                   "msVFX_Stylized Smoke 1", "msVFX_Stylized Smoke 2" };
+            int optOk = 0;
+            foreach (var name in optional.Where(n => !wanted.Contains(n, StringComparer.OrdinalIgnoreCase)))
+            {
+                var pf = Resolve(name);
+                cat.prefabs.Add(new EmergenceAssetCatalog.PrefabEntry { name = name, prefab = pf });
+                if (pf != null) { ok++; optOk++; }
+                else sb.AppendLine($"  optional (absent, tolerated): {name}");
+            }
+            sb.AppendLine($"fire/smoke chain (optional): {optOk}/{optional.Length} resolved");
+
             foreach (var name in wanted.Distinct(StringComparer.OrdinalIgnoreCase))
             {
                 var pf = Resolve(name);

@@ -13,6 +13,20 @@ MonoBehaviour:
   m_Name: EmergenceAssetCatalog
   m_EditorClassIdentifier: Assembly-CSharp::Emergence.Runtime.EmergenceAssetCatalog
   prefabs:
+  - name: VFX_Fire_01_Medium
+    prefab: {fileID: 8295591563862043295, guid: 98c5ce036f68d8941922e7541fb70887, type: 3}
+  - name: VFX_Fire_01_Big
+    prefab: {fileID: 8829451551789304542, guid: e91fa0fac941e714e8c4d5709097019f, type: 3}
+  - name: P_FX_fire
+    prefab: {fileID: 9002380880433531131, guid: 30676f232a1876f40a16219b65af703f, type: 3}
+  - name: PF_FX_fire
+    prefab: {fileID: 0}
+  - name: fire
+    prefab: {fileID: 9002380880433531131, guid: 2aba9f0b2bf220c48916633329d4dc07, type: 3}
+  - name: msVFX_Stylized Smoke 1
+    prefab: {fileID: 104829970813648393, guid: d3015b7eea383f64d8b81f965cc466e7, type: 3}
+  - name: msVFX_Stylized Smoke 2
+    prefab: {fileID: 985483039366664255, guid: f91edac4d13fc4343ba96bb6a843ad05, type: 3}
   - name: P_PROP_flag_01
     prefab: {fileID: 1525057500783216557, guid: 319a3e76f3abd7a43b206990bf62733f, type: 3}
   - name: mill.glb

@@ -1,8 +1,8 @@
 EMERGENCE — FAS 5 PROBE: the Almanac Overview v0 (ANALYZE's first native face)
-generated 2026-07-23 01:33:54
+generated 2026-07-23 01:57:44
 data source = Fas5MetricsRecorder (consumer #4 on the bus + applied state, read-only)
 
-## PLAY PHASE (frames=17330)
+## PLAY PHASE (frames=17012)
 ready: view READY=True on reused Resources/Fas4PanelSettings, recorder 6 year-records (OK)
 truth: latest pop 6==state 6 @y5==5, births 2==feed 2, deaths 0==feed 0, huts 1==state 1 (OK)
 almanac open: pauses clock OK (was paused=True), tps untouched 24->24 (OK)

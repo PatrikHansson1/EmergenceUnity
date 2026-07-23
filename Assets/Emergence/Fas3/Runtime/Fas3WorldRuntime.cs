@@ -18,6 +18,7 @@ namespace Emergence.Runtime
         readonly AgentReconciler _agents = new AgentReconciler();
         readonly HutReconciler _huts = new HutReconciler();
         readonly LiveReconciler _codex = new LiveReconciler();
+        readonly FireReconciler _fires = new FireReconciler();   // Fas 6 ink. 3 (D-158): the living fire layer
 
         public int AppliedCount { get; private set; }
         public int LastAppliedYear { get; private set; } = -1;
@@ -30,6 +31,8 @@ namespace Emergence.Runtime
         public WorldState PrevState { get; private set; }
         public int HutCount => _huts.Count;
         public int AgentCount => _agents.Count;
+        public int FireCount => _fires.Count;
+        public int SmokeCount => _fires.SmokeCount;
         public int CodexPlacedCount => _codex.PlacedCount;
         public string LastCodexNote { get; private set; } = "";
 
@@ -42,6 +45,9 @@ namespace Emergence.Runtime
             _huts.Reconcile(S);
             try { _codex.Reconcile(S); LastCodexNote = "ok"; }
             catch (Exception e) { LastCodexNote = e.Message; Debug.LogWarning("[Fas3WorldRuntime] codex: " + e.Message); }
+            // fires are dressing-tier: a failure here must never break agents/huts (same clause as codex)
+            try { _fires.Reconcile(S); }
+            catch (Exception e) { Debug.LogWarning("[Fas3WorldRuntime] fires: " + e.Message); }
             AppliedCount++;
             LastAppliedYear = S.years;
         }
@@ -51,7 +57,7 @@ namespace Emergence.Runtime
         /// <summary>Clear every live layer (scrub entry point — a checkpoint Apply rebuilds the world).</summary>
         public void ResetWorld()
         {
-            _agents.Clear(); _huts.Clear(); _codex.Clear();
+            _agents.Clear(); _huts.Clear(); _codex.Clear(); _fires.Clear();
             AppliedCount = 0; LastAppliedYear = -1;
             LastState = null; PrevState = null;
         }
