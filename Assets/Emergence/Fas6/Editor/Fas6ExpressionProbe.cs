@@ -303,30 +303,14 @@ namespace Emergence.Editor
                 bool speedOk = Mathf.Abs(_coldSpeedAtCheck - wantSpeed) < 0.001f;
                 _n5 = $"cold branch (4242-y120-dusk + EN själ satt cold intill elden — deklarerad mekanism-fixtur, ingen liggande export bär cold): attends mapped fire={attends}, yaw {_coldYawAtCheck:F1}<12°={yawOk}, tempo {_coldSpeedAtCheck:F3}==law {wantSpeed:F3}={speedOk} ({(attends && yawOk && speedOk ? "OK" : "FAIL")})";
 
-                // evidence: PAIR-framing (first-run eye lesson: mid-point framing at fixed distance put
-                // the soul outside the frame while the fire sat pretty in the middle — the subject of the
-                // mechanism must be IN the picture). Perpendicular to the soul->fire axis, distance
-                // proportional to the pair span, raycast against BOTH endpoints (the D-131 lesson).
+                // evidence: FAS 7 ink. 0 (D-163) — the PAIR-framing (first-run eye lesson: the soul
+                // was outside the frame) is now the SHARED evidence law: perpendicular to the
+                // farthest-pair axis, distance proportional to the span, raycast against ALL subjects.
                 var soulPos = aa.transform.position;
-                var mid = (soulPos + _firePos) * 0.5f + Vector3.up * 1.0f;
-                var axis = _firePos - soulPos; axis.y = 0f;
-                float span = Mathf.Max(axis.magnitude, 8f);
-                var perp = Vector3.Cross(axis.normalized, Vector3.up);
-                Vector3 pick = mid + perp * span * 1.2f + Vector3.up * 4f;
-                bool found = false;
-                foreach (var side in new[] { perp, -perp })
-                {
-                    foreach (var h in new[] { 3.5f, 6.5f })
-                    {
-                        var cand = mid + side * span * 1.2f + Vector3.up * h;
-                        if (!Physics.Linecast(cand, soulPos + Vector3.up * 1f) && !Physics.Linecast(cand, _firePos + Vector3.up * 0.5f))
-                        { pick = cand; found = true; break; }
-                        pick = cand;
-                    }
-                    if (found) break;
-                }
+                Vector3 lookAt;
+                Vector3 pick = EvidenceFraming.FrameSubjects(out lookAt, soulPos, _firePos);
                 var cam = Camera.main;
-                if (cam != null) { cam.transform.position = pick; cam.transform.LookAt(mid); }
+                if (cam != null) { cam.transform.position = pick; cam.transform.LookAt(lookAt); }
                 var g = new GameObject("Fas6ExprGrabber").AddComponent<Fas4NativeGrabber>();
                 g.Path = Png; g.OnGrabbed = note => { _n6 = "evidence " + note; };
                 _grabAskedAt = Time.unscaledTime;

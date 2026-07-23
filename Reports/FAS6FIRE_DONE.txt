@@ -1,2 +1,2 @@
-DONE 09:11:38 verdict=GREEN firesAtCheck=1 smokeAtCheck=1 firesAfterLoss=0
+DONE 09:45:35 verdict=GREEN firesAtCheck=1 smokeAtCheck=1 firesAfterLoss=0
 see Reports/fas6-fire.txt

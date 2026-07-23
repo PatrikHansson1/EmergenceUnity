@@ -23,6 +23,12 @@ namespace Emergence.AutoCompileTool
     [InitializeOnLoad]
     public static class AutoCompile
     {
+        // N2 (Fas 6 G-review r2, D-163): the DECLARED warning baseline — 16 pre-existing
+        // third-party/legacy warnings (15 Polyart CS0414/CS0618/UAC1001 + 1 Fas2MoveProbe CS0414),
+        // audited 2026-07-23. A full recompile reports all 16; an incremental one may report fewer.
+        // Deviations ABOVE baseline are findings; update the constant only with a fresh audit.
+        const int WarningsBaseline = 16;
+
         static double _next, _armedAt;
         static bool _armed, _sawFinish;
         static readonly List<string> _errors = new List<string>();
@@ -87,7 +93,9 @@ namespace Emergence.AutoCompileTool
             _armed = false;
             var sb = new StringBuilder();
             sb.AppendLine($"COMPILE {verdict} — {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
-            sb.AppendLine($"errors={_errors.Count} warnings={_warnings.Count}");
+            sb.AppendLine($"errors={_errors.Count} warnings={_warnings.Count} warningsBaseline={WarningsBaseline}");
+            if (_warnings.Count > WarningsBaseline)
+                sb.AppendLine($"NOTE: warning count EXCEEDS the declared baseline ({WarningsBaseline}) — inspect ## WARNINGS before accepting (N2, D-163). (An incremental compile honestly reports fewer.)");
             sb.AppendLine();
             if (_errors.Count > 0)   { sb.AppendLine("## ERRORS");   foreach (var e in _errors)   sb.AppendLine("  " + e); sb.AppendLine(); }
             if (_warnings.Count > 0) { sb.AppendLine("## WARNINGS"); foreach (var w in _warnings) sb.AppendLine("  " + w); }

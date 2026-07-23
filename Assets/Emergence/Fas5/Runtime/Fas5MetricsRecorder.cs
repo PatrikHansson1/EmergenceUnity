@@ -90,7 +90,8 @@ namespace Emergence.Runtime
             var w = World();
             var S = w != null ? w.LastState : null;
             int y = w != null ? w.LastAppliedYear : -1;
-            if (S != null && y >= 0 && y != _lastSampledYear && !c.ApplyingJump)
+            // I4: a fixture-born snapshot is never sampled into the series (late-reader guard)
+            if (S != null && y >= 0 && y != _lastSampledYear && !c.ApplyingJump && !w.LastApplyWasFixture)
             {
                 _lastSampledYear = y;
                 var r = GetOrMake(y);
@@ -106,6 +107,9 @@ namespace Emergence.Runtime
         {
             var c = Clock();
             if (c != null && c.ApplyingJump) { SuppressedDuringJump++; return; }   // reconstruction, not history
+            // FAS 7 ink. 0 (G-review r2 fynd I4): fixture injection is as invisible to the metrics
+            // series as it is to the chronicle — probes only, production never sets the flag
+            if (Fas3WorldRuntime.FixtureInjection) return;
 
             switch (e.Type)
             {

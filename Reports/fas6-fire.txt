@@ -1,5 +1,5 @@
 EMERGENCE — FAS 6 PROBE: the living fire layer — the eye catches up with the ear
-generated 2026-07-23 09:11:26
+generated 2026-07-23 09:45:21
 data source = applied WorldState fires/huts (read-only); grammar = WorldDresser.PlaceFires verbatim (TD-025/D-114/115b)
 
 ## PLAY PHASE (frames=7)

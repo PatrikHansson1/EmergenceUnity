@@ -218,7 +218,9 @@ namespace Emergence.Editor
                 var cam = Camera.main;
                 if (cam != null)
                 {
-                    cam.transform.position = _firePos + new Vector3(2.5f, 9f, 2.5f);   // near-overhead: canopy gaps
+                    // DECLARED special angle (not FrameSubjects): near-overhead through canopy gaps —
+                    // a deliberate second perspective, kept alongside the shared law's angle A
+                    cam.transform.position = _firePos + new Vector3(2.5f, 9f, 2.5f);
                     cam.transform.LookAt(_firePos + Vector3.up * 0.6f);
                 }
                 var g = new GameObject("Fas6FireGrabberB").AddComponent<Fas4NativeGrabber>();
@@ -257,22 +259,9 @@ namespace Emergence.Editor
             }
         }
 
-        /// <summary>Pick the first of eight camera candidates (4 compass x 2 elevations) with an
-        /// unoccluded ray to the fire; fall back to the last candidate. The D-131 canopy lesson,
-        /// mechanized.</summary>
-        static Vector3 PickAngle()
-        {
-            var target = _firePos + Vector3.up * 1.0f;
-            Vector3 pick = _firePos + new Vector3(5f, 7f, 5f);
-            foreach (var d in new[] { new Vector3(1,0,1), new Vector3(1,0,-1), new Vector3(-1,0,1), new Vector3(-1,0,-1) })
-                foreach (var h in new[] { 3.5f, 7f })
-                {
-                    var cand = _firePos + d.normalized * 6.5f + Vector3.up * h;
-                    if (!Physics.Linecast(cand, target)) return cand;
-                    pick = cand;
-                }
-            return pick;
-        }
+        /// <summary>FAS 7 ink. 0 (D-163): the shared evidence framing law — single-subject case
+        /// (the D-131/D-158 canopy lesson lives in EvidenceFraming now, one law for all probes).</summary>
+        static Vector3 PickAngle() => EvidenceFraming.FrameSubjects(out _, _firePos);
 
         static void PlaceCamera(Vector3 pos)
         {

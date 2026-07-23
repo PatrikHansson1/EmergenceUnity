@@ -29,6 +29,12 @@ namespace Emergence.Runtime
         // around a fixture Apply so chronicle-class consumers stay silent; production never sets it.
         public static bool FixtureInjection;
 
+        // FAS 7 ink. 0 (G-review r2 fynd I4): the synchronous flag can't cover LATE readers (the
+        // metrics recorder samples LastState in Update, frames after the Apply) — so the Apply
+        // stamps whether the snapshot standing applied came from an injection. A following live
+        // Apply clears it. Read-only outside.
+        public bool LastApplyWasFixture { get; private set; }
+
         // FAS 4 (ChronicleFeed): the last two applied snapshots, exposed READ-ONLY so bus consumers
         // can resolve sim-given NAMES (WorldAgent.name) at event time. Set BEFORE reconciling so the
         // synchronous event burst of an Apply can already see the state it derives from; PrevState
@@ -46,6 +52,7 @@ namespace Emergence.Runtime
         public void Apply(WorldState S)
         {
             if (S == null) return;
+            LastApplyWasFixture = FixtureInjection;   // I4: late readers ask the applied snapshot, not the flag
             PrevState = LastState; LastState = S;
             _agents.Reconcile(S, false);
             _huts.Reconcile(S);

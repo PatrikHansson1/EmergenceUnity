@@ -1,8 +1,8 @@
 EMERGENCE — FAS 5 PROBE: the tab skeleton — Villages live + Souls base
-generated 2026-07-23 00:44:34
+generated 2026-07-23 09:52:02
 data sources = applied WorldState (read-only) + fixture seq-8919-y055.json (a real engine export, D-131 fixture school)
 
-## PLAY PHASE (frames=16779)
+## PLAY PHASE (frames=16959)
 skeleton: 7 tabs (reference nav), default tab 0==Overview, READY=True (OK)
 villages LIVE (empty branch): rows 0==state 0 @y5 — the young world hides nothing, fakes nothing (OK)
 souls LIVE: rows 6==6, oldest first 'Eira'=='Eira', dossier Eira/26 år/gen 1/'wandering' (OK)
