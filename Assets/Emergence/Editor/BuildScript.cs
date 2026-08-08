@@ -52,20 +52,14 @@ namespace Emergence.Editor
             }
         }
 
-        // The engine/harness/goldens live canonically at Assets/Emergence/Engine/ (plan §4).
-        // The player reads them from StreamingAssets — this sync keeps the two identical at build time.
+        // DISARMED (D-172, R2 ink. 1 finding): Assets/Emergence/Engine/emergence-engine.js is a
+        // WRITE-LOCKED 2.0.1 RELIC — every engine wave since 2.3 lives ONLY in the StreamingAssets
+        // twin (EngineSourcePath prefers it; editor, player and golden all read it). Running this
+        // sync would OVERWRITE the living 2.3.2 engine with the relic. The menu now refuses.
         [MenuItem("Emergence/Build/Sync StreamingAssets (engine + harness)")]
         public static void SyncStreamingAssets()
         {
-            var src = Path.Combine(Application.dataPath, "Emergence", "Engine");
-            var dst = Path.Combine(Application.dataPath, "StreamingAssets", "Emergence");
-            Directory.CreateDirectory(Path.Combine(dst, "harness"));
-            CopyForce(Path.Combine(src, "emergence-engine.js"), Path.Combine(dst, "emergence-engine.js"));
-            CopyForce(Path.Combine(src, "ENGINE-SHA.txt"), Path.Combine(dst, "ENGINE-SHA.txt"));
-            CopyForce(Path.Combine(src, "harness", "harness.js"), Path.Combine(dst, "harness", "harness.js"));
-            CopyForce(Path.Combine(src, "harness", "prelude-hypot.js"), Path.Combine(dst, "harness", "prelude-hypot.js"));
-            AssetDatabase.Refresh();
-            Debug.Log("[BuildScript] StreamingAssets synced from Assets/Emergence/Engine/");
+            Debug.LogError("[BuildScript] DISARMED (D-172): Engine/ holds a 2.0.1 relic; the LIVING engine is the StreamingAssets twin. Syncing Engine/->StreamingAssets would destroy the current engine. If a sync is ever needed, it must run the OTHER way, deliberately, in a motor-lane session.");
         }
 
 
