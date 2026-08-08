@@ -11,7 +11,7 @@ namespace Emergence.Runtime
 {
     public sealed class EmergenceJintHost
     {
-        public const string ExpectedEngineSha = "4f237acffa0cc76e6de29df8abb43db6519705d07b7b8b0439fae45f2dcad18e"; // ENGINE 2.3.1 (Jint-perf flat-array grid, D-095 — output-identical to 2.3.0)
+        public const string ExpectedEngineSha = "e59b028cd88b06e082d0a2ed92d50f3c9f917b5429c477378f08546ca60b94c1"; // ENGINE 2.3.2 (R2 INK1: verbOf/worldEra/eraName/ERAS + pathUse footfall + event id/causes[] — read-side additive, history-identical to 2.3.1; TD-076)
 
         private readonly Jint.Engine _engine;
         public string EngineSha256 { get; }

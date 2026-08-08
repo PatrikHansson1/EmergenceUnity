@@ -395,3 +395,43 @@ seed=20260718 t=720: GREEN jintSha=34fa5a18eb864254b36efc27be06853c25a2789036f06
 seed=4242-founders t=720: GREEN jintSha=3b8b61b2a256bb955ec9d5b21054f35d95285543f52857092551b3033f7f5264 goldenSha=3b8b61b2a256bb955ec9d5b21054f35d95285543f52857092551b3033f7f5264 bytes=324340 secs=47
 VERDICT: GREEN
 
+GOLDEN MASTER — in-editor (Unity 6000.5.4f1, 2026-08-08 23:43)
+commit: c1f0427e9439 (refs/heads/audition/free-assets-2026-07-19)
+Engine SHA assert: OK
+seed=97013 t=720: GREEN jintSha=00919f18be697f0f4ce3963884480a78d774729c58d889307907e81d5dfea91b goldenSha=00919f18be697f0f4ce3963884480a78d774729c58d889307907e81d5dfea91b bytes=304122 secs=38
+seed=4242 t=720: GREEN jintSha=d971084290f1e24d3a4afe0701792cd820c6d31c4ef4bf22ccc8edd163c6f4df goldenSha=d971084290f1e24d3a4afe0701792cd820c6d31c4ef4bf22ccc8edd163c6f4df bytes=314253 secs=39
+seed=20260718 t=720: GREEN jintSha=34fa5a18eb864254b36efc27be06853c25a2789036f06b02c13de6f572ecfcae goldenSha=34fa5a18eb864254b36efc27be06853c25a2789036f06b02c13de6f572ecfcae bytes=312647 secs=34
+seed=4242-founders t=720: GREEN jintSha=3b8b61b2a256bb955ec9d5b21054f35d95285543f52857092551b3033f7f5264 goldenSha=3b8b61b2a256bb955ec9d5b21054f35d95285543f52857092551b3033f7f5264 bytes=324340 secs=40
+VERDICT: GREEN
+
+GOLDEN MASTER — in-editor (Unity 6000.5.4f1, 2026-08-09 00:02)
+commit: c1f0427e9439 (refs/heads/audition/free-assets-2026-07-19)
+Engine SHA assert: OK
+seed=97013 t=720: RED jintSha=bb73f9a1dbf226902e5299e07d2d1bee28a6c733893356770a0826f9e74096e1 goldenSha=00919f18be697f0f4ce3963884480a78d774729c58d889307907e81d5dfea91b bytes=304786 secs=39
+  first divergent char index: 160 (triage per JINT-GOLDEN-MASTER-PLAN §5 / readable variant)
+seed=4242 t=720: RED jintSha=f98c6c0a9367368bd0dc233051a390dce7b0f7bb85516f93bf22a6f5917db24f goldenSha=d971084290f1e24d3a4afe0701792cd820c6d31c4ef4bf22ccc8edd163c6f4df bytes=315751 secs=39
+  first divergent char index: 160 (triage per JINT-GOLDEN-MASTER-PLAN §5 / readable variant)
+seed=20260718 t=720: RED jintSha=cbaac800bbe9f57e5f3ad9af28e180810a5bbd1444dd95ad97cbb262bd4ed0d1 goldenSha=34fa5a18eb864254b36efc27be06853c25a2789036f06b02c13de6f572ecfcae bytes=314042 secs=34
+  first divergent char index: 160 (triage per JINT-GOLDEN-MASTER-PLAN §5 / readable variant)
+seed=4242-founders t=720: RED jintSha=7263987ac20ac6e5df680b2f0b549ad188ff0ff4fc6abdf224752760c692ede9 goldenSha=3b8b61b2a256bb955ec9d5b21054f35d95285543f52857092551b3033f7f5264 bytes=326749 secs=40
+  first divergent char index: 398 (triage per JINT-GOLDEN-MASTER-PLAN §5 / readable variant)
+VERDICT: RED — STOP THE LINE (UNITY-BRIDGE-SPEC §5)
+
+GOLDEN MASTER — in-editor (Unity 6000.5.4f1, 2026-08-09 00:06)
+commit: c1f0427e9439 (refs/heads/audition/free-assets-2026-07-19)
+Engine SHA assert: OK
+seed=97013 t=720: GREEN jintSha=bb73f9a1dbf226902e5299e07d2d1bee28a6c733893356770a0826f9e74096e1 goldenSha=bb73f9a1dbf226902e5299e07d2d1bee28a6c733893356770a0826f9e74096e1 bytes=304786 secs=41
+seed=4242 t=720: GREEN jintSha=f98c6c0a9367368bd0dc233051a390dce7b0f7bb85516f93bf22a6f5917db24f goldenSha=f98c6c0a9367368bd0dc233051a390dce7b0f7bb85516f93bf22a6f5917db24f bytes=315751 secs=42
+seed=20260718 t=720: GREEN jintSha=cbaac800bbe9f57e5f3ad9af28e180810a5bbd1444dd95ad97cbb262bd4ed0d1 goldenSha=cbaac800bbe9f57e5f3ad9af28e180810a5bbd1444dd95ad97cbb262bd4ed0d1 bytes=314042 secs=33
+seed=4242-founders t=720: GREEN jintSha=7263987ac20ac6e5df680b2f0b549ad188ff0ff4fc6abdf224752760c692ede9 goldenSha=7263987ac20ac6e5df680b2f0b549ad188ff0ff4fc6abdf224752760c692ede9 bytes=326749 secs=41
+VERDICT: GREEN
+
+GOLDEN MASTER — in-editor (Unity 6000.5.4f1, 2026-08-09 00:09)
+commit: c1f0427e9439 (refs/heads/audition/free-assets-2026-07-19)
+Engine SHA assert: OK
+seed=97013 t=8640: GREEN jintSha=1124d2b3787712f63bbc1c95a1775f219f3f1ef1ca496d2de9cc69b720c111c0 goldenSha=1124d2b3787712f63bbc1c95a1775f219f3f1ef1ca496d2de9cc69b720c111c0 bytes=664209 secs=796
+seed=4242 t=8640: GREEN jintSha=d433a780d8ea76bf904bf4f335e2cdf27afa8bf634b675eac1025072baa804de goldenSha=d433a780d8ea76bf904bf4f335e2cdf27afa8bf634b675eac1025072baa804de bytes=1474717 secs=1700
+seed=20260718 t=8640: GREEN jintSha=f5e694b474b07887711fbb8b1bcbc8ce43ce026b3d387fdac415cc4107c105a7 goldenSha=f5e694b474b07887711fbb8b1bcbc8ce43ce026b3d387fdac415cc4107c105a7 bytes=616498 secs=958
+seed=4242-founders t=8640: GREEN jintSha=ff8ca35da91b700716cd27c95d483ce5faba0191869a1d89dc03d04073ae4f51 goldenSha=ff8ca35da91b700716cd27c95d483ce5faba0191869a1d89dc03d04073ae4f51 bytes=622920 secs=665
+VERDICT: GREEN
+

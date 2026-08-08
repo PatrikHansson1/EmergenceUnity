@@ -65,18 +65,24 @@ namespace Emergence.Runtime
 
         // node-exporter parity (minus tiles: the 2.3 flat grid is engine-internal and the dresser
         // doesn't need tiles live — terrain is dressed once from a verified snapshot).
+        // R2 INK1 (MOTOR-LANE-ORDER-R2-FAS4, engine wave): ADDITIVE fields only — eraName (motor-owned
+        // era canon, §5), agents[].verb (canonical work/carry verb, §verb) and pathUse (cumulative
+        // footfall per tile, row-major y*W+x, §pathUse). The pre-existing fields and their values are
+        // byte-identical to before (era keeps the same inline law; E.worldEra is the same law motor-side).
         const string ExportJs = @"(function(){var E=Emergence,S=__S;return JSON.stringify({
 engineVersion:E.VERSION,seed:__seed,years:Math.floor(S.tick/E.YEAR),tick:S.tick,ended:!!S.ended,season:''+S.season,
 era:(function(){var m=0;S.agents.forEach(function(a){if(a.dead)return;a.knows.forEach(function(t){var q=E.TECH[t];if(q&&q.era>m)m=q.era})});return m})(),
+eraName:''+E.eraName(E.worldEra(S)),
 W:E.W,H:E.H,
 tileTypes:'',tileN:[],
-agents:S.agents.filter(function(a){return !a.dead}).map(function(a){return {id:a.id,name:''+a.name,x:a.x,y:a.y,age:a.age,gen:a.gen,task:''+a.task,say:''+(a.say||''),sayAct:''+(a.sayAct||''),home:!!a.home}}),
+agents:S.agents.filter(function(a){return !a.dead}).map(function(a){return {id:a.id,name:''+a.name,x:a.x,y:a.y,age:a.age,gen:a.gen,task:''+a.task,verb:''+E.verbOf(a.task),say:''+(a.say||''),sayAct:''+(a.sayAct||''),home:!!a.home}}),
 dead:S.agents.filter(function(a){return a.dead}).length,
 huts:S.huts.map(function(h){return {x:h.x,y:h.y,owner:''+(h.owner||''),free:!!h.free}}),
 fires:S.fires.map(function(f){return {x:f.x,y:f.y,fuel:f.fuel}}),
 fields:S.fields.map(function(f){return {x:f.x,y:f.y,stage:f.stage,owner:''+(f.owner||'')}}),
 villages:S.villages.map(function(v){return {x:v.x,y:v.y,name:''+v.name}}),
 animals:S.animals.map(function(an){return {id:an.id,type:''+an.type,x:an.x,y:an.y}}),
+pathUse:S.pathUse||[],
 dna:''+E.computeDNA(S)})})()";
 
         void Start()

@@ -245,8 +245,13 @@ const VALUES=[{target:'fire',name:'The Undying Flame',txt:'keeps a flame burning
 const RELIGION_WORDS={stone:'Stone',flowers:'Flowers',seed:'Seed',water:'Water',twig:'Ember',singing:'Song',humming:'Song',drumming:'Drum',stories:'Telling',painting:'Marks',carving:'Marks',wood:'Trees',iron:'Iron',fire:'Flame',wolf:'Wolf',observation:'Open Eye'};
 
 // ---------- event log ----------
+// R2 INK1 (MOTOR-LANE-ORDER-R2-FAS4 §writeHistory, causes[] substrate): every event carries a
+// stable id = its index in S.events at emission. Emitters may pass an additive causes[] array of
+// references ('ev:<eventId>' | 'agent:<agentId>' | 'tech:<techId>' | 'cause:<key>') to the events
+// that caused this one (depth 1 — the chain is traversed in UI). Pure read-side bookkeeping:
+// consumes no S.rand, changes no behavior, removes nothing from the schema.
 function ev(S,type,txt,data){
-  const e=Object.assign({tick:S.tick,day:S.day,year:Math.floor(S.tick/YEAR)+1,type,txt},data||{});
+  const e=Object.assign({id:S.events.length,tick:S.tick,day:S.day,year:Math.floor(S.tick/YEAR)+1,type,txt},data||{});
   S.events.push(e);
   if(S.onEvent&&!S.silent)S.onEvent(e,S);
   return e;
@@ -276,7 +281,10 @@ function gainKnowledge(S,a,id,via,altUsed){
     const mat=altUsed?Object.keys(altUsed)[0]:null;
     const name=`${a.name}'s ${mat==='iron'&&id==='axe'?'iron ':''}${pick(S,t.var)}`;
     k=S.knowledge[id]={id,name,status:'alive',inventedBy:a.name,yearBorn:Math.floor(S.tick/YEAR)+1,rediscoveries:0,losses:0,madeFrom:altUsed?Object.keys(altUsed).join('+'):''};
-    ev(S,'tech',`${t.icon} <b>${a.name}</b> ${t.flavor} — <b>${name}</b> (${t.base}) has been invented! <i>${t.effect}</i>`,{tech:id,agent:a.id,x:a.x,y:a.y});
+    // R2 INK1 causes: an invention is caused by its prerequisites — reference each pre's own
+    // invention event where the world recorded one, else the tech id as a state reference.
+    const te=ev(S,'tech',`${t.icon} <b>${a.name}</b> ${t.flavor} — <b>${name}</b> (${t.base}) has been invented! <i>${t.effect}</i>`,{tech:id,agent:a.id,x:a.x,y:a.y,causes:(t.pre||[]).map(p=>S.knowledge[p]&&S.knowledge[p].evId!==undefined?'ev:'+S.knowledge[p].evId:'tech:'+p)});
+    k.evId=te.id;
     speak(S,a,pickSay(S,a,'discovery'),'discovery');
     if(id==='fire')giveEpithet(S,a,'the Firebringer');
     else if(id==='writing')giveEpithet(S,a,'the Rememberer');
@@ -288,7 +296,8 @@ function gainKnowledge(S,a,id,via,altUsed){
   } else if(k.status==='extinct'){
     k.status='alive'; k.rediscoveries++;
     giveEpithet(S,a,'the Rekindler');
-    ev(S,'rediscovered',`💡 <b>${disp(a)}</b> has rediscovered ${k.name} (${t.base}) — knowledge lost for ${Math.floor(S.tick/YEAR)+1-k.diedYear} years lives again!`,{tech:id,agent:a.id,x:a.x,y:a.y});
+    // R2 INK1 causes: a rediscovery is caused by the loss it undoes.
+    ev(S,'rediscovered',`💡 <b>${disp(a)}</b> has rediscovered ${k.name} (${t.base}) — knowledge lost for ${Math.floor(S.tick/YEAR)+1-k.diedYear} years lives again!`,{tech:id,agent:a.id,x:a.x,y:a.y,causes:k.evLost!==undefined?['ev:'+k.evLost]:['tech:'+id]});
   }
 }
 function checkExtinct(S){
@@ -297,7 +306,8 @@ function checkExtinct(S){
     if(k.status!=='alive')continue;
     if(!S.agents.some(a=>!a.dead&&a.knows.has(id))){
       k.status='extinct'; k.diedYear=Math.floor(S.tick/YEAR)+1; k.losses++;
-      ev(S,'knowledgeLost',`🕯️ With <b>${k.lastKnownBy||'the last of them'}</b> died the last knowledge of ${k.name} (${TECH[id].base}). It is <b>extinct</b> — until someone rediscovers it.`,{tech:id});
+      // R2 INK1: record the loss event's id so a future rediscovery can reference the loss it undoes.
+      k.evLost=ev(S,'knowledgeLost',`🕯️ With <b>${k.lastKnownBy||'the last of them'}</b> died the last knowledge of ${k.name} (${TECH[id].base}). It is <b>extinct</b> — until someone rediscovers it.`,{tech:id}).id;
     }
   }
   for(const id in S.customs){
@@ -925,6 +935,12 @@ function moveToward(S,a,t){
   if(S.tiles[Math.round(clamp(ny,0,H-1))][Math.round(clamp(nx,0,W-1))].t!=='water'){a.x=nx;a.y=ny;}
   else wander(S,a);
   a.x=clamp(a.x,0,W-1);a.y=clamp(a.y,0,H-1);
+  // R2 INK1 (MOTOR-LANE-ORDER-R2-FAS4 §pathUse): cumulative footfall per tile for every DIRECTED
+  // step (all 13 call sites are human souls; animals move inline in animalsTick and are excluded —
+  // desire lines are human). Read-side tally: consumes no S.rand, never feeds back into behavior.
+  // Lazily allocated (resimulation rebuilds it identically); row-major y*W+x like tileN.
+  if(!S.pathUse)S.pathUse=new Array(W*H).fill(0);
+  S.pathUse[Math.round(a.y)*W+Math.round(a.x)]++;
 }
 function wander(S,a){
   const nx=clamp(a.x+R(S,-.6,.6),0,W-1),ny=clamp(a.y+R(S,-.6,.6),0,H-1);
@@ -995,7 +1011,7 @@ function talk(S,a,b){
     S.agents.push(child);S.stats.births++;
     S.maxPop=Math.max(S.maxPop,S.agents.filter(x=>!x.dead).length);
     {const cd=(worldKnows(S,'farming')||worldKnows(S,'fishing'))?380:520;a.childCd=cd;b.childCd=cd;} // TENSION PROTO: shorter birth spacing for a more populous world (EP request)
-    ev(S,'child',`👶 <b>${a.name}</b> and <b>${b.name}</b> have had a child, <b>${child.name}</b> — generation ${child.gen}. They inherit traits from both.`,{agent:child.id,x:a.x,y:a.y});
+    ev(S,'child',`👶 <b>${a.name}</b> and <b>${b.name}</b> have had a child, <b>${child.name}</b> — generation ${child.gen}. They inherit traits from both.`,{agent:child.id,x:a.x,y:a.y,causes:['agent:'+a.id,'agent:'+b.id]}); // R2 INK1 causes: a birth is caused by its parents
     maybeEmergeCustom(S,a,'child');
   }
 }
@@ -1010,14 +1026,17 @@ function tryBuildHut(S,a){
     giveEpithet(S,a,'the Founder');
     const vname=a.name.split(' ')[0]+pick(S,['stead','vik','heim','holm','haven']);
     S.villages.push({x:h.x,y:h.y,name:vname});
-    ev(S,'village',`🏘️ Three huts have become more — <b>${vname}</b> has been founded! A village born of nothing but cooperation.`,{village:vname,x:h.x,y:h.y});
+    // R2 INK1 causes: a founding is caused by its founder (v1 depth-1; hut owners are stored by
+    // NAME, not id, and origin/exodus tracking does not exist — the cheap honest reference is the
+    // soul whose hut completed the cluster). Full exodus lineage = a later wave.
+    ev(S,'village',`🏘️ Three huts have become more — <b>${vname}</b> has been founded! A village born of nothing but cooperation.`,{village:vname,x:h.x,y:h.y,causes:['agent:'+a.id]});
   }
 }
 
 function killAgent(S,a,causeKey,causeTxt){
   for(const kid of a.knows){const k=S.knowledge[kid];if(k)k.lastKnownBy=disp(a);}
   S.stats.deaths[causeKey]=(S.stats.deaths[causeKey]||0)+1;
-  ev(S,'death',`<b>${disp(a)}</b> ${causeTxt}.${a.knows.size>3?' Much knowledge died with them — unless someone learned in time.':''}`,{agent:a.id,x:a.x,y:a.y,cause:causeKey});
+  ev(S,'death',`<b>${disp(a)}</b> ${causeTxt}.${a.knows.size>3?' Much knowledge died with them — unless someone learned in time.':''}`,{agent:a.id,x:a.x,y:a.y,cause:causeKey,causes:['cause:'+causeKey]}); // R2 INK1 causes: a death is caused by its cause key (starvation/cold/age/wolves/violence)
   a.dead=true;if(a.home)a.home.free=true;S.someoneDied=true;
   let closest=null,cb=40;
   for(const w of S.agents){
@@ -1700,6 +1719,44 @@ function roleOf(S,a){
   return cand[0][0];
 }
 
+// ---------- R2 INK1 (MOTOR-LANE-ORDER-R2-FAS4 §5): the engine owns the ERA concept ----------
+// era = the highest TECH era any LIVING soul carries (0 before any era-tagged discovery) — the
+// exact law the body derived interim (D-147), now motor-owned. Pure readout: no S.rand, no
+// mutation. Canonical era NAMES (replace the body's interim dawn/stone/bronze/iron/mill/print/
+// steam): index 0 is the wakening world (fire, sharp stone, rope, the first huts — the untagged
+// base techs); index 1 is the settled hearth (brick, well, granary, storytelling — clay and
+// tales, NOT stone tools, which live in index 0); 2-6 follow the materials and machines that
+// define them (bronze; iron/steel; mills and clocks; the printing press; steam).
+const ERAS=['The First Morning','The Age of Hearths','The Age of Bronze','The Age of Iron','The Age of Mills','The Age of the Press','The Age of Steam'];
+function worldEra(S){let m=0;for(const a of S.agents){if(a.dead)continue;for(const t of a.knows){const q=TECH[t];if(q&&q.era>m)m=q.era;}}return m;}
+function eraName(e){e=e|0;return ERAS[e<0?0:(e>=ERAS.length?ERAS.length-1:e)];}
+
+// ---------- R2 INK1 (order §verb, Fas 2-grindens R2): canonical work/carry verb ----------
+// Pure classifier over the EXISTING task strings (the prose strings themselves stay untouched —
+// they are presentation text). The body animates role-true from the verb; unknown/future verbs
+// must fall back to idle/walk body-side. Verb set (15): idle move gather carry work harvest
+// hunt fish eat rest grow social ritual fight trade. 'carry' currently fires only for surplus
+// hoarding ('adding to their store') — the only true haul in the sim today; an A->B haul
+// mechanic would widen it. No S.rand, no mutation.
+function verbOf(task){
+  const t=String(task||'');
+  if(t==='sleeping')return 'rest';
+  if(t==='growing up')return 'grow';
+  if(t==='eating'||t==='feasting on the hunt')return 'eat';
+  if(t==='hunting')return 'hunt';
+  if(t==='fishing')return 'fish';
+  if(t==='harvesting')return 'harvest';
+  if(t==='adding to their store')return 'carry';
+  if(t==='trading')return 'trade';
+  if(t==='taking food by force'||t==='settling a score'||t==='raiding a neighbour')return 'fight';
+  if(t==='tilling the earth'||t==='experimenting'||t==='lighting a fire'||t==='tending the flame')return 'work';
+  if(t.indexOf('gathering ')===0||t==='collecting curiosities')return 'gather';
+  if(t==='talking'||t==='talking quietly, apart'||t.indexOf('visiting ')===0)return 'social';
+  if(t.indexOf('joining the evening ')===0||t==='watching the sky with the others'||t==='keeping the rule of the shared fire')return 'ritual';
+  if(t.indexOf('heading to ')===0||t.indexOf('searching for ')===0||t.indexOf('walking to ')===0||t.indexOf('going ')===0||t==='seeking warmth'||t==='seeking company'||t==='huddling for warmth')return 'move';
+  return 'idle'; // 'thinking', 'wandering', and anything future
+}
+
 // ---------- Civilization DNA ----------
 function computeDNA(S){
   const years=Math.floor(S.tick/YEAR)+1;
@@ -1866,5 +1923,5 @@ function resimulate(seed,toTick){
   return S;
 }
 
-return {createWorld,tickWorld,computeDNA,resimulate,writeHistory,roleOf,TECHS,TECH,OBS,QUIRK,W,H,YEAR,SEASONS,VERSION:'2.3.0'};
+return {createWorld,tickWorld,computeDNA,resimulate,writeHistory,roleOf,verbOf,worldEra,eraName,ERAS,TECHS,TECH,OBS,QUIRK,W,H,YEAR,SEASONS,VERSION:'2.3.0'};
 });
