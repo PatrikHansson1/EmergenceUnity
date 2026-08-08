@@ -1,5 +1,3 @@
-COMPILE CLEAN — 2026-08-08 20:46:47
-errors=0 warnings=1 warningsBaseline=16
+COMPILE CLEAN — 2026-08-08 21:39:04
+errors=0 warnings=0 warningsBaseline=16
 
-## WARNINGS
-  Assembly-CSharp-Editor.dll: Assets\Emergence\Fas2\Editor\Fas2MoveProbe.cs(40) Assets\Emergence\Fas2\Editor\Fas2MoveProbe.cs(40,34): warning CS0414: The field 'Fas2MoveProbe._cuts' is assigned but its value is never used

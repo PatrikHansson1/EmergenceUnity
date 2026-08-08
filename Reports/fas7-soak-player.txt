@@ -1,0 +1,59 @@
+EMERGENCE — FAS 7 PLAYER SOAK: one undisturbed long session in a real player build
+generated 2026-08-08 21:44:39
+declared span: y0 -> y40 at 1x/producer wall (full 120y window is producer-bound ~2.7+h, D-148 — WAITS on engine-lane deep-tick)
+
+proof scene: genesis wilderness + camera + Fas7SoakPlayerProof (observer composes the boot)
+build: Succeeded, errors=0, buildDirMB=925 (exe stub 652 KB), secs=12
+traceability: commit=f214ef50 (refs/heads/audition/free-assets-2026-07-19), Assembly-CSharp.dll mtime=2026-07-23 16:57:44
+
+## PLAYER RESULT
+soak span=OK(y0->y40 undisturbed, 753s at 1x/producer wall — declared slice; full 120y WAITS on deep-tick D-148) order=OK(breaks=0) pace=OK(violations=0) bounds=OK(busMax=261/8192,feedMax=32/4096,metricsMax=41/512,lookaheadMax=0/16) softlock=OK(none) trend=OK(gc 15->17MB x1.16<4, maxHitch 0.87s, 18.8s/year avg) evidence=OK(framed by shared law) magenta=0/0 COMPLETE
+
+## TREND (per applied year)
+# FAS 7 SOAK trend — one row per applied year (R1: stamped at measurement)
+# year secs bus feed feedDropped metrics buffered gcMB maxHitchSecs
+   0    1.2     4     4   0    1  0    14.9  0.87
+   1   16.3     9     5   0    2  0    15.4  0.02
+   2   25.5     9     5   0    3  0    15.4  0.02
+   3   36.3    10     5   0    4  0    15.9  0.01
+   4   47.4    12     5   0    5  0    16.7  0.01
+   5   57.2    16     8   0    6  0    16.1  0.01
+   6   69.6    18     9   0    7  0    16.5  0.11
+   7   81.2    23     9   0    8  0    15.9  0.01
+   8   95.8    26     9   0    9  0    16.1  0.01
+   9  112.4    30     9   0   10  0    16.5  0.01
+  10  127.8    34    10   0   11  0    15.8  0.01
+  11  143.7    39    11   0   12  0    16.1  0.01
+  12  158.7    43    11   0   13  0    15.9  0.01
+  13  171.7    49    12   0   14  0    16.1  0.01
+  14  187.1    55    12   0   15  0    16.2  0.01
+  15  200.2    60    12   0   16  0    16.2  0.01
+  16  218.6    66    14   0   17  0    16.1  0.01
+  17  235.6    71    15   0   18  0    16.7  0.01
+  18  254.1    74    15   0   19  0    16.6  0.01
+  19  269.8    78    15   0   20  0    16.8  0.01
+  20  285.9    84    17   0   21  0    16.8  0.01
+  21  305.8    92    18   0   22  0    16.8  0.11
+  22  328.4   100    18   0   23  0    16.5  0.01
+  23  348.2   109    19   0   24  0    16.5  0.01
+  24  366.6   118    19   0   25  0    16.7  0.01
+  25  383.4   125    19   0   26  0    16.9  0.01
+  26  401.6   132    19   0   27  0    17.0  0.01
+  27  423.4   140    20   0   28  0    16.8  0.01
+  28  444.5   146    21   0   29  0    17.0  0.01
+  29  465.8   151    22   0   30  0    18.3  0.02
+  30  489.5   159    23   0   31  0    16.9  0.01
+  31  515.0   165    23   0   32  0    17.1  0.01
+  32  538.4   176    24   0   33  0    18.5  0.01
+  33  561.4   186    26   0   34  0    17.1  0.01
+  34  591.3   192    26   0   35  0    16.9  0.03
+  35  613.8   201    27   0   36  0    17.2  0.01
+  36  642.2   211    27   0   37  0    17.2  0.01
+  37  671.5   224    27   0   38  0    16.7  0.01
+  38  700.3   236    28   0   39  0    16.9  0.01
+  39  725.8   248    29   0   40  0    17.3  0.01
+  40  752.6   261    32   0   41  0    17.3  0.01
+
+evidence: soak png + trend -> 45-UNITY/evidence/fas7/ (rendered IN the player)
+
+verdict: GREEN — one undisturbed session holds: no crash, no soft-lock, every witness bounded, pacing honest
