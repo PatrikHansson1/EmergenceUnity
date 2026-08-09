@@ -1,2 +1,2 @@
-DONE 02:27:43 verdict=GREEN liveEra='The Age of Hearths' tile='The Age of Hearths' feedEra=1/5 liveVerbs=5/5 liveState=1/1 fxState=6/6 fxVerbCarried=6 fxNonIdle=1 oldState=22/22 oldVerbEmpty=22
+DONE 02:59:11 verdict=GREEN liveEra='The Age of Hearths' tile='The Age of Hearths' feedEra=1/5 liveVerbs=5/5 liveState=1/1 fxState=6/6 fxVerbCarried=6 fxNonIdle=1 oldState=22/22 oldVerbEmpty=22
 see Reports/fas7-r2body.txt

@@ -46,6 +46,7 @@ namespace Emergence.Editor
         static string Done    => Path.Combine(Application.dataPath, "..", "Reports", "FAS7R2_DONE.txt");
         const string Report   = "Reports/fas7-r2body.txt";
         const string Png      = "Reports/fas7-r2body.png";
+        const string PngEra   = "Reports/fas7-r2body-era.png";
         const string GenesisPath = "Assets/Emergence/WorldStates/seq-8919-y000-genesis.json";
         const string FixtureR2   = "Assets/Emergence/WorldStates/world-8919-y006-r2ink1.json";  // real 2.3.x export WITH eraName+verb
         const string FixtureOld  = "Assets/Emergence/WorldStates/seq-8919-y055.json";           // real pre-R2 export WITHOUT the fields
@@ -64,7 +65,7 @@ namespace Emergence.Editor
         static int _feedOk = -1, _feedTotal = -1;
         static int _fxOk = -1, _fxChecked = -1, _fxNonIdle = -1, _fxVerbCarried = -1;
         static int _oldOk = -1, _oldChecked = -1, _oldVerbEmpty = -1;
-        static string _n1 = "", _n2 = "", _n3 = "", _n4 = "", _n5 = "", _n6 = "", _n7 = "", _n8 = "";
+        static string _n1 = "", _n2 = "", _n3 = "", _n4 = "", _n5 = "", _n6 = "", _n6b = "", _n7 = "", _n8 = "";
 
         static Fas7R2BodyProbe() { EditorApplication.update += Tick; }
 
@@ -139,7 +140,7 @@ namespace Emergence.Editor
             _liveVerbs = _liveTotal = _liveStateOk = _liveStateChecked = _feedOk = _feedTotal = -1;
             _fxOk = _fxChecked = _fxNonIdle = _fxVerbCarried = -1;
             _oldOk = _oldChecked = _oldVerbEmpty = -1;
-            _n1 = _n2 = _n3 = _n4 = _n5 = _n6 = _n7 = _n8 = "";
+            _n1 = _n2 = _n3 = _n4 = _n5 = _n6 = _n6b = _n7 = _n8 = "";
             File.WriteAllText(Done, "RUNNING (entering play mode) " + DateTime.Now.ToString("HH:mm:ss") + "\n");
             EditorApplication.EnterPlaymode();
         }
@@ -284,8 +285,22 @@ namespace Emergence.Editor
                 Vector3 pick = Emergence.Runtime.EvidenceFraming.FrameSubjects(out lookAt, soulPos);
                 var cam = Camera.main;
                 if (cam != null) { cam.transform.position = pick; cam.transform.LookAt(lookAt); }
+                // TD-078-review condition: TWO honest frames — the almanac modal dims the world, so
+                // the work POSE and the READABLE era name cannot share one image without lying.
+                // Frame 1 (Png): the pose, almanac closed. Frame 2 (PngEra): almanac open, the
+                // engine era name readable in UI. The report claims exactly what each frame shows.
                 var g = new GameObject("Fas7R2Grabber").AddComponent<Fas4NativeGrabber>();
-                g.Path = Png; g.OnGrabbed = note => { _n6 = "evidence " + note; };
+                g.Path = Png; g.OnGrabbed = note =>
+                {
+                    _n6 = "evidence(pose) " + note;
+                    try
+                    {
+                        _view.OpenAlmanac(); _view.RefreshNow();
+                        var g2 = new GameObject("Fas7R2GrabberEra").AddComponent<Fas4NativeGrabber>();
+                        g2.Path = PngEra; g2.OnGrabbed = note2 => { _n6b = "evidence(era-UI) " + note2; try { _view.CloseAlmanac(); } catch { } };
+                    }
+                    catch (Exception e) { _n6b = "evidence(era-UI) FAIL: " + e.Message; }
+                };
                 _grabAskedAt = Time.unscaledTime;
                 _phase = 3;
                 return;
@@ -293,7 +308,7 @@ namespace Emergence.Editor
 
             if (_phase == 3)   // wait for the grab, then the BACKWARD fixture
             {
-                if (_n6.Length == 0 && Time.unscaledTime - _grabAskedAt < 10f) return;
+                if ((_n6.Length == 0 || _n6b.Length == 0) && Time.unscaledTime - _grabAskedAt < 16f) return;
                 _fx = JsonUtility.FromJson<WorldState>(File.ReadAllText(FixtureOld));
                 Fas3WorldRuntime.FixtureInjection = true;   // injection: chronicle silent
                 try { w.Apply(_fx); } finally { Fas3WorldRuntime.FixtureInjection = false; }
@@ -344,7 +359,7 @@ namespace Emergence.Editor
             {
                 var sb = new StringBuilder(SessionState.GetString(KeyReport, ""));
                 sb.AppendLine($"## PLAY PHASE (frames={_frames}{(overtime ? ", WATCHDOG cut" : "")})");
-                foreach (var n in new[] { _n1, _n2, _n3, _n4, _n5, _n6, _n7, _n8 })
+                foreach (var n in new[] { _n1, _n2, _n3, _n4, _n5, _n6, _n6b, _n7, _n8 })
                     sb.AppendLine(n.Length > 0 ? n : "check never reached (FAIL)");
                 sb.AppendLine();
                 sb.AppendLine("lane honesty: the body CONSUMES Engine 2.3.2's additive R2 ink. 1 export (eraName + agents[].verb).");
@@ -356,7 +371,7 @@ namespace Emergence.Editor
                 sb.AppendLine("r2ink1 + y055 are REAL engine exports through the SAME Apply path (FixtureInjection, chronicle silent).");
                 bool green = !overtime
                     && _n1.Contains("(OK)") && _n2.Contains("(OK)") && _n3.Contains("(OK)") && _n4.Contains("(OK)")
-                    && _n5.Contains("(OK)") && _n6.Contains("OK") && !_n6.Contains("FAIL")
+                    && _n5.Contains("(OK)") && _n6.Contains("OK") && !_n6.Contains("FAIL") && _n6b.Contains("OK") && !_n6b.Contains("FAIL")
                     && _n7.Contains("(OK)") && _n8.Contains("(OK)");
                 sb.AppendLine();
                 sb.AppendLine("verdict: " + (green
