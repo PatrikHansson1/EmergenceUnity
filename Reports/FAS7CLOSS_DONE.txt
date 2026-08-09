@@ -1,0 +1,2 @@
+DONE 18:48:54 verdict=GREEN preChips=34/34 postChips=30/30 lostGone=4/4 nbCrafts=34/34
+see Reports/fas7-closs.txt + Reports/fas7-closs-node.txt

@@ -79,6 +79,10 @@ namespace Emergence.Runtime
         public int VillageDossierKnows { get; private set; }
         public string VillageDossierLeader { get; private set; } = "";   // E1.5: '' when none recognized
         public string VillageDossierGift { get; private set; } = "";     // E1.5: '' until the custom is named
+        // C-loss witness (D-182 follow-up): the dossier's KNOWS chips must be content-assertable,
+        // not just countable — a probe accessor onto the EXACT array the chips were built from.
+        string[] _dossierKnows;
+        public string VillageDossierChip(int i) => _dossierKnows != null && i >= 0 && i < _dossierKnows.Length ? _dossierKnows[i] : "";
 
         // souls truth
         public const int SoulRowCap = 30;   // the reference's "30 mest förmögna" — wealth sort live since E1.5
@@ -434,7 +438,7 @@ namespace Emergence.Runtime
 
             if (_villageDossier >= VillageRowCount) _villageDossier = -1;
             VillageDossierName = ""; VillageDossierPop = 0; VillageDossierGen = 0; VillageDossierCrafts = 0; VillageDossierKnows = 0;
-            VillageDossierLeader = ""; VillageDossierGift = "";
+            VillageDossierLeader = ""; VillageDossierGift = ""; _dossierKnows = null;
 
             if (VillageRowCount == 0)
             {
@@ -450,6 +454,7 @@ namespace Emergence.Runtime
                 VillageDossierName = v.name ?? "";
                 VillageDossierPop = v.pop; VillageDossierGen = v.maxGen; VillageDossierCrafts = v.crafts;
                 VillageDossierKnows = v.knows != null ? v.knows.Length : 0;
+                _dossierKnows = v.knows;   // the chips' source array, verbatim (C-loss witness seam)
                 VillageDossierLeader = v.leader ?? ""; VillageDossierGift = v.gift ?? "";   // E1.5
                 _villagesHost.Add(BuildVillageDossier(v));
             }

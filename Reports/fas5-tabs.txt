@@ -1,8 +1,8 @@
 EMERGENCE — FAS 5 PROBE: the tab skeleton — Villages live + Souls base
-generated 2026-08-09 12:09:59
+generated 2026-08-09 18:50:35
 data sources = applied WorldState (read-only) + fixture seq-8919-y055.json (a real engine export, D-131 fixture school)
 
-## PLAY PHASE (frames=16208)
+## PLAY PHASE (frames=17033)
 skeleton: 7 tabs (reference nav), default tab 0==Overview, READY=True (OK)
 villages LIVE (empty branch): rows 0==state 0 @y5 — the young world hides nothing, fakes nothing (OK)
 souls LIVE: rows 6==6, wealth-first 'Torv'=='Torv' (rikedom 19), dossier Torv/22 år/gen 1/'wandering' (OK)

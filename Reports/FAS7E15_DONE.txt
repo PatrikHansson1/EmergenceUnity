@@ -1,2 +1,2 @@
-DONE 16:10:48 verdict=GREEN fxTempo=6/6 attendSoc=3/3 attendNone=3/3 busSayActs=8 busLeader=3 busGiftway=2 feedGained=7/7 top='Sixten'(213) dossier='Sixten'/'The Hearth-Gift' societyViolence=1/1/1 ledVillages=3 mournYaw=3,0 mournSpeed=0,754 mutations=4
+DONE 18:52:23 verdict=GREEN fxTempo=6/6 attendSoc=3/3 attendNone=3/3 busSayActs=8 busLeader=3 busGiftway=2 feedGained=7/7 top='Sixten'(213) dossier='Sixten'/'The Hearth-Gift' societyViolence=1/1/1 ledVillages=3 mournYaw=2,4 mournSpeed=0,754 mutations=4
 see Reports/fas7-e15body.txt

@@ -1,0 +1,31 @@
+C-LOSS WITNESS — independent node verification
+generated 2026-08-09T16:44:21.582Z  engine VERSION=2.4.1  seed=97013  yPre=54  yPost=55  village=Torvhaven
+
+OK   PRE y54: village count mine=2 scope=2 file=2
+OK   PRE y54 [Torvhaven] independent recompute == E.villageScope  {pop:10,maxGen:4,avgAge:17,crafts:34}
+OK   PRE y54 [Torvhaven] independent recompute == exported fixture file (driver-parity chain)
+OK   PRE y54 [Torvhaven] contract: crafts==knows.length (34)
+OK   PRE y54 [Bjornheim] independent recompute == E.villageScope  {pop:8,maxGen:4,avgAge:31,crafts:34}
+OK   PRE y54 [Bjornheim] independent recompute == exported fixture file (driver-parity chain)
+OK   PRE y54 [Bjornheim] contract: crafts==knows.length (34)
+  PRE y54: Torvhaven pop=10 maxGen=4 avgAge=17 crafts=34 | Bjornheim pop=8 maxGen=4 avgAge=31 crafts=34
+OK   POST y55: village count mine=2 scope=2 file=2
+OK   POST y55 [Torvhaven] independent recompute == E.villageScope  {pop:10,maxGen:4,avgAge:18,crafts:30}
+OK   POST y55 [Torvhaven] independent recompute == exported fixture file (driver-parity chain)
+OK   POST y55 [Torvhaven] contract: crafts==knows.length (30)
+OK   POST y55 [Bjornheim] independent recompute == E.villageScope  {pop:8,maxGen:4,avgAge:32,crafts:34}
+OK   POST y55 [Bjornheim] independent recompute == exported fixture file (driver-parity chain)
+OK   POST y55 [Bjornheim] contract: crafts==knows.length (34)
+  POST y55: Torvhaven pop=10 maxGen=4 avgAge=18 crafts=30 | Bjornheim pop=8 maxGen=4 avgAge=32 crafts=34
+OK   village 'Torvhaven' present both years
+OK   THE LOSS: Torvhaven knows shrinks STRICTLY: 34 -> 30, lost=[writing, tin, glassblowing, optics], gained=[]
+OK   pop holds (10 -> 10) — knowledge died, not the village
+OK   DISTINCTION: at least one other living village differs in crafts at y55 (Bjornheim=34 vs Torvhaven=30)
+
+## THE ENGINE'S OWN WITNESS (knowledgeLost events, y53–y56)
+  y56: 🕯️ In Torvhaven, Torv's script is lost — the land cannot feed the craft, or the last who knew it is gone. Until it is brought back or rediscovered.
+  y56: 🕯️ In Torvhaven, Eira's the pale metal is lost — the land cannot feed the craft, or the last who knew it is gone. Until it is brought back or rediscovered.
+  y56: 🕯️ In Torvhaven, Eira's blown glass is lost — the land cannot feed the craft, or the last who knew it is gone. Until it is brought back or rediscovered.
+  y56: 🕯️ In Torvhaven, Eira's spectacles is lost — the land cannot feed the craft, or the last who knew it is gone. Until it is brought back or rediscovered.
+
+verdict: GREEN

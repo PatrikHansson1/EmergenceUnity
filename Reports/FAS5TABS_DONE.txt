@@ -1,2 +1,2 @@
-DONE 12:10:58 verdict=GREEN villagesFixtureRows=2 soulsRowsLive=6
+DONE 18:51:34 verdict=GREEN villagesFixtureRows=2 soulsRowsLive=6
 see Reports/fas5-tabs.txt
