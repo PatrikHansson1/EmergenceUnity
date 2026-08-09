@@ -1,5 +1,5 @@
 C-LOSS WITNESS — independent node verification
-generated 2026-08-09T17:43:09.298Z  engine VERSION=2.4.1  seed=97013  yPre=54  yPost=55  village=Torvhaven
+generated 2026-08-09T19:32:31.722Z  engine VERSION=2.4.1  seed=97013  yPre=54  yPost=55  village=Torvhaven
 
 OK   PRE y54: village count mine=2 scope=2 file=2
 OK   PRE y54 [Torvhaven] independent recompute == E.villageScope  {pop:10,maxGen:4,avgAge:17,crafts:34}

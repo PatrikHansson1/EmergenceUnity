@@ -1,9 +1,9 @@
 EMERGENCE — FAS 7 PLAYER SAVELOAD: save/load A7 sharp inside a real player build
-generated 2026-08-09 21:00:14
+generated 2026-08-09 21:37:30
 
 proof scene: genesis wilderness + camera + Fas7SaveLoadPlayerProof (observer composes the boots)
-build: Succeeded, errors=0, buildDirMB=925 (exe stub 652 KB), secs=29
-traceability: commit=05c6a12e (refs/heads/audition/free-assets-2026-07-19), Assembly-CSharp.dll mtime=2026-08-09 21:00:45 (exe stub is launcher-only, not rewritten incrementally)
+build: Succeeded, errors=0, buildDirMB=925 (exe stub 652 KB), secs=11
+traceability: commit=eedb3485 (refs/heads/audition/free-assets-2026-07-19), Assembly-CSharp.dll mtime=2026-08-09 21:00:45 (exe stub is launcher-only, not rewritten incrementally)
 
 ## PLAYER RESULT
 saveload save=OK(y6,anchor==c027012c) resim=OK(grid wiped 9 files) shaMatch=OK(c027012c) loaded=OK(y6,souls6,huts2) mode=OK(paused=False,tps=24) feedNew=OK(0) liveOn=OK(y7) evidence=OK(framed by shared law) evidenceHud=OK(backbuffer incl. IMGUI, nonwhite 100%) magenta=0/0 COMPLETE

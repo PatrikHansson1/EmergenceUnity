@@ -1,10 +1,10 @@
 EMERGENCE — FAS 7 PROBE: save/load A7 sharp — determinism IS the save format (D-137 grid grammar)
-generated 2026-08-09 19:36:36
+generated 2026-08-09 21:32:52
 save = seed + witnessed year + presentation mode + state-SHA anchor; load = RESIMULATE (grid wiped) + JumpToYear + mode restore
 
-## PLAY PHASE (frames=46353)
+## PLAY PHASE (frames=43249)
 save @y6: file=True, grammar(seed/year/mode/anchor)=True, contSha=c027012c604e (OK)
-teardown: composition destroyed, worker stopped, checkpoint grid WIPED (9 files) — load must resimulate (OK)
+teardown: composition destroyed, worker stopped, checkpoint grid WIPED (41 files) — load must resimulate (OK)
 THE PROOF: resimulated SHA == continuous SHA == save anchor: True (c027012c604e) (OK)
 loaded world: y6==6, tick=864, souls=6, huts=2 (OK)
 mode restored: paused=False==False, tps=24==24 (OK)
