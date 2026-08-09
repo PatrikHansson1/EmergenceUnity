@@ -116,10 +116,21 @@ namespace Emergence.Runtime
         // D-159: the FULL engine sayAct vocabulary (9 verbs, audited from the engine's speak() calls —
         // discovery/ritual/observe/teach/love/small/hungry/cold/fail). Discovery lifts, observe slows
         // into attention, cold huddles, fail sags; small stays neutral tempo (it gets the social GAZE).
+        // E1.5 (Engine 2.4.1, TENSION-WAVE §A.2): the SIX drama sayActs join the ONE register —
+        // additive arms only, the D-159 values are UNTOUCHED. Director-chosen (same school as D-159):
+        //   raid 1.12 — aggression peaks the register (above discovery: violence moves fastest);
+        //   feud 1.08 — old anger carried hot, a stride with intent;
+        //   gift 1.04 — giving lifts, a lighter spring (kept below love's 1.07);
+        //   steal 0.92 — the skulk: the hand hurries but the body makes itself unseen;
+        //   submit 0.88 — the body makes itself small before the stronger;
+        //   mourn 0.82 — grief drags heaviest of all, below cold's huddle (the slowest gait we show).
+        // Unknown/future acts (e.g. the engine's 'hail') fall through to 1f — the null-tempo contract.
         public static float MoodSpeed(string act) => act switch
         {
             "discovery" => 1.10f, "love" => 1.07f, "teach" => 0.96f, "observe" => 0.94f,
-            "ritual" => 0.90f, "fail" => 0.90f, "hungry" => 0.86f, "cold" => 0.85f, _ => 1f
+            "ritual" => 0.90f, "fail" => 0.90f, "hungry" => 0.86f, "cold" => 0.85f,
+            "raid" => 1.12f, "feud" => 1.08f, "gift" => 1.04f,
+            "steal" => 0.92f, "submit" => 0.88f, "mourn" => 0.82f, _ => 1f
         };
         // D-159: age reads in the gait — a child skips, an elder drags. Multiplicative with mood.
         public static float AgeGain(string band) => band == "child" ? 1.06f : band == "elder" ? 0.92f : 1f;

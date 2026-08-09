@@ -61,8 +61,41 @@ namespace Emergence.Runtime
             // fires are dressing-tier: a failure here must never break agents/huts (same clause as codex)
             try { _fires.Reconcile(S); }
             catch (Exception e) { Debug.LogWarning("[Fas3WorldRuntime] fires: " + e.Message); }
+            // E1.5: village-scope drama (a leader recognized/lost, a gift-way named) reaches the bus
+            // as a minimal ADDITIVE publication — a pure diff of applied snapshots, no RNG, bounded
+            // by the village count. Same failure clause as codex: never breaks agents/huts.
+            try { PublishVillageDrama(PrevState, S); }
+            catch (Exception e) { Debug.LogWarning("[Fas3WorldRuntime] villages: " + e.Message); }
             AppliedCount++;
             LastAppliedYear = S.years;
+        }
+
+        // ---- E1.5 village drama diff (Engine 2.4.1: villages[].leader + villages[].gift) ----
+        // WITNESS LAW: only CHANGES between two applied snapshots are events (the first Apply of a
+        // session publishes nothing — a pre-existing leader is standing fact, not witnessed history).
+        // Consumers keep their own guards (ApplyingJump / FixtureInjection) exactly as for agents.
+        static void PublishVillageDrama(WorldState prev, WorldState S)
+        {
+            if (prev == null || S?.villages == null) return;
+            for (int i = 0; i < S.villages.Length; i++)
+            {
+                var v = S.villages[i];
+                if (v == null || string.IsNullOrEmpty(v.name)) continue;
+                string pl = "", pg = "";
+                if (prev.villages != null)
+                    foreach (var pv in prev.villages)
+                        if (pv != null && pv.name == v.name) { pl = pv.leader ?? ""; pg = pv.gift ?? ""; break; }
+                string leader = v.leader ?? "", gift = v.gift ?? "";
+                if (leader.Length > 0 && leader != pl)
+                    PresentationEventBus.Publish(new PresentationEvent(
+                        S.tick, S.years, WorldEras.Name(S), PresentationEventType.Custom, "village:" + v.name, i, "leader: " + leader));
+                else if (leader.Length == 0 && pl.Length > 0)
+                    PresentationEventBus.Publish(new PresentationEvent(
+                        S.tick, S.years, WorldEras.Name(S), PresentationEventType.Custom, "village:" + v.name, i, "leader-gone: " + pl));
+                if (gift.Length > 0 && gift != pg)
+                    PresentationEventBus.Publish(new PresentationEvent(
+                        S.tick, S.years, WorldEras.Name(S), PresentationEventType.Custom, "village:" + v.name, i, "giftway: " + gift));
+            }
         }
 
         public void Apply(string snapshotJson) => Apply(JsonUtility.FromJson<WorldState>(snapshotJson));

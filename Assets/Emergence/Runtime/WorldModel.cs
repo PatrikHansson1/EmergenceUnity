@@ -15,13 +15,20 @@ namespace Emergence.Runtime
     // engine's 15 canonical work verbs (idle move gather carry work harvest hunt fish eat rest grow
     // social ritual fight trade), derived engine-side from task. Old exports lack it → null → the
     // body falls back to the task classification (AgentTaskRead). Additive field only — parser untouched.
-    [Serializable] public class WorldAgent { public int id; public string name; public float x, y; public float age; public int gen; public string task, say, sayAct; public string verb; }
+    // E1.5 (Engine 2.4.1, TD-080..082): the export additively carries agents[].wealth (E.wealthOf —
+    // the aspiration/hoarding proxy, the Almanac's wealth sort feeds on it). Old exports lack it
+    // → 0 → the wealth sort degrades to its tie law (age DESC) — no consumer breaks. Additive only.
+    [Serializable] public class WorldAgent { public int id; public string name; public float x, y; public float age; public int gen; public string task, say, sayAct; public string verb; public float wealth; }
     [Serializable] public class WorldHut { public float x, y; public string owner; public bool free; }
     [Serializable] public class WorldFire { public float x, y; public float fuel; }
     [Serializable] public class WorldField { public float x, y; public int stage; public string owner; }
     // TD-033: villages carry their development profile (aggregate of members' knowledge + beliefs +
     // demographics) so the codex can place objects by DISCOVERY. Old exports lack these → default 0/null → safe.
-    [Serializable] public class WorldVillage { public float x, y; public string name; public int pop, maxGen, avgAge, crafts; public string cosmos; public string[] knows; public string[] beliefs; }
+    // E1.5 (Engine 2.4.1): villages additively carry leader (the recognized leader's NAME, '' when no
+    // one is recognized — 4242 taught us big villages can go leaderless for 120 years by design) and
+    // gift (the named gift-way, e.g. "The Hearth-Gift", '' until the custom is named). Old exports
+    // lack both → null/'' → dossiers simply omit the rows. Additive only — parser untouched.
+    [Serializable] public class WorldVillage { public float x, y; public string name; public int pop, maxGen, avgAge, crafts; public string cosmos; public string[] knows; public string[] beliefs; public string leader; public string gift; }
     [Serializable] public class WorldAnimal { public int id; public string type; public float x, y; }
     // TD-033: the object codex — discovery-driven placement. JsonUtility-friendly flat schema.
     // D-112 (Fas 1 inc 2): ruinOnLoss=1 → when this built structure's gate stops holding (Memory Engine

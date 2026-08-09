@@ -30,6 +30,10 @@ namespace Emergence.Runtime
             public int births;       // witnessed this year (bus AgentActivity)
             public int deaths;       // witnessed this year
             public int hutsDelta;    // spawned - removed this year (bus Asset*)
+            // E1.5 (Engine 2.4.1): witnessed violence-act events this year (the reconciler publishes
+            // "sayAct: steal|raid|feud" when the applied state shows a soul entering the act). Per-year
+            // like births/deaths so the scrub-trim law keeps them honest BY CONSTRUCTION.
+            public int steal, raid, feud;
             public bool sampled;     // pop/era filled from an applied snapshot (bus deltas alone otherwise)
         }
 
@@ -67,6 +71,10 @@ namespace Emergence.Runtime
 
         public int TotalBirths { get { int n = 0; foreach (var r in _years.Values) n += r.births; return n; } }
         public int TotalDeaths { get { int n = 0; foreach (var r in _years.Values) n += r.deaths; return n; } }
+        // E1.5: witnessed violence-act totals — sums over surviving records (trim-honest by construction)
+        public int TotalSteal { get { int n = 0; foreach (var r in _years.Values) n += r.steal; return n; } }
+        public int TotalRaid  { get { int n = 0; foreach (var r in _years.Values) n += r.raid;  return n; } }
+        public int TotalFeud  { get { int n = 0; foreach (var r in _years.Values) n += r.feud;  return n; } }
         public int HutCount    { get { int n = 0; foreach (var r in _years.Values) n += r.hutsDelta; return n; } }
         public int LatestYear  { get { int y = -1; foreach (var k in _years.Keys) y = k; return y; } }
 
@@ -118,6 +126,10 @@ namespace Emergence.Runtime
                 case PresentationEventType.AgentActivity:
                     if (e.Data == "a child is born") { var r = GetOrMake(e.Year); r.births++; _years[e.Year] = r; }
                     else if (e.Data == "a soul departs") { var r = GetOrMake(e.Year); r.deaths++; _years[e.Year] = r; }
+                    // E1.5: the violence acts, per witnessed year (bounded by the series capacity)
+                    else if (e.Data == "sayAct: steal") { var r = GetOrMake(e.Year); r.steal++; _years[e.Year] = r; }
+                    else if (e.Data == "sayAct: raid")  { var r = GetOrMake(e.Year); r.raid++;  _years[e.Year] = r; }
+                    else if (e.Data == "sayAct: feud")  { var r = GetOrMake(e.Year); r.feud++;  _years[e.Year] = r; }
                     break;
 
                 case PresentationEventType.AssetSpawned:

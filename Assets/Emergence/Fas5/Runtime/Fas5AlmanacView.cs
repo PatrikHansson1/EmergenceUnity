@@ -9,10 +9,18 @@
 // v1 (this file) = the TAB SKELETON against the almanac reference's seven tabs, with:
 //   - VILLAGES live: rows + dossier straight from the applied snapshot's villages[] (name/pop/
 //     maxGen/avgAge/crafts/cosmos/knows/beliefs — the state has carried these since TD-033);
-//   - SOULS base: the 30 OLDEST souls from agents[] (name/task/age/gen) — the reference sorts by
-//     wealth, but wealth/roles/traits are engine metrics (R2 order), so the base sort is age;
+//   - SOULS base: the 30 souls from agents[] (name/task/age/gen);
 //   - SOCIETY / TECH & MEMORY / DYNASTY as honest stubs — they NAME what they await (R2);
 //   - CHRONICLE = a handoff to the Fas 4 book (link, never rebuild — the brief's law).
+// E1.5 tail (Engine 2.4.1, this file's v2): the engine now EXPORTS what the reference asked for —
+//   - SOULS sort by WEALTH DESC (the reference's own sort; agents[].wealth = E.wealthOf). Old
+//     exports carry wealth 0 everywhere, so the sort degrades to its tie law (age DESC, id ASC) —
+//     exactly the pre-E1.5 ordering, backward-honest by construction. Dossier shows wealth.
+//   - VILLAGE dossier shows LEDARE (villages[].leader) and GÅVO-SED (villages[].gift) when the
+//     engine has recognized/named them — omitted rows otherwise (a leaderless village is design).
+//   - SOCIETY replaces its stub with the FIRST honest view: wealth top list + leader per village +
+//     witnessed violence-act counters (Fas5MetricsRecorder, bus-witnessed steal/raid/feud). What
+//     still lacks engine data (Gini · trade · faith · correlations) remains a NAMED honest wait.
 // DETERMINISM (D-078 r4): a pure READ of Fas5MetricsRecorder + the applied WorldState — never
 // writes anything back. Scrub honesty is inherited by construction: villages/souls render the
 // PRESENTED snapshot, and the recorder's series obey the trim law (D-144).
@@ -47,7 +55,7 @@ namespace Emergence.Runtime
         // ---- tabs (reference order, emergence-almanac.html nav) ----
         public const int TabOverview = 0, TabSociety = 1, TabTech = 2, TabVillages = 3, TabSouls = 4, TabDynasty = 5, TabChronicle = 6;
         public static readonly string[] TabNames = { "Översikt", "Samhälle", "Teknik & minne", "Byar", "Själar", "Dynastier & tid", "Krönika" };
-        public static bool TabIsStub(int t) => t == TabSociety || t == TabTech || t == TabDynasty;
+        public static bool TabIsStub(int t) => t == TabTech || t == TabDynasty;   // E1.5: Society graduated to its first honest view
         public int ActiveTab { get; private set; }
 
         // probe-readable rendered truth (set at rebuild, straight from the labels' sources)
@@ -69,22 +77,41 @@ namespace Emergence.Runtime
         public int VillageDossierGen { get; private set; }
         public int VillageDossierCrafts { get; private set; }
         public int VillageDossierKnows { get; private set; }
+        public string VillageDossierLeader { get; private set; } = "";   // E1.5: '' when none recognized
+        public string VillageDossierGift { get; private set; } = "";     // E1.5: '' until the custom is named
 
         // souls truth
-        public const int SoulRowCap = 30;   // the reference's "30 mest förmögna"; base = 30 oldest (wealth awaits R2)
+        public const int SoulRowCap = 30;   // the reference's "30 mest förmögna" — wealth sort live since E1.5
         public int SoulRowCount { get; private set; }
         public string SoulRowName(int i) => _sortedSouls != null && i >= 0 && i < _sortedSouls.Length ? _sortedSouls[i].name : "";
         public string SoulDossierName { get; private set; } = "";
         public int SoulDossierAge { get; private set; }
         public int SoulDossierGen { get; private set; }
         public string SoulDossierTask { get; private set; } = "";
+        public int SoulDossierWealth { get; private set; }   // E1.5: rounded display law (RoundToInt)
+
+        // society truth (E1.5 first honest view)
+        public int SocietyWealthRows { get; private set; }
+        public string SocietyTopName { get; private set; } = "";
+        public int SocietyTopWealth { get; private set; }
+        public int SocietyVillageRows { get; private set; }
+        public int SocietyLedVillages { get; private set; }   // villages with a recognized leader
+        public int SocietySteal { get; private set; }
+        public int SocietyRaid { get; private set; }
+        public int SocietyFeud { get; private set; }
+
+        /// <summary>THE ONE wealth-sort law (view + probes recompute through this): wealth DESC,
+        /// tie age DESC, tie id ASC. All-zero wealth (old exports) degrades to the old age sort.</summary>
+        public static int WealthOrder(WorldAgent a, WorldAgent b)
+            => b.wealth != a.wealth ? b.wealth.CompareTo(a.wealth)
+             : b.age != a.age ? b.age.CompareTo(a.age) : a.id.CompareTo(b.id);
 
         Fas5MetricsRecorder _rec;
         Fas3PresentationClock _clock;
         Fas3WorldRuntime _worldRt;
         UIDocument _doc;
         VisualElement _openBtnPanel, _root, _tilesRow, _eraStrip, _curveHost;
-        VisualElement _tabsBar, _villagesHost, _soulsHost;
+        VisualElement _tabsBar, _villagesHost, _soulsHost, _societyHost;
         readonly VisualElement[] _tabBodies = new VisualElement[7];
         readonly List<Button> _tabButtons = new List<Button>();
         Label _sub;
@@ -243,8 +270,12 @@ namespace Emergence.Runtime
                     RebuildVillages(S);
                     break;
                 case TabSouls:
-                    _sub.text = StateWhen() + " · de " + SoulRowCap + " äldsta själarna — roller · rikedom · egenskaper väntar på motorns metrics (R2)";
+                    _sub.text = StateWhen() + " · de " + SoulRowCap + " mest förmögna själarna (rikedom ur motorns export, E1.5) — roller · egenskaper väntar på motorns metrics (R2)";
                     RebuildSouls(S);
+                    break;
+                case TabSociety:
+                    _sub.text = StateWhen() + " · rikedom · ledare · bevittnat våld — Gini · handel · tro väntar på motorns metrics (R2)";
+                    RebuildSociety(S, r);
                     break;
                 default:
                     _sub.text = "år " + TileYear + " · " + TileEra;
@@ -349,12 +380,12 @@ namespace Emergence.Runtime
             _eraStrip.style.height = 22; _eraStrip.style.marginTop = 6;
             ov.Add(_eraStrip);
 
-            // Villages / Souls — scrollable lists rebuilt on refresh
+            // Villages / Souls / Society — scrollable lists rebuilt on refresh (Society: E1.5 first honest view)
             _tabBodies[TabVillages] = MakeScrollBody(card, out _villagesHost);
             _tabBodies[TabSouls] = MakeScrollBody(card, out _soulsHost);
+            _tabBodies[TabSociety] = MakeScrollBody(card, out _societyHost);
 
             // Honest stubs — they NAME what they await (never fake data)
-            _tabBodies[TabSociety] = MakeStub(card, "Samhälle väntar på motorns metrics-export (R2): Gini · konflikt · handel · tro.");
             _tabBodies[TabTech] = MakeStub(card, "Teknik & minne väntar på motorns metrics-export (R2): tech lost/rediscovered · Minnesmotorns kurvor.");
             _tabBodies[TabDynasty] = MakeStub(card, "Dynastier & tid väntar på motorns metrics-export (R2): generationsträd · tidslinjens skalor.");
             // Chronicle body never shows — SelectTab hands off to the Fas 4 book.
@@ -403,6 +434,7 @@ namespace Emergence.Runtime
 
             if (_villageDossier >= VillageRowCount) _villageDossier = -1;
             VillageDossierName = ""; VillageDossierPop = 0; VillageDossierGen = 0; VillageDossierCrafts = 0; VillageDossierKnows = 0;
+            VillageDossierLeader = ""; VillageDossierGift = "";
 
             if (VillageRowCount == 0)
             {
@@ -418,6 +450,7 @@ namespace Emergence.Runtime
                 VillageDossierName = v.name ?? "";
                 VillageDossierPop = v.pop; VillageDossierGen = v.maxGen; VillageDossierCrafts = v.crafts;
                 VillageDossierKnows = v.knows != null ? v.knows.Length : 0;
+                VillageDossierLeader = v.leader ?? ""; VillageDossierGift = v.gift ?? "";   // E1.5
                 _villagesHost.Add(BuildVillageDossier(v));
             }
 
@@ -449,6 +482,10 @@ namespace Emergence.Runtime
             AddKv(d, "Generationer", v.maxGen.ToString());
             AddKv(d, "Medelålder", v.avgAge + " år");
             AddKv(d, "Hantverk", v.crafts.ToString());
+            // E1.5: the engine's recognized leader + named gift-way — shown only when the sim has them
+            // (a leaderless village is design, not missing data — 4242 went 120 years without one)
+            if (!string.IsNullOrEmpty(v.leader)) AddKv(d, "Ledare", "🕯️ " + v.leader);
+            if (!string.IsNullOrEmpty(v.gift)) AddKv(d, "Gåvo-sed", "🍞 " + v.gift);
             if (!string.IsNullOrEmpty(v.cosmos)) AddKv(d, "Himmelstro", "🌌 " + v.cosmos);
             if (law) AddKv(d, "Lag", "⚖️ Peace of Kin");
 
@@ -469,14 +506,14 @@ namespace Emergence.Runtime
             _soulsHost.Clear();
             var src = S != null && S.agents != null ? S.agents : new WorldAgent[0];
             var all = (WorldAgent[])src.Clone();
-            System.Array.Sort(all, (a, b) => b.age != a.age ? b.age.CompareTo(a.age) : a.id.CompareTo(b.id));
+            System.Array.Sort(all, WealthOrder);   // E1.5: the reference's wealth sort (old exports degrade to the age tie law)
             int n = Mathf.Min(SoulRowCap, all.Length);
             _sortedSouls = new WorldAgent[n];
             System.Array.Copy(all, _sortedSouls, n);
             SoulRowCount = n;
 
             if (_soulDossier >= SoulRowCount) _soulDossier = -1;
-            SoulDossierName = ""; SoulDossierAge = 0; SoulDossierGen = 0; SoulDossierTask = "";
+            SoulDossierName = ""; SoulDossierAge = 0; SoulDossierGen = 0; SoulDossierTask = ""; SoulDossierWealth = 0;
 
             if (SoulRowCount == 0)
             {
@@ -491,13 +528,15 @@ namespace Emergence.Runtime
                 var s = _sortedSouls[_soulDossier];
                 SoulDossierName = s.name ?? "";
                 SoulDossierAge = Mathf.RoundToInt(s.age); SoulDossierGen = s.gen; SoulDossierTask = s.task ?? "";
+                SoulDossierWealth = Mathf.RoundToInt(s.wealth);   // E1.5 display law
                 _soulsHost.Add(BuildSoulDossier(s));
             }
 
             for (int i = 0; i < _sortedSouls.Length; i++)
             {
                 var s = _sortedSouls[i];
-                string meta = (s.task ?? "—") + " · " + Mathf.RoundToInt(s.age) + " år · gen " + s.gen;
+                string meta = (s.task ?? "—") + " · " + Mathf.RoundToInt(s.age) + " år · gen " + s.gen
+                            + " · rikedom " + Mathf.RoundToInt(s.wealth);   // E1.5
                 _soulsHost.Add(MakeClickRow(s.name ?? ("själ " + s.id), meta, i, OpenSoulDossier));
             }
         }
@@ -519,10 +558,77 @@ namespace Emergence.Runtime
             AddKv(d, "Ålder", Mathf.RoundToInt(s.age) + " år");
             AddKv(d, "Generation", s.gen.ToString());
             AddKv(d, "Syssla", s.task ?? "—");
-            var note = new Label("egenskaper · band · rikedom · dråp väntar på motorns metrics-export (R2)");
+            AddKv(d, "Rikedom", Mathf.RoundToInt(s.wealth).ToString());   // E1.5: E.wealthOf ur exporten
+            var note = new Label("egenskaper · band · dråp väntar på motorns metrics-export (R2)");
             note.style.color = ColSub; note.style.fontSize = 11; note.style.marginTop = 8; note.style.whiteSpace = WhiteSpace.Normal;
             d.Add(note);
             return d;
+        }
+
+        // ---------------- society (E1.5 first honest view) ----------------
+
+        void RebuildSociety(WorldState S, Fas5MetricsRecorder r)
+        {
+            _societyHost.Clear();
+            var agents = S != null && S.agents != null ? S.agents : new WorldAgent[0];
+            var villages = S != null && S.villages != null ? S.villages : new WorldVillage[0];
+
+            // wealth top list — same ONE sort law as the Souls tab
+            var sorted = (WorldAgent[])agents.Clone();
+            System.Array.Sort(sorted, WealthOrder);
+            int n = Mathf.Min(10, sorted.Length);
+            SocietyWealthRows = n;
+            SocietyTopName = n > 0 ? (sorted[0].name ?? "") : "";
+            SocietyTopWealth = n > 0 ? Mathf.RoundToInt(sorted[0].wealth) : 0;
+
+            AddSectionHead(_societyHost, "RIKEDOM — DE " + n + " FRÄMSTA (ur motorns export, E1.5)");
+            if (n == 0)
+            {
+                var empty = new Label("inga levande själar i det presenterade året");
+                empty.style.color = ColSub; empty.style.fontSize = 13;
+                _societyHost.Add(empty);
+            }
+            for (int i = 0; i < n; i++)
+                AddKv(_societyHost, (i + 1) + ". " + (sorted[i].name ?? ("själ " + sorted[i].id)),
+                      "rikedom " + Mathf.RoundToInt(sorted[i].wealth) + " · " + Mathf.RoundToInt(sorted[i].age) + " år");
+
+            // leader per village — the engine's recognized leaders (leaderless = design, said honestly)
+            AddSectionHead(_societyHost, "LEDARE PER BY");
+            SocietyVillageRows = villages.Length; SocietyLedVillages = 0;
+            if (villages.Length == 0)
+            {
+                var noVil = new Label("inga byar ännu — ingen att erkänna en ledare");
+                noVil.style.color = ColSub; noVil.style.fontSize = 13;
+                _societyHost.Add(noVil);
+            }
+            foreach (var v in villages)
+            {
+                bool led = v != null && !string.IsNullOrEmpty(v.leader);
+                if (led) SocietyLedVillages++;
+                AddKv(_societyHost, v != null ? (v.name ?? "?") : "?", led ? "🕯️ " + v.leader : "ingen erkänd ledare");
+            }
+
+            // witnessed violence — the body's OWN ledger (bus-witnessed sayAct events, trim-honest),
+            // not the engine's full history (that count is the R2 metrics export's to give)
+            SocietySteal = r != null ? r.TotalSteal : 0;
+            SocietyRaid = r != null ? r.TotalRaid : 0;
+            SocietyFeud = r != null ? r.TotalFeud : 0;
+            AddSectionHead(_societyHost, "VÅLD — BEVITTNAT AV KROPPEN");
+            AddKv(_societyHost, "Stölder", SocietySteal.ToString());
+            AddKv(_societyHost, "Räder", SocietyRaid.ToString());
+            AddKv(_societyHost, "Fejder", SocietyFeud.ToString());
+
+            var wait = new Label("Gini · konflikt-korrelationer · handel · tro väntar på motorns metrics-export (R2).");
+            wait.style.color = ColSub; wait.style.fontSize = 11; wait.style.marginTop = 8; wait.style.whiteSpace = WhiteSpace.Normal;
+            _societyHost.Add(wait);
+        }
+
+        void AddSectionHead(VisualElement parent, string text)
+        {
+            var h = new Label(text);
+            h.style.color = ColSub; h.style.fontSize = 10; h.style.letterSpacing = 1;
+            h.style.marginTop = 8; h.style.marginBottom = 4;
+            parent.Add(h);
         }
 
         // ---------------- shared row/chip/kv helpers ----------------

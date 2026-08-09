@@ -5,8 +5,8 @@
 //   1. tab bar = the reference's seven tabs, Overview active by default, view READY;
 //   2. VILLAGES live (empty branch): rows == state.villages count at the frozen year (the young
 //      world honestly shows "inga byar ännu" — never fake rows);
-//   3. SOULS live: rows == min(30, agents), sorted OLDEST first (wealth sort awaits R2);
-//      dossier row 0 == the state's oldest soul verbatim (name/age/gen/task);
+//   3. SOULS live: rows == min(30, agents), sorted by the E1.5 wealth law (wealth DESC, tie age
+//      DESC, id ASC — recomputed independently); dossier row 0 verbatim (name/age/gen/task/wealth);
 //   4. VILLAGES populated branch (D-131 fixture school): seq-8919-y055.json (a REAL engine
 //      export, 2 villages) fed through the SAME rebuild path via SetStateFixture — rows ==
 //      fixture count, sorted pop DESC, dossier == the fixture village verbatim (incl. knows);
@@ -178,21 +178,23 @@ namespace Emergence.Editor
                 bool villLiveOk = _view.VillageRowCount == sv;
                 _n2 = $"villages LIVE (empty branch): rows {_view.VillageRowCount}==state {sv} @y{w.LastAppliedYear} — the young world hides nothing, fakes nothing ({(villLiveOk ? "OK" : "FAIL")})";
 
-                // oldest soul from state (the view's sort law: age DESC, id ASC tiebreak)
-                WorldAgent oldest = null;
+                // first soul by the view's ONE sort law (E1.5: wealth DESC, tie age DESC, id ASC —
+                // recomputed independently through the same published comparator)
+                WorldAgent top = null;
                 if (S != null && S.agents != null)
                     foreach (var a in S.agents)
-                        if (oldest == null || a.age > oldest.age || (a.age == oldest.age && a.id < oldest.id)) oldest = a;
+                        if (top == null || Fas5AlmanacView.WealthOrder(a, top) < 0) top = a;
                 int expRows = S != null && S.agents != null ? Mathf.Min(Fas5AlmanacView.SoulRowCap, S.agents.Length) : 0;
                 _view.SelectTab(Fas5AlmanacView.TabSouls);
                 _view.OpenSoulDossier(0);
-                bool soulsOk = _view.SoulRowCount == expRows && oldest != null
-                            && _view.SoulRowName(0) == oldest.name
-                            && _view.SoulDossierName == oldest.name
-                            && _view.SoulDossierAge == Mathf.RoundToInt(oldest.age)
-                            && _view.SoulDossierGen == oldest.gen
-                            && _view.SoulDossierTask == (oldest.task ?? "");
-                _n3 = $"souls LIVE: rows {_view.SoulRowCount}=={expRows}, oldest first '{_view.SoulRowName(0)}'=='{(oldest != null ? oldest.name : "?")}', dossier {_view.SoulDossierName}/{_view.SoulDossierAge} år/gen {_view.SoulDossierGen}/'{_view.SoulDossierTask}' ({(soulsOk ? "OK" : "FAIL")})";
+                bool soulsOk = _view.SoulRowCount == expRows && top != null
+                            && _view.SoulRowName(0) == top.name
+                            && _view.SoulDossierName == top.name
+                            && _view.SoulDossierAge == Mathf.RoundToInt(top.age)
+                            && _view.SoulDossierGen == top.gen
+                            && _view.SoulDossierTask == (top.task ?? "")
+                            && _view.SoulDossierWealth == Mathf.RoundToInt(top.wealth);
+                _n3 = $"souls LIVE: rows {_view.SoulRowCount}=={expRows}, wealth-first '{_view.SoulRowName(0)}'=='{(top != null ? top.name : "?")}' (rikedom {_view.SoulDossierWealth}), dossier {_view.SoulDossierName}/{_view.SoulDossierAge} år/gen {_view.SoulDossierGen}/'{_view.SoulDossierTask}' ({(soulsOk ? "OK" : "FAIL")})";
                 _soulsRowsLive = _view.SoulRowCount;   // stamped at the live measurement (review I1)
 
                 var g = new GameObject("Fas5SoulsGrabber").AddComponent<Fas4NativeGrabber>();
@@ -276,8 +278,10 @@ namespace Emergence.Editor
                 foreach (var n in new[] { _n1, _n2, _n3, _n4, _n5, _n6, _n7, _n8, _n9 })
                     sb.AppendLine(n.Length > 0 ? n : "check never reached (FAIL)");
                 sb.AppendLine();
-                sb.AppendLine("caveat: Souls base sorts by AGE (the reference's wealth sort + roles/traits/bonds await the engine metrics, R2);");
-                sb.AppendLine("Society/Tech&Memory/Dynasty are honest stubs naming what they await; the populated-villages branch is fixture-proven");
+                sb.AppendLine("caveat: Souls sorts by WEALTH since E1.5 (agents[].wealth; all-zero old exports degrade to the age tie law);");
+                sb.AppendLine("roles/traits/bonds await the engine metrics (R2); Society carries its E1.5 first honest view (wealth/leaders/");
+                sb.AppendLine("witnessed violence — proven by Fas7E15BodyProbe); Tech&Memory/Dynasty are honest stubs naming what they await;");
+                sb.AppendLine("the populated-villages branch is fixture-proven");
                 sb.AppendLine("(seq-8919-y055.json, a real engine export through the SAME rebuild path — D-131 school; villages emerge y30-y55 at this seed,");
                 sb.AppendLine("an 8-minute live sim buys no additional mechanism truth).");
                 bool green = !overtime

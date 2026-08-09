@@ -40,6 +40,11 @@ namespace Emergence.Runtime
             public override string ToString() => $"+{born} -{died} aged={aged} retask={retasked} moved={moved} ={kept}";
         }
 
+        /// <summary>E1.5: the six drama sayActs (Engine 2.4.1) — the ones the chronicle hears about.
+        /// steal/raid/feud carry the violence arc, mourn/gift the human answer, submit the hierarchy.</summary>
+        public static bool DramaAct(string act) => act == "steal" || act == "raid" || act == "feud"
+            || act == "mourn" || act == "submit" || act == "gift";
+
         /// <summary>Soul-stable presentation sex — a property of the id, never of where the agent stands.</summary>
         public static bool Female(int id) => (Hash(id, 0, id * 31 + 7) & 1u) == 0u;
         public static string Band(float age) => age < 14 ? "child" : age > 55 ? "elder" : "adult";
@@ -128,7 +133,16 @@ namespace Emergence.Runtime
                     if (aaExpr != null)
                     {
                         string act = a.sayAct ?? "";
-                        if (rec.sayAct != act) { rec.sayAct = act; aaExpr.SetMood(act); }
+                        if (rec.sayAct != act)
+                        {
+                            rec.sayAct = act; aaExpr.SetMood(act);
+                            // E1.5: the SIX drama acts are the chronicle's business too — a minimal
+                            // ADDITIVE publication when the applied state shows a soul entering one
+                            // (pure state diff, no RNG; routine acts stay off the bus as before).
+                            if (DramaAct(act))
+                                PresentationEventBus.Publish(new PresentationEvent(
+                                    _tick, S.years, WorldEras.Name(S), PresentationEventType.AgentActivity, "agent-" + a.id, -1, "sayAct: " + act));
+                        }
                         if (Application.isPlaying) Attend(S, a, aaExpr);
                     }
                 }
@@ -145,6 +159,11 @@ namespace Emergence.Runtime
                     PresentationEventBus.Publish(new PresentationEvent(
                         _tick, S.years, WorldEras.Name(S), PresentationEventType.AgentActivity, "agent-" + a.id, -1,
                         band == "child" ? "a child is born" : "a soul arrives"));
+                    // E1.5: a soul can ENTER the witnessed world already inside a drama act
+                    // (checkpoint re-entry, first sight after a jump) — publish it like any change.
+                    if (DramaAct(a.sayAct ?? ""))
+                        PresentationEventBus.Publish(new PresentationEvent(
+                            _tick, S.years, WorldEras.Name(S), PresentationEventType.AgentActivity, "agent-" + a.id, -1, "sayAct: " + a.sayAct));
                 }
             }
             return d;
@@ -249,7 +268,12 @@ namespace Emergence.Runtime
         // Replace-path (G-review r1, anm. 4): these are DIRECTOR-CHOSEN presentation constants without
         // engine backing — when the R2 export carries social reach, Attend reads the export instead.
         public const float SocialRadius = 6f, FireRadius = 12f;   // sim units
-        public static bool SocialAct(string act) => act == "teach" || act == "love" || act == "small";
+        // E1.5: gift/submit/mourn join the SOCIAL classification — a gift is handed TO someone, a
+        // submission is made BEFORE someone, grief seeks the living. steal/raid/feud stay UNSOCIAL
+        // by design (the thief hides, the raider closes distance via the sim's own position — the
+        // body does not telegraph a target the export doesn't carry).
+        public static bool SocialAct(string act) => act == "teach" || act == "love" || act == "small"
+            || act == "gift" || act == "submit" || act == "mourn";
         static void Attend(WorldState S, WorldAgent a, AgentAnimator aa)
         {
             string act = a.sayAct ?? "";
@@ -264,7 +288,9 @@ namespace Emergence.Runtime
                 }
                 if (best != null) { aa.SetAttend(GroundW(P(S, best.x, best.y))); return; }
             }
-            else if (act == "cold" && S.fires != null)
+            // cold seeks the fire (D-159); E1.5: a mourner with NO soul in social reach turns to the
+            // nearest hearth too — grief without company faces the fire (same mechanism, same radius).
+            if ((act == "cold" || act == "mourn") && S.fires != null)
             {
                 WorldFire best = null; float bd = FireRadius * FireRadius;
                 foreach (var f in S.fires)

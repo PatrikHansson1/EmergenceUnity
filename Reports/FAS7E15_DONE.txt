@@ -1,0 +1,2 @@
+DONE 12:05:41 verdict=GREEN fxTempo=6/6 attendSoc=3/3 attendNone=3/3 busSayActs=8 busLeader=3 busGiftway=2 feedGained=7/7 top='Sixten'(213) dossier='Tuva'/'The Full Bowl Custom' societyViolence=1/1/1 ledVillages=3 mournYaw=0,0 mournSpeed=0,754 mutations=4
+see Reports/fas7-e15body.txt

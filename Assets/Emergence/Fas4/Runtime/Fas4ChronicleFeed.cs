@@ -32,7 +32,7 @@ namespace Emergence.Runtime
             public int year;
             public string era;
             public int salience;    // 1 = routine ledger, 2 = notable, 3 = a turning point
-            public string kind;     // arrival | birth | death | milestone | asset
+            public string kind;     // arrival | birth | death | milestone | asset | steal | raid | feud | mourn | gift | leader | giftway (E1.5)
             public string text;
             public string key;      // dedupe identity: year|type|id|data
         }
@@ -102,7 +102,47 @@ namespace Emergence.Runtime
                         else { salience = 1; text = NameOf(e.Id, true) + " departs"; }
                         kind = "death";
                     }
+                    // E1.5 (Engine 2.4.1): the DRAMA acts reach the book. Rule-based v0-salience,
+                    // extended per the E1.5 body order: feud + raid = ★ TURNING POINTS (blood answers
+                    // blood, violence over goods), steal = notable, mourn/gift = notable. submit is
+                    // deliberately the body's business only (tempo + attend) — the chronicle does not
+                    // ledger every bowed head in v0. Names come from the applied state as always.
+                    else if (e.Data.StartsWith("sayAct: "))
+                    {
+                        switch (e.Data.Substring(8))
+                        {
+                            case "feud":
+                                salience = 3; kind = "feud";
+                                text = NameOf(e.Id, false) + " comes for an old wrong — a feud, not forgotten"; break;
+                            case "raid":
+                                salience = 3; kind = "raid";
+                                text = NameOf(e.Id, false) + " sets upon another's stores — a raid"; break;
+                            case "steal":
+                                salience = 2; kind = "steal";
+                                text = "want owned the hand — " + NameOf(e.Id, false) + " steals"; break;
+                            case "mourn":
+                                salience = 2; kind = "mourn";
+                                text = NameOf(e.Id, false) + " mourns — and does not forget"; break;
+                            case "gift":
+                                salience = 2; kind = "gift";
+                                text = NameOf(e.Id, false) + " gives — the gift itself binds"; break;
+                            default: return;   // submit + future acts: witnessed by the body, not the book (v0)
+                        }
+                    }
                     else return;   // task/age changes are the body's business, not the chronicle's (v0)
+                    break;
+
+                // E1.5: village-scope drama published by Fas3WorldRuntime's applied-state diff —
+                // a leader recognized/lost, a gift-way named. All NOTABLE (salience 2) per the body
+                // order; the village name rides the shared VillageId suffix below.
+                case PresentationEventType.Custom:
+                    if (e.Data.StartsWith("leader: "))
+                    { salience = 2; kind = "leader"; text = "the people begin to listen when " + e.Data.Substring(8) + " speaks"; }
+                    else if (e.Data.StartsWith("leader-gone: "))
+                    { salience = 2; kind = "leader"; text = e.Data.Substring(13) + "'s voice is gone — no one yet speaks for all"; }
+                    else if (e.Data.StartsWith("giftway: "))
+                    { salience = 2; kind = "giftway"; text = "the giving has become a way with a name — " + e.Data.Substring(9); }
+                    else return;
                     break;
 
                 case PresentationEventType.AssetSpawned:
