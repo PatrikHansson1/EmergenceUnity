@@ -72,6 +72,11 @@ namespace Emergence.Runtime
         // E1.5 (MOTOR-LANE-ORDER-E15-DRAMATIK, engine 2.4.0): ADDITIVE again — agents[].wealth
         // (E.wealthOf, the Almanac's wealth sort), villages[].leader (recognized-leader name or '')
         // and villages[].gift (the named gift-way or ''). Nothing removed or renamed.
+        // VILLAGE-SCOPE (MOTOR-LANE-ORDER-VILLAGE-SCOPE 2026-08-09, TD-085): ADDITIVE again —
+        // villages[] merges E.villageScope(S) {pop,maxGen,avgAge,crafts,knows[]} (same order as
+        // S.villages, the engine's ONE census law) so the Almanac's village dossier and the
+        // C-condition's loss half read LIVE data, not just fixtures. dna is now JSON (the D-179
+        // '[object Object]' quirk fixed) — a parseable world fingerprint for divergence proofs.
         const string ExportJs = @"(function(){var E=Emergence,S=__S;return JSON.stringify({
 engineVersion:E.VERSION,seed:__seed,years:Math.floor(S.tick/E.YEAR),tick:S.tick,ended:!!S.ended,season:''+S.season,
 era:(function(){var m=0;S.agents.forEach(function(a){if(a.dead)return;a.knows.forEach(function(t){var q=E.TECH[t];if(q&&q.era>m)m=q.era})});return m})(),
@@ -83,10 +88,10 @@ dead:S.agents.filter(function(a){return a.dead}).length,
 huts:S.huts.map(function(h){return {x:h.x,y:h.y,owner:''+(h.owner||''),free:!!h.free}}),
 fires:S.fires.map(function(f){return {x:f.x,y:f.y,fuel:f.fuel}}),
 fields:S.fields.map(function(f){return {x:f.x,y:f.y,stage:f.stage,owner:''+(f.owner||'')}}),
-villages:S.villages.map(function(v){return {x:v.x,y:v.y,name:''+v.name,leader:''+(v.leaderName||''),gift:''+(v.giftName||'')}}),
+villages:(function(){var sc=E.villageScope(S);return S.villages.map(function(v,i){var s=sc[i];return {x:v.x,y:v.y,name:''+v.name,leader:''+(v.leaderName||''),gift:''+(v.giftName||''),pop:s.pop,maxGen:s.maxGen,avgAge:s.avgAge,crafts:s.crafts,knows:s.knows}})})(),
 animals:S.animals.map(function(an){return {id:an.id,type:''+an.type,x:an.x,y:an.y}}),
 pathUse:S.pathUse||[],
-dna:''+E.computeDNA(S)})})()";
+dna:JSON.stringify(E.computeDNA(S))})})()";
 
         void Start()
         {

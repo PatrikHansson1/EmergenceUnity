@@ -24,10 +24,11 @@ const out = {
   huts: S.huts.map(h => ({ x: h.x, y: h.y, owner: '' + (h.owner || ''), free: !!h.free })),
   fires: S.fires.map(f => ({ x: f.x, y: f.y, fuel: f.fuel })),
   fields: S.fields.map(f => ({ x: f.x, y: f.y, stage: f.stage, owner: '' + (f.owner || '') })),
-  villages: S.villages.map(v => ({ x: v.x, y: v.y, name: '' + v.name, leader: '' + (v.leaderName || ''), gift: '' + (v.giftName || '') })),
+  // VILLAGE-SCOPE (TD-085 driver parity): merge E.villageScope(S) field for field with the driver.
+  villages: (() => { const sc = E.villageScope(S); return S.villages.map((v, i) => ({ x: v.x, y: v.y, name: '' + v.name, leader: '' + (v.leaderName || ''), gift: '' + (v.giftName || ''), pop: sc[i].pop, maxGen: sc[i].maxGen, avgAge: sc[i].avgAge, crafts: sc[i].crafts, knows: sc[i].knows })); })(),
   animals: S.animals.map(an => ({ id: an.id, type: '' + an.type, x: an.x, y: an.y })),
   pathUse: S.pathUse || [],
-  dna: '' + E.computeDNA(S)
+  dna: JSON.stringify(E.computeDNA(S))
 };
 const outDir = PATH.join(__dirname, '..', 'Assets', 'Emergence', 'WorldStates');
 const f = `world-${seed}-y${years}-e15.json`;
