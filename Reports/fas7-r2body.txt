@@ -1,0 +1,23 @@
+EMERGENCE — FAS 7 PROBE: R2 ink. 1 consumed — engine era canon (eraName) + verb-driven animation
+generated 2026-08-09 02:26:22
+data source = applied WorldState (eraName, agents[].verb) — read-only; presentation follows applied state
+
+## PLAY PHASE (frames=18728)
+live era canon @y3: state eraName='The Age of Hearths' non-empty, WorldEras.Name(S)=='The Age of Hearths', != interim 'stone', != season 'spring' (OK)
+feed: 1/5 entries carry the current engine name 'The Age of Hearths', empty=0, interim-named=0 (OK) — [y0|The First Morning|arrival] [y0|The First Morning|arrival] [y0|The First Morning|arrival] [y0|The First Morning|arrival] [y1|The Age of Hearths|birth]
+almanac tile: 'The Age of Hearths' == engine 'The Age of Hearths', never interim/season (OK)
+live verb law: verbs 5/5 non-empty, settled bodies in StateFor(verb,task,canWork) 1/1 (OK)
+fixture r2ink1 (riktig 2.3.x-export, samma Apply-väg, 6 själar): state==recomputed-from-verb 6/6 (alla), verb carried 6/6, non-idle verbs=1>0; verb DRIVES: 'Embla' verb='gather' task='gathering wood' -> state Work (task law alone would say Walk) (OK)
+evidence evidence: OK (end-of-frame backbuffer, nonwhite 100%) -> Reports/fas7-r2body.png
+backward y055 (pre-R2-export utan fälten, 22 själar): verbs empty 22/22, state==task-law 22/22 (>=20), era law falls back to interim 'dawn' (non-empty, eraName absent) (OK)
+resume: tps 24==24 (OK) — R2 consumption never touches the clock
+
+lane honesty: the body CONSUMES Engine 2.3.2's additive R2 ink. 1 export (eraName + agents[].verb).
+Verb law: idle/rest/eat/grow->Idle, move->Walk, gather/hunt/fish/carry->Work-for-adults (no Carry clip —
+the true carry cycle is Väg-1/R3 purchase work; the D-131 basket prop stays task-driven), work/harvest/
+trade/fight->Work-for-adults; social/ritual keep the D-159 expression paths; empty/unknown -> task fallback.
+Era law: a non-empty engine eraName IS the name; empty falls back to the interim names — no UI can show an
+empty era. TempoFor and attend (D-159) are untouched — their regression rides Fas6Expr. Fixture honesty:
+r2ink1 + y055 are REAL engine exports through the SAME Apply path (FixtureInjection, chronicle silent).
+
+verdict: GREEN — the engine names the age and picks the step; the body follows, and old worlds still play

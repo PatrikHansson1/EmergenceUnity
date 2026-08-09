@@ -194,8 +194,9 @@ namespace Emergence.Editor
                 _n4 = $"tiles==recorder: pop {_view.TilePop}/{latest.pop} births {_view.TileBirths}/{_rec.TotalBirths} deaths {_view.TileDeaths}/{_rec.TotalDeaths} huts {_view.TileHuts}/{_rec.HutCount} år {_view.TileYear}/{c.PresentationYear} ({(tilesOk ? "OK" : "FAIL")}); curve {_view.CurvePointCount} pts to y{_view.CurveLastYear} ({(curveOk ? "OK" : "FAIL")})";
                 _recordsAtTruth = _rec.RecordCount; _curvePtsAtTruth = _view.CurvePointCount;   // stamped at the truth check (review I2)
 
-                bool eraOk = _view.TileEra == WorldEras.Name(S != null ? S.era : 0) && _view.TileEra != S.season;
-                _n5 = $"era tile: '{_view.TileEra}' == WorldEras.Name({(S != null ? S.era : 0)}), never the season ('{(S != null ? S.season : "?")}') ({(eraOk ? "OK" : "FAIL")})";
+                // R2 ink. 1: THE ONE ERA-NAME LAW — the engine's eraName wins when present, interim fallback otherwise
+                bool eraOk = _view.TileEra == WorldEras.Name(S) && _view.TileEra != S.season;
+                _n5 = $"era tile: '{_view.TileEra}' == WorldEras.Name(S) (era {(S != null ? S.era : 0)}, engine eraName '{(S != null ? S.eraName : "?")}'), never the season ('{(S != null ? S.season : "?")}') ({(eraOk ? "OK" : "FAIL")})";
 
                 var g = new GameObject("Fas5AlmGrabber").AddComponent<Fas4NativeGrabber>();
                 g.Path = PngAlm; g.OnGrabbed = note => { _n9 = "almanac " + note; };

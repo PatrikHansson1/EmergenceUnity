@@ -11,7 +11,11 @@ using System;
 
 namespace Emergence.Runtime
 {
-    [Serializable] public class WorldAgent { public int id; public string name; public float x, y; public float age; public int gen; public string task, say, sayAct; }
+    // R2 ink. 1 (Engine 2.3.2, TD-076): the export additively carries agents[].verb — one of the
+    // engine's 15 canonical work verbs (idle move gather carry work harvest hunt fish eat rest grow
+    // social ritual fight trade), derived engine-side from task. Old exports lack it → null → the
+    // body falls back to the task classification (AgentTaskRead). Additive field only — parser untouched.
+    [Serializable] public class WorldAgent { public int id; public string name; public float x, y; public float age; public int gen; public string task, say, sayAct; public string verb; }
     [Serializable] public class WorldHut { public float x, y; public string owner; public bool free; }
     [Serializable] public class WorldFire { public float x, y; public float fuel; }
     [Serializable] public class WorldField { public float x, y; public int stage; public string owner; }
@@ -33,6 +37,10 @@ namespace Emergence.Runtime
         // D-147: era = max TECH[t].era over living souls' knowledge (derived read-only in the driver's
         // export JS — the engine is untouched). Old snapshots/checkpoints lack the field → 0 = "dawn".
         public int era;
+        // R2 ink. 1 (Engine 2.3.2, TD-076): the ENGINE now owns era canon — eraName carries the
+        // canonical name ("The First Morning" … "The Age of Steam"). Old snapshots/checkpoints lack
+        // the field → null/"" → WorldEras interim fallback. Additive field only — parser untouched.
+        public string eraName;
         public int W, H; public string tileTypes; public int[] tileN;
         public WorldAgent[] agents; public WorldHut[] huts; public WorldFire[] fires;
         public WorldField[] fields; public WorldVillage[] villages; public WorldAnimal[] animals;
@@ -46,5 +54,14 @@ namespace Emergence.Runtime
     {
         static readonly string[] Names = { "dawn", "stone", "bronze", "iron", "mill", "print", "steam" };
         public static string Name(int era) => era >= 0 && era < Names.Length ? Names[era] : "era-" + era;
+
+        // ---- R2 ink. 1 (Engine 2.3.2): the ENGINE owns era canon. THE ONE ERA-NAME LAW: ----
+        // a non-empty engine eraName IS the name; empty/null (old exports, old checkpoints, old
+        // fixtures) falls back to the interim names above. Backward compatibility is part of the
+        // proof (Fas7R2BodyProbe) — no consumer may ever show an empty era string.
+        /// <summary>Era label for a (derived era index, engine eraName) pair — engine name wins when present.</summary>
+        public static string Name(int era, string eraName) => !string.IsNullOrEmpty(eraName) ? eraName : Name(era);
+        /// <summary>Era label for an applied state — engine name wins when present; null-safe.</summary>
+        public static string Name(WorldState S) => S == null ? Names[0] : Name(S.era, S.eraName);
     }
 }

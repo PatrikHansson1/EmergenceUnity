@@ -31,6 +31,31 @@ namespace Emergence.Runtime
         /// <summary>Animator state name for a task. canWork=false for bands without a work clip (child/elder).</summary>
         public static string StateFor(string task, bool canWork) =>
             (canWork && Working(task)) ? "Work" : Moving(task) ? "Walk" : "Idle";
+
+        // ---- R2 ink. 1 (Engine 2.3.2): VERB-DRIVEN ANIMATION — the engine's verb picks the state ----
+        // The export now carries agents[].verb (15 canonical verbs, engine-derived from task). NEW LAW:
+        // a non-empty verb SELECTS the animation state; an empty verb (old exports/fixtures/checkpoints)
+        // falls back to the task classification above — backward compatibility is part of the proof.
+        //   idle/rest/eat/grow -> Idle;  move -> Walk;
+        //   gather/hunt/fish/carry -> Work for adults (no Carry state exists — the true carry cycle is
+        //     Väg-1/R3 purchase work; the D-131 basket prop stays task-driven and unchanged), Walk for
+        //     bands without a work clip (the roam reads);
+        //   work/harvest/trade/fight -> Work for adults, Idle otherwise;
+        //   social/ritual -> keep their existing expression paths (sayAct tempo + attend-gaze, D-159);
+        //     their STATE stays the task read;  unknown/future verbs -> task fallback (engine contract:
+        //     body-side falls back to idle/walk).
+        /// <summary>THE ONE state law since R2 ink. 1: verb selects when present, task classifies otherwise.</summary>
+        public static string StateFor(string verb, string task, bool canWork)
+        {
+            switch (verb)
+            {
+                case "idle": case "rest": case "eat": case "grow": return "Idle";
+                case "move": return "Walk";
+                case "gather": case "hunt": case "fish": case "carry": return canWork ? "Work" : "Walk";
+                case "work": case "harvest": case "trade": case "fight": return canWork ? "Work" : "Idle";
+            }
+            return StateFor(task, canWork);   // empty / social / ritual / unknown → the task classification stands
+        }
     }
 
     [DisallowMultipleComponent]
@@ -38,6 +63,9 @@ namespace Emergence.Runtime
     {
         public int agentId;
         public string task;
+        // R2 ink. 1: the engine's canonical work verb for this soul ("" on old exports → task fallback).
+        // Serialized like task/band so Rehydrate survives the enter-playmode domain reload (D-124).
+        public string verb = "";
         public bool canWork = true;   // adults only — the child/elder GLB sets carry no work clip
         // D-124: identity carried on the instance so the live agent-reconciler can rehydrate its
         // id->instance map after the enter-playmode domain reload (serialized fields survive it).
@@ -75,6 +103,9 @@ namespace Emergence.Runtime
 
         /// <summary>Reconciler-facing: update the task live (crossfades only when the read changes).</summary>
         public void SetTask(string t) { task = t; if (_anim != null) Apply(false); }
+
+        /// <summary>R2 ink. 1: task + engine verb together (the verb picks the state when non-empty).</summary>
+        public void SetTask(string t, string v) { verb = v ?? ""; SetTask(t); }
 
         /// <summary>A2-polish (D-159): sim sayAct → animator tempo. Full body-states await the Väg-1 clips.</summary>
         public void SetMood(string act)
@@ -160,7 +191,7 @@ namespace Emergence.Runtime
         void Apply(bool hashPhase)
         {
             if (_anim.runtimeAnimatorController == null) return;
-            string s = _transit ? "Walk" : AgentTaskRead.StateFor(task, canWork);   // transit overrides the read
+            string s = _transit ? "Walk" : AgentTaskRead.StateFor(verb, task, canWork);   // transit overrides the read (R2: verb selects when present)
             if (s == _state) return;
             _state = s;
             // phase de-sync so 111 villagers don't stride in lockstep — hash(agentId), never sim RNG

@@ -25,6 +25,7 @@ namespace Emergence.Runtime
         {
             public int year;
             public int era;          // WorldState.era at the moment the year applied (D-147)
+            public string eraName;   // R2 ink. 1: engine-owned era name at sample time ("" on old exports → WorldEras interim fallback)
             public int pop;          // agents alive in the applied snapshot
             public int births;       // witnessed this year (bus AgentActivity)
             public int deaths;       // witnessed this year
@@ -97,6 +98,7 @@ namespace Emergence.Runtime
                 var r = GetOrMake(y);
                 r.pop = S.agents != null ? S.agents.Length : 0;
                 r.era = S.era;
+                r.eraName = S.eraName;   // R2 ink. 1: null/"" on old exports — the view falls back to interim names
                 r.sampled = true;
                 _years[y] = r;
                 Bound();

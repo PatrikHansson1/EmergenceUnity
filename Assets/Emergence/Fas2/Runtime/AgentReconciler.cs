@@ -28,7 +28,7 @@ namespace Emergence.Runtime
         const float TileSize = 8f;   // matches WorldDresser/LiveReconciler
         const float Scale = 1f;      // matches WorldDresser.VillagerScale
 
-        sealed class Rec { public GameObject go; public string band; public bool female; public string task; public string sayAct; }
+        sealed class Rec { public GameObject go; public string band; public bool female; public string task; public string sayAct; public string verb; }
         readonly Dictionary<int, Rec> _agents = new();
         int _tick;
 
@@ -51,7 +51,7 @@ namespace Emergence.Runtime
             var layer = GameObject.Find(LayerName);
             if (layer == null) return;
             foreach (var aa in layer.GetComponentsInChildren<AgentAnimator>())
-                _agents[aa.agentId] = new Rec { go = aa.gameObject, band = aa.band, female = aa.female, task = aa.task, sayAct = aa.sayAct };
+                _agents[aa.agentId] = new Rec { go = aa.gameObject, band = aa.band, female = aa.female, task = aa.task, sayAct = aa.sayAct, verb = aa.verb };
         }
 
         public Delta Reconcile(WorldState S, bool editPose)
@@ -70,7 +70,7 @@ namespace Emergence.Runtime
                 _agents.Remove(id);
                 d.died++;
                 PresentationEventBus.Publish(new PresentationEvent(
-                    _tick, S.years, WorldEras.Name(S.era), PresentationEventType.AgentActivity, "agent-" + id, -1, "a soul departs"));
+                    _tick, S.years, WorldEras.Name(S), PresentationEventType.AgentActivity, "agent-" + id, -1, "a soul departs"));
             }
 
             // 2) births + updates
@@ -88,7 +88,7 @@ namespace Emergence.Runtime
                         rec.band = band;
                         d.aged++;
                         PresentationEventBus.Publish(new PresentationEvent(
-                            _tick, S.years, WorldEras.Name(S.era), PresentationEventType.AgentActivity, "agent-" + a.id, -1,
+                            _tick, S.years, WorldEras.Name(S), PresentationEventType.AgentActivity, "agent-" + a.id, -1,
                             band == "adult" ? "comes of age" : "grows old"));
                     }
                     else
@@ -103,18 +103,20 @@ namespace Emergence.Runtime
                             d.moved++;
                         }
                         var aaLive = rec.go.GetComponent<AgentAnimator>();
-                        if (rec.task != a.task)
+                        // R2 ink. 1: verb rides with task (engine derives verb FROM task, so a verb
+                        // change implies a task change in live exports; fixtures may mutate either).
+                        if (rec.task != a.task || rec.verb != (a.verb ?? ""))
                         {
-                            rec.task = a.task;
+                            rec.task = a.task; rec.verb = a.verb ?? "";
                             if (aaLive != null)
                             {
-                                if (Application.isPlaying) aaLive.SetTask(a.task);   // live crossfade
-                                else { aaLive.task = a.task; if (editPose) StillPose(rec.go, a, band, female); }
+                                if (Application.isPlaying) aaLive.SetTask(a.task, a.verb ?? "");   // live crossfade (verb selects the state)
+                                else { aaLive.task = a.task; aaLive.verb = a.verb ?? ""; if (editPose) StillPose(rec.go, a, band, female); }
                                 EnsureCarryProp(rec.go, a.task);                 // "bär" (D-131): basket in hand on carry/haul tasks
                             }
                             d.retasked++;
                             PresentationEventBus.Publish(new PresentationEvent(
-                                _tick, S.years, WorldEras.Name(S.era), PresentationEventType.AgentActivity, "agent-" + a.id, -1, "task: " + a.task));
+                                _tick, S.years, WorldEras.Name(S), PresentationEventType.AgentActivity, "agent-" + a.id, -1, "task: " + a.task));
                         }
                         else d.kept++;
                     }
@@ -133,7 +135,7 @@ namespace Emergence.Runtime
                 else
                 {
                     var go = Spawn(S, a, band, female, layer, editPose);
-                    _agents[a.id] = new Rec { go = go, band = band, female = female, task = a.task, sayAct = a.sayAct ?? "" };
+                    _agents[a.id] = new Rec { go = go, band = band, female = female, task = a.task, sayAct = a.sayAct ?? "", verb = a.verb ?? "" };
                     if (Application.isPlaying)
                     {
                         var aaNew = go.GetComponent<AgentAnimator>();
@@ -141,7 +143,7 @@ namespace Emergence.Runtime
                     }
                     d.born++;
                     PresentationEventBus.Publish(new PresentationEvent(
-                        _tick, S.years, WorldEras.Name(S.era), PresentationEventType.AgentActivity, "agent-" + a.id, -1,
+                        _tick, S.years, WorldEras.Name(S), PresentationEventType.AgentActivity, "agent-" + a.id, -1,
                         band == "child" ? "a child is born" : "a soul arrives"));
                 }
             }
@@ -175,6 +177,7 @@ namespace Emergence.Runtime
             if (rac != null) anim.runtimeAnimatorController = rac;
             var aa = go.AddComponent<AgentAnimator>();
             aa.agentId = a.id; aa.task = a.task; aa.canWork = band == "adult"; aa.band = band; aa.female = female;
+            aa.verb = a.verb ?? "";                                          // R2 ink. 1: verb selects the state when present
             aa.sayAct = a.sayAct ?? "";                                      // A2-interim (D-131)
             EnsureCarryProp(go, a.task);                                     // "bär" (D-131)
 
@@ -217,8 +220,9 @@ namespace Emergence.Runtime
         static void StillPose(GameObject go, WorldAgent a, string band, bool female)
         {
 #if UNITY_EDITOR
-            string suffix = (band == "adult" && AgentTaskRead.Working(a.task)) ? "-work"
-                          : AgentTaskRead.Moving(a.task) ? "-walk" : "";
+            // R2 ink. 1: stills go through the SAME one state law as play mode (verb selects when present)
+            string st = AgentTaskRead.StateFor(a.verb, a.task, band == "adult");
+            string suffix = st == "Work" ? "-work" : st == "Walk" ? "-walk" : "";
             string baseNm = band == "child" ? (female ? "villager-child-f" : "villager-child")
                           : band == "elder" ? (female ? "villager-elder-f" : "villager-elder")
                           : (female ? "villager-f" : "villager");

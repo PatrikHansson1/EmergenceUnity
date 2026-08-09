@@ -154,7 +154,7 @@ namespace Emergence.Editor
                 _crossfadesAtCheck = _amb.CrossfadesDone;                       // stamped at the live measurement
                 _eraAtCheck = _amb.CurrentEra;
                 bool trackOk = _amb.CurrentEra == S.era && _amb.BedPlaying;
-                _n2 = $"live shifts: crossfades {_crossfadesAtCheck} (>=2), CurrentEra {_eraAtCheck}==state.era {S.era} '{WorldEras.Name(S.era)}' @y{w.LastAppliedYear}, bed playing={_amb.BedPlaying} ({(trackOk ? "OK" : "FAIL")})";
+                _n2 = $"live shifts: crossfades {_crossfadesAtCheck} (>=2), CurrentEra {_eraAtCheck}==state.era {S.era} '{WorldEras.Name(S)}' @y{w.LastAppliedYear}, bed playing={_amb.BedPlaying} ({(trackOk ? "OK" : "FAIL")})";
 
                 _tpsBefore = c.ticksPerSecond;
                 c.paused = true;

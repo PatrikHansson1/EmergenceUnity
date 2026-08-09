@@ -212,7 +212,7 @@ namespace Emergence.Runtime
             _curve = r.Series();
             var last = r.Latest();
             TileYear = PresYear();
-            TileEra = WorldEras.Name(last.era);
+            TileEra = WorldEras.Name(last.era, last.eraName);   // R2 ink. 1: engine name wins, interim fallback
             TilePop = last.pop;
             TileBirths = r.TotalBirths;
             TileDeaths = r.TotalDeaths;
@@ -616,7 +616,7 @@ namespace Emergence.Runtime
                 seg.style.borderLeftWidth = spanStart > 0 ? 1 : 0;
                 seg.style.borderLeftColor = ColGold;
                 seg.style.justifyContent = Justify.Center;
-                var l = new Label(WorldEras.Name(_curve[spanStart].era));
+                var l = new Label(WorldEras.Name(_curve[spanStart].era, _curve[spanStart].eraName));   // R2 ink. 1
                 l.style.color = ColSub; l.style.fontSize = 9; l.style.letterSpacing = 1;
                 l.style.paddingLeft = 4;
                 seg.Add(l);
