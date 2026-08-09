@@ -1,4 +1,23 @@
 /* ============================================================================
+   EMERGENCE — Civilization Engine — ENGINE 2.4.0 (Wave E1.5: DRAMATIK-MINIMUM, D-166 B1)
+   E1.5 (MOTOR-LANE-ORDER-E15-DRAMATIK, EP-sanctioned): causal human drama OUT
+   OF the four forces (Resurser x Individer x Friktion x Handling) — never
+   scripted. The merged tension spike is made HONEST and NARRATABLE:
+   (1) friction from scarcity drives conflict (pressure(), cached per tick);
+   (2) aspiration hoards surplus -> wealth/inequality (wealthOf exported);
+   (3) causal violence, three rungs — steal (desperation) -> raid (greed) ->
+       feud/blood-revenge (honour) — read from NEW DEDICATED inherited traits
+       aggression / impulse(-control) / vindictiveness (the proto's proxies
+       were dishonest); every act is an event with id + causes[] (R2 grammar)
+       and a grudge BOOKKEEPS the wrong it answers (ev:-chains in the feud);
+   (4) prestige hardens into a RECOGNIZED LEADER (RESEARCH-FRONTIER 2.1) with
+       tribute flowing upward as a sim fact; (5) the existing ritual-kin food
+       sharing is FORMALIZED as a named gift-way (first Polanyi step — NO
+       markets, NO prices, NO currency). New sayActs: steal/raid/feud/mourn/
+       submit/gift (body falls back to null tempo on unknown acts).
+   VERSION honestly bumped to 2.4.0 (the 2.3.x string debt is paid).
+   ============================================================================
+   (2.0.1 header follows, still true:)
    EMERGENCE — Civilization Engine — ENGINE 2.0.1 (Wave E1: THE WIDER WORLD + THE WATER FIX)
    E1 bundles every known World-Code-breaking change into this ONE major
    (D-072/D-078): the wider valley (100x70, D-061 Stage-A) + world-gen v2
@@ -224,6 +243,14 @@ const CHAT={
   observe:['Did you see that?','Curious...','I must remember this.','Again. It happened again.','Why does it do that?'],
   fail:['Not like that, then...','Almost. Almost!','Why will it not hold?','The idea was right. The hands were wrong.','Tomorrow it will work.'],
   ritual:['It felt right.','For those before us.','So we remember.','The old ones would approve.','This is how we stay ourselves.'],
+  // E1.5 (D-166 B1): the drama speaks. New sayAct pools — same position-hash law as all speech
+  // (never S.rand); the body falls back to null tempo on any act it does not know.
+  steal:['Forgive me. Hunger owns me tonight.','You had more than you needed.','I could not watch them starve.','The winter left me nothing.','I will not die politely.'],
+  raid:['The strong take. The rest remember.','You have plenty. Now less.','This is mine now.','Stop me, then.'],
+  feud:['For the one you took.','Blood remembers.','You thought the years would bury it.','My kin cry from the ground.','This debt is old.'],
+  mourn:['They took what cannot be given back.','The fire is colder now.','I will not forget this.','Grief is a long road.','Someone will answer for this.'],
+  submit:['We follow you.','Lead us, then.','Your word carries now.','Speak, and it is done.'],
+  gift:['Take it. No one starves at my fire.',"What is mine is the hearth's.",'We keep the same ways, you and I.','Eat. The gift binds us.'],
 };
 // ENGINE 2.0 SPEECH ACTS (E1, TD-012/D-078): the engine emits an ACT; the phrase
 // is chosen by a deterministic position hash — NEVER by S.rand — so pools can
@@ -611,6 +638,11 @@ function makeWorld(S){
     }
   }
 }
+// E1.5: the secondary trait stream — mulberry32 ONLY (hard req §1), seeded from the world seed,
+// consumed EXCLUSIVELY for the three new conflict traits at birth. This keeps the primary
+// stream's draw order at agent creation byte-identical to 2.3.2 (no reroll of canon souls).
+function R2T(S,a,b){return a+S.rand2()*(b-a);}
+function mut2(S,v){return clamp(v+R2T(S,-.15,.15),.05,1);}
 function makeAgent(S,x,y,parents,founder){
   const mut=v=>clamp(v+R(S,-.15,.15),.05,1);
   const a={
@@ -630,7 +662,17 @@ function makeAgent(S,x,y,parents,founder){
       musicality:parents?mut((parents[0].traits.musicality+parents[1].traits.musicality)/2):R(S,.05,.95),
       empathy:parents?mut((parents[0].traits.empathy+parents[1].traits.empathy)/2):R(S,.1,.95),
       ambition:parents?mut((parents[0].traits.ambition+parents[1].traits.ambition)/2):R(S,.1,.95),
+      // E1.5 (D-166 B1): DEDICATED conflict traits, inherited like all others — the tension
+      // proto read these as proxies of empathy/ambition/conformity, which was dishonest.
+      // Violence-proneness itself now evolves across generations (additive in DNA/arv).
+      // They draw from the SECONDARY stream (S.rand2, mulberry32 — see createWorld): the primary
+      // stream's consumption at agent creation stays byte-identical to 2.3.2, so every canon
+      // soul KEEPS its canon identity (Eira stays Eira); the temperament layer is added on top.
+      aggression:parents?mut2(S,(parents[0].traits.aggression+parents[1].traits.aggression)/2):R2T(S,.05,.9),
+      impulse:parents?mut2(S,(parents[0].traits.impulse+parents[1].traits.impulse)/2):R2T(S,.15,.95),
+      vindictiveness:parents?mut2(S,(parents[0].traits.vindictiveness+parents[1].traits.vindictiveness)/2):R2T(S,.05,.9),
     },
+    grudges:{}, // E1.5: wrong -> memory. targetId -> event id of the wrong (steal/raid/killing) — the feud's causes[] chain
     parents:parents?[parents[0].name,parents[1].name]:null,
     habit:null,habitShown:false,habitOrigin:null,
   };
@@ -649,7 +691,7 @@ function makeAgent(S,x,y,parents,founder){
   // first four — recorded input, part of the World Code (Contract §1 used as designed).
   if(founder){
     if(founder.name)a.name=String(founder.name).slice(0,24);
-    if(founder.traits)for(const tk of ['curiosity','social','diligence','conformity','dexterity','creativity','musicality','empathy','ambition'])
+    if(founder.traits)for(const tk of ['curiosity','social','diligence','conformity','dexterity','creativity','musicality','empathy','ambition','aggression','impulse','vindictiveness'])
       if(typeof founder.traits[tk]==='number'&&isFinite(founder.traits[tk]))a.traits[tk]=clamp(founder.traits[tk],0.05,0.95);
   }
   S.maxGeneration=Math.max(S.maxGeneration,a.gen);
@@ -660,6 +702,7 @@ function makeAgent(S,x,y,parents,founder){
 function createWorld(seed,founders){
   const S={
     seed:seed>>>0, rand:mulberry32(seed>>>0),
+    rand2:mulberry32((seed^0x00E15DA7)>>>0), // E1.5: secondary mulberry32 stream — birth-time conflict traits ONLY (never in the tick path)
     tick:0,hour:6,day:1,
     tiles:null,agents:[],fires:[],huts:[],villages:[],regrows:[],
     events:[],knowledge:{},customs:{},nextCustomId:1,
@@ -968,16 +1011,32 @@ function talk(S,a,b){
   // shared ways bind: communities with common rituals hold together
   let shared=0;
   for(const id of a.customs)if(b.customs.has(id)){const sc=S.customs[id];if(sc&&sc.status==='alive')shared++;}
+  let gaveGift=false;
   if(shared){
     const bond=Math.min(6,shared*2);
     a.rel[b.id]+=bond;b.rel[a.id]+=bond;
-    // and they do not let each other starve — faith's evolutionary value
-    if(b.hunger<30&&a.hunger>65){
-      a.hunger-=15;b.hunger=clamp(b.hunger+25,0,140);
-      if(S.rand()<.15)ev(S,'sharing',`🍞 <b>${a.name}</b> shared food with <b>${b.name}</b>. Those who keep the same ways do not let each other starve.`,{x:a.x,y:a.y});
-    }else if(a.hunger<30&&b.hunger>65){
-      b.hunger-=15;a.hunger=clamp(a.hunger+25,0,140);
-      if(S.rand()<.15)ev(S,'sharing',`🍞 <b>${b.name}</b> shared food with <b>${a.name}</b>. Those who keep the same ways do not let each other starve.`,{x:a.x,y:a.y});
+    // and they do not let each other starve — faith's evolutionary value.
+    // E1.5 (D-166 B1 §5, the §10.2 correction): this EXISTING sharing IS the first Polanyi step —
+    // the gift economy. It is kept exactly as it was, counted per village, and when it has
+    // recurred enough it receives a NAME (a named way, an event) — NO prices, NO market, NO
+    // currency: the gift itself binds. The Almanac/chronicle can now narrate it.
+    let giver=null,taker=null;
+    if(b.hunger<30&&a.hunger>65){giver=a;taker=b;}
+    else if(a.hunger<30&&b.hunger>65){giver=b;taker=a;}
+    if(giver){
+      giver.hunger-=15;taker.hunger=clamp(taker.hunger+25,0,140);
+      S.stats.gifts=(S.stats.gifts||0)+1;
+      const gv=villageOf(S,giver);
+      if(gv){
+        gv.shareN=(gv.shareN||0)+1;
+        if(!gv.giftName&&gv.shareN>=6){
+          gv.giftName=pick(S,['The Open Hand','The Shared Bowl','The Hearth-Gift','The Full Bowl Custom']);
+          ev(S,'giftway',`🍞 In <b>${gv.name}</b>, the giving has become a way with a name: <b>${gv.giftName}</b> — those who keep the same ways do not let each other starve. No price is asked; the gift itself binds.`,{village:gv.name,x:gv.x,y:gv.y,label:'A GIFT-WAY IS NAMED',causes:['agent:'+giver.id]});
+        }
+      }
+      if(S.rand()<.15)ev(S,'sharing',`🍞 <b>${giver.name}</b> shared food with <b>${taker.name}</b>${gv&&gv.giftName?' — '+gv.giftName+' holds':''}. Those who keep the same ways do not let each other starve.`,{x:a.x,y:a.y,agent:giver.id,causes:['agent:'+giver.id,'agent:'+taker.id]});
+      speak(S,giver,pickSay(S,giver,'gift'),'gift');
+      if(giver===a)gaveGift=true; // the giver's words stand — the end-of-talk speech must not overwrite them
     }
   }
   let taught=false;
@@ -996,7 +1055,8 @@ function talk(S,a,b){
     }
   }
   spreadCustoms(S,a,b);
-  if(taught)speak(S,a,pickSay(S,a,'teach'),'teach');
+  if(gaveGift){} // E1.5: the gift line already spoken
+  else if(taught)speak(S,a,pickSay(S,a,'teach'),'teach');
   else if((a.rel[b.id]||0)>70)speak(S,a,pickSay(S,a,'love'),'love');
   else speak(S,a,pickSay(S,a,'small'),'small');
   if(a.rel[b.id]>45&&b.rel[a.id]>45&&a.age>16&&b.age>16&&a.age<52&&b.age<52
@@ -1033,10 +1093,13 @@ function tryBuildHut(S,a){
   }
 }
 
-function killAgent(S,a,causeKey,causeTxt){
+function killAgent(S,a,causeKey,causeTxt,extraCauses){
   for(const kid of a.knows){const k=S.knowledge[kid];if(k)k.lastKnownBy=disp(a);}
   S.stats.deaths[causeKey]=(S.stats.deaths[causeKey]||0)+1;
-  ev(S,'death',`<b>${disp(a)}</b> ${causeTxt}.${a.knows.size>3?' Much knowledge died with them — unless someone learned in time.':''}`,{agent:a.id,x:a.x,y:a.y,cause:causeKey,causes:['cause:'+causeKey]}); // R2 INK1 causes: a death is caused by its cause key (starvation/cold/age/wolves/violence)
+  // R2 INK1 causes: a death is caused by its cause key (starvation/cold/age/wolves/violence).
+  // E1.5: a VIOLENT death may additionally chain the act that dealt it + the hand that held the
+  // blade (extraCauses, R2 grammar) — and the death event is returned so grief can reference it.
+  const de=ev(S,'death',`<b>${disp(a)}</b> ${causeTxt}.${a.knows.size>3?' Much knowledge died with them — unless someone learned in time.':''}`,{agent:a.id,x:a.x,y:a.y,cause:causeKey,causes:['cause:'+causeKey].concat(extraCauses||[])});
   a.dead=true;if(a.home)a.home.free=true;S.someoneDied=true;
   let closest=null,cb=40;
   for(const w of S.agents){
@@ -1054,6 +1117,7 @@ function killAgent(S,a,causeKey,causeTxt){
     const q=QUIRK[a.habit];
     ev(S,'legend',`🕊️ ${disp(a)} is gone. But someone still ${q.txt.charAt(0).toLowerCase()+q.txt.slice(1).replace(/\.$/,'')}. No one asks why it began.`,{agent:a.id});
   }
+  return de;
 }
 // ===== STAR OBSERVATION -> COSMOLOGY -> RELIGION (EP directive, TD-030 prototype ported into 2.2, D-088) =====
 // A curious soul awake in the dark, away from the fire's glow, sees the lights that do not fall. Watching
@@ -1121,7 +1185,12 @@ function starTick(S,a){
 // TUNING (EP 2026-07-20: "våld ska dyka upp ibland och väldigt sällan wipa hela civilisationer").
 // One place to dial the whole thing up or down. Lower = rarer + less lethal.
 const TUNE={
-  theftRate:      0.04,  // per-tick chance multiplier that a ripe grievance becomes an act (was 0.16)
+  theftRate:      0.025, // per-tick chance multiplier that a ripe DESPERATION becomes a theft (was 0.16; E1.5 gate-tuned)
+  // E1.5 BALANCE GATE (order §3, measured over canon seeds y0-y120): theft must stay occasional-per-
+  // decade and the feud a generational event. The proto's single rate let GREED fire as often as
+  // hunger — measured 277 raids/120y on seed 4242. Each rung now carries its own rarity:
+  raidRate:       0.006, // greed is patient — predation on the richer is RARE, not a lifestyle
+  feudRate:       0.025, // honour moves when it moves — between theft and raid in rarity
   brawlLethalBase:0.010, // chance a resisted theft/raid turns deadly, fists (was 0.03)
   brawlLethalArm: 0.045, // + this × best weapon (was 0.13) — steel still bites, just far less often
   warChance:      0.22,  // chance a ripe village tension actually breaks into a raid that year (was 0.50)
@@ -1129,9 +1198,14 @@ const TUNE={
   warParty:       3,     // raiders per war (was 4)
   warLethalBase:  0.05,  // per-clash death chance in a raid, fists (was 0.15)
   warLethalArm:   0.08,  // + this × best weapon (was 0.20)
-  warMaxDead:     2      // a single raid can cost at most this many lives total — no wipeouts
+  warMaxDead:     2,     // a single raid can cost at most this many lives total — no wipeouts
+  // E1.5 (D-166 B1): leadership + tribute knobs (RESEARCH-FRONTIER 2.1 — smallest honest rule)
+  leaderMin:      1.00,  // prestige+ambition score a soul must clear to be RECOGNIZED at all
+  leaderMargin:   1.04,  // ...and how clearly they must stand above the second-best (no tie-lords)
+  leaderVillage:  5,     // adults a village needs before "who decides" is even a question
+  tributeMin:     8      // wealth below which no one pays tribute — no one starves for a leader
 };
-function wealth(a){let w=0;for(const k in a.inv)w+=a.inv[k]||0;return w;}
+function wealth(a){let w=0;for(const k in a.inv)w+=a.inv[k]||0;return w;} // E1.5: exported as wealthOf — the Almanac's wealth sort feeds on this
 // means of force: a weapon or metal makes coercion viable AND lethal (ties violence to the tech tree).
 function forceMeans(a){
   if(a.knows.has('steel'))return 1.0;
@@ -1140,10 +1214,11 @@ function forceMeans(a){
   if(a.knows.has('sharp'))return 0.3;
   return 0.12; // fists and stones
 }
-function aggression(a){return clamp((1-a.traits.empathy)*0.6+a.traits.ambition*0.4,0,1);}
-// social restraint: empathy(fear of harm) + impulse control(conformity) + any emerged law/peace-norm.
+// E1.5 (D-166 B1): the proxies are RETIRED — aggression is now a first-class inherited trait.
+function aggression(a){return a.traits.aggression!==undefined?a.traits.aggression:clamp((1-a.traits.empathy)*0.6+a.traits.ambition*0.4,0,1);}
+// social restraint: impulse CONTROL (dedicated trait) + empathy (fear of harming) + any emerged law/peace-norm.
 function restraintOf(S,a){
-  let r=a.traits.empathy*0.55+a.traits.conformity*0.45;
+  let r=(a.traits.impulse!==undefined?a.traits.impulse:a.traits.conformity)*0.6+a.traits.empathy*0.4;
   if(hasCustomKind(S,a,'taboo','harm')||hasCustomKind(S,a,'value','peace'))r+=0.4; // an emerged law bites
   return clamp(r,0,1.3);
 }
@@ -1165,7 +1240,7 @@ function aspireTick(S,a){
 // CONFLICT: theft / brawl / raid / revenge — a gap closed by force. Returns true if it consumed the tick.
 function conflictTick(S,a){
   if(a.age<12)return false;
-  const desp=a.hunger<24?1:(a.hunger<38?0.4:0);
+  const desp=a.hunger<24?1:(a.hunger<32?0.35:0); // E1.5 gate-tuning: desperation is DESPERATION — the peckish do not rob
   const myW=wealth(a), fric=pressure(S);
   let tgt=null,best=0,revenge=false;
   for(const b of nearby(S,a,4.5)){
@@ -1173,7 +1248,7 @@ function conflictTick(S,a){
     const grudge=(a.rel[b.id]||0)<-55?1:0;
     const foodGap=desp&&b.hunger>62?1:0;
     const wGap=wealth(b)-myW;
-    const score=foodGap*70+(wGap>4?wGap:0)+grudge*85;
+    const score=foodGap*70+(wGap>8?wGap:0)+grudge*85; // E1.5 gate-tuning: greed preys on the visibly RICH (hoarders, leaders), not on anyone slightly better off
     if(score>best){best=score;tgt=b;revenge=grudge&&!foodGap&&wGap<=4;}
   }
   if(!tgt)return false;
@@ -1183,31 +1258,60 @@ function conflictTick(S,a){
   // GROUP IDENTITY: kin (same village) are shielded by the Peace of Kin; a stranger is fair game.
   const kin=villageOf(S,a)===villageOf(S,tgt)?0.22:-0.06; // raiding your own is far harder than raiding "them"
   // drive to use force = pull of the gap, lifted by aggression/means/friction, minus restraint.
+  // E1.5: each rung reads its HONEST trait — desperation is hunger's own force, greed rides
+  // aggression+means, and revenge is VINDICTIVENESS (the blood-memory trait), not ambition.
   let drive=0;
   if(desp)          drive=0.85*desp+agg*0.2-restraint*0.45-kin;
-  else if(revenge)  drive=0.65+a.traits.ambition*0.2-restraint*0.35-kin;         // honor/vindictiveness overrides more
-  else if(greed>0)  drive=greed*0.7+agg*0.3+forceMeans(a)*0.2-restraint*0.65-kin; // predation on the richer
-  drive*=(0.7+0.6*fric); // FRICTION: scarcity makes every gap sharper
+  else if(revenge)  drive=0.30+a.traits.vindictiveness*0.6-restraint*0.35-kin;   // honor: the grudge burns by disposition
+  else if(greed>0)  drive=greed*0.6+agg*0.35+forceMeans(a)*0.2-restraint*0.7-kin; // predation on the richer
+  drive*=(0.7+0.6*fric); // FRICTION: scarcity makes every gap sharper (population pressure as DRIVER, D-089->D-166)
   if(drive<=0)return false;
-  if(S.rand()>clamp(drive,0,1)*TUNE.theftRate)return false;                   // occasional, weighted by drive
-  // --- THE ACT ---
-  const kind=desp&&tgt.hunger>62?'steal-food':revenge?'revenge':'raid';
+  const rate=desp?TUNE.theftRate:revenge?TUNE.feudRate:TUNE.raidRate;         // E1.5: each rung has its own rarity
+  if(S.rand()>clamp(drive,0,1)*rate)return false;                             // occasional, weighted by drive
+  // --- THE ACT (E1.5: each rung is its OWN event type, id + causes[] per the R2 grammar).
+  // The kind follows the DRIVING branch (the proto let a desperation act on an unfed target
+  // masquerade as a greed-raid — dishonest bookkeeping AND it leaked theft's rate into raids). ---
+  const kind=desp?(tgt.hunger>62?'steal-food':'steal-goods'):revenge?'revenge':'raid';
   const armedMe=forceMeans(a), armedYou=forceMeans(tgt);
   const meStr=armedMe+a.traits.dexterity*0.5, youStr=armedYou+tgt.traits.dexterity*0.5;
-  let outcome;
+  let outcome, actEv;
   if(kind==='steal-food'){
     const took=Math.min(28,Math.max(10,tgt.hunger-30));
     tgt.hunger=clamp(tgt.hunger-took,0,140); a.hunger=clamp(a.hunger+took*0.8,0,140);
     a.task='taking food by force'; outcome='took food';
+    S.stats.steals=(S.stats.steals||0)+1;
+    actEv=ev(S,'steal',`🥀 Hunger owned the hand: <b>${disp(a)}</b> wrenched food from <b>${disp(tgt)}</b>.`,{agent:a.id,victim:tgt.id,x:a.x,y:a.y,cause:'desperation',causes:['agent:'+tgt.id,'cause:desperation'].concat(S.season==='winter'?['cause:winter']:[])});
+    speak(S,a,pickSay(S,a,'steal'),'steal');
   } else {
     const kinds=Object.keys(tgt.inv).filter(k=>tgt.inv[k]>0);
     if(kinds.length){const m=kinds[Math.floor(S.rand()*kinds.length)];const q=Math.min(tgt.inv[m],1+Math.floor(S.rand()*3));tgt.inv[m]-=q;a.inv[m]=(a.inv[m]||0)+q;outcome='seized goods';}
     else outcome='found little';
-    a.task=kind==='revenge'?'settling a score':'raiding a neighbour';
+    if(kind==='steal-goods'){
+      a.task='taking food by force';
+      S.stats.steals=(S.stats.steals||0)+1;
+      actEv=ev(S,'steal',`🥀 Need drove the hand: <b>${disp(a)}</b> ${outcome==='seized goods'?'took what could be carried from':'went through the store of'} <b>${disp(tgt)}</b>.`,{agent:a.id,victim:tgt.id,x:a.x,y:a.y,cause:'desperation',causes:['agent:'+tgt.id,'cause:desperation'].concat(S.season==='winter'?['cause:winter']:[])});
+      speak(S,a,pickSay(S,a,'steal'),'steal');
+    }else if(kind==='revenge'){
+      a.task='settling a score';
+      S.stats.feuds=(S.stats.feuds||0)+1; S.stats.revenges=(S.stats.revenges||0)+1;
+      // the feud CHAINS: causes[] carries the remembered wrong (the very event that lit the grudge)
+      const src=a.grudges?a.grudges[tgt.id]:undefined;
+      actEv=ev(S,'feud',`🩸 <b>${disp(a)}</b> came for <b>${disp(tgt)}</b> — an old wrong, not forgotten, ${outcome==='seized goods'?'paid back in goods and bruises':'answered at last'}.`,{agent:a.id,victim:tgt.id,x:a.x,y:a.y,cause:'honor',causes:(src!==undefined?['ev:'+src]:[]).concat(['agent:'+tgt.id,'cause:grudge'])});
+      speak(S,a,pickSay(S,a,'feud'),'feud');
+    }else{
+      a.task='raiding a neighbour';
+      S.stats.raids=(S.stats.raids||0)+1;
+      actEv=ev(S,'raid',`⚔️ <b>${disp(a)}</b> set upon <b>${disp(tgt)}</b> and ${outcome} — the gap was cheaper to close by force.`,{agent:a.id,victim:tgt.id,x:a.x,y:a.y,cause:'greed',causes:['agent:'+tgt.id,'cause:greed']});
+      speak(S,a,pickSay(S,a,'raid'),'raid');
+    }
   }
-  tgt.rel[a.id]=(tgt.rel[a.id]||0)-45; a.rel[tgt.id]=(a.rel[tgt.id]||0)-10; // the victim remembers
-  S.stats.thefts=(S.stats.thefts||0)+1;
-  ev(S,'violence',`⚔️ <b>${disp(a)}</b> ${outcome==='took food'?'wrenched food from':'set upon'} <b>${disp(tgt)}</b>${kind==='revenge'?' — an old score':''}.`,{agent:a.id,x:a.x,y:a.y,cause:kind});
+  // the victim remembers — and HOW MUCH depends on the wrong: hunger is half-forgiven (a stolen
+  // meal stays below the feud threshold), GREED is not (a raid burns deep enough to demand answer).
+  tgt.rel[a.id]=(tgt.rel[a.id]||0)-(kind==='raid'?60:45);
+  if(tgt.grudges)tgt.grudges[a.id]=actEv.id;                                // ...and remembers WHICH wrong (the feud's future evidence)
+  if(kind==='revenge'){a.rel[tgt.id]=-30;if(a.grudges)delete a.grudges[tgt.id];} // E1.5: blood ANSWERED settles the score (no endless ping-pong — the counter-grudge may still chain it, generationally)
+  else a.rel[tgt.id]=(a.rel[tgt.id]||0)-10;
+  S.stats.thefts=(S.stats.thefts||0)+1; // legacy total across all three rungs
   // resistance -> a real fight; the MEANS decides lethality (a stone-age scuffle rarely kills; steel does).
   const resists=(kind!=='steal-food')||tgt.traits.ambition>0.5||S.rand()<0.5;
   if(resists){
@@ -1219,27 +1323,78 @@ function conflictTick(S,a){
       const healer=S.agents.some(h=>!h.dead&&h!==loser&&dist(h,loser)<5&&h.knows.has('medicine'));
       if(healer&&S.rand()<0.5){
         loser.energy=clamp(loser.energy-25,0,100);
-        ev(S,'violence',`🩹 <b>${disp(killer)}</b> left <b>${disp(loser)}</b> bleeding — a healer's hands held death off.`,{agent:loser.id,x:loser.x,y:loser.y});
+        ev(S,'violence',`🩹 <b>${disp(killer)}</b> left <b>${disp(loser)}</b> bleeding — a healer's hands held death off.`,{agent:loser.id,x:loser.x,y:loser.y,causes:['ev:'+actEv.id]});
       }else{
-        killAgent(S,loser,'violence',`was killed by <b>${disp(killer)}</b> in a fight`);
+        const deathEv=killAgent(S,loser,'violence',`was killed by <b>${disp(killer)}</b> in a fight`,['ev:'+actEv.id,'agent:'+killer.id]);
         killer.kills=(killer.kills||0)+1;
-        // the killing seeds a FEUD: everyone who loved the fallen now hates the killer (blodshämnd)
-        for(const w of S.agents){if(w.dead||w===killer)continue;if(dist(w,loser)<7&&(w.rel[loser.id]||0)>30)w.rel[killer.id]=(w.rel[killer.id]||0)-75;}
+        // the killing seeds a FEUD: everyone who loved the fallen now hates the killer (blodshämnd),
+        // and each mourner BOOKKEEPS the killing event — the future revenge will cite it (E1.5).
+        let mourner=null;
+        for(const w of S.agents){if(w.dead||w===killer)continue;if(dist(w,loser)<7&&(w.rel[loser.id]||0)>30){w.rel[killer.id]=(w.rel[killer.id]||0)-75;if(w.grudges)w.grudges[killer.id]=deathEv.id;if(!mourner)mourner=w;}}
+        if(mourner){
+          ev(S,'mourn',`🕯️ <b>${disp(mourner)}</b> mourns <b>${disp(loser)}</b> — and does not forget whose hand it was.`,{agent:mourner.id,victim:loser.id,x:mourner.x,y:mourner.y,causes:['ev:'+deathEv.id]});
+          speak(S,mourner,pickSay(S,mourner,'mourn'),'mourn');
+        }
         S.stats.killings=(S.stats.killings||0)+1;
         // INSTITUTION AS RESPONSE: recurring blood in one place breeds a norm against harm (proto-law).
         maybeEmergeCustom(S,killer,'death','violence');
-        if((S.stats.killings||0)>=3&&S.rand()<0.5)seedHarmTaboo(S,killer);
+        if((S.stats.killings||0)>=3&&S.rand()<0.5)seedHarmTaboo(S,killer,deathEv.id);
       }
     }
   }
-  if(kind==='revenge')S.stats.revenges=(S.stats.revenges||0)+1;
   return true;
 }
 // justice emerges as an answer to recurring violence: a village-borne taboo against harming your own.
-function seedHarmTaboo(S,a){
+function seedHarmTaboo(S,a,evId){
   if(hasCustomKind(S,a,'taboo','harm'))return;
   const c=addCustom(S,a,{kind:'taboo',lens:'law',target:'harm',slot:'taboo:harm',name:'The Peace of Kin',txt:'that spilling the blood of your own is forbidden',word:'peace'});
-  if(c)ev(S,'violence',`⚖️ After too much blood, the people of <b>${disp(a)}</b>'s village bind themselves to a rule: <b>The Peace of Kin</b> — no more killing your own.`,{agent:a.id,x:a.x,y:a.y,label:'A LAW IS BORN'});
+  if(c)ev(S,'violence',`⚖️ After too much blood, the people of <b>${disp(a)}</b>'s village bind themselves to a rule: <b>The Peace of Kin</b> — no more killing your own.`,{agent:a.id,x:a.x,y:a.y,label:'A LAW IS BORN',causes:evId!==undefined?['ev:'+evId]:[]});
+}
+
+// ===== E1.5 (D-166 B1 §4, RESEARCH-FRONTIER 2.1): PRESTIGE -> RECOGNIZED LEADER =====
+// Prestige-weighted imitation existed since the culture engine; what was missing is prestige
+// ACCUMULATING into recognized authority over others. Smallest honest rule: in a village of
+// enough adults, a soul whose standing (prestige + ambition) clears a threshold AND clearly
+// outshines every rival is RECOGNIZED — a sim fact (village.leader), never an assignment.
+// Redistribution UPWARD follows: households with surplus lay a share at the leader's door
+// (tribute — the gift-obligation face of hierarchy; Flannery & Marcus). Runs yearly.
+function leaderScore(a){return prestige(a)+a.traits.ambition*0.5;}
+function leaderTick(S){
+  for(const v of S.villages){
+    const adults=[];
+    for(const a of S.agents){if(!a.dead&&a.age>=16&&villageOf(S,a)===v)adults.push(a);}
+    // a dead (or departed) leader is laid down first — the village remembers, the chronicle tells
+    if(v.leader!=null&&!adults.some(a=>a.id===v.leader)){
+      ev(S,'leader',`🕯️ <b>${v.name}</b> is without a leader — <b>${v.leaderName}</b>'s voice is gone, and no one yet speaks for all.`,{village:v.name,x:v.x,y:v.y,causes:v.leaderEv!==undefined?['ev:'+v.leaderEv]:[]});
+      v.leader=null;v.leaderName=null;v.leaderEv=undefined;
+    }
+    if(v.leader!=null||adults.length<TUNE.leaderVillage)continue;
+    let top=null,second=null;
+    for(const a of adults){const s=leaderScore(a);
+      if(!top||s>top.s){second=top;top={a,s};}
+      else if(!second||s>second.s)second={a,s};}
+    if(!top||top.s<TUNE.leaderMin)continue;
+    if(second&&top.s<second.s*TUNE.leaderMargin)continue; // recognition needs CLEAR standing, not a tie
+    v.leader=top.a.id;v.leaderName=top.a.name;
+    const le=ev(S,'leader',`👑 In <b>${v.name}</b>, the people have begun to listen when <b>${disp(top.a)}</b> speaks — prestige has hardened into leadership. No one voted; it is simply so.`,{village:v.name,agent:top.a.id,x:v.x,y:v.y,label:'A LEADER IS RECOGNIZED',causes:['agent:'+top.a.id]});
+    v.leaderEv=le.id;
+    giveEpithet(S,top.a,'the Voice of '+v.name);
+    let n=0;for(const a of adults){if(a!==top.a&&n<2){speak(S,a,pickSay(S,a,'submit'),'submit');n++;}} // the first followers speak their submission (id order — deterministic)
+    S.stats.leaders=(S.stats.leaders||0)+1;
+  }
+  // TRIBUTE: redistribution upward as a sim fact — surplus flows toward standing.
+  for(const v of S.villages){
+    if(v.leader==null)continue;
+    const L=S.agents.find(a=>!a.dead&&a.id===v.leader); if(!L)continue;
+    let given=0;
+    for(const a of S.agents){
+      if(a.dead||a===L||a.age<16||villageOf(S,a)!==v)continue;
+      if(wealth(a)<TUNE.tributeMin)continue;
+      let bk=null,bq=0;for(const m in a.inv){if(a.inv[m]>bq){bq=a.inv[m];bk=m;}}
+      if(bk&&bq>2){a.inv[bk]--;L.inv[bk]=(L.inv[bk]||0)+1;given++;}
+    }
+    if(given&&S.rand()<0.12)ev(S,'tribute',`🧺 In <b>${v.name}</b>, ${given} household${given>1?'s':''} laid a share at <b>${disp(L)}</b>'s door. So surplus flows upward, and standing becomes wealth.`,{village:v.name,agent:L.id,x:v.x,y:v.y,causes:['agent:'+L.id].concat(v.leaderEv!==undefined?['ev:'+v.leaderEv]:[])});
+  }
 }
 
 // TRADE — the peaceful twin of the raid: the SAME friction (I lack X, you hold it) resolved by
@@ -1282,7 +1437,11 @@ function warTick(S){
     for(let i=0;i<kk.length;i++){ const k=kk[i];              // is engine-defined; this stays Node≡Jint
       if(!aliveIds.has(+k)){ delete a.rel[k]; continue; }     // the dead are forgotten
       if(a.rel[k]<0)a.rel[k]=Math.min(0,a.rel[k]+4);          // and feuds cool toward peace
-    } }
+    }
+    // E1.5: grudge bookkeeping follows the same law — the dead are beyond revenge, and a wrong
+    // whose anger has cooled (rel back above -20) is FORGIVEN: its event reference is released.
+    if(a.grudges){ const gk=Object.keys(a.grudges);
+      for(let i=0;i<gk.length;i++){ const k=gk[i]; if(!aliveIds.has(+k)||(a.rel[k]||0)>-20)delete a.grudges[k]; } } }
   const vs=S.villages.filter(v=>!v.dead); if(vs.length<2)return;
   const info=new Map();
   for(const v of vs)info.set(v,{ppl:[],hungry:0,armed:0,wealth:0});
@@ -1307,11 +1466,11 @@ function warTick(S){
           const rs=forceMeans(raider)+raider.traits.dexterity*0.5, ds=forceMeans(def)+def.traits.dexterity*0.5;
           const lethal=TUNE.warLethalBase+TUNE.warLethalArm*Math.max(forceMeans(raider),forceMeans(def));
           if(S.rand()<lethal){ const loser=(rs+S.rand()*0.4)<(ds+S.rand()*0.4)?raider:def, enemy=loser===raider?def:raider;
-            killAgent(S,loser,'violence',`fell in the raid on ${B.name}`); if(loser===raider)deadA++;else deadB++;
-            for(const w of S.agents){if(w.dead)continue;if((w.rel[loser.id]||0)>30)w.rel[enemy.id]=(w.rel[enemy.id]||0)-60;} } } // war deepens the feud
+            const wde=killAgent(S,loser,'violence',`fell in the raid on ${B.name}`,['agent:'+enemy.id,'cause:war']); if(loser===raider)deadA++;else deadB++;
+            for(const w of S.agents){if(w.dead)continue;if((w.rel[loser.id]||0)>30){w.rel[enemy.id]=(w.rel[enemy.id]||0)-60;if(w.grudges)w.grudges[enemy.id]=wde.id;}} } } // war deepens the feud — and E1.5 books WHICH death each survivor holds against whom
       }
       S.stats.wars=(S.stats.wars||0)+1;
-      ev(S,'violence',`🔥⚔️ Driven by a failing harvest, the people of <b>${A.name}</b> fell upon <b>${B.name}</b> — a raid for grain and goods.${(deadA+deadB)>0?' '+(deadA+deadB)+' lay dead ('+deadB+' of '+B.name+', '+deadA+' of '+A.name+').':' They took what they could carry.'}`,{x:A.x,y:A.y,label:'WAR'});
+      ev(S,'violence',`🔥⚔️ Driven by a failing harvest, the people of <b>${A.name}</b> fell upon <b>${B.name}</b> — a raid for grain and goods.${(deadA+deadB)>0?' '+(deadA+deadB)+' lay dead ('+deadB+' of '+B.name+', '+deadA+' of '+A.name+').':' They took what they could carry.'}`,{x:A.x,y:A.y,label:'WAR',causes:(grud>1?['cause:grudge']:[]).concat(['cause:scarcity'])});
       return; // one war per year keeps it momentous
     }
   }
@@ -1664,6 +1823,7 @@ function tickWorld(S){
   animalsTick(S);
   if(S.tick%YEAR===0)cultureYearTick(S);
   if(S.tick%YEAR===0)warTick(S); // TENSION PROTO: village-scale organised violence (the war rung)
+  if(S.tick%YEAR===0)leaderTick(S); // E1.5 (D-166 B1): prestige -> recognized leader + tribute upward
   if(S.tick%YEAR===0)knowledgeRetentionTick(S); // ENGINE 2.1 (D-086): per-community knowledge census + local loss/rediscovery (yearly; pure readout)
   for(const f of S.fires)f.fuel--;
   S.fires=S.fires.filter(f=>f.fuel>0);
@@ -1796,6 +1956,12 @@ function computeDNA(S){
     legends:S.events.filter(e=>e.type==='epithet').map(e=>stripTags(e.txt).replace(/From that day on, |was known as |✨ /g,'').split('  ').pop()).slice(0,8),
     milestones:firsts,
     status:S.ended?`Extinct in year ${S.endedYear}`:`Alive in year ${years}`,
+    // E1.5 (D-166 B1): the drama's ledger — additive tail (no field removed/renamed above)
+    violence:{steals:S.stats.steals||0,raids:S.stats.raids||0,feuds:S.stats.feuds||0,killings:S.stats.killings||0,brawls:S.stats.brawls||0,wars:S.stats.wars||0},
+    trades:S.stats.trades||0,gifts:S.stats.gifts||0,
+    leaders:S.villages.filter(v=>v.leaderName).map(v=>v.name+': '+v.leaderName),
+    giftWays:S.villages.filter(v=>v.giftName).map(v=>v.name+': '+v.giftName),
+    wealthTop:(()=>{let t=null;for(const a2 of S.agents){if(a2.dead)continue;const w=wealth(a2);if(!t||w>t.w)t={w,name:disp(a2)};}return t?t.name+' ('+t.w+')':'none';})(),
   };
 }
 
@@ -1815,7 +1981,8 @@ function writeHistory(S){
   for(const ci of cis){
     const evs=byCh.get(ci), y0=ci*CH+1, y1=Math.min((ci+1)*CH,totalYears);
     const text=[];
-    let births=0,deaths={starvation:0,cold:0,age:0,wolves:0},techs=[],losses=[],redisc=[],vills=[],trads=[],rels=[],tabs=[],breaks=[],gods=0,hasStart=false,hasEnd=false,convs=0,reforms=[],fades=[],lenses=[],hard=[],wolves=[],hunts=[],sharing=0,epis=[],quirks=[],legends=[],journeys=[];
+    let births=0,deaths={starvation:0,cold:0,age:0,wolves:0},techs=[],losses=[],redisc=[],vills=[],trads=[],rels=[],tabs=[],breaks=[],gods=0,hasStart=false,hasEnd=false,convs=0,reforms=[],fades=[],lenses=[],hard=[],wolves=[],hunts=[],sharing=0,epis=[],quirks=[],legends=[],journeys=[],
+        steals=[],raidsE=[],feudsE=[],mourns=[],leadersE=[],giftways=[],tribs=0; // E1.5: the drama enters the chronicle
     for(const e of evs){
       if(e.type==='child')births++;
       else if(e.type==='death')deaths[e.cause||'age']=(deaths[e.cause||'age']||0)+1;
@@ -1839,6 +2006,13 @@ function writeHistory(S){
       else if(e.type==='legend')legends.push(e);
       else if(e.type==='journey'&&/came home|shared a fire/.test(e.txt))journeys.push(e);
       else if(e.type==='tabooBroken')breaks.push(e);
+      else if(e.type==='steal')steals.push(e);
+      else if(e.type==='raid')raidsE.push(e);
+      else if(e.type==='feud')feudsE.push(e);
+      else if(e.type==='mourn')mourns.push(e);
+      else if(e.type==='leader')leadersE.push(e);
+      else if(e.type==='giftway')giftways.push(e);
+      else if(e.type==='tribute')tribs++;
       else if(e.type==='god')gods++;
       else if(e.type==='start'){hasStart=true;text.push(stripTags(e.txt));}
       else if(e.type==='end'){hasEnd=true;}
@@ -1870,6 +2044,14 @@ function writeHistory(S){
       const qs=[...quirks];while(qs.length>room)qs.splice(Math.floor(rng()*qs.length),1);
       for(const e of qs)text.push(pk(['It is also remembered that ','The chronicle notes, without explanation, that ','And in those same years, '])+stripTags(e.txt).replace('🙂 ',''));
     }
+    // E1.5: the chronicle tells the drama — every act below fell out of the forces, none was scripted.
+    for(const e of leadersE)text.push(stripTags(e.txt).replace(/^👑 |^🕯️ /,''));
+    for(const e of giftways)text.push(stripTags(e.txt).replace(/^🍞 /,''));
+    if(tribs)text.push('And each harvest-turn, those with surplus laid a share at the leader\'s door. So standing became wealth, and wealth standing.');
+    if(steals.length){const s0=steals[0];text.push(steals.length===1?('In the year '+s0.year+', hunger drove a hand to take what was another\'s: '+stripTags(s0.txt).replace(/^🥀 Hunger owned the hand: /,'')+' It was not forgotten.'):('Hunger turned to theft '+steals.length+' times in this age — desperate hands in lean seasons, and every one remembered.'));}
+    if(raidsE.length){const r0=raidsE[0];text.push(raidsE.length===1?('The year '+r0.year+' knew open greed: '+stripTags(r0.txt).replace(/^⚔️ /,'')):('Greed walked openly '+raidsE.length+' times — the strong taking because the gap was cheaper to close by force.'));}
+    for(const e of feudsE)text.push('The year '+e.year+' paid an old debt: '+stripTags(e.txt).replace(/^🩸 /,'')+' Blood remembers.');
+    if(mourns.length)text.push(mourns.length===1?stripTags(mourns[0].txt).replace(/^🕯️ /,'')+' Grief like that does not fade; it waits.':'And '+mourns.length+' times, mourners stood over the fallen and marked a name in their hearts. Grief like that waits.');
     if(sharing)text.push('And when the food ran low, those who kept the same ways fed one another. The rituals, whatever the skeptics said, kept people alive.');
     if(convs)text.push(convs===1?'One soul, that age, quietly left an old way for a new one.':convs+' times in this age, someone left one way for another. Minds were changing, and with them, the world.');
     const dTot=deaths.starvation+deaths.cold+deaths.age;
@@ -1893,6 +2075,8 @@ function writeHistory(S){
     else if(hard.length)title='The Hunger Winter';
     else if(rels.length){const c=S.customs[rels[0].custom];title='The Age of '+((c&&c.religionName)?c.religionName.replace('The Way of the ',''):'Faith');}
     else if(breaks.length)title='The Time of the Broken Ban';
+    else if(feudsE.length>=2)title='The Blood Years'; // E1.5: the feud can name an age
+    else if(leadersE.length&&leadersE.some(e=>e.label==='A LEADER IS RECOGNIZED'))title='The Age of the Recognized';
     else if(vills.length)title='The Age of '+vills[0].village;
     else if(losses.length&&!techs.length)title='The Forgetting';
     else if(techs.length)title='The Years of '+TECH[techs[0].tech].base;
@@ -1923,5 +2107,5 @@ function resimulate(seed,toTick){
   return S;
 }
 
-return {createWorld,tickWorld,computeDNA,resimulate,writeHistory,roleOf,verbOf,worldEra,eraName,ERAS,TECHS,TECH,OBS,QUIRK,W,H,YEAR,SEASONS,VERSION:'2.3.0'};
+return {createWorld,tickWorld,computeDNA,resimulate,writeHistory,roleOf,verbOf,worldEra,eraName,ERAS,wealthOf:wealth,TECHS,TECH,OBS,QUIRK,W,H,YEAR,SEASONS,VERSION:'2.4.0'};
 });
