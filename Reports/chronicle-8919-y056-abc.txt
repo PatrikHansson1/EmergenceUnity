@@ -1,0 +1,56 @@
+KRÖNIKAN — skriven av ingen, allt hände
+seed 8919 · y0..y56 · COMPLETE · 53 witnessed entries · exported 2026-08-09 14:10 · A/B/C-samtidighetsproben (Fas 7 ink. 3, player vehicle)
+------------------------------------------------------------------------
+y  0 [The First Morning] . Eira arrives — a soul steps onto the empty land
+y  0 [The First Morning] . Ask arrives — a soul steps onto the empty land
+y  0 [The First Morning] . Embla arrives — a soul steps onto the empty land
+y  0 [The First Morning] . Torv arrives — a soul steps onto the empty land
+y  1 [The Age of Hearths] * a first child is born — Liv
+y  5 [The Age of Bronze]   Sten is born
+y  5 [The Age of Bronze] * the first hut
+y  5 [The Age of Bronze]   a hut is raised
+y  6 [The Age of Bronze]   a hut is raised
+y  9 [The Age of Iron]   Ylva is born
+y 10 [The Age of Mills]   Bjorn is born
+y 10 [The Age of Mills]   a hut is raised
+y 16 [The Age of Mills]   Saga is born
+y 17 [The Age of Mills]   a hut is raised
+y 20 [The Age of the Press]   Rune is born
+y 21 [The Age of the Press]   a hut is raised
+y 23 [The Age of the Press]   a hut is raised
+y 25 [The Age of the Press]   Freja is born
+y 26 [The Age of the Press]   a hut is raised
+y 28 [The Age of the Press]   Kare is born
+y 29 [The Age of the Press]   Idun is born
+y 29 [The Age of the Press]   Halvar is born
+y 32 [The Age of the Press]   Signe is born
+y 33 [The Age of the Press]   Vidar is born
+y 36 [The Age of the Press]   a hut is raised
+y 36 [The Age of the Press]   a hut is raised
+y 37 [The Age of the Press]   Tuva is born
+y 39 [The Age of the Press]   a hut is raised
+y 41 [The Age of the Press] . the people begin to listen when Torv speaks (Sagastead)
+y 43 [The Age of the Press] * death finds the people for the first time — Torv departs
+y 43 [The Age of the Press]   Alve is born
+y 43 [The Age of the Press] . Torv's voice is gone — no one yet speaks for all (Sagastead)
+y 45 [The Age of the Press]   Ronja is born
+y 45 [The Age of the Press] . the people begin to listen when Embla speaks (Runevik)
+y 47 [The Age of the Press]   Sixten is born
+y 47 [The Age of the Press]   Maja is born
+y 48 [The Age of the Press]   a hut is raised
+y 49 [The Age of the Press]   Loke is born
+y 49 [The Age of the Press]   a hut is raised
+y 50 [The Age of the Press]   Ask departs
+y 50 [The Age of the Press]   Vera is born
+y 51 [The Age of the Press]   Otto is born
+y 52 [The Age of the Press]   Selma is born
+y 52 [The Age of the Press]   a hut is raised
+y 52 [The Age of the Press]   a hut is raised
+y 53 [The Age of the Press]   Embla departs
+y 53 [The Age of the Press]   Falk is born
+y 53 [The Age of the Press]   a hut is raised
+y 53 [The Age of the Press] . Embla's voice is gone — no one yet speaks for all (Runevik)
+y 54 [The Age of the Press] . Vidar gives — the gift itself binds
+y 54 [The Age of the Press]   Nanna is born
+y 55 [The Age of the Press]   Signe departs
+y 55 [The Age of the Press]   a hut is raised

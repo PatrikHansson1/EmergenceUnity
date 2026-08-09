@@ -1,0 +1,20 @@
+EMERGENCE — FAS 7 A/B/C SIMULTANEITY PROOF: the three existence conditions in ONE undisturbed player run
+generated 2026-08-09 13:44:46
+declared window: seed 8919, y0 -> y56 at 1x/producer wall (~17-20 min; full 120y is producer-bound, D-148 — WAITS on engine-lane deep-tick)
+reference for C: seed 4242 produced headless to y8 in the SAME player BEFORE the witness begins (never applied, never witnessed)
+HUMAN half of the gate (cold tester + recorded first hour) = Patrik — flagged VÄNTAR, never built around.
+
+proof scene: genesis wilderness + camera + Fas7ABCPlayerProof (observer composes ref producer + onboarding; expectedGenesisSouls=4)
+build: Succeeded, errors=0, buildDirMB=925 (exe stub 652 KB), secs=19
+traceability: commit=1b3c7527 (refs/heads/audition/free-assets-2026-07-19), Assembly-CSharp.dll mtime=2026-08-09 13:45:06
+
+## PLAYER RESULT (one line per condition)
+A genesis=OK(y0,souls4/4,huts0) firstChild=OK(y1,gaze3.8deg) firstHut=OK(y5,gaze4.7deg) beatsOrder=OK(genesis y0 -> child y1 -> hut y5) undisturbed=OK(pausedFrames=0,jumpFrames=0,scrubJumps=0,orderBreaks=0,paceViolations=0) span=OK(y0->y56 at 1x/producer wall, 1421s — declared window; full 120y WAITS on deep-tick D-148)
+B span=OK(y0..y55,53entries,dropped0/4096) spine=OK(3stars,child+,hut+,death+,ordered=yes) drama=OK(bookEntries=5[y41 leader,y43 leader,y45 leader,y53 leader,y54 gift],busSeen=5,submitBodyOnly=4) artifact=OK(53entries,txt+html) book=OK(open@y56,nonwhite100%)
+C divergence=OK(y8: sha 9a0399ad!=a91bd0d7; world[pop6,huts2,hut0(44.7;35.6),souls@(44.9;39.3)]!=[pop6,huts2,hut0(50.7;55.4),souls@(51.0;46.5)]; dna-field='[object Object]' stringify-quirk declared->engine-lane) loss=DECLARED-ABSENT(none falls out on 8919<=y80 by recon; live export carries no village knows/pop so codex ruin gates cannot fire — engine-lane order; loss half rests on divergence + D-111/D-112)
+abc evidence=OK(abc-world.png latest) magenta=0/0 COMPLETE
+
+artifacts+evidence copied: 3 PNG + chronicle txt/html -> 45-UNITY/evidence/fas7/, chronicle -> 30-QA/ + Reports/ (rendered IN the player)
+
+conditions: A=OK  B=OK  C=OK  end=OK
+verdict: GREEN — A/B/C hold SIMULTANEOUSLY in one undisturbed player run (technical half; the human half is Patrik's, VÄNTAR)
