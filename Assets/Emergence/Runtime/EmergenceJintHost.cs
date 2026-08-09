@@ -11,7 +11,7 @@ namespace Emergence.Runtime
 {
     public sealed class EmergenceJintHost
     {
-        public const string ExpectedEngineSha = "7fc4ae8e8e62920bdb5f685253dc88f6fe5287b214d8113ede26956733e955ab"; // ENGINE 2.4.0 (E1.5 dramatik-minimum, D-166 B1: dedicated conflict traits via secondary mulberry32 stream, steal/raid/feud/mourn events with causes[], recognized leaders + tribute, named gift-ways, wealth export; histories DIVERGE from 2.3.2 by design — goldens re-baselined)
+        public const string ExpectedEngineSha = "91e5535db3dfaae4a1ce3fafcb70e088cd48425489abb7e65f6e8b1f0c3ec7b0"; // ENGINE 2.4.1 (E1.5b hardening, D-176: review conditions V1 rebuilt leader rule [unclamped standing + absolute sqrt-eased lead], V2 feud trigger reads grudge bookkeeping [ev: by construction], V6 steal/raid drive-chains [winter-onset season events, per-village famine marks, hoard milestone events], V8 feud room law in writeHistory; histories DIVERGE from 2.4.0 by design — goldens re-baselined)
 
         private readonly Jint.Engine _engine;
         public string EngineSha256 { get; }

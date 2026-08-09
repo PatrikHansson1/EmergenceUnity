@@ -1,13 +1,13 @@
 EMERGENCE — FAS 6 PROBE: A2-polish — full tempo law (age × mood, 9 verbs) + social attend-gaze
-generated 2026-08-09 02:28:19
+generated 2026-08-09 11:37:47
 data source = applied WorldState agents' sayAct/age + fires (read-only; presentation follows applied state)
 
-## PLAY PHASE (frames=7757)
+## PLAY PHASE (frames=8350)
 pure law: 9-verb mood table=True, age gains=True, multiplicative=True, social classifier=True (OK)
 live @y2: bodies at law tempo 5/5 (OK)
 fixture y055 (riktig motor-export, samma Apply-väg): law tempo 22/22 (>=20), non-neutral=20>0, social gaze 15/15>0 at mapped neighbor (OK)
 mood-gate fix (agent 1, task oförändrad, akt->ritual i minnet — deklarerad mekanism-mutation): speed 0,865->0,828==law 0,828 (OK)
-cold branch (4242-y120-dusk + EN själ satt cold intill elden — deklarerad mekanism-fixtur, ingen liggande export bär cold): attends mapped fire=True, yaw 0,0<12°=True, tempo 0,782==law 0,782=True (OK)
+cold branch (4242-y120-dusk + EN själ satt cold intill elden — deklarerad mekanism-fixtur, ingen liggande export bär cold): attends mapped fire=True, yaw 11,9<12°=True, tempo 0,782==law 0,782=True (OK)
 evidence evidence: OK (end-of-frame backbuffer, nonwhite 100%) -> Reports/fas6-expression.png
 resume: tps 24==24 (OK) — expression never touches the clock
 

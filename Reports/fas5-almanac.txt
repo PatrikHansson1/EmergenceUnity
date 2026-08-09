@@ -1,13 +1,13 @@
 EMERGENCE — FAS 5 PROBE: the Almanac Overview v0 (ANALYZE's first native face)
-generated 2026-07-23 09:50:15
+generated 2026-08-09 11:34:50
 data source = Fas5MetricsRecorder (consumer #4 on the bus + applied state, read-only)
 
-## PLAY PHASE (frames=17050)
+## PLAY PHASE (frames=14952)
 ready: view READY=True on reused Resources/Fas4PanelSettings, recorder 6 year-records (OK)
 truth: latest pop 6==state 6 @y5==5, births 2==feed 2, deaths 0==feed 0, huts 1==state 1 (OK)
 almanac open: pauses clock OK (was paused=True), tps untouched 24->24 (OK)
 tiles==recorder: pop 6/6 births 2/2 deaths 0/0 huts 1/1 år 5/5 (OK); curve 6 pts to y5 (OK)
-era tile: 'bronze' == WorldEras.Name(2), never the season ('spring') (OK)
+era tile: 'The Age of Bronze' == WorldEras.Name(S) (era 2, engine eraName 'The Age of Bronze'), never the season ('spring') (OK)
 close: prior pause state restored (paused=True, expected True), opener back (OK)
 scrub honesty: J0 -> series trimmed to y0 (1 records, trims 1, suppressed-in-jump 4) (OK)
 disarm branch: bogus resource -> disarms (Ready=False, enabled=False, error set=True), armed view intact=True (OK)

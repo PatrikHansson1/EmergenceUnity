@@ -1,4 +1,28 @@
 /* ============================================================================
+   EMERGENCE — Civilization Engine — ENGINE 2.4.1 (Wave E1.5b: HARDENING, review conditions V1/V2/V6/V8, D-176)
+   E1.5b closes the engine-side conditions of the E1.5 wave review (E15-WAVE-REVIEW-2026-07-25):
+   V1 (I2): leaderScore REBUILT — the prestige clamp saturated every adult to the same value,
+       reducing recognition to argmax(ambition) with a ratio margin that shrank monotonically
+       with village size (leadership got HARDER as villages grew — inverted vs the anthropology
+       it cites). Standing is now UNCLAMPED and accumulates over a life (what you know, the
+       ways you carry, the years you have seen, the visible surplus at your door), and the
+       margin is an ABSOLUTE lead (TUNE.leaderLead), not a percentage of the runner-up —
+       a clear lead is a visible distance, and heavy-tailed wealth makes that distance GROW
+       with village scale (the aggrandizer path; Flannery & Marcus, RESEARCH-FRONTIER 2.1).
+   V2 (I6): the revenge trigger reads the SAME truth-source as the bookkeeping — a.grudges
+       (in conjunction with still-hot rel), never rel alone. A feud can only fire on a BOOKED
+       wrong, so every feud event carries a resolving ev: reference BY CONSTRUCTION.
+   V6 (I1): theft chains to its DRIVE. Winter now enters the log at every onset (season event,
+       plain text for ordinary winters), starvation deaths are bookkept per village, and a
+       desperation steal cites the freshest of them (winter within half a year, village famine
+       within a year). Raids cite the target's hoard-milestone (new rare 'hoard' event, once
+       per life at TUNE.hoardMark) or the leadership event whose tribute fed the pile. The
+       order's example chain "winter took the harvest -> Torv stole" now EXISTS in the log.
+   V8 (I8): feud lines in writeHistory are capped by the same room law as the other categories.
+   No RNG draws added anywhere (mulberry32 only; primary/secondary stream discipline unchanged).
+   VERSION honestly bumped to 2.4.1.
+   ============================================================================
+   (2.4.0 header follows, still true:)
    EMERGENCE — Civilization Engine — ENGINE 2.4.0 (Wave E1.5: DRAMATIK-MINIMUM, D-166 B1)
    E1.5 (MOTOR-LANE-ORDER-E15-DRAMATIK, EP-sanctioned): causal human drama OUT
    OF the four forces (Resurser x Individer x Friktion x Handling) — never
@@ -1190,7 +1214,7 @@ const TUNE={
   // decade and the feud a generational event. The proto's single rate let GREED fire as often as
   // hunger — measured 277 raids/120y on seed 4242. Each rung now carries its own rarity:
   raidRate:       0.006, // greed is patient — predation on the richer is RARE, not a lifestyle
-  feudRate:       0.025, // honour moves when it moves — between theft and raid in rarity
+  feudRate:       0.025, // honour moves when it moves — between theft and raid in rarity (E1.5b: probed at 0.020/0.015 — no reliable leverage on single-seed counts, fork variance dominates, and lower settings starve the other seeds of feuds entirely; kept at the E1.5 calibration, band deviation on 4242 reported honestly)
   brawlLethalBase:0.010, // chance a resisted theft/raid turns deadly, fists (was 0.03)
   brawlLethalArm: 0.045, // + this × best weapon (was 0.13) — steel still bites, just far less often
   warChance:      0.22,  // chance a ripe village tension actually breaks into a raid that year (was 0.50)
@@ -1200,10 +1224,16 @@ const TUNE={
   warLethalArm:   0.08,  // + this × best weapon (was 0.20)
   warMaxDead:     2,     // a single raid can cost at most this many lives total — no wipeouts
   // E1.5 (D-166 B1): leadership + tribute knobs (RESEARCH-FRONTIER 2.1 — smallest honest rule)
-  leaderMin:      1.00,  // prestige+ambition score a soul must clear to be RECOGNIZED at all
-  leaderMargin:   1.04,  // ...and how clearly they must stand above the second-best (no tie-lords)
+  // E1.5b (V1, review I2): the ratio margin (leaderMargin 1.04) is RETIRED — a percentage of the
+  // runner-up shrinks monotonically as villages grow, which inverted the rule against its own
+  // anthropology. The lead is now ABSOLUTE (score units), read against the unclamped standing.
+  leaderMin:      2.30,  // accumulated standing a soul must clear to be RECOGNIZED at all (calibrated E1.5b)
+  leaderLead:     0.55,  // ...and how far above the second-best they must stand, in ABSOLUTE score units at the leaderVillage floor; eased by sqrt(leaderVillage/adults) as the group grows (calibrated E1.5b)
   leaderVillage:  5,     // adults a village needs before "who decides" is even a question
-  tributeMin:     8      // wealth below which no one pays tribute — no one starves for a leader
+  tributeMin:     8,     // wealth below which no one pays tribute — no one starves for a leader
+  // E1.5b (V6, review I1): the hoard milestone — the one-per-life event that makes surplus VISIBLE
+  // in the log, so greed's raid can cite the pile it preys on (calibrated E1.5b).
+  hoardMark:      12
 };
 function wealth(a){let w=0;for(const k in a.inv)w+=a.inv[k]||0;return w;} // E1.5: exported as wealthOf — the Almanac's wealth sort feeds on this
 // means of force: a weapon or metal makes coercion viable AND lethal (ties violence to the tech tree).
@@ -1235,6 +1265,11 @@ function aspireTick(S,a){
   if(a.hunger>60&&a.warmth>50&&a.energy>35&&S.rand()<0.05*a.traits.ambition){
     const kinds=['wood','clay','stone','fiber'];const m=kinds[Math.floor(S.rand()*kinds.length)];
     a.inv[m]=(a.inv[m]||0)+1; a.hoard=(a.hoard||0)+1; a.task='adding to their store';
+    // E1.5b (V6, review I1): the hoard becomes VISIBLE once per life — a rare milestone event
+    // (no rand consumed: fires exactly when the count crosses TUNE.hoardMark) that greed's
+    // raid can later cite as the surplus it preys on. The pile enters the chronicle of causes.
+    if(a.hoard===TUNE.hoardMark&&a.hoardEv===undefined)
+      a.hoardEv=ev(S,'hoard',`🏺 <b>${disp(a)}</b> has begun laying up stores beyond any need. The pile grows — and eyes have begun to follow it.`,{agent:a.id,x:a.x,y:a.y,causes:['agent:'+a.id]}).id;
   }
 }
 // CONFLICT: theft / brawl / raid / revenge — a gap closed by force. Returns true if it consumed the tick.
@@ -1245,7 +1280,12 @@ function conflictTick(S,a){
   let tgt=null,best=0,revenge=false;
   for(const b of nearby(S,a,4.5)){
     if(b.age<10)continue;
-    const grudge=(a.rel[b.id]||0)<-55?1:0;
+    // E1.5b (V2, review I6): ONE truth-source. The revenge trigger reads the grudge BOOKKEEPING
+    // (a.grudges — wrong -> event id), in conjunction with still-hot anger (rel), never rel alone.
+    // rel can sink for non-violent reasons (taboo-breaking) with no booked wrong behind it — the
+    // old trigger could then fire a feud with no citable cause. Now a feud NEEDS a booked wrong,
+    // so its causes[] carries a resolving ev: reference BY CONSTRUCTION.
+    const grudge=(a.grudges&&a.grudges[b.id]!==undefined&&(a.rel[b.id]||0)<-55)?1:0;
     const foodGap=desp&&b.hunger>62?1:0;
     const wGap=wealth(b)-myW;
     const score=foodGap*70+(wGap>8?wGap:0)+grudge*85; // E1.5 gate-tuning: greed preys on the visibly RICH (hoarders, leaders), not on anyone slightly better off
@@ -1272,6 +1312,19 @@ function conflictTick(S,a){
   // The kind follows the DRIVING branch (the proto let a desperation act on an unfed target
   // masquerade as a greed-raid — dishonest bookkeeping AND it leaked theft's rate into raids). ---
   const kind=desp?(tgt.hunger>62?'steal-food':'steal-goods'):revenge?'revenge':'raid';
+  // E1.5b (V6, review I1): theft chains to its DRIVE — the freshest hunger-event the log holds.
+  // Winter within half a year (the onset event now exists every winter — see tickWorld), else a
+  // starvation death in the thief's own village within a year. Honest: if the log holds no
+  // drive-event in near-history, the steal carries labels only — no chain is invented.
+  let driveEv;
+  if(desp){
+    if(S.lastWinterEv&&S.tick-S.lastWinterEv.tick<=YEAR/2)driveEv=S.lastWinterEv.id;
+    else if(S.lastStarve&&S.tick-S.lastStarve.tick<=YEAR){const mv=villageOf(S,a);if(mv&&mv.name===S.lastStarve.vil)driveEv=S.lastStarve.id;}
+  }
+  // E1.5b (V6): greed's ev-link — the raid preys on VISIBLE surplus; when the log booked the
+  // target's hoard-milestone (or the leadership whose tribute fed the pile), the raid cites it.
+  let greedEv=tgt.hoardEv;
+  if(greedEv===undefined){const tv=villageOf(S,tgt);if(tv&&tv.leader===tgt.id&&tv.leaderEv!==undefined)greedEv=tv.leaderEv;}
   const armedMe=forceMeans(a), armedYou=forceMeans(tgt);
   const meStr=armedMe+a.traits.dexterity*0.5, youStr=armedYou+tgt.traits.dexterity*0.5;
   let outcome, actEv;
@@ -1280,7 +1333,7 @@ function conflictTick(S,a){
     tgt.hunger=clamp(tgt.hunger-took,0,140); a.hunger=clamp(a.hunger+took*0.8,0,140);
     a.task='taking food by force'; outcome='took food';
     S.stats.steals=(S.stats.steals||0)+1;
-    actEv=ev(S,'steal',`🥀 Hunger owned the hand: <b>${disp(a)}</b> wrenched food from <b>${disp(tgt)}</b>.`,{agent:a.id,victim:tgt.id,x:a.x,y:a.y,cause:'desperation',causes:['agent:'+tgt.id,'cause:desperation'].concat(S.season==='winter'?['cause:winter']:[])});
+    actEv=ev(S,'steal',`🥀 Hunger owned the hand: <b>${disp(a)}</b> wrenched food from <b>${disp(tgt)}</b>.`,{agent:a.id,victim:tgt.id,x:a.x,y:a.y,cause:'desperation',causes:(driveEv!==undefined?['ev:'+driveEv]:[]).concat(['agent:'+tgt.id,'cause:desperation'],S.season==='winter'?['cause:winter']:[])});
     speak(S,a,pickSay(S,a,'steal'),'steal');
   } else {
     const kinds=Object.keys(tgt.inv).filter(k=>tgt.inv[k]>0);
@@ -1289,19 +1342,21 @@ function conflictTick(S,a){
     if(kind==='steal-goods'){
       a.task='taking food by force';
       S.stats.steals=(S.stats.steals||0)+1;
-      actEv=ev(S,'steal',`🥀 Need drove the hand: <b>${disp(a)}</b> ${outcome==='seized goods'?'took what could be carried from':'went through the store of'} <b>${disp(tgt)}</b>.`,{agent:a.id,victim:tgt.id,x:a.x,y:a.y,cause:'desperation',causes:['agent:'+tgt.id,'cause:desperation'].concat(S.season==='winter'?['cause:winter']:[])});
+      actEv=ev(S,'steal',`🥀 Need drove the hand: <b>${disp(a)}</b> ${outcome==='seized goods'?'took what could be carried from':'went through the store of'} <b>${disp(tgt)}</b>.`,{agent:a.id,victim:tgt.id,x:a.x,y:a.y,cause:'desperation',causes:(driveEv!==undefined?['ev:'+driveEv]:[]).concat(['agent:'+tgt.id,'cause:desperation'],S.season==='winter'?['cause:winter']:[])});
       speak(S,a,pickSay(S,a,'steal'),'steal');
     }else if(kind==='revenge'){
       a.task='settling a score';
       S.stats.feuds=(S.stats.feuds||0)+1; S.stats.revenges=(S.stats.revenges||0)+1;
-      // the feud CHAINS: causes[] carries the remembered wrong (the very event that lit the grudge)
+      // the feud CHAINS: causes[] carries the remembered wrong (the very event that lit the grudge).
+      // E1.5b (V2): src is defined BY CONSTRUCTION — the trigger above only fires on a booked
+      // grudge, so every feud resolves to its wrong. The guard below is kept as belt-and-braces.
       const src=a.grudges?a.grudges[tgt.id]:undefined;
       actEv=ev(S,'feud',`🩸 <b>${disp(a)}</b> came for <b>${disp(tgt)}</b> — an old wrong, not forgotten, ${outcome==='seized goods'?'paid back in goods and bruises':'answered at last'}.`,{agent:a.id,victim:tgt.id,x:a.x,y:a.y,cause:'honor',causes:(src!==undefined?['ev:'+src]:[]).concat(['agent:'+tgt.id,'cause:grudge'])});
       speak(S,a,pickSay(S,a,'feud'),'feud');
     }else{
       a.task='raiding a neighbour';
       S.stats.raids=(S.stats.raids||0)+1;
-      actEv=ev(S,'raid',`⚔️ <b>${disp(a)}</b> set upon <b>${disp(tgt)}</b> and ${outcome} — the gap was cheaper to close by force.`,{agent:a.id,victim:tgt.id,x:a.x,y:a.y,cause:'greed',causes:['agent:'+tgt.id,'cause:greed']});
+      actEv=ev(S,'raid',`⚔️ <b>${disp(a)}</b> set upon <b>${disp(tgt)}</b> and ${outcome} — the gap was cheaper to close by force.`,{agent:a.id,victim:tgt.id,x:a.x,y:a.y,cause:'greed',causes:(greedEv!==undefined?['ev:'+greedEv]:[]).concat(['agent:'+tgt.id,'cause:greed'])});
       speak(S,a,pickSay(S,a,'raid'),'raid');
     }
   }
@@ -1358,7 +1413,15 @@ function seedHarmTaboo(S,a,evId){
 // outshines every rival is RECOGNIZED — a sim fact (village.leader), never an assignment.
 // Redistribution UPWARD follows: households with surplus lay a share at the leader's door
 // (tribute — the gift-obligation face of hierarchy; Flannery & Marcus). Runs yearly.
-function leaderScore(a){return prestige(a)+a.traits.ambition*0.5;}
+// E1.5b (V1, review I2): REBUILT. prestige() clamps at 1.2 and every adult saturates — the old
+// score reduced to argmax(ambition), and the ratio margin made recognition monotonically HARDER
+// as villages grew (inverted vs Flannery & Marcus, where authority institutionalizes as groups
+// GROW). Standing is now UNCLAMPED and accumulates over a life: what you know, the ways you
+// carry, the years you have seen, and the visible surplus at your door (wealth = hoard + trade +
+// tribute, heavy-tailed — in a larger village the top pile is larger in ABSOLUTE terms, so the
+// absolute lead below is EASIER to clear, not harder). prestige() itself (imitation weights in
+// the culture engine) is untouched — this is the leader rule's own reading of standing.
+function leaderScore(a){return (a.knows.size+a.customs.size)*0.08+a.age*0.004+wealth(a)*0.010+a.traits.ambition*0.5;}
 function leaderTick(S){
   for(const v of S.villages){
     const adults=[];
@@ -1374,7 +1437,11 @@ function leaderTick(S){
       if(!top||s>top.s){second=top;top={a,s};}
       else if(!second||s>second.s)second={a,s};}
     if(!top||top.s<TUNE.leaderMin)continue;
-    if(second&&top.s<second.s*TUNE.leaderMargin)continue; // recognition needs CLEAR standing, not a tie
+    // E1.5b (V1): recognition needs a CLEAR lead in ABSOLUTE terms — a visible distance, not a
+    // percentage of the runner-up (which shrank with village size). The required distance eases
+    // as the group grows (sqrt law): scalar stress — the more people must coordinate, the sooner
+    // a standing lead is accepted as authority (Johnson & Earle; Flannery & Marcus).
+    if(second&&top.s-second.s<TUNE.leaderLead*Math.sqrt(TUNE.leaderVillage/adults.length))continue;
     v.leader=top.a.id;v.leaderName=top.a.name;
     const le=ev(S,'leader',`👑 In <b>${v.name}</b>, the people have begun to listen when <b>${disp(top.a)}</b> speaks — prestige has hardened into leadership. No one voted; it is simply so.`,{village:v.name,agent:top.a.id,x:v.x,y:v.y,label:'A LEADER IS RECOGNIZED',causes:['agent:'+top.a.id]});
     v.leaderEv=le.id;
@@ -1497,7 +1564,10 @@ function agentTick(S,a){
   if(a.hunger<=0||a.warmth<=0||a.age>a.lifespan){
     const causeKey=a.hunger<=0?'starvation':a.warmth<=0?'cold':'age';
     const cause=a.hunger<=0?'starved to death':a.warmth<=0?(winter?'froze to death in the winter cold':'froze to death'):'died of old age at '+Math.floor(a.age);
-    killAgent(S,a,causeKey,cause);
+    const de=killAgent(S,a,causeKey,cause);
+    // E1.5b (V6, review I1): a starvation death is the village's famine-mark — bookkept so a
+    // desperation steal in the same village within a year can cite the hunger that drove it.
+    if(causeKey==='starvation'){const v=villageOf(S,a);S.lastStarve={id:de.id,tick:S.tick,vil:v?v.name:null};}
     return;
   }
   const child=a.age<14;
@@ -1811,11 +1881,18 @@ function tickWorld(S){
       S.season=ns;S.bgDirty=true;
       if(ns==='winter'){
         S.winterSeverity=0.8+S.rand()*0.7;
-        if(!S.seenWinter){S.seenWinter=true;ev(S,'season',`❄️ The first winter has come. The world turns white and hard, and the nights grow long. Fire is no longer comfort — it is life.`,{});}
+        // E1.5b (V6, review I1): EVERY winter now enters the log at onset — the order's chain
+        // "winter took the harvest -> Torv stole" needs the winter to be a citable event, not a
+        // season flag. First and hard winters keep their voices; ordinary winters get a plain
+        // line. No rand consumed; the chronicle's hard-winter filter is unaffected.
+        let we;
+        if(!S.seenWinter){S.seenWinter=true;we=ev(S,'season',`❄️ The first winter has come. The world turns white and hard, and the nights grow long. Fire is no longer comfort — it is life.`,{});}
         else if(S.winterSeverity>1.35&&(Math.floor(S.tick/YEAR)+1)-(S.lastHarshYear||0)>=12){
           S.lastHarshYear=Math.floor(S.tick/YEAR)+1;S.stats.harshWinters++;
-          ev(S,'season',`❄️ A hard winter grips the world. The old will remember it; not all the young will see spring.`,{});
+          we=ev(S,'season',`❄️ A hard winter grips the world. The old will remember it; not all the young will see spring.`,{});
         }
+        else we=ev(S,'season',`❄️ Winter closes over the world. The stores will decide who sees spring.`,{});
+        S.lastWinterEv={id:we.id,tick:S.tick}; // V6 bookkeeping: the freshest winter, citable by desperation
       }
       if(ns==='spring'&&S.seenWinter&&S.rand()<.3)ev(S,'season',`🌸 Spring returns. The survivors count each other, and begin again.`,{});
     }
@@ -2050,7 +2127,15 @@ function writeHistory(S){
     if(tribs)text.push('And each harvest-turn, those with surplus laid a share at the leader\'s door. So standing became wealth, and wealth standing.');
     if(steals.length){const s0=steals[0];text.push(steals.length===1?('In the year '+s0.year+', hunger drove a hand to take what was another\'s: '+stripTags(s0.txt).replace(/^🥀 Hunger owned the hand: /,'')+' It was not forgotten.'):('Hunger turned to theft '+steals.length+' times in this age — desperate hands in lean seasons, and every one remembered.'));}
     if(raidsE.length){const r0=raidsE[0];text.push(raidsE.length===1?('The year '+r0.year+' knew open greed: '+stripTags(r0.txt).replace(/^⚔️ /,'')):('Greed walked openly '+raidsE.length+' times — the strong taking because the gap was cheaper to close by force.'));}
-    for(const e of feudsE)text.push('The year '+e.year+' paid an old debt: '+stripTags(e.txt).replace(/^🩸 /,'')+' Blood remembers.');
+    // E1.5b (V8, review I8): feud lines obey the SAME room law as the other categories (the
+    // quirk rule) — a chapter is a telling, not a ledger; on long horizons or a hot feudRate
+    // the blood must not crowd out the rest of the age. Truncation is counted honestly.
+    if(feudsE.length){
+      const froom=Math.max(1,Math.min(feudsE.length,text.length<5?3:1));
+      const fsel=[...feudsE];while(fsel.length>froom)fsel.splice(Math.floor(rng()*fsel.length),1);
+      for(const e of fsel)text.push('The year '+e.year+' paid an old debt: '+stripTags(e.txt).replace(/^🩸 /,'')+' Blood remembers.');
+      if(feudsE.length>fsel.length)text.push('Nor were those the only debts: '+feudsE.length+' old wrongs were paid in blood that age.');
+    }
     if(mourns.length)text.push(mourns.length===1?stripTags(mourns[0].txt).replace(/^🕯️ /,'')+' Grief like that does not fade; it waits.':'And '+mourns.length+' times, mourners stood over the fallen and marked a name in their hearts. Grief like that waits.');
     if(sharing)text.push('And when the food ran low, those who kept the same ways fed one another. The rituals, whatever the skeptics said, kept people alive.');
     if(convs)text.push(convs===1?'One soul, that age, quietly left an old way for a new one.':convs+' times in this age, someone left one way for another. Minds were changing, and with them, the world.');
@@ -2107,5 +2192,5 @@ function resimulate(seed,toTick){
   return S;
 }
 
-return {createWorld,tickWorld,computeDNA,resimulate,writeHistory,roleOf,verbOf,worldEra,eraName,ERAS,wealthOf:wealth,TECHS,TECH,OBS,QUIRK,W,H,YEAR,SEASONS,VERSION:'2.4.0'};
+return {createWorld,tickWorld,computeDNA,resimulate,writeHistory,roleOf,verbOf,worldEra,eraName,ERAS,wealthOf:wealth,TECHS,TECH,OBS,QUIRK,W,H,YEAR,SEASONS,VERSION:'2.4.1'};
 });
