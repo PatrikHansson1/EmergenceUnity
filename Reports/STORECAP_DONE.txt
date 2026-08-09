@@ -1,0 +1,2 @@
+DONE 19:09:41 pngs=48 worstMagenta=0
+see Reports/store-cap-report.txt

@@ -1,0 +1,62 @@
+EMERGENCE — STORE CAPTURE RIG (three Signature Moments, real worlds, dusk look)
+generated 2026-08-09 19:09:19
+
+[first-fire] particle systems simulated: 35
+[first-fire-00] dir=(1,1) r=9 magenta=0
+[first-fire-01] dir=(1,1) r=14 magenta=0
+[first-fire-02] dir=(1,-1) r=9 magenta=0
+[first-fire-03] dir=(1,-1) r=14 magenta=0
+[first-fire-04] dir=(-1,1) r=9 magenta=0
+[first-fire-05] dir=(-1,1) r=14 magenta=0
+[first-fire-06] dir=(-1,-1) r=9 magenta=0
+[first-fire-07] dir=(-1,-1) r=14 magenta=0
+[first-fire-08] dir=(1,0) r=9 magenta=0
+[first-fire-09] dir=(1,0) r=14 magenta=0
+[first-fire-10] dir=(-1,0) r=9 magenta=0
+[first-fire-11] dir=(-1,0) r=14 magenta=0
+[first-fire-12] dir=(0,1) r=9 magenta=0
+[first-fire-13] dir=(0,1) r=14 magenta=0
+[first-fire-14] dir=(0,-1) r=9 magenta=0
+[first-fire-15] dir=(0,-1) r=14 magenta=0
+[first-fire] world tick=2880 y(label)=21 season=spring agents=7 fires=1 — 16 candidates
+
+[flame-chain] particle systems simulated: 29
+[flame-chain-00] dir=(1,1) r=9 magenta=0
+[flame-chain-01] dir=(1,1) r=14 magenta=0
+[flame-chain-02] dir=(1,-1) r=9 magenta=0
+[flame-chain-03] dir=(1,-1) r=14 magenta=0
+[flame-chain-04] dir=(-1,1) r=9 magenta=0
+[flame-chain-05] dir=(-1,1) r=14 magenta=0
+[flame-chain-06] dir=(-1,-1) r=9 magenta=0
+[flame-chain-07] dir=(-1,-1) r=14 magenta=0
+[flame-chain-08] dir=(1,0) r=9 magenta=0
+[flame-chain-09] dir=(1,0) r=14 magenta=0
+[flame-chain-10] dir=(-1,0) r=9 magenta=0
+[flame-chain-11] dir=(-1,0) r=14 magenta=0
+[flame-chain-12] dir=(0,1) r=9 magenta=0
+[flame-chain-13] dir=(0,1) r=14 magenta=0
+[flame-chain-14] dir=(0,-1) r=9 magenta=0
+[flame-chain-15] dir=(0,-1) r=14 magenta=0
+[flame-chain] world tick=12892 y(label)=90 season=summer agents=24 fires=0 — 16 candidates
+
+[rekindler] particle systems simulated: 32
+[rekindler-00] dir=(1,1) r=9 magenta=0
+[rekindler-01] dir=(1,1) r=14 magenta=0
+[rekindler-02] dir=(1,-1) r=9 magenta=0
+[rekindler-03] dir=(1,-1) r=14 magenta=0
+[rekindler-04] dir=(-1,1) r=9 magenta=0
+[rekindler-05] dir=(-1,1) r=14 magenta=0
+[rekindler-06] dir=(-1,-1) r=9 magenta=0
+[rekindler-07] dir=(-1,-1) r=14 magenta=0
+[rekindler-08] dir=(1,0) r=9 magenta=0
+[rekindler-09] dir=(1,0) r=14 magenta=0
+[rekindler-10] dir=(-1,0) r=9 magenta=0
+[rekindler-11] dir=(-1,0) r=14 magenta=0
+[rekindler-12] dir=(0,1) r=9 magenta=0
+[rekindler-13] dir=(0,1) r=14 magenta=0
+[rekindler-14] dir=(0,-1) r=9 magenta=0
+[rekindler-15] dir=(0,-1) r=14 magenta=0
+[rekindler] world tick=13857 y(label)=97 season=spring agents=16 fires=0 — 16 candidates
+
+worst magenta over 48 captures: 0 => GREEN
+The human eye picks the final frame per shot (D-008); captions composited outside the rig.
