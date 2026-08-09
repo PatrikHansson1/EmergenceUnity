@@ -11,7 +11,7 @@ namespace Emergence.Runtime
 {
     public sealed class EmergenceJintHost
     {
-        public const string ExpectedEngineSha = "91e5535db3dfaae4a1ce3fafcb70e088cd48425489abb7e65f6e8b1f0c3ec7b0"; // ENGINE 2.4.1 (E1.5b hardening, D-176: review conditions V1 rebuilt leader rule [unclamped standing + absolute sqrt-eased lead], V2 feud trigger reads grudge bookkeeping [ev: by construction], V6 steal/raid drive-chains [winter-onset season events, per-village famine marks, hoard milestone events], V8 feud room law in writeHistory; histories DIVERGE from 2.4.0 by design — goldens re-baselined)
+        public const string ExpectedEngineSha = "22e2ac053cd820b5656f8fa04b1392dde7c650c65d8f19df633f33b3f46d7020"; // ENGINE 2.4.1 + villageScope export-only readout (MOTOR-LANE-ORDER-VILLAGE-SCOPE 2026-08-09: per-village {name,pop,maxGen,avgAge,crafts,knows} census for the C-condition's loss half; pure READ, no S.rand, no S mutation — sim stream byte-identical, goldens NOT re-baselined [2.3.1 precedent: only the engine file's own SHA shifts]. Prior 2.4.1 sha: 91e5535db3df…)
 
         private readonly Jint.Engine _engine;
         public string EngineSha256 { get; }

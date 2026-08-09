@@ -1994,6 +1994,29 @@ function verbOf(task){
   return 'idle'; // 'thinking', 'wandering', and anything future
 }
 
+// ---------- VILLAGE SCOPE (export-only readout — MOTOR-LANE-ORDER-VILLAGE-SCOPE, 2026-08-09) ----------
+// The C-condition's loss half made WITNESSABLE: per-village census {name,pop,maxGen,avgAge,crafts,knows}
+// so the body can SEE what each village KNOWS (and later: loses). Membership = villageOf (the sim's own
+// law); knows[] = union of living members' knows in TECHS-canonical order (deterministic). A pure READ:
+// consumes no S.rand, mutates nothing — sim stream and goldens are byte-identical; only the engine
+// file's own SHA shifts (the 2.3.1 flat-array precedent). Field names are CONTRACT with the body's
+// WorldVillage parse and the seq-fixture format. cosmos/beliefs deliberately NOT in this wave.
+function villageScope(S){
+  const out=[];
+  for(const v of S.villages){
+    const mem=[];
+    for(const a of S.agents){ if(!a.dead&&villageOf(S,a)===v)mem.push(a); }
+    const ku=new Set();
+    for(const a of mem)for(const k of a.knows)ku.add(k);
+    const kn=[];
+    for(const t of TECHS)if(ku.has(t.id))kn.push(t.id);
+    let mg=0,ages=0;
+    for(const a of mem){ if(a.gen>mg)mg=a.gen; ages+=a.age; }
+    out.push({name:''+v.name,pop:mem.length,maxGen:mg,avgAge:mem.length?Math.round(ages/mem.length):0,crafts:kn.length,knows:kn});
+  }
+  return out;
+}
+
 // ---------- Civilization DNA ----------
 function computeDNA(S){
   const years=Math.floor(S.tick/YEAR)+1;
@@ -2192,5 +2215,5 @@ function resimulate(seed,toTick){
   return S;
 }
 
-return {createWorld,tickWorld,computeDNA,resimulate,writeHistory,roleOf,verbOf,worldEra,eraName,ERAS,wealthOf:wealth,TECHS,TECH,OBS,QUIRK,W,H,YEAR,SEASONS,VERSION:'2.4.1'};
+return {createWorld,tickWorld,computeDNA,villageScope,resimulate,writeHistory,roleOf,verbOf,worldEra,eraName,ERAS,wealthOf:wealth,TECHS,TECH,OBS,QUIRK,W,H,YEAR,SEASONS,VERSION:'2.4.1'};
 });
