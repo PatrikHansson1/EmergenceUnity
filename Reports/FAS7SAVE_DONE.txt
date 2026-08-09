@@ -1,2 +1,2 @@
-DONE 14:15:42 verdict=GREEN shaMatch=YES sha12=324ac90f1823 savedYear=6 chkDeleted=57 loadedSouls=6 loadedHuts=2 feedNew=0 liveOn=y7
+DONE 19:39:02 verdict=GREEN shaMatch=YES sha12=c027012c604e savedYear=6 chkDeleted=9 loadedSouls=6 loadedHuts=2 feedNew=0 liveOn=y7
 see Reports/fas7-saveload.txt

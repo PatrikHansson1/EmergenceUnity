@@ -1,58 +1,58 @@
 EMERGENCE — FAS 7 PLAYER SOAK: one undisturbed long session in a real player build
-generated 2026-08-08 23:21:30
+generated 2026-08-09 21:07:23
 declared span: y0 -> y40 at 1x/producer wall (full 120y window is producer-bound ~2.7+h, D-148 — WAITS on engine-lane deep-tick)
 
 proof scene: genesis wilderness + camera + Fas7SoakPlayerProof (observer composes the boot)
-build: Succeeded, errors=0, buildDirMB=925 (exe stub 652 KB), secs=19
-traceability: commit=541a9f4e (refs/heads/audition/free-assets-2026-07-19), Assembly-CSharp.dll mtime=2026-08-08 23:21:50
+build: Succeeded, errors=0, buildDirMB=925 (exe stub 652 KB), secs=11
+traceability: commit=05c6a12e (refs/heads/audition/free-assets-2026-07-19), Assembly-CSharp.dll mtime=2026-08-09 21:07:37
 
 ## PLAYER RESULT
-soak span=OK(y0->y40 undisturbed, 714s at 1x/producer wall — declared slice; full 120y WAITS on deep-tick D-148) order=OK(breaks=0) pace=OK(violations=0) bounds=OK(busMax=261/8192,feedMax=32/4096,metricsMax=41/512,lookaheadMax=0/16) softlock=OK(none) trend=OK(gc 15->18MB x1.17<4, maxHitch 0.78s, 17.8s/year avg) evidence=OK(framed by shared law) magenta=0/0 COMPLETE
+soak span=OK(y0->y40 undisturbed, 722s at 1x/producer wall — declared slice; full 120y WAITS on deep-tick D-148) order=OK(breaks=0) pace=OK(violations=0) bounds=OK(busMax=358/8192,feedMax=90/4096,metricsMax=41/512,lookaheadMax=0/16) softlock=OK(none) trend=OK(gc 16->18MB x1.19<4, maxHitch 0.83s, 18.1s/year avg) evidence=OK(framed by shared law) magenta=0/0 COMPLETE
 
 ## TREND (per applied year)
 # FAS 7 SOAK trend — one row per applied year (R1: stamped at measurement)
 # year secs bus feed feedDropped metrics buffered gcMB maxHitchSecs
-   0    1.1     4     4   0    1  0    15.3  0.78
-   1   16.0     9     5   0    2  0    15.7  0.02
-   2   24.7     9     5   0    3  0    15.8  0.02
-   3   34.5    10     5   0    4  0    16.0  0.01
-   4   45.0    12     5   0    5  0    15.8  0.01
-   5   54.4    16     8   0    6  0    16.3  0.01
-   6   66.5    18     9   0    7  0    16.4  0.01
-   7   77.7    23     9   0    8  0    15.9  0.01
-   8   91.4    26     9   0    9  0    16.0  0.01
-   9  107.1    30     9   0   10  0    16.4  0.07
-  10  122.0    34    10   0   11  0    16.4  0.01
-  11  137.5    39    11   0   12  0    16.5  0.01
-  12  152.3    43    11   0   13  0    16.1  0.01
-  13  165.3    49    12   0   14  0    16.3  0.01
-  14  180.7    55    12   0   15  0    16.7  0.01
-  15  193.1    60    12   0   16  0    17.0  0.01
-  16  211.1    66    14   0   17  0    16.4  0.01
-  17  227.4    71    15   0   18  0    16.8  0.01
-  18  245.8    74    15   0   19  0    16.9  0.02
-  19  260.9    78    15   0   20  0    16.5  0.01
-  20  276.4    84    17   0   21  0    16.8  0.01
-  21  295.7    92    18   0   22  0    16.9  0.01
-  22  317.1   100    18   0   23  0    16.6  0.11
-  23  335.5   109    19   0   24  0    17.0  0.03
-  24  352.5   118    19   0   25  0    16.9  0.06
-  25  368.1   125    19   0   26  0    16.9  0.04
-  26  385.6   132    19   0   27  0    17.0  0.01
-  27  406.6   140    20   0   28  0    17.5  0.01
-  28  425.8   146    21   0   29  0    17.5  0.01
-  29  446.6   151    22   0   30  0    17.2  0.01
-  30  470.2   159    23   0   31  0    17.5  0.01
-  31  494.4   165    23   0   32  0    17.0  0.01
-  32  515.7   176    24   0   33  0    17.0  0.01
-  33  536.4   186    26   0   34  0    17.1  0.01
-  34  563.1   192    26   0   35  0    17.3  0.01
-  35  582.7   201    27   0   36  0    17.1  0.01
-  36  609.0   211    27   0   37  0    17.3  0.01
-  37  637.8   224    27   0   38  0    17.8  0.01
-  38  665.9   236    28   0   39  0    17.3  0.01
-  39  689.3   248    29   0   40  0    17.2  0.01
-  40  713.7   261    32   0   41  0    17.8  0.02
+   0    1.4     4     4   0    1  0    15.5  0.83
+   1   15.7     9     5   0    2  0    16.4  0.03
+   2   24.0     9     5   0    3  0    16.7  0.02
+   3   33.4    10     5   0    4  0    16.8  0.01
+   4   43.4    12     5   0    5  0    17.4  0.01
+   5   52.5    16     8   0    6  0    17.4  0.01
+   6   64.3    18     9   0    7  0    16.8  0.01
+   7   75.1    23     9   0    8  0    16.8  0.01
+   8   88.6    26     9   0    9  0    17.7  0.01
+   9  102.5    31    10   0   10  0    17.6  0.01
+  10  115.5    38    12   0   11  0    17.3  0.01
+  11  130.4    42    12   0   12  0    17.5  0.01
+  12  144.9    47    12   0   13  0    17.3  0.01
+  13  158.8    53    12   0   14  0    17.3  0.01
+  14  173.6    58    12   0   15  0    17.2  0.01
+  15  187.0    61    12   0   16  0    17.5  0.02
+  16  200.8    67    13   0   17  0    17.8  0.01
+  17  216.0    73    14   0   18  0    17.6  0.01
+  18  230.0    77    14   0   19  0    17.6  0.01
+  19  247.8    82    14   0   20  0    18.0  0.01
+  20  264.7    87    15   0   21  0    17.5  0.01
+  21  278.4    93    16   0   22  0    17.6  0.01
+  22  295.5    99    16   0   23  0    17.9  0.01
+  23  313.6   107    17   0   24  0    17.8  0.01
+  24  330.8   115    17   0   25  0    18.3  0.01
+  25  352.8   125    18   0   26  0    17.9  0.01
+  26  371.5   134    19   0   27  0    17.4  0.02
+  27  386.3   140    19   0   28  0    18.0  0.01
+  28  407.5   150    20   0   29  0    17.6  0.02
+  29  424.1   157    22   0   30  0    17.9  0.01
+  30  444.1   164    22   0   31  0    17.6  0.01
+  31  469.0   172    22   0   32  0    17.5  0.01
+  32  499.1   182    23   0   33  0    17.8  0.01
+  33  525.5   191    24   0   34  0    18.1  0.01
+  34  553.5   200    24   0   35  0    18.0  0.01
+  35  580.9   209    24   0   36  0    18.5  0.01
+  36  604.2   272    61   0   37  0    18.4  0.01
+  37  632.3   287    63   0   38  0    18.1  0.20
+  38  662.0   298    63   0   39  0    18.2  0.01
+  39  696.0   329    76   0   40  0    18.2  0.01
+  40  722.4   358    90   0   41  0    18.4  0.01
 
 evidence: soak png + trend -> 45-UNITY/evidence/fas7/ (rendered IN the player)
 

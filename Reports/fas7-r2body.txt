@@ -1,8 +1,8 @@
 EMERGENCE — FAS 7 PROBE: R2 ink. 1 consumed — engine era canon (eraName) + verb-driven animation
-generated 2026-08-09 16:12:48
+generated 2026-08-09 19:41:16
 data source = applied WorldState (eraName, agents[].verb) — read-only; presentation follows applied state
 
-## PLAY PHASE (frames=19745)
+## PLAY PHASE (frames=19846)
 live era canon @y3: state eraName='The Age of Hearths' non-empty, WorldEras.Name(S)=='The Age of Hearths', != interim 'stone', != season 'spring' (OK)
 feed: 1/5 entries carry the current engine name 'The Age of Hearths', empty=0, interim-named=0 (OK) — [y0|The First Morning|arrival] [y0|The First Morning|arrival] [y0|The First Morning|arrival] [y0|The First Morning|arrival] [y1|The Age of Hearths|birth]
 almanac tile: 'The Age of Hearths' == engine 'The Age of Hearths', never interim/season (OK)

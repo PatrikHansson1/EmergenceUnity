@@ -34,6 +34,7 @@ namespace Emergence.Editor
         static string ExePath   => Path.Combine(OutDir, "EmergenceSaveLoad.exe");
         static string PlayerTxt => Path.Combine(OutDir, "saveload-player.txt");
         static string PlayerPng => Path.Combine(OutDir, "saveload-player.png");
+        static string PlayerHudPng => Path.Combine(OutDir, "saveload-player-hud.png");
         const string Report     = "Reports/fas7-saveload-player.txt";
         const string Evidence   = @"C:\Users\patri\Dropbox\Emergence\45-UNITY\evidence\fas7";
         const string KeyWaiting = "emg.fas7psave.waiting", KeyStart = "emg.fas7psave.start", KeyReport = "emg.fas7psave.report";
@@ -114,6 +115,7 @@ namespace Emergence.Editor
 
             try { if (File.Exists(PlayerTxt)) File.Delete(PlayerTxt); } catch {}
             try { if (File.Exists(PlayerPng)) File.Delete(PlayerPng); } catch {}
+            try { if (File.Exists(PlayerHudPng)) File.Delete(PlayerHudPng); } catch {}
             Process.Start(new ProcessStartInfo(ExePath, "-screen-fullscreen 0 -screen-width 1600 -screen-height 900")
             { UseShellExecute = true, WorkingDirectory = OutDir });
             SessionState.SetString(KeyReport, sb.ToString());
@@ -143,6 +145,8 @@ namespace Emergence.Editor
                     Directory.CreateDirectory(Evidence);
                     if (File.Exists(PlayerPng)) { File.Copy(PlayerPng, Path.Combine(Evidence, "fas7-saveload-player.png"), true); evNote = "evidence: saveload-player.png -> 45-UNITY/evidence/fas7/fas7-saveload-player.png (rendered IN the player)"; }
                     else evNote = "evidence: NO png produced";
+                    if (File.Exists(PlayerHudPng)) { File.Copy(PlayerHudPng, Path.Combine(Evidence, "fas7-saveload-player-hud.png"), true); evNote += " + hud: saveload-player-hud.png -> 45-UNITY/evidence/fas7/fas7-saveload-player-hud.png (backbuffer incl. IMGUI HUD, I5)"; }
+                    else evNote += " + hud: NO hud png produced";
                 }
                 catch (Exception e) { evNote = "evidence copy failed: " + e.Message; }
                 sb.AppendLine(evNote);
@@ -150,8 +154,10 @@ namespace Emergence.Editor
                 bool green = player.Contains("save=OK") && player.Contains("resim=OK") && player.Contains("shaMatch=OK")
                           && player.Contains("loaded=OK") && player.Contains("mode=OK") && player.Contains("feedNew=OK")
                           && player.Contains("liveOn=OK") && player.Contains("evidence=OK")
+                          && player.Contains("evidenceHud=OK")
                           && player.Contains("magenta=0/0") && player.Contains("COMPLETE")
-                          && evNote.Contains("rendered IN the player");
+                          && evNote.Contains("rendered IN the player")
+                          && evNote.Contains("backbuffer incl. IMGUI HUD");
                 sb.AppendLine();
                 sb.AppendLine("verdict: " + (green ? "GREEN — save->load reproduces the world exactly INSIDE a real player (SHA-proven) and lives on"
                                                    : "CHECK — see player result above"));

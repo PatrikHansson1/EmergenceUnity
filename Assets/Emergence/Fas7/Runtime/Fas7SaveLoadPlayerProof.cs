@@ -30,10 +30,11 @@ namespace Emergence.Runtime
         string _shaCont = "", _shaLoad = "";
         int _chkDeleted = -1, _feedNew = -1, _liveOnYear = -1;
         int _magenta = -1, _magentaTone = -1;
-        string _nSave = "", _nWipe = "", _nSha = "", _nWorld = "", _nMode = "", _nFeed = "", _nLive = "", _nEvid = "";
+        string _nSave = "", _nWipe = "", _nSha = "", _nWorld = "", _nMode = "", _nFeed = "", _nLive = "", _nEvid = "", _nEvidHud = "";
 
         string OutPath => Path.Combine(Application.dataPath, "..", "saveload-player.txt");
         string PngPath => Path.Combine(Application.dataPath, "..", "saveload-player.png");
+        string PngHudPath => Path.Combine(Application.dataPath, "..", "saveload-player-hud.png");
 
         void Update()
         {
@@ -179,8 +180,40 @@ namespace Emergence.Runtime
             {
                 if (++_waitFrames < 5) return;
                 CaptureFrame(PngPath);
-                Finish("");
+                // I5 (grind-review runda 1): the framed RT capture never sees IMGUI — grab the
+                // backbuffer END-OF-FRAME too, so the evidence bears the HUD (year/tick/tps),
+                // the D-142 school (Fas3OnboardPlayerProof.GrabHud).
+                StartCoroutine(CaptureHudThenFinish());
+                _phase = 8;
+                return;
             }
+        }
+
+        System.Collections.IEnumerator CaptureHudThenFinish()
+        {
+            yield return new WaitForEndOfFrame();   // IMGUI (time HUD) has drawn by now
+            try
+            {
+                var tex = ScreenCapture.CaptureScreenshotAsTexture();
+                if (tex == null) { _nEvidHud = "evidenceHud=FAIL(null grab)"; }
+                else
+                {
+                    var px = tex.GetPixels32();
+                    int nonWhite = 0, dark = 0;
+                    foreach (var p in px)
+                    {
+                        if (!(p.r > 245 && p.g > 245 && p.b > 245)) nonWhite++;
+                        if (p.r < 90 && p.g < 90 && p.b < 90) dark++;
+                    }
+                    float nw = nonWhite / (float)px.Length;
+                    bool ok = nw > 0.10f && dark > px.Length / 1000;   // D-142 blank-guard — never a white sheet again
+                    File.WriteAllBytes(PngHudPath, tex.EncodeToPNG());
+                    Destroy(tex);
+                    _nEvidHud = $"evidenceHud={(ok ? "OK" : "FAIL(blank)")}(backbuffer incl. IMGUI, nonwhite {(nw * 100f).ToString("F0", CultureInfo.InvariantCulture)}%)";
+                }
+            }
+            catch (Exception e) { _nEvidHud = "evidenceHud=FAIL(" + e.Message + ")"; }
+            Finish("");
         }
 
         static Vector3 Mapped(WorldState S, float x, float y)
@@ -226,8 +259,8 @@ namespace Emergence.Runtime
             _phase = 9;
             var sb = new StringBuilder();
             sb.Append(string.Format(CultureInfo.InvariantCulture,
-                "saveload {0} {1} {2} {3} {4} {5} {6} {7} magenta={8}/{9} {10}\n",
-                N(_nSave), N(_nWipe), N(_nSha), N(_nWorld), N(_nMode), N(_nFeed), N(_nLive), N(_nEvid),
+                "saveload {0} {1} {2} {3} {4} {5} {6} {7} {8} magenta={9}/{10} {11}\n",
+                N(_nSave), N(_nWipe), N(_nSha), N(_nWorld), N(_nMode), N(_nFeed), N(_nLive), N(_nEvid), N(_nEvidHud),
                 _magenta, _magentaTone, error.Length > 0 ? "ERROR=" + error : "COMPLETE"));
             try { File.WriteAllText(OutPath, sb.ToString()); } catch { }
             Application.Quit();

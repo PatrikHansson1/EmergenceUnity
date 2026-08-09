@@ -1,10 +1,10 @@
 EMERGENCE — FAS 7 PROBE: the C-loss witness — Torvhaven loses writing/tin/glassblowing/optics and the dossier SEES it
-generated 2026-08-09 18:48:13
+generated 2026-08-09 19:39:21
 data sources = world-97013-y54-e15.json + world-97013-y55-e15.json (REAL Engine 2.4.1 exports,
 driver-parity serializer over the StreamingAssets twin) through the SAME Fas3WorldRuntime.Apply path;
 independent recomputation = Tools/verify-closs.js -> Reports/fas7-closs-node.txt (node, own aggregation code)
 
-## PLAY PHASE (frames=11110)
+## PLAY PHASE (frames=11343)
 fixture canon vs node truth: Torvhaven y54 {10,4,17,34} ok, y55 {10,4,18,30} ok; Bjornheim y54 {8,4,31,34} ok, y55 {8,4,32,34} ok; lost set held@pre 4/4, gone@post 4/4, strict subset=True, neighbor knows byte-unchanged=True (OK)
 PRE dossier 'Torvhaven': pop 10==10, gen 4==4, hantverk 34==34, chips 34==34 element-wise==fixture, doomed crafts visible 4/4 (OK)
 evidence(pre) evidence: OK (end-of-frame backbuffer, nonwhite 100%) -> Reports/fas7-closs-pre.png
