@@ -83,8 +83,12 @@ namespace Emergence.Runtime
             switch (e.Type)
             {
                 case PresentationEventType.Milestone:
-                    // the canon beat — Codex chronicleEvent text (e.desc) or a reconciler's own line, verbatim
-                    salience = 3; kind = "milestone"; text = e.Data;
+                    // the canon beat — Codex chronicleEvent text (e.desc) or a reconciler's own line.
+                    // Trailer round (slot 5 capture finding): the D-106 "(told-not-shown …)" mechanism
+                    // marker (reconciler prefix + codex-desc suffix) leaked verbatim into the READER's
+                    // book — internal grammar, not story. Stripped HERE, at the READ layer only: the
+                    // bus keeps carrying it (probe classification + traceability are bus-side).
+                    salience = 3; kind = "milestone"; text = StripMechanismMarkers(e.Data);
                     break;
 
                 case PresentationEventType.AgentActivity:
@@ -189,6 +193,17 @@ namespace Emergence.Runtime
                     else if (_entries[i].kind == "death") _firstDeathSeen = true;
                 }
             }
+        }
+
+        /// <summary>READ-layer sanitizer (trailer round, slot 5 finding): removes every
+        /// "(told-not-shown…)" mechanism parenthetical (D-106 §1 grammar — reconciler prefix AND
+        /// codex-desc suffix variants) from reader-facing chronicle text, then collapses the
+        /// whitespace the removal leaves. The BUS text is untouched — probes classify on it.</summary>
+        public static string StripMechanismMarkers(string s)
+        {
+            if (string.IsNullOrEmpty(s) || s.IndexOf("(told-not-shown", System.StringComparison.Ordinal) < 0) return s;
+            s = System.Text.RegularExpressions.Regex.Replace(s, @"\s*\(told-not-shown[^)]*\)\s*", " ");
+            return s.Trim();
         }
 
         // ---- name resolution: the sim's own names, read from the applied snapshot (never invented) ----

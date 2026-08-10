@@ -29,10 +29,38 @@ namespace Emergence.AutoCompileTool
         // Deviations ABOVE baseline are findings; update the constant only with a fresh audit.
         const int WarningsBaseline = 16;
 
+        // N3 (Fas 7 G-review r2, D-187): the count baseline is recompilation-width-dependent —
+        // the same tree gave 0/16/18 warnings the same evening, and a NEW unique warning can hide
+        // inside a wide recompile that a human then has to eyeball. The IDENTITY baseline fixes
+        // that: every warning is keyed as "<file>|<code>" and any key NOT in this audited set is
+        // reported as NEW regardless of totals. Audited 2026-08-09 (wide recompile, 18 msgs ->
+        // 7 identities, all pre-existing third-party/probe). Extend only with a fresh audit.
+        static readonly HashSet<string> KnownWarningIdentities = new HashSet<string>
+        {
+            "CloudRenderer.cs|CS0618",
+            "Fas2MoveProbe.cs|CS0414",
+            "FirstPersonController_Dreamscape.cs|CS0414",
+            "FirstPersonController_Polyart.cs|CS0414",
+            "ImpostorDataHolder.cs|UAC1001",
+            "NPCAnimationController.cs|UAC1001",
+            "StoreCaptureRig.cs|CS0618",
+        };
+
+        /// <summary>"<file>|<code>" identity for a warning line, or null if unparsable (unparsable => treated as NEW).</summary>
+        static string WarningIdentity(string file, string message)
+        {
+            string name = null;
+            try { name = Path.GetFileName(file); } catch {}
+            if (string.IsNullOrEmpty(name)) return null;
+            var m = System.Text.RegularExpressions.Regex.Match(message ?? "", @"\b(CS\d{4}|UAC\d{4})\b");
+            return m.Success ? name + "|" + m.Value : null;
+        }
+
         static double _next, _armedAt;
         static bool _armed, _sawFinish;
         static readonly List<string> _errors = new List<string>();
         static readonly List<string> _warnings = new List<string>();
+        static readonly List<string> _newWarnings = new List<string>();   // N3: identities outside the audited set
 
         static string Trigger => Path.Combine(Application.dataPath, "..", "Reports", "RUN_COMPILE.trigger");
         static string Done    => Path.Combine(Application.dataPath, "..", "Reports", "COMPILE_DONE.txt");
@@ -55,7 +83,7 @@ namespace Emergence.AutoCompileTool
                 {
                     File.Delete(Trigger);
                     _armed = true; _sawFinish = false; _armedAt = EditorApplication.timeSinceStartup;
-                    _errors.Clear(); _warnings.Clear();
+                    _errors.Clear(); _warnings.Clear(); _newWarnings.Clear();
                     Directory.CreateDirectory(Path.GetDirectoryName(Done));
                     File.WriteAllText(Done, "RUNNING " + DateTime.Now.ToString("HH:mm:ss") + "\n");
                     AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);   // import new/changed .cs without focus
@@ -77,7 +105,13 @@ namespace Emergence.AutoCompileTool
             {
                 var line = $"{Path.GetFileName(asmPath)}: {m.file}({m.line}) {m.message}";
                 if (m.type == CompilerMessageType.Error) _errors.Add(line);
-                else if (m.type == CompilerMessageType.Warning) _warnings.Add(line);
+                else if (m.type == CompilerMessageType.Warning)
+                {
+                    _warnings.Add(line);
+                    var id = WarningIdentity(m.file, m.message);
+                    if (id == null || !KnownWarningIdentities.Contains(id))
+                        _newWarnings.Add((id ?? "UNPARSABLE") + "  <-  " + line);
+                }
             }
         }
 
@@ -93,14 +127,20 @@ namespace Emergence.AutoCompileTool
             _armed = false;
             var sb = new StringBuilder();
             sb.AppendLine($"COMPILE {verdict} — {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
-            sb.AppendLine($"errors={_errors.Count} warnings={_warnings.Count} warningsBaseline={WarningsBaseline}");
-            if (_warnings.Count > WarningsBaseline)
-                sb.AppendLine($"NOTE: warning count EXCEEDS the declared baseline ({WarningsBaseline}) — inspect ## WARNINGS before accepting (N2, D-163). (An incremental compile honestly reports fewer.)");
+            sb.AppendLine($"errors={_errors.Count} warnings={_warnings.Count} warningsBaseline={WarningsBaseline} newUniqueWarnings={_newWarnings.Count}");
+            if (_newWarnings.Count > 0)
+            {
+                sb.AppendLine($"NOTE: {_newWarnings.Count} warning(s) OUTSIDE the audited identity set (N3, D-187) — these are FINDINGS, not noise:");
+                sb.AppendLine("## NEW WARNINGS (identity not in baseline)");
+                foreach (var w in _newWarnings) sb.AppendLine("  " + w);
+            }
+            else if (_warnings.Count > WarningsBaseline)
+                sb.AppendLine($"NOTE: count {_warnings.Count} > baseline {WarningsBaseline} but ALL identities are in the audited set (N3-lagen frikänner: wide recompiles re-emit known warnings; an incremental compile honestly reports fewer).");
             sb.AppendLine();
             if (_errors.Count > 0)   { sb.AppendLine("## ERRORS");   foreach (var e in _errors)   sb.AppendLine("  " + e); sb.AppendLine(); }
             if (_warnings.Count > 0) { sb.AppendLine("## WARNINGS"); foreach (var w in _warnings) sb.AppendLine("  " + w); }
             try { File.WriteAllText(Report, sb.ToString()); } catch {}
-            try { File.WriteAllText(Done, $"DONE {DateTime.Now:HH:mm:ss} verdict={verdict} errors={_errors.Count} warnings={_warnings.Count}\nsee Reports/compile-report.txt\n"); } catch {}
+            try { File.WriteAllText(Done, $"DONE {DateTime.Now:HH:mm:ss} verdict={verdict} errors={_errors.Count} warnings={_warnings.Count} newUnique={_newWarnings.Count}\nsee Reports/compile-report.txt\n"); } catch {}
             Debug.Log($"[AutoCompile] {verdict} errors={_errors.Count} warnings={_warnings.Count}");
         }
     }

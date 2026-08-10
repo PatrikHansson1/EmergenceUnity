@@ -146,6 +146,22 @@ namespace Emergence.Runtime
             return show;
         }
 
+        /// <summary>Store/probe seam (trailer round, slot 5): scrolls the BOOK so the first row with
+        /// year &lt;= yearTarget sits at the top of the viewport. Rows are newest-first, so this finds
+        /// the newest entry at-or-before that year. Pure presentation — touches no feed/clock state.
+        /// Layout must exist: call at least one frame after RefreshNow(). Returns the row index or -1.</summary>
+        public int ScrollBookToYear(int yearTarget)
+        {
+            for (int i = 0; i < _bookRows.Count; i++)
+                if (_bookRows[i].year <= yearTarget)
+                {
+                    var el = _bookScroll.contentContainer[i];
+                    _bookScroll.scrollOffset = new Vector2(0f, el.layout.y);
+                    return i;
+                }
+            return -1;
+        }
+
         /// <summary>Rebuild both surfaces from the feed NOW (probe-friendly: no frame-order races).</summary>
         public void RefreshNow()
         {

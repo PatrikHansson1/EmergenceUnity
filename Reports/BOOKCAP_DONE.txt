@@ -1,0 +1,2 @@
+DONE 03:16:04 verdict=GREEN candidates=5/5
+see Reports/store-bookcap-report.txt

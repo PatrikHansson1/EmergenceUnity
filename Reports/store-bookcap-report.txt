@@ -1,0 +1,9 @@
+witnessed: y0..y90, 795 entries, book open
+[book-spine-nohud] filter=vändpunkter scroll=top hud=off rows=312 — evidence: OK (end-of-frame backbuffer, nonwhite 100%) -> Reports/store-cap\book-spine-nohud.png
+[book-spine-y43-nohud] filter=vändpunkter scroll=y43 (row 267) hud=off rows=312 — evidence: OK (end-of-frame backbuffer, nonwhite 100%) -> Reports/store-cap\book-spine-y43-nohud.png
+[book-all-y43-nohud] filter=allt scroll=y43 (row 670) hud=off rows=795 — evidence: OK (end-of-frame backbuffer, nonwhite 100%) -> Reports/store-cap\book-all-y43-nohud.png
+[book-spine-hud] filter=vändpunkter scroll=top hud=on rows=312 — evidence: OK (end-of-frame backbuffer, nonwhite 100%) -> Reports/store-cap\book-spine-hud.png
+[book-all-y43-hud] filter=allt scroll=y43 (row 670) hud=on rows=795 — evidence: OK (end-of-frame backbuffer, nonwhite 100%) -> Reports/store-cap\book-all-y43-hud.png
+
+The human eye picks the final frame (D-008); caption + world code composited outside the rig (TD-088 grammar).
+verdict: GREEN — 5/5 candidates captured

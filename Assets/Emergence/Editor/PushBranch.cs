@@ -41,6 +41,10 @@ namespace Emergence.Editor
                 File.Delete(TriggerPath);
                 var psi = new ProcessStartInfo("cmd.exe",
                     "/c cd /d C:\\Dev\\EmergenceUnity && (if exist .git\\index.lock del /f .git\\index.lock) && " +
+                    // N1 (Fas 7 G-review r2, D-187): TerrainData_generated.asset is a regenerable
+                    // WorldDresser.Build byproduct (no committed scene references it) that mutated
+                    // silently in TD-089 — untrack once (idempotent), .gitignore keeps it out.
+                    "git rm -r -q --cached --ignore-unmatch Assets\\Emergence\\Scenes\\TerrainData_generated.asset Assets\\Emergence\\Scenes\\TerrainData_generated.asset.meta & " +
                     "git add -A & git commit -F Logs\\commitmsg-current.txt & git push -u origin HEAD " +   // unconditional: push retries even when nothing new to commit
                     "> Logs\\git-commitpush.log 2>&1 & git log --oneline -1 >> Logs\\git-commitpush.log 2>&1")
                 { CreateNoWindow = true, UseShellExecute = false };

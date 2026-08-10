@@ -247,7 +247,9 @@ namespace Emergence.Editor
             {
                 int cut = m.IndexOf('|');
                 int my = int.Parse(m.Substring(0, cut), CultureInfo.InvariantCulture);
-                string mt = m.Substring(cut + 1);
+                // the feed strips the "(told-not-shown…)" mechanism marker at the READ layer
+                // (trailer round law) — the mirror asserts CONTENT, so compare the sanitized form
+                string mt = Fas4ChronicleFeed.StripMechanismMarkers(m.Substring(cut + 1));
                 bool has = false;
                 foreach (var e in _feed.Entries)
                     if (e.kind == "milestone" && e.year == my && e.text.StartsWith(mt)) { has = true; break; }

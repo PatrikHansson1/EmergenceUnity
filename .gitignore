@@ -62,3 +62,8 @@ Assets/Emergence/Scenes/ABCProofScene.unity.meta
 # TD-088: store-capture candidate frames are regenerable (RUN_STORECAP.trigger) and 146 MB —
 # the CHOSEN composited finals live in Dropbox 60-MARKETING/world-reports/; never commit the bulk
 Reports/store-cap/
+# N1 (Fas 7 G-review r2, D-187): TerrainData_generated.asset is a regenerable WorldDresser.Build
+# byproduct (mutates on every dressing/build; no committed scene references its GUID) — untracked
+# via the RUN_GITCOMMIT one-shot, kept out here (store-cap pattern)
+Assets/Emergence/Scenes/TerrainData_generated.asset
+Assets/Emergence/Scenes/TerrainData_generated.asset.meta

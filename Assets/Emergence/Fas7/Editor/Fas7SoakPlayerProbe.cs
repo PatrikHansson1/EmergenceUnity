@@ -146,6 +146,11 @@ namespace Emergence.Editor
                 {
                     sb.AppendLine("## TREND (per applied year)");
                     sb.AppendLine(File.ReadAllText(PlayerTrend).Trim());
+                    sb.AppendLine("declared (N2, Fas 7 G-review r2 D-187): the y36 step jump (bus 209->272, feed 24->61 in one");
+                    sb.AppendLine("year after ~35 linear years) is the E1.5 drama's first death wave clustering events (the ABC run");
+                    sb.AppendLine("places Torv's death in the y43 region) — an expected drama-produced event cluster, not a leak;");
+                    sb.AppendLine("all bounds stay far under cap. Whether the post-jump level is a plateau or a ramp start is");
+                    sb.AppendLine("answered by the FULL-LENGTH soak (WAITS on the engine lane's deep tick, D-148/D-149).");
                     sb.AppendLine();
                 }
                 string evNote;
