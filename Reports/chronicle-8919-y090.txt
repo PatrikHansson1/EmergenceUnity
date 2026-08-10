@@ -1,123 +1,798 @@
 KRÖNIKAN — skriven av ingen, allt hände
-seed 8919 · y0..y90 · COMPLETE · 120 witnessed entries · exported 2026-07-22 21:38
+seed 8919 · y0..y90 · COMPLETE · 795 witnessed entries · exported 2026-08-10 09:30
 ------------------------------------------------------------------------
-y  0 [dawn] . Eira arrives — a soul steps onto the empty land
-y  0 [dawn] . Ask arrives — a soul steps onto the empty land
-y  0 [dawn] . Embla arrives — a soul steps onto the empty land
-y  0 [dawn] . Torv arrives — a soul steps onto the empty land
-y  1 [stone] * a first child is born — Liv
-y  5 [bronze]   Sten is born
-y  5 [bronze] * the first hut
-y  5 [bronze]   a hut is raised
-y  6 [bronze]   a hut is raised
-y 10 [iron]   a hut is raised
-y 11 [iron]   Ylva is born
-y 13 [print]   a hut is raised
-y 16 [print]   Bjorn is born
-y 16 [print]   a hut is raised
-y 17 [print]   Saga is born
-y 20 [print]   Rune is born
-y 20 [print]   a hut is raised
-y 21 [print]   Freja is born
-y 23 [print]   Kare is born
-y 27 [print]   Idun is born
-y 28 [print]   a hut is raised
-y 29 [print]   Halvar is born
-y 30 [print]   a hut is raised
-y 32 [print]   a hut is raised
-y 33 [print]   Signe is born
-y 33 [print]   Vidar is born
-y 35 [print]   a hut is raised
-y 38 [print]   Tuva is born
-y 39 [print]   a hut is raised
-y 40 [print]   Alve is born
-y 40 [print]   Ronja is born
-y 40 [print]   a hut is raised
-y 43 [print] * death finds the people for the first time — Torv departs
-y 43 [print]   Sixten is born
-y 43 [print]   Maja is born
-y 43 [print]   a hut is raised
-y 45 [print]   Loke is born
-y 46 [print]   Rune departs
-y 47 [print]   a hut is raised
-y 50 [print]   Ask departs
-y 51 [print]   Vera is born
-y 51 [print]   Otto is born
-y 53 [print]   Embla departs
-y 54 [print]   Selma is born
-y 54 [print]   Falk is born
-y 57 [print]   Eira departs
-y 57 [print]   Nanna is born
-y 58 [print]   Liv departs
-y 58 [print]   Ulv is born
-y 58 [print]   Disa is born
-y 58 [print]   Orm is born
-y 58 [print]   a hut is raised
-y 60 [print]   Eira II is born
-y 60 [print]   Ask II is born
-y 61 [print]   Embla II is born
-y 61 [print]   Torv II is born
-y 61 [print]   Liv II is born
-y 62 [print]   Halvar departs
-y 64 [print]   Sten II is born
-y 64 [print]   Ylva II is born
-y 64 [print]   Bjorn II is born
-y 64 [print]   Saga II is born
-y 67 [print]   Rune II is born
-y 67 [print]   Freja II is born
-y 67 [print]   Kare II is born
-y 69 [print]   Idun II is born
-y 70 [print]   Halvar II is born
-y 70 [print]   Signe II is born
-y 70 [print]   a hut is raised
-y 71 [print]   a hut is raised
-y 73 [print]   Vidar II is born
-y 74 [print]   Tuva II is born
-y 74 [print]   Alve II is born
-y 74 [print]   a hut is raised
-y 74 [print]   a hut is raised
-y 75 [print]   Ronja II is born
-y 75 [print]   Sixten II is born
-y 77 [print]   Maja II is born
-y 79 [print]   a hut is raised
-y 80 [print]   Freja departs
-y 80 [print]   Loke II is born
-y 80 [print]   Vera II is born
-y 80 [print]   Otto II is born
-y 80 [print]   Selma II is born
-y 81 [print]   Falk II is born
-y 81 [print]   Nanna II is born
-y 81 [print]   Ulv II is born
-y 82 [print]   Disa II is born
-y 83 [mill]   Orm II is born
-y 83 [mill]   Eira II is born
-y 83 [mill]   Ask II is born
-y 83 [mill]   Embla II is born
-y 83 [mill]   a hut is raised
-y 83 [mill]   a hut is raised
-y 83 [mill]   a hut is raised
-y 84 [mill]   Torv II is born
-y 84 [mill]   Liv II is born
-y 84 [mill]   a hut is raised
-y 85 [mill]   Sten departs
-y 85 [mill]   Sten II is born
-y 86 [mill]   Ylva departs
-y 86 [mill]   Ylva II is born
-y 86 [mill]   Bjorn II is born
-y 86 [mill]   a hut is raised
-y 87 [mill]   Saga II is born
-y 87 [mill]   Rune II is born
-y 87 [mill]   Freja II is born
-y 88 [mill]   Ulv departs
-y 88 [mill]   Kare II is born
-y 88 [mill]   a hut is raised
-y 89 [mill]   Loke departs
-y 89 [mill]   Disa departs
-y 89 [mill]   Idun II is born
-y 89 [mill]   Halvar II is born
-y 89 [mill]   Signe II is born
-y 89 [mill]   Vidar II is born
-y 89 [mill]   a hut is raised
-y 89 [mill]   a hut is raised
-y 90 [mill]   Saga departs
-y 90 [mill]   a hut is raised
+y  0 [The First Morning] . Eira arrives — a soul steps onto the empty land
+y  0 [The First Morning] . Ask arrives — a soul steps onto the empty land
+y  0 [The First Morning] . Embla arrives — a soul steps onto the empty land
+y  0 [The First Morning] . Torv arrives — a soul steps onto the empty land
+y  1 [The Age of Hearths] * a first child is born — Liv
+y  5 [The Age of Bronze]   Sten is born
+y  5 [The Age of Bronze] * the first hut
+y  5 [The Age of Bronze]   a hut is raised
+y  6 [The Age of Bronze]   a hut is raised
+y  9 [The Age of Iron]   Ylva is born
+y 10 [The Age of Mills]   Bjorn is born
+y 10 [The Age of Mills]   a hut is raised
+y 16 [The Age of Mills]   Saga is born
+y 17 [The Age of Mills]   a hut is raised
+y 20 [The Age of the Press]   Rune is born
+y 21 [The Age of the Press]   a hut is raised
+y 23 [The Age of the Press]   a hut is raised
+y 25 [The Age of the Press]   Freja is born
+y 26 [The Age of the Press]   a hut is raised
+y 28 [The Age of the Press]   Kare is born
+y 29 [The Age of the Press]   Idun is born
+y 29 [The Age of the Press]   Halvar is born
+y 32 [The Age of the Press]   Signe is born
+y 33 [The Age of the Press]   Vidar is born
+y 36 [The Age of the Press]   a hut is raised
+y 36 [The Age of the Press]   a hut is raised
+y 36 [The Age of the Press]   mill takes its place in the world (Sagastead)
+y 36 [The Age of the Press] * the mill — where the village learned to grind grain, famine receded (Sagastead)
+y 36 [The Age of the Press]   writing-post takes its place in the world (Sagastead)
+y 36 [The Age of the Press] * a marked post — a people who have learned to write leave words for those who come after (Sagastead)
+y 36 [The Age of the Press]   temple takes its place in the world (Sagastead)
+y 36 [The Age of the Press] * a temple raised to the sky-faith — the cosmology that began with one soul watching the stars now has a house and a keeper. (Sagastead)
+y 36 [The Age of the Press]   forge takes its place in the world (Sagastead)
+y 36 [The Age of the Press] * the forge — where this people learned to work metal, the smith's fire never fully dies (Sagastead)
+y 36 [The Age of the Press]   boat takes its place in the world (Sagastead)
+y 36 [The Age of the Press] * a rowboat drawn up at the village edge — a people who learned to build hulls and read the water (Sagastead)
+y 36 [The Age of the Press]   cart takes its place in the world (Sagastead)
+y 36 [The Age of the Press] * a handcart — once the wheel was understood, one back could carry what many had before (Sagastead)
+y 36 [The Age of the Press]   weaving-line takes its place in the world (Sagastead)
+y 36 [The Age of the Press] * a line of drying cloth — a people who learned to spin thread and weave; wool and linen dry in the wind (Sagastead)
+y 36 [The Age of the Press]   granary-store takes its place in the world (Sagastead)
+y 36 [The Age of the Press] * stores of grain in barrels — the people learned to keep a surplus against the hungry season (Sagastead)
+y 36 [The Age of the Press]   pottery takes its place in the world (Sagastead)
+y 36 [The Age of the Press] * fired clay pots — the first craft beyond stone and wood, clay shaped and hardened in the kiln (Sagastead)
+y 36 [The Age of the Press]   mason-stones takes its place in the world (Sagastead)
+y 36 [The Age of the Press] * cut and dressed stone blocks — masonry, the knowledge of shaping stone to build things meant to last (Sagastead)
+y 36 [The Age of the Press]   well takes its place in the world (Sagastead)
+y 36 [The Age of the Press] * a dug well ringed with stone — the village no longer waits on the river for its water (Sagastead)
+y 36 [The Age of the Press]   docks takes its place in the world (Sagastead)
+y 36 [The Age of the Press] * wooden docks reaching into the water — where the hulls are tied and the day's catch comes in (Sagastead)
+y 36 [The Age of the Press]   glass-vessels takes its place in the world (Sagastead)
+y 36 [The Age of the Press] * clear glass vessels catching the light — the people learned to melt sand into something you can see through (Sagastead)
+y 36 [The Age of the Press]   casks takes its place in the world (Sagastead)
+y 36 [The Age of the Press] * stores and casks stacked by the wall — a settled village keeps more than it can carry (Sagastead)
+y 36 [The Age of the Press]   crates takes its place in the world (Sagastead)
+y 36 [The Age of the Press] * crates stacked beside the path — goods waiting to change hands (Sagastead)
+y 36 [The Age of the Press]   green-bench takes its place in the world (Sagastead)
+y 36 [The Age of the Press] * a bench by the green — somewhere to sit, and so somewhere to talk (Sagastead)
+y 36 [The Age of the Press]   commons-fire takes its place in the world (Sagastead)
+y 36 [The Age of the Press] * a common fire ring at the heart of the green — where the village gathers when the dark comes (Sagastead)
+y 36 [The Age of the Press] * sails turned to the wind on the hill — grinding grain where no river runs (Sagastead)
+y 37 [The Age of the Press]   Tuva is born
+y 37 [The Age of the Press]   crates is gone (Sagastead)
+y 39 [The Age of the Press]   a hut is raised
+y 39 [The Age of the Press] . temple falls to ruin (Sagastead)
+y 39 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Sagastead)
+y 39 [The Age of the Press]   mason-stones is gone (Sagastead)
+y 39 [The Age of the Press]   docks is gone (Sagastead)
+y 39 [The Age of the Press]   casks is gone (Sagastead)
+y 39 [The Age of the Press]   windmill is gone (Sagastead)
+y 39 [The Age of the Press]   weaving-line takes its place in the world (Runevik)
+y 39 [The Age of the Press] * a line of drying cloth — a people who learned to spin thread and weave; wool and linen dry in the wind (Runevik)
+y 39 [The Age of the Press]   pottery takes its place in the world (Runevik)
+y 39 [The Age of the Press] * fired clay pots — the first craft beyond stone and wood, clay shaped and hardened in the kiln (Runevik)
+y 39 [The Age of the Press]   commons-fire takes its place in the world (Runevik)
+y 39 [The Age of the Press] * a common fire ring at the heart of the green — where the village gathers when the dark comes (Runevik)
+y 40 [The Age of the Press] . mill falls to ruin (Sagastead)
+y 40 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Sagastead)
+y 40 [The Age of the Press] . forge falls to ruin (Sagastead)
+y 40 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Sagastead)
+y 40 [The Age of the Press]   cart is gone (Sagastead)
+y 40 [The Age of the Press]   granary-store is gone (Sagastead)
+y 40 [The Age of the Press]   glass-vessels is gone (Sagastead)
+y 40 [The Age of the Press]   green-bench is gone (Sagastead)
+y 40 [The Age of the Press]   writing-post takes its place in the world (Runevik)
+y 40 [The Age of the Press] * a marked post — a people who have learned to write leave words for those who come after (Runevik)
+y 40 [The Age of the Press]   boat takes its place in the world (Runevik)
+y 40 [The Age of the Press] * a rowboat drawn up at the village edge — a people who learned to build hulls and read the water (Runevik)
+y 40 [The Age of the Press]   well takes its place in the world (Runevik)
+y 40 [The Age of the Press] * a dug well ringed with stone — the village no longer waits on the river for its water (Runevik)
+y 41 [The Age of the Press] * rediscovered — the ruin is raised again (Sagastead)
+y 41 [The Age of the Press]   mill takes its place in the world (Sagastead)
+y 41 [The Age of the Press] * the mill — where the village learned to grind grain, famine receded (Sagastead)
+y 41 [The Age of the Press] * rediscovered — the ruin is raised again (Sagastead)
+y 41 [The Age of the Press]   forge takes its place in the world (Sagastead)
+y 41 [The Age of the Press] * the forge — where this people learned to work metal, the smith's fire never fully dies (Sagastead)
+y 41 [The Age of the Press]   cart takes its place in the world (Sagastead)
+y 41 [The Age of the Press] * a handcart — once the wheel was understood, one back could carry what many had before (Sagastead)
+y 41 [The Age of the Press]   granary-store takes its place in the world (Sagastead)
+y 41 [The Age of the Press] * stores of grain in barrels — the people learned to keep a surplus against the hungry season (Sagastead)
+y 41 [The Age of the Press]   glass-vessels takes its place in the world (Sagastead)
+y 41 [The Age of the Press] * clear glass vessels catching the light — the people learned to melt sand into something you can see through (Sagastead)
+y 41 [The Age of the Press]   green-bench takes its place in the world (Sagastead)
+y 41 [The Age of the Press] * a bench by the green — somewhere to sit, and so somewhere to talk (Sagastead)
+y 41 [The Age of the Press] . the people begin to listen when Torv speaks (Sagastead)
+y 42 [The Age of the Press]   granary-store is gone (Sagastead)
+y 42 [The Age of the Press]   green-bench is gone (Sagastead)
+y 42 [The Age of the Press]   cart is gone (Sagastead)
+y 42 [The Age of the Press] . forge falls to ruin (Sagastead)
+y 42 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Sagastead)
+y 42 [The Age of the Press] . mill falls to ruin (Sagastead)
+y 42 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Sagastead)
+y 42 [The Age of the Press]   glass-vessels is gone (Sagastead)
+y 43 [The Age of the Press] * death finds the people for the first time — Torv departs
+y 43 [The Age of the Press]   Alve is born
+y 43 [The Age of the Press]   temple takes its place in the world (Runevik)
+y 43 [The Age of the Press] * a temple raised to the sky-faith — the cosmology that began with one soul watching the stars now has a house and a keeper. (Runevik)
+y 43 [The Age of the Press]   mason-stones takes its place in the world (Runevik)
+y 43 [The Age of the Press] * cut and dressed stone blocks — masonry, the knowledge of shaping stone to build things meant to last (Runevik)
+y 43 [The Age of the Press]   docks takes its place in the world (Runevik)
+y 43 [The Age of the Press] * wooden docks reaching into the water — where the hulls are tied and the day's catch comes in (Runevik)
+y 43 [The Age of the Press]   casks takes its place in the world (Runevik)
+y 43 [The Age of the Press] * stores and casks stacked by the wall — a settled village keeps more than it can carry (Runevik)
+y 43 [The Age of the Press] * sails turned to the wind on the hill — grinding grain where no river runs (Runevik)
+y 43 [The Age of the Press] . Torv's voice is gone — no one yet speaks for all (Sagastead)
+y 44 [The Age of the Press] . writing-post falls to ruin (Sagastead)
+y 44 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Sagastead)
+y 44 [The Age of the Press]   boat is gone (Sagastead)
+y 44 [The Age of the Press] . well falls to ruin (Sagastead)
+y 44 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Sagastead)
+y 45 [The Age of the Press]   Ronja is born
+y 45 [The Age of the Press] . the people begin to listen when Embla speaks (Runevik)
+y 47 [The Age of the Press]   Sixten is born
+y 47 [The Age of the Press]   Maja is born
+y 48 [The Age of the Press]   a hut is raised
+y 48 [The Age of the Press]   crates takes its place in the world (Runevik)
+y 48 [The Age of the Press] * crates stacked beside the path — goods waiting to change hands (Runevik)
+y 49 [The Age of the Press]   Loke is born
+y 49 [The Age of the Press]   a hut is raised
+y 49 [The Age of the Press]   crates is gone (Runevik)
+y 50 [The Age of the Press]   Ask departs
+y 50 [The Age of the Press]   Vera is born
+y 50 [The Age of the Press]   crates takes its place in the world (Runevik)
+y 50 [The Age of the Press] * crates stacked beside the path — goods waiting to change hands (Runevik)
+y 51 [The Age of the Press]   Otto is born
+y 51 [The Age of the Press]   crates is gone (Runevik)
+y 51 [The Age of the Press]   weaving-line is gone (Sagastead)
+y 52 [The Age of the Press]   Selma is born
+y 52 [The Age of the Press]   a hut is raised
+y 52 [The Age of the Press]   a hut is raised
+y 52 [The Age of the Press]   weaving-line takes its place in the world (Sagastead)
+y 52 [The Age of the Press] * a line of drying cloth — a people who learned to spin thread and weave; wool and linen dry in the wind (Sagastead)
+y 52 [The Age of the Press]   crates takes its place in the world (Runevik)
+y 52 [The Age of the Press] * crates stacked beside the path — goods waiting to change hands (Runevik)
+y 53 [The Age of the Press]   Embla departs
+y 53 [The Age of the Press]   Falk is born
+y 53 [The Age of the Press]   a hut is raised
+y 53 [The Age of the Press]   crates is gone (Runevik)
+y 53 [The Age of the Press]   pottery is gone (Sagastead)
+y 53 [The Age of the Press]   weaving-line is gone (Sagastead)
+y 53 [The Age of the Press]   commons-fire is gone (Sagastead)
+y 53 [The Age of the Press]   mill takes its place in the world (Halvarhaven)
+y 53 [The Age of the Press] * the mill — where the village learned to grind grain, famine receded (Halvarhaven)
+y 53 [The Age of the Press]   forge takes its place in the world (Halvarhaven)
+y 53 [The Age of the Press] * the forge — where this people learned to work metal, the smith's fire never fully dies (Halvarhaven)
+y 53 [The Age of the Press]   boat takes its place in the world (Halvarhaven)
+y 53 [The Age of the Press] * a rowboat drawn up at the village edge — a people who learned to build hulls and read the water (Halvarhaven)
+y 53 [The Age of the Press]   cart takes its place in the world (Halvarhaven)
+y 53 [The Age of the Press] * a handcart — once the wheel was understood, one back could carry what many had before (Halvarhaven)
+y 53 [The Age of the Press]   weaving-line takes its place in the world (Halvarhaven)
+y 53 [The Age of the Press] * a line of drying cloth — a people who learned to spin thread and weave; wool and linen dry in the wind (Halvarhaven)
+y 53 [The Age of the Press]   granary-store takes its place in the world (Halvarhaven)
+y 53 [The Age of the Press] * stores of grain in barrels — the people learned to keep a surplus against the hungry season (Halvarhaven)
+y 53 [The Age of the Press]   pottery takes its place in the world (Halvarhaven)
+y 53 [The Age of the Press] * fired clay pots — the first craft beyond stone and wood, clay shaped and hardened in the kiln (Halvarhaven)
+y 53 [The Age of the Press]   well takes its place in the world (Halvarhaven)
+y 53 [The Age of the Press] * a dug well ringed with stone — the village no longer waits on the river for its water (Halvarhaven)
+y 53 [The Age of the Press]   glass-vessels takes its place in the world (Halvarhaven)
+y 53 [The Age of the Press] * clear glass vessels catching the light — the people learned to melt sand into something you can see through (Halvarhaven)
+y 53 [The Age of the Press]   green-bench takes its place in the world (Halvarhaven)
+y 53 [The Age of the Press] * a bench by the green — somewhere to sit, and so somewhere to talk (Halvarhaven)
+y 53 [The Age of the Press]   commons-fire takes its place in the world (Halvarhaven)
+y 53 [The Age of the Press] * a common fire ring at the heart of the green — where the village gathers when the dark comes (Halvarhaven)
+y 53 [The Age of the Press] . Embla's voice is gone — no one yet speaks for all (Runevik)
+y 54 [The Age of the Press] . Vidar gives — the gift itself binds
+y 54 [The Age of the Press]   Nanna is born
+y 54 [The Age of the Press]   granary-store is gone (Halvarhaven)
+y 54 [The Age of the Press]   cart is gone (Halvarhaven)
+y 54 [The Age of the Press] . forge falls to ruin (Halvarhaven)
+y 54 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Halvarhaven)
+y 54 [The Age of the Press] . mill falls to ruin (Halvarhaven)
+y 54 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Halvarhaven)
+y 54 [The Age of the Press]   glass-vessels is gone (Halvarhaven)
+y 54 [The Age of the Press]   green-bench is gone (Halvarhaven)
+y 54 [The Age of the Press]   pottery takes its place in the world (Sagastead)
+y 54 [The Age of the Press] * fired clay pots — the first craft beyond stone and wood, clay shaped and hardened in the kiln (Sagastead)
+y 54 [The Age of the Press]   commons-fire takes its place in the world (Sagastead)
+y 54 [The Age of the Press] * a common fire ring at the heart of the green — where the village gathers when the dark comes (Sagastead)
+y 55 [The Age of the Press]   Signe departs
+y 55 [The Age of the Press]   a hut is raised
+y 55 [The Age of the Press]   commons-fire is gone (Sagastead)
+y 55 [The Age of the Press]   pottery is gone (Sagastead)
+y 55 [The Age of the Press] * rediscovered — the ruin is raised again (Halvarhaven)
+y 55 [The Age of the Press]   mill takes its place in the world (Halvarhaven)
+y 55 [The Age of the Press] * the mill — where the village learned to grind grain, famine receded (Halvarhaven)
+y 55 [The Age of the Press] * rediscovered — the ruin is raised again (Halvarhaven)
+y 55 [The Age of the Press]   forge takes its place in the world (Halvarhaven)
+y 55 [The Age of the Press] * the forge — where this people learned to work metal, the smith's fire never fully dies (Halvarhaven)
+y 55 [The Age of the Press]   cart takes its place in the world (Halvarhaven)
+y 55 [The Age of the Press] * a handcart — once the wheel was understood, one back could carry what many had before (Halvarhaven)
+y 55 [The Age of the Press]   granary-store takes its place in the world (Halvarhaven)
+y 55 [The Age of the Press] * stores of grain in barrels — the people learned to keep a surplus against the hungry season (Halvarhaven)
+y 55 [The Age of the Press]   glass-vessels takes its place in the world (Halvarhaven)
+y 55 [The Age of the Press] * clear glass vessels catching the light — the people learned to melt sand into something you can see through (Halvarhaven)
+y 55 [The Age of the Press]   green-bench takes its place in the world (Halvarhaven)
+y 55 [The Age of the Press] * a bench by the green — somewhere to sit, and so somewhere to talk (Halvarhaven)
+y 56 [The Age of the Press]   windmill is gone (Runevik)
+y 56 [The Age of the Press]   casks is gone (Runevik)
+y 56 [The Age of the Press]   docks is gone (Runevik)
+y 56 [The Age of the Press]   mason-stones is gone (Runevik)
+y 56 [The Age of the Press] . temple falls to ruin (Runevik)
+y 56 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Runevik)
+y 56 [The Age of the Press]   weaving-line takes its place in the world (Sagastead)
+y 56 [The Age of the Press] * a line of drying cloth — a people who learned to spin thread and weave; wool and linen dry in the wind (Sagastead)
+y 56 [The Age of the Press]   pottery takes its place in the world (Sagastead)
+y 56 [The Age of the Press] * fired clay pots — the first craft beyond stone and wood, clay shaped and hardened in the kiln (Sagastead)
+y 56 [The Age of the Press]   commons-fire takes its place in the world (Sagastead)
+y 56 [The Age of the Press] * a common fire ring at the heart of the green — where the village gathers when the dark comes (Sagastead)
+y 57 [The Age of the Press]   Eira departs
+y 57 [The Age of the Press]   Ulv is born
+y 57 [The Age of the Press]   green-bench is gone (Halvarhaven)
+y 57 [The Age of the Press]   glass-vessels is gone (Halvarhaven)
+y 57 [The Age of the Press]   granary-store is gone (Halvarhaven)
+y 57 [The Age of the Press]   boat is gone (Halvarhaven)
+y 57 [The Age of the Press] . well falls to ruin (Halvarhaven)
+y 57 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Halvarhaven)
+y 57 [The Age of the Press]   cart is gone (Halvarhaven)
+y 57 [The Age of the Press] . forge falls to ruin (Halvarhaven)
+y 57 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Halvarhaven)
+y 57 [The Age of the Press] . mill falls to ruin (Halvarhaven)
+y 57 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Halvarhaven)
+y 57 [The Age of the Press] * rediscovered — the ruin is raised again (Runevik)
+y 57 [The Age of the Press]   temple takes its place in the world (Runevik)
+y 57 [The Age of the Press] * a temple raised to the sky-faith — the cosmology that began with one soul watching the stars now has a house and a keeper. (Runevik)
+y 57 [The Age of the Press]   mason-stones takes its place in the world (Runevik)
+y 57 [The Age of the Press] * cut and dressed stone blocks — masonry, the knowledge of shaping stone to build things meant to last (Runevik)
+y 57 [The Age of the Press]   docks takes its place in the world (Runevik)
+y 57 [The Age of the Press] * wooden docks reaching into the water — where the hulls are tied and the day's catch comes in (Runevik)
+y 57 [The Age of the Press]   casks takes its place in the world (Runevik)
+y 57 [The Age of the Press] * stores and casks stacked by the wall — a settled village keeps more than it can carry (Runevik)
+y 57 [The Age of the Press]   crates takes its place in the world (Runevik)
+y 57 [The Age of the Press] * crates stacked beside the path — goods waiting to change hands (Runevik)
+y 57 [The Age of the Press] * sails turned to the wind on the hill — grinding grain where no river runs (Runevik)
+y 58 [The Age of the Press]   Liv departs
+y 58 [The Age of the Press]   Disa is born
+y 58 [The Age of the Press]   weaving-line is gone (Sagastead)
+y 59 [The Age of the Press]   weaving-line takes its place in the world (Sagastead)
+y 59 [The Age of the Press] * a line of drying cloth — a people who learned to spin thread and weave; wool and linen dry in the wind (Sagastead)
+y 60 [The Age of the Press]   crates is gone (Runevik)
+y 60 [The Age of the Press] . writing-post falls to ruin (Runevik)
+y 60 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Runevik)
+y 60 [The Age of the Press]   boat takes its place in the world (Sagastead)
+y 60 [The Age of the Press] * a rowboat drawn up at the village edge — a people who learned to build hulls and read the water (Sagastead)
+y 60 [The Age of the Press] * rediscovered — the ruin is raised again (Sagastead)
+y 60 [The Age of the Press]   well takes its place in the world (Sagastead)
+y 60 [The Age of the Press] * a dug well ringed with stone — the village no longer waits on the river for its water (Sagastead)
+y 61 [The Age of the Press]   Orm is born
+y 61 [The Age of the Press]   windmill is gone (Runevik)
+y 61 [The Age of the Press]   casks is gone (Runevik)
+y 61 [The Age of the Press]   docks is gone (Runevik)
+y 61 [The Age of the Press]   mason-stones is gone (Runevik)
+y 61 [The Age of the Press] . temple falls to ruin (Runevik)
+y 61 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Runevik)
+y 61 [The Age of the Press] * rediscovered — the ruin is raised again (Sagastead)
+y 61 [The Age of the Press]   mill takes its place in the world (Sagastead)
+y 61 [The Age of the Press] * the mill — where the village learned to grind grain, famine receded (Sagastead)
+y 61 [The Age of the Press] * rediscovered — the ruin is raised again (Sagastead)
+y 61 [The Age of the Press]   forge takes its place in the world (Sagastead)
+y 61 [The Age of the Press] * the forge — where this people learned to work metal, the smith's fire never fully dies (Sagastead)
+y 61 [The Age of the Press]   cart takes its place in the world (Sagastead)
+y 61 [The Age of the Press] * a handcart — once the wheel was understood, one back could carry what many had before (Sagastead)
+y 61 [The Age of the Press]   granary-store takes its place in the world (Sagastead)
+y 61 [The Age of the Press] * stores of grain in barrels — the people learned to keep a surplus against the hungry season (Sagastead)
+y 61 [The Age of the Press]   glass-vessels takes its place in the world (Sagastead)
+y 61 [The Age of the Press] * clear glass vessels catching the light — the people learned to melt sand into something you can see through (Sagastead)
+y 61 [The Age of the Press]   green-bench takes its place in the world (Sagastead)
+y 61 [The Age of the Press] * a bench by the green — somewhere to sit, and so somewhere to talk (Sagastead)
+y 62 [The Age of the Press]   green-bench is gone (Sagastead)
+y 62 [The Age of the Press]   glass-vessels is gone (Sagastead)
+y 62 [The Age of the Press] . well falls to ruin (Sagastead)
+y 62 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Sagastead)
+y 62 [The Age of the Press]   granary-store is gone (Sagastead)
+y 62 [The Age of the Press]   boat is gone (Sagastead)
+y 62 [The Age of the Press]   cart is gone (Sagastead)
+y 62 [The Age of the Press] . forge falls to ruin (Sagastead)
+y 62 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Sagastead)
+y 62 [The Age of the Press] . mill falls to ruin (Sagastead)
+y 62 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Sagastead)
+y 63 [The Age of the Press]   Eira II is born
+y 63 [The Age of the Press]   Ask II is born
+y 63 [The Age of the Press] . forge falls to ruin (Runevik)
+y 63 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Runevik)
+y 63 [The Age of the Press] . mill falls to ruin (Runevik)
+y 63 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Runevik)
+y 63 [The Age of the Press]   cart is gone (Runevik)
+y 63 [The Age of the Press]   granary-store is gone (Runevik)
+y 63 [The Age of the Press]   glass-vessels is gone (Runevik)
+y 63 [The Age of the Press]   green-bench is gone (Runevik)
+y 63 [The Age of the Press] * rediscovered — the ruin is raised again (Sagastead)
+y 63 [The Age of the Press]   mill takes its place in the world (Sagastead)
+y 63 [The Age of the Press] * the mill — where the village learned to grind grain, famine receded (Sagastead)
+y 63 [The Age of the Press] * rediscovered — the ruin is raised again (Sagastead)
+y 63 [The Age of the Press]   forge takes its place in the world (Sagastead)
+y 63 [The Age of the Press] * the forge — where this people learned to work metal, the smith's fire never fully dies (Sagastead)
+y 63 [The Age of the Press]   boat takes its place in the world (Sagastead)
+y 63 [The Age of the Press] * a rowboat drawn up at the village edge — a people who learned to build hulls and read the water (Sagastead)
+y 63 [The Age of the Press]   cart takes its place in the world (Sagastead)
+y 63 [The Age of the Press] * a handcart — once the wheel was understood, one back could carry what many had before (Sagastead)
+y 63 [The Age of the Press]   granary-store takes its place in the world (Sagastead)
+y 63 [The Age of the Press] * stores of grain in barrels — the people learned to keep a surplus against the hungry season (Sagastead)
+y 63 [The Age of the Press] * rediscovered — the ruin is raised again (Sagastead)
+y 63 [The Age of the Press]   well takes its place in the world (Sagastead)
+y 63 [The Age of the Press] * a dug well ringed with stone — the village no longer waits on the river for its water (Sagastead)
+y 63 [The Age of the Press]   glass-vessels takes its place in the world (Sagastead)
+y 63 [The Age of the Press] * clear glass vessels catching the light — the people learned to melt sand into something you can see through (Sagastead)
+y 63 [The Age of the Press]   green-bench takes its place in the world (Sagastead)
+y 63 [The Age of the Press] * a bench by the green — somewhere to sit, and so somewhere to talk (Sagastead)
+y 64 [The Age of the Press]   boat takes its place in the world (Halvarhaven)
+y 64 [The Age of the Press] * a rowboat drawn up at the village edge — a people who learned to build hulls and read the water (Halvarhaven)
+y 64 [The Age of the Press] * rediscovered — the ruin is raised again (Halvarhaven)
+y 64 [The Age of the Press]   well takes its place in the world (Halvarhaven)
+y 64 [The Age of the Press] * a dug well ringed with stone — the village no longer waits on the river for its water (Halvarhaven)
+y 65 [The Age of the Press]   Embla II is born
+y 65 [The Age of the Press] * rediscovered — the ruin is raised again (Runevik)
+y 65 [The Age of the Press]   mill takes its place in the world (Runevik)
+y 65 [The Age of the Press] * the mill — where the village learned to grind grain, famine receded (Runevik)
+y 65 [The Age of the Press] * rediscovered — the ruin is raised again (Runevik)
+y 65 [The Age of the Press]   forge takes its place in the world (Runevik)
+y 65 [The Age of the Press] * the forge — where this people learned to work metal, the smith's fire never fully dies (Runevik)
+y 65 [The Age of the Press]   cart takes its place in the world (Runevik)
+y 65 [The Age of the Press] * a handcart — once the wheel was understood, one back could carry what many had before (Runevik)
+y 65 [The Age of the Press]   granary-store takes its place in the world (Runevik)
+y 65 [The Age of the Press] * stores of grain in barrels — the people learned to keep a surplus against the hungry season (Runevik)
+y 65 [The Age of the Press]   glass-vessels takes its place in the world (Runevik)
+y 65 [The Age of the Press] * clear glass vessels catching the light — the people learned to melt sand into something you can see through (Runevik)
+y 65 [The Age of the Press]   green-bench takes its place in the world (Runevik)
+y 65 [The Age of the Press] * a bench by the green — somewhere to sit, and so somewhere to talk (Runevik)
+y 66 [The Age of the Press]   Torv II is born
+y 66 [The Age of the Press] . forge falls to ruin (Halvarhaven)
+y 66 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Halvarhaven)
+y 66 [The Age of the Press] . mill falls to ruin (Halvarhaven)
+y 66 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Halvarhaven)
+y 66 [The Age of the Press]   weaving-line is gone (Sagastead)
+y 66 [The Age of the Press]   glass-vessels is gone (Sagastead)
+y 66 [The Age of the Press] . well falls to ruin (Sagastead)
+y 66 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Sagastead)
+y 66 [The Age of the Press]   granary-store is gone (Sagastead)
+y 66 [The Age of the Press]   cart is gone (Sagastead)
+y 66 [The Age of the Press]   boat is gone (Sagastead)
+y 66 [The Age of the Press]   green-bench is gone (Sagastead)
+y 67 [The Age of the Press]   Liv II is born
+y 67 [The Age of the Press] * rediscovered — the ruin is raised again (Sagastead)
+y 67 [The Age of the Press]   mill takes its place in the world (Sagastead)
+y 67 [The Age of the Press] * the mill — where the village learned to grind grain, famine receded (Sagastead)
+y 67 [The Age of the Press] * rediscovered — the ruin is raised again (Sagastead)
+y 67 [The Age of the Press]   forge takes its place in the world (Sagastead)
+y 67 [The Age of the Press] * the forge — where this people learned to work metal, the smith's fire never fully dies (Sagastead)
+y 67 [The Age of the Press]   boat takes its place in the world (Sagastead)
+y 67 [The Age of the Press] * a rowboat drawn up at the village edge — a people who learned to build hulls and read the water (Sagastead)
+y 67 [The Age of the Press]   cart takes its place in the world (Sagastead)
+y 67 [The Age of the Press] * a handcart — once the wheel was understood, one back could carry what many had before (Sagastead)
+y 67 [The Age of the Press]   weaving-line takes its place in the world (Sagastead)
+y 67 [The Age of the Press] * a line of drying cloth — a people who learned to spin thread and weave; wool and linen dry in the wind (Sagastead)
+y 67 [The Age of the Press]   granary-store takes its place in the world (Sagastead)
+y 67 [The Age of the Press] * stores of grain in barrels — the people learned to keep a surplus against the hungry season (Sagastead)
+y 67 [The Age of the Press] * rediscovered — the ruin is raised again (Sagastead)
+y 67 [The Age of the Press]   well takes its place in the world (Sagastead)
+y 67 [The Age of the Press] * a dug well ringed with stone — the village no longer waits on the river for its water (Sagastead)
+y 67 [The Age of the Press]   glass-vessels takes its place in the world (Sagastead)
+y 67 [The Age of the Press] * clear glass vessels catching the light — the people learned to melt sand into something you can see through (Sagastead)
+y 67 [The Age of the Press]   green-bench takes its place in the world (Sagastead)
+y 67 [The Age of the Press] * a bench by the green — somewhere to sit, and so somewhere to talk (Sagastead)
+y 67 [The Age of the Press] * rediscovered — the ruin is raised again (Runevik)
+y 67 [The Age of the Press]   temple takes its place in the world (Runevik)
+y 67 [The Age of the Press] * a temple raised to the sky-faith — the cosmology that began with one soul watching the stars now has a house and a keeper. (Runevik)
+y 67 [The Age of the Press]   mason-stones takes its place in the world (Runevik)
+y 67 [The Age of the Press] * cut and dressed stone blocks — masonry, the knowledge of shaping stone to build things meant to last (Runevik)
+y 67 [The Age of the Press]   docks takes its place in the world (Runevik)
+y 67 [The Age of the Press] * wooden docks reaching into the water — where the hulls are tied and the day's catch comes in (Runevik)
+y 67 [The Age of the Press]   casks takes its place in the world (Runevik)
+y 67 [The Age of the Press] * stores and casks stacked by the wall — a settled village keeps more than it can carry (Runevik)
+y 67 [The Age of the Press] * sails turned to the wind on the hill — grinding grain where no river runs (Runevik)
+y 68 [The Age of the Press]   Sten II is born
+y 68 [The Age of the Press]   Ylva II is born
+y 68 [The Age of the Press]   a hut is raised
+y 68 [The Age of the Press]   windmill is gone (Runevik)
+y 68 [The Age of the Press]   casks is gone (Runevik)
+y 68 [The Age of the Press]   docks is gone (Runevik)
+y 68 [The Age of the Press]   mason-stones is gone (Runevik)
+y 68 [The Age of the Press] . temple falls to ruin (Runevik)
+y 68 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Runevik)
+y 68 [The Age of the Press] * rediscovered — the ruin is raised again (Halvarhaven)
+y 68 [The Age of the Press]   mill takes its place in the world (Halvarhaven)
+y 68 [The Age of the Press] * the mill — where the village learned to grind grain, famine receded (Halvarhaven)
+y 68 [The Age of the Press]   temple takes its place in the world (Halvarhaven)
+y 68 [The Age of the Press] * a temple raised to the sky-faith — the cosmology that began with one soul watching the stars now has a house and a keeper. (Halvarhaven)
+y 68 [The Age of the Press] * rediscovered — the ruin is raised again (Halvarhaven)
+y 68 [The Age of the Press]   forge takes its place in the world (Halvarhaven)
+y 68 [The Age of the Press] * the forge — where this people learned to work metal, the smith's fire never fully dies (Halvarhaven)
+y 68 [The Age of the Press]   cart takes its place in the world (Halvarhaven)
+y 68 [The Age of the Press] * a handcart — once the wheel was understood, one back could carry what many had before (Halvarhaven)
+y 68 [The Age of the Press]   granary-store takes its place in the world (Halvarhaven)
+y 68 [The Age of the Press] * stores of grain in barrels — the people learned to keep a surplus against the hungry season (Halvarhaven)
+y 68 [The Age of the Press]   mason-stones takes its place in the world (Halvarhaven)
+y 68 [The Age of the Press] * cut and dressed stone blocks — masonry, the knowledge of shaping stone to build things meant to last (Halvarhaven)
+y 68 [The Age of the Press]   docks takes its place in the world (Halvarhaven)
+y 68 [The Age of the Press] * wooden docks reaching into the water — where the hulls are tied and the day's catch comes in (Halvarhaven)
+y 68 [The Age of the Press]   glass-vessels takes its place in the world (Halvarhaven)
+y 68 [The Age of the Press] * clear glass vessels catching the light — the people learned to melt sand into something you can see through (Halvarhaven)
+y 68 [The Age of the Press]   casks takes its place in the world (Halvarhaven)
+y 68 [The Age of the Press] * stores and casks stacked by the wall — a settled village keeps more than it can carry (Halvarhaven)
+y 68 [The Age of the Press]   green-bench takes its place in the world (Halvarhaven)
+y 68 [The Age of the Press] * a bench by the green — somewhere to sit, and so somewhere to talk (Halvarhaven)
+y 68 [The Age of the Press] * sails turned to the wind on the hill — grinding grain where no river runs (Halvarhaven)
+y 69 [The Age of the Press]   Bjorn II is born
+y 69 [The Age of the Press]   green-bench is gone (Sagastead)
+y 69 [The Age of the Press]   glass-vessels is gone (Sagastead)
+y 69 [The Age of the Press] . well falls to ruin (Sagastead)
+y 69 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Sagastead)
+y 69 [The Age of the Press]   granary-store is gone (Sagastead)
+y 69 [The Age of the Press]   cart is gone (Sagastead)
+y 69 [The Age of the Press]   boat is gone (Sagastead)
+y 69 [The Age of the Press] . forge falls to ruin (Sagastead)
+y 69 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Sagastead)
+y 69 [The Age of the Press] . mill falls to ruin (Sagastead)
+y 69 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Sagastead)
+y 69 [The Age of the Press]   market takes its place in the world (Halvarhaven)
+y 69 [The Age of the Press] * a market stall — where enough hands and crafts gather in one place, goods begin to change hands (Halvarhaven)
+y 69 [The Age of the Press]   crates takes its place in the world (Halvarhaven)
+y 69 [The Age of the Press] * crates stacked beside the path — goods waiting to change hands (Halvarhaven)
+y 70 [The Age of the Press]   Ylva departs
+y 70 [The Age of the Press]   Saga departs
+y 70 [The Age of the Press]   market is gone (Halvarhaven)
+y 71 [The Age of the Press]   Saga II is born
+y 71 [The Age of the Press]   Rune II is born
+y 71 [The Age of the Press]   commons-fire is gone (Sagastead)
+y 71 [The Age of the Press]   pottery is gone (Sagastead)
+y 71 [The Age of the Press]   weaving-line is gone (Sagastead)
+y 72 [The Age of the Press] . Rune II gives — the gift itself binds
+y 72 [The Age of the Press]   mason-stones is gone (Halvarhaven)
+y 72 [The Age of the Press] . temple falls to ruin (Halvarhaven)
+y 72 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Halvarhaven)
+y 72 [The Age of the Press]   crates is gone (Halvarhaven)
+y 72 [The Age of the Press]   docks is gone (Halvarhaven)
+y 72 [The Age of the Press]   casks is gone (Halvarhaven)
+y 72 [The Age of the Press]   windmill is gone (Halvarhaven)
+y 72 [The Age of the Press]   boat takes its place in the world (Sagastead)
+y 72 [The Age of the Press] * a rowboat drawn up at the village edge — a people who learned to build hulls and read the water (Sagastead)
+y 72 [The Age of the Press]   weaving-line takes its place in the world (Sagastead)
+y 72 [The Age of the Press] * a line of drying cloth — a people who learned to spin thread and weave; wool and linen dry in the wind (Sagastead)
+y 72 [The Age of the Press]   pottery takes its place in the world (Sagastead)
+y 72 [The Age of the Press] * fired clay pots — the first craft beyond stone and wood, clay shaped and hardened in the kiln (Sagastead)
+y 72 [The Age of the Press] * rediscovered — the ruin is raised again (Sagastead)
+y 72 [The Age of the Press]   well takes its place in the world (Sagastead)
+y 72 [The Age of the Press] * a dug well ringed with stone — the village no longer waits on the river for its water (Sagastead)
+y 72 [The Age of the Press]   commons-fire takes its place in the world (Sagastead)
+y 72 [The Age of the Press] * a common fire ring at the heart of the green — where the village gathers when the dark comes (Sagastead)
+y 73 [The Age of the Press]   Bjorn departs
+y 73 [The Age of the Press]   Freja II is born
+y 73 [The Age of the Press]   Kare II is born
+y 73 [The Age of the Press] * rediscovered — the ruin is raised again (Sagastead)
+y 73 [The Age of the Press]   mill takes its place in the world (Sagastead)
+y 73 [The Age of the Press] * the mill — where the village learned to grind grain, famine receded (Sagastead)
+y 73 [The Age of the Press]   market takes its place in the world (Sagastead)
+y 73 [The Age of the Press] * a market stall — where enough hands and crafts gather in one place, goods begin to change hands (Sagastead)
+y 73 [The Age of the Press] * rediscovered — the ruin is raised again (Sagastead)
+y 73 [The Age of the Press]   temple takes its place in the world (Sagastead)
+y 73 [The Age of the Press] * a temple raised to the sky-faith — the cosmology that began with one soul watching the stars now has a house and a keeper. (Sagastead)
+y 73 [The Age of the Press] * rediscovered — the ruin is raised again (Sagastead)
+y 73 [The Age of the Press]   forge takes its place in the world (Sagastead)
+y 73 [The Age of the Press] * the forge — where this people learned to work metal, the smith's fire never fully dies (Sagastead)
+y 73 [The Age of the Press]   cart takes its place in the world (Sagastead)
+y 73 [The Age of the Press] * a handcart — once the wheel was understood, one back could carry what many had before (Sagastead)
+y 73 [The Age of the Press]   granary-store takes its place in the world (Sagastead)
+y 73 [The Age of the Press] * stores of grain in barrels — the people learned to keep a surplus against the hungry season (Sagastead)
+y 73 [The Age of the Press]   mason-stones takes its place in the world (Sagastead)
+y 73 [The Age of the Press] * cut and dressed stone blocks — masonry, the knowledge of shaping stone to build things meant to last (Sagastead)
+y 73 [The Age of the Press]   docks takes its place in the world (Sagastead)
+y 73 [The Age of the Press] * wooden docks reaching into the water — where the hulls are tied and the day's catch comes in (Sagastead)
+y 73 [The Age of the Press]   glass-vessels takes its place in the world (Sagastead)
+y 73 [The Age of the Press] * clear glass vessels catching the light — the people learned to melt sand into something you can see through (Sagastead)
+y 73 [The Age of the Press]   casks takes its place in the world (Sagastead)
+y 73 [The Age of the Press] * stores and casks stacked by the wall — a settled village keeps more than it can carry (Sagastead)
+y 73 [The Age of the Press]   crates takes its place in the world (Sagastead)
+y 73 [The Age of the Press] * crates stacked beside the path — goods waiting to change hands (Sagastead)
+y 73 [The Age of the Press]   green-bench takes its place in the world (Sagastead)
+y 73 [The Age of the Press] * a bench by the green — somewhere to sit, and so somewhere to talk (Sagastead)
+y 73 [The Age of the Press] * sails turned to the wind on the hill — grinding grain where no river runs (Sagastead)
+y 73 [The Age of the Press] . the people begin to listen when Freja speaks (Sagastead)
+y 74 [The Age of the Press]   Idun II is born
+y 74 [The Age of the Press]   market is gone (Sagastead)
+y 74 [The Age of the Press]   crates is gone (Sagastead)
+y 74 [The Age of the Press] * rediscovered — the ruin is raised again (Halvarhaven)
+y 74 [The Age of the Press]   temple takes its place in the world (Halvarhaven)
+y 74 [The Age of the Press] * a temple raised to the sky-faith — the cosmology that began with one soul watching the stars now has a house and a keeper. (Halvarhaven)
+y 74 [The Age of the Press]   mason-stones takes its place in the world (Halvarhaven)
+y 74 [The Age of the Press] * cut and dressed stone blocks — masonry, the knowledge of shaping stone to build things meant to last (Halvarhaven)
+y 74 [The Age of the Press]   docks takes its place in the world (Halvarhaven)
+y 74 [The Age of the Press] * wooden docks reaching into the water — where the hulls are tied and the day's catch comes in (Halvarhaven)
+y 74 [The Age of the Press]   casks takes its place in the world (Halvarhaven)
+y 74 [The Age of the Press] * stores and casks stacked by the wall — a settled village keeps more than it can carry (Halvarhaven)
+y 74 [The Age of the Press] * sails turned to the wind on the hill — grinding grain where no river runs (Halvarhaven)
+y 75 [The Age of the Press]   casks is gone (Halvarhaven)
+y 75 [The Age of the Press]   docks is gone (Halvarhaven)
+y 75 [The Age of the Press]   mason-stones is gone (Halvarhaven)
+y 75 [The Age of the Press] . temple falls to ruin (Halvarhaven)
+y 75 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Halvarhaven)
+y 75 [The Age of the Press]   windmill is gone (Halvarhaven)
+y 76 [The Age of the Press]   Halvar II is born
+y 76 [The Age of the Press]   Signe II is born
+y 76 [The Age of the Press]   glass-vessels is gone (Runevik)
+y 76 [The Age of the Press]   granary-store is gone (Runevik)
+y 76 [The Age of the Press]   green-bench is gone (Runevik)
+y 76 [The Age of the Press]   cart is gone (Runevik)
+y 76 [The Age of the Press] . forge falls to ruin (Runevik)
+y 76 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Runevik)
+y 76 [The Age of the Press] . mill falls to ruin (Runevik)
+y 76 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Runevik)
+y 76 [The Age of the Press] * rediscovered — the ruin is raised again (Halvarhaven)
+y 76 [The Age of the Press]   temple takes its place in the world (Halvarhaven)
+y 76 [The Age of the Press] * a temple raised to the sky-faith — the cosmology that began with one soul watching the stars now has a house and a keeper. (Halvarhaven)
+y 76 [The Age of the Press]   mason-stones takes its place in the world (Halvarhaven)
+y 76 [The Age of the Press] * cut and dressed stone blocks — masonry, the knowledge of shaping stone to build things meant to last (Halvarhaven)
+y 76 [The Age of the Press]   docks takes its place in the world (Halvarhaven)
+y 76 [The Age of the Press] * wooden docks reaching into the water — where the hulls are tied and the day's catch comes in (Halvarhaven)
+y 76 [The Age of the Press]   casks takes its place in the world (Halvarhaven)
+y 76 [The Age of the Press] * stores and casks stacked by the wall — a settled village keeps more than it can carry (Halvarhaven)
+y 76 [The Age of the Press] * sails turned to the wind on the hill — grinding grain where no river runs (Halvarhaven)
+y 77 [The Age of the Press]   Vidar II is born
+y 77 [The Age of the Press]   crates takes its place in the world (Sagastead)
+y 77 [The Age of the Press] * crates stacked beside the path — goods waiting to change hands (Sagastead)
+y 77 [The Age of the Press] * rediscovered — the ruin is raised again (Runevik)
+y 77 [The Age of the Press]   mill takes its place in the world (Runevik)
+y 77 [The Age of the Press] * the mill — where the village learned to grind grain, famine receded (Runevik)
+y 77 [The Age of the Press] * rediscovered — the ruin is raised again (Runevik)
+y 77 [The Age of the Press]   forge takes its place in the world (Runevik)
+y 77 [The Age of the Press] * the forge — where this people learned to work metal, the smith's fire never fully dies (Runevik)
+y 77 [The Age of the Press]   cart takes its place in the world (Runevik)
+y 77 [The Age of the Press] * a handcart — once the wheel was understood, one back could carry what many had before (Runevik)
+y 77 [The Age of the Press]   granary-store takes its place in the world (Runevik)
+y 77 [The Age of the Press] * stores of grain in barrels — the people learned to keep a surplus against the hungry season (Runevik)
+y 77 [The Age of the Press]   glass-vessels takes its place in the world (Runevik)
+y 77 [The Age of the Press] * clear glass vessels catching the light — the people learned to melt sand into something you can see through (Runevik)
+y 77 [The Age of the Press]   green-bench takes its place in the world (Runevik)
+y 77 [The Age of the Press] * a bench by the green — somewhere to sit, and so somewhere to talk (Runevik)
+y 78 [The Age of the Press]   Ulv departs
+y 78 [The Age of the Press]   crates is gone (Sagastead)
+y 78 [The Age of the Press]   windmill is gone (Halvarhaven)
+y 78 [The Age of the Press]   casks is gone (Halvarhaven)
+y 78 [The Age of the Press]   docks is gone (Halvarhaven)
+y 78 [The Age of the Press] . temple falls to ruin (Sagastead)
+y 78 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Sagastead)
+y 78 [The Age of the Press]   mason-stones is gone (Halvarhaven)
+y 78 [The Age of the Press]   granary-store is gone (Halvarhaven)
+y 78 [The Age of the Press]   cart is gone (Halvarhaven)
+y 78 [The Age of the Press] . forge falls to ruin (Halvarhaven)
+y 78 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Halvarhaven)
+y 78 [The Age of the Press] . mill falls to ruin (Halvarhaven)
+y 78 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Halvarhaven)
+y 78 [The Age of the Press]   glass-vessels is gone (Halvarhaven)
+y 78 [The Age of the Press]   green-bench is gone (Halvarhaven)
+y 79 [The Age of the Press] * Orm sets upon another's stores — a raid
+y 79 [The Age of the Press] . Ylva II gives — the gift itself binds
+y 79 [The Age of the Press]   Tuva II is born
+y 79 [The Age of the Press]   cart is gone (Sagastead)
+y 79 [The Age of the Press] . forge falls to ruin (Sagastead)
+y 79 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Sagastead)
+y 79 [The Age of the Press] . mill falls to ruin (Sagastead)
+y 79 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Sagastead)
+y 79 [The Age of the Press]   glass-vessels is gone (Sagastead)
+y 79 [The Age of the Press]   granary-store is gone (Sagastead)
+y 79 [The Age of the Press]   green-bench is gone (Sagastead)
+y 79 [The Age of the Press] * rediscovered — the ruin is raised again (Halvarhaven)
+y 79 [The Age of the Press]   mill takes its place in the world (Halvarhaven)
+y 79 [The Age of the Press] * the mill — where the village learned to grind grain, famine receded (Halvarhaven)
+y 79 [The Age of the Press] * rediscovered — the ruin is raised again (Halvarhaven)
+y 79 [The Age of the Press]   forge takes its place in the world (Halvarhaven)
+y 79 [The Age of the Press] * the forge — where this people learned to work metal, the smith's fire never fully dies (Halvarhaven)
+y 79 [The Age of the Press]   cart takes its place in the world (Halvarhaven)
+y 79 [The Age of the Press] * a handcart — once the wheel was understood, one back could carry what many had before (Halvarhaven)
+y 79 [The Age of the Press]   granary-store takes its place in the world (Halvarhaven)
+y 79 [The Age of the Press] * stores of grain in barrels — the people learned to keep a surplus against the hungry season (Halvarhaven)
+y 79 [The Age of the Press]   glass-vessels takes its place in the world (Halvarhaven)
+y 79 [The Age of the Press] * clear glass vessels catching the light — the people learned to melt sand into something you can see through (Halvarhaven)
+y 79 [The Age of the Press]   green-bench takes its place in the world (Halvarhaven)
+y 79 [The Age of the Press] * a bench by the green — somewhere to sit, and so somewhere to talk (Halvarhaven)
+y 80 [The Age of the Press]   Alve II is born
+y 80 [The Age of the Press] * rediscovered — the ruin is raised again (Sagastead)
+y 80 [The Age of the Press]   mill takes its place in the world (Sagastead)
+y 80 [The Age of the Press] * the mill — where the village learned to grind grain, famine receded (Sagastead)
+y 80 [The Age of the Press] * rediscovered — the ruin is raised again (Sagastead)
+y 80 [The Age of the Press]   forge takes its place in the world (Sagastead)
+y 80 [The Age of the Press] * the forge — where this people learned to work metal, the smith's fire never fully dies (Sagastead)
+y 80 [The Age of the Press]   cart takes its place in the world (Sagastead)
+y 80 [The Age of the Press] * a handcart — once the wheel was understood, one back could carry what many had before (Sagastead)
+y 80 [The Age of the Press]   granary-store takes its place in the world (Sagastead)
+y 80 [The Age of the Press] * stores of grain in barrels — the people learned to keep a surplus against the hungry season (Sagastead)
+y 80 [The Age of the Press]   glass-vessels takes its place in the world (Sagastead)
+y 80 [The Age of the Press] * clear glass vessels catching the light — the people learned to melt sand into something you can see through (Sagastead)
+y 80 [The Age of the Press]   green-bench takes its place in the world (Sagastead)
+y 80 [The Age of the Press] * a bench by the green — somewhere to sit, and so somewhere to talk (Sagastead)
+y 80 [The Age of the Press] * rediscovered — the ruin is raised again (Halvarhaven)
+y 80 [The Age of the Press]   temple takes its place in the world (Halvarhaven)
+y 80 [The Age of the Press] * a temple raised to the sky-faith — the cosmology that began with one soul watching the stars now has a house and a keeper. (Halvarhaven)
+y 80 [The Age of the Press]   mason-stones takes its place in the world (Halvarhaven)
+y 80 [The Age of the Press] * cut and dressed stone blocks — masonry, the knowledge of shaping stone to build things meant to last (Halvarhaven)
+y 80 [The Age of the Press]   docks takes its place in the world (Halvarhaven)
+y 80 [The Age of the Press] * wooden docks reaching into the water — where the hulls are tied and the day's catch comes in (Halvarhaven)
+y 80 [The Age of the Press]   casks takes its place in the world (Halvarhaven)
+y 80 [The Age of the Press] * stores and casks stacked by the wall — a settled village keeps more than it can carry (Halvarhaven)
+y 80 [The Age of the Press]   crates takes its place in the world (Halvarhaven)
+y 80 [The Age of the Press] * crates stacked beside the path — goods waiting to change hands (Halvarhaven)
+y 80 [The Age of the Press] * sails turned to the wind on the hill — grinding grain where no river runs (Halvarhaven)
+y 81 [The Age of the Press] . Idun gives — the gift itself binds
+y 81 [The Age of the Press]   Ronja II is born
+y 81 [The Age of the Press]   Sixten II is born
+y 81 [The Age of the Press]   Maja II is born
+y 81 [The Age of the Press]   crates is gone (Halvarhaven)
+y 82 [The Age of the Press]   a hut is raised
+y 82 [The Age of the Press]   windmill is gone (Halvarhaven)
+y 82 [The Age of the Press]   casks is gone (Halvarhaven)
+y 82 [The Age of the Press]   docks is gone (Halvarhaven)
+y 82 [The Age of the Press]   mason-stones is gone (Halvarhaven)
+y 82 [The Age of the Press] . temple falls to ruin (Halvarhaven)
+y 82 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Halvarhaven)
+y 82 [The Age of the Press]   market takes its place in the world (Sagastead)
+y 82 [The Age of the Press] * a market stall — where enough hands and crafts gather in one place, goods begin to change hands (Sagastead)
+y 82 [The Age of the Press] * rediscovered — the ruin is raised again (Sagastead)
+y 82 [The Age of the Press]   temple takes its place in the world (Sagastead)
+y 82 [The Age of the Press] * a temple raised to the sky-faith — the cosmology that began with one soul watching the stars now has a house and a keeper. (Sagastead)
+y 82 [The Age of the Press]   mason-stones takes its place in the world (Sagastead)
+y 82 [The Age of the Press] * cut and dressed stone blocks — masonry, the knowledge of shaping stone to build things meant to last (Sagastead)
+y 82 [The Age of the Press]   docks takes its place in the world (Sagastead)
+y 82 [The Age of the Press] * wooden docks reaching into the water — where the hulls are tied and the day's catch comes in (Sagastead)
+y 82 [The Age of the Press]   casks takes its place in the world (Sagastead)
+y 82 [The Age of the Press] * stores and casks stacked by the wall — a settled village keeps more than it can carry (Sagastead)
+y 82 [The Age of the Press]   crates takes its place in the world (Sagastead)
+y 82 [The Age of the Press] * crates stacked beside the path — goods waiting to change hands (Sagastead)
+y 82 [The Age of the Press] * sails turned to the wind on the hill — grinding grain where no river runs (Sagastead)
+y 82 [The Age of the Press] . the people begin to listen when Rune speaks (Runevik)
+y 83 [The Age of the Press]   a hut is raised
+y 83 [The Age of the Press]   market is gone (Sagastead)
+y 84 [The Age of the Press]   Loke II is born
+y 84 [The Age of the Press]   Vera II is born
+y 84 [The Age of the Press]   crates is gone (Sagastead)
+y 84 [The Age of the Press] * rediscovered — the ruin is raised again (Halvarhaven)
+y 84 [The Age of the Press]   temple takes its place in the world (Halvarhaven)
+y 84 [The Age of the Press] * a temple raised to the sky-faith — the cosmology that began with one soul watching the stars now has a house and a keeper. (Halvarhaven)
+y 84 [The Age of the Press]   mason-stones takes its place in the world (Halvarhaven)
+y 84 [The Age of the Press] * cut and dressed stone blocks — masonry, the knowledge of shaping stone to build things meant to last (Halvarhaven)
+y 84 [The Age of the Press]   docks takes its place in the world (Halvarhaven)
+y 84 [The Age of the Press] * wooden docks reaching into the water — where the hulls are tied and the day's catch comes in (Halvarhaven)
+y 84 [The Age of the Press]   casks takes its place in the world (Halvarhaven)
+y 84 [The Age of the Press] * stores and casks stacked by the wall — a settled village keeps more than it can carry (Halvarhaven)
+y 84 [The Age of the Press] * sails turned to the wind on the hill — grinding grain where no river runs (Halvarhaven)
+y 85 [The Age of the Press]   Sten departs
+y 85 [The Age of the Press]   Kare departs
+y 85 [The Age of the Press]   Otto II is born
+y 85 [The Age of the Press]   Selma II is born
+y 85 [The Age of the Press]   glass-vessels is gone (Runevik)
+y 85 [The Age of the Press]   windmill is gone (Halvarhaven)
+y 85 [The Age of the Press]   granary-store is gone (Runevik)
+y 85 [The Age of the Press]   casks is gone (Halvarhaven)
+y 85 [The Age of the Press]   mason-stones is gone (Halvarhaven)
+y 85 [The Age of the Press] . temple falls to ruin (Halvarhaven)
+y 85 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Halvarhaven)
+y 85 [The Age of the Press]   docks is gone (Sagastead)
+y 85 [The Age of the Press]   cart is gone (Runevik)
+y 85 [The Age of the Press] . forge falls to ruin (Runevik)
+y 85 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Runevik)
+y 85 [The Age of the Press] . mill falls to ruin (Runevik)
+y 85 [The Age of the Press] * the knowledge was lost — where it stood, only a ruin remains (Runevik)
+y 85 [The Age of the Press]   green-bench is gone (Runevik)
+y 86 [The Age of Mills]   Falk II is born
+y 86 [The Age of Mills]   a hut is raised
+y 86 [The Age of Mills]   green-bench is gone (Halvarhaven)
+y 86 [The Age of Mills]   glass-vessels is gone (Halvarhaven)
+y 86 [The Age of Mills]   granary-store is gone (Halvarhaven)
+y 86 [The Age of Mills]   cart is gone (Halvarhaven)
+y 86 [The Age of Mills] . forge falls to ruin (Halvarhaven)
+y 86 [The Age of Mills] * the knowledge was lost — where it stood, only a ruin remains (Halvarhaven)
+y 86 [The Age of Mills] . mill falls to ruin (Halvarhaven)
+y 86 [The Age of Mills] * the knowledge was lost — where it stood, only a ruin remains (Halvarhaven)
+y 86 [The Age of Mills] * rediscovered — the ruin is raised again (Sagastead)
+y 86 [The Age of Mills]   temple takes its place in the world (Sagastead)
+y 86 [The Age of Mills] * a temple raised to the sky-faith — the cosmology that began with one soul watching the stars now has a house and a keeper. (Sagastead)
+y 86 [The Age of Mills]   mason-stones takes its place in the world (Sagastead)
+y 86 [The Age of Mills] * cut and dressed stone blocks — masonry, the knowledge of shaping stone to build things meant to last (Sagastead)
+y 86 [The Age of Mills]   docks takes its place in the world (Sagastead)
+y 86 [The Age of Mills] * wooden docks reaching into the water — where the hulls are tied and the day's catch comes in (Sagastead)
+y 86 [The Age of Mills]   casks takes its place in the world (Sagastead)
+y 86 [The Age of Mills] * stores and casks stacked by the wall — a settled village keeps more than it can carry (Sagastead)
+y 86 [The Age of Mills] * sails turned to the wind on the hill — grinding grain where no river runs (Sagastead)
+y 86 [The Age of Mills]   mill takes its place in the world (Ylvahaven)
+y 86 [The Age of Mills] * the mill — where the village learned to grind grain, famine receded (Ylvahaven)
+y 86 [The Age of Mills]   market takes its place in the world (Ylvahaven)
+y 86 [The Age of Mills] * a market stall — where enough hands and crafts gather in one place, goods begin to change hands (Ylvahaven)
+y 86 [The Age of Mills]   manor takes its place in the world (Ylvahaven)
+y 86 [The Age of Mills] * a fine great-house set apart — where a family's fortune outgrew its neighbours', the first inequality takes shape in timber and stone. (Ylvahaven)
+y 86 [The Age of Mills]   forge takes its place in the world (Ylvahaven)
+y 86 [The Age of Mills] * the forge — where this people learned to work metal, the smith's fire never fully dies (Ylvahaven)
+y 86 [The Age of Mills]   boat takes its place in the world (Ylvahaven)
+y 86 [The Age of Mills] * a rowboat drawn up at the village edge — a people who learned to build hulls and read the water (Ylvahaven)
+y 86 [The Age of Mills]   cart takes its place in the world (Ylvahaven)
+y 86 [The Age of Mills] * a handcart — once the wheel was understood, one back could carry what many had before (Ylvahaven)
+y 86 [The Age of Mills]   weaving-line takes its place in the world (Ylvahaven)
+y 86 [The Age of Mills] * a line of drying cloth — a people who learned to spin thread and weave; wool and linen dry in the wind (Ylvahaven)
+y 86 [The Age of Mills]   granary-store takes its place in the world (Ylvahaven)
+y 86 [The Age of Mills] * stores of grain in barrels — the people learned to keep a surplus against the hungry season (Ylvahaven)
+y 86 [The Age of Mills]   pottery takes its place in the world (Ylvahaven)
+y 86 [The Age of Mills] * fired clay pots — the first craft beyond stone and wood, clay shaped and hardened in the kiln (Ylvahaven)
+y 86 [The Age of Mills]   well takes its place in the world (Ylvahaven)
+y 86 [The Age of Mills] * a dug well ringed with stone — the village no longer waits on the river for its water (Ylvahaven)
+y 86 [The Age of Mills]   glass-vessels takes its place in the world (Ylvahaven)
+y 86 [The Age of Mills] * clear glass vessels catching the light — the people learned to melt sand into something you can see through (Ylvahaven)
+y 86 [The Age of Mills]   statue takes its place in the world (Ylvahaven)
+y 86 [The Age of Mills] * a carved statue on the green — a people with hands to spare for beauty, and someone worth remembering in stone (Ylvahaven)
+y 86 [The Age of Mills]   crates takes its place in the world (Ylvahaven)
+y 86 [The Age of Mills] * crates stacked beside the path — goods waiting to change hands (Ylvahaven)
+y 86 [The Age of Mills]   green-bench takes its place in the world (Ylvahaven)
+y 86 [The Age of Mills] * a bench by the green — somewhere to sit, and so somewhere to talk (Ylvahaven)
+y 86 [The Age of Mills]   commons-fire takes its place in the world (Ylvahaven)
+y 86 [The Age of Mills] * a common fire ring at the heart of the green — where the village gathers when the dark comes (Ylvahaven)
+y 87 [The Age of Mills]   Nanna II is born
+y 87 [The Age of Mills]   Ulv II is born
+y 87 [The Age of Mills]   crates takes its place in the world (Sagastead)
+y 87 [The Age of Mills] * crates stacked beside the path — goods waiting to change hands (Sagastead)
+y 87 [The Age of Mills] * rediscovered — the ruin is raised again (Halvarhaven)
+y 87 [The Age of Mills]   mill takes its place in the world (Halvarhaven)
+y 87 [The Age of Mills] * the mill — where the village learned to grind grain, famine receded (Halvarhaven)
+y 87 [The Age of Mills] * rediscovered — the ruin is raised again (Halvarhaven)
+y 87 [The Age of Mills]   forge takes its place in the world (Halvarhaven)
+y 87 [The Age of Mills] * the forge — where this people learned to work metal, the smith's fire never fully dies (Halvarhaven)
+y 87 [The Age of Mills]   cart takes its place in the world (Halvarhaven)
+y 87 [The Age of Mills] * a handcart — once the wheel was understood, one back could carry what many had before (Halvarhaven)
+y 87 [The Age of Mills]   granary-store takes its place in the world (Halvarhaven)
+y 87 [The Age of Mills] * stores of grain in barrels — the people learned to keep a surplus against the hungry season (Halvarhaven)
+y 87 [The Age of Mills]   glass-vessels takes its place in the world (Halvarhaven)
+y 87 [The Age of Mills] * clear glass vessels catching the light — the people learned to melt sand into something you can see through (Halvarhaven)
+y 87 [The Age of Mills]   green-bench takes its place in the world (Halvarhaven)
+y 87 [The Age of Mills] * a bench by the green — somewhere to sit, and so somewhere to talk (Halvarhaven)
+y 88 [The Age of Mills]   Vidar departs
+y 88 [The Age of Mills]   Disa II is born
+y 88 [The Age of Mills] * rediscovered — the ruin is raised again (Runevik)
+y 88 [The Age of Mills]   mill takes its place in the world (Runevik)
+y 88 [The Age of Mills] * the mill — where the village learned to grind grain, famine receded (Runevik)
+y 88 [The Age of Mills] * rediscovered — the ruin is raised again (Runevik)
+y 88 [The Age of Mills]   forge takes its place in the world (Runevik)
+y 88 [The Age of Mills] * the forge — where this people learned to work metal, the smith's fire never fully dies (Runevik)
+y 88 [The Age of Mills]   cart takes its place in the world (Runevik)
+y 88 [The Age of Mills] * a handcart — once the wheel was understood, one back could carry what many had before (Runevik)
+y 88 [The Age of Mills]   granary-store takes its place in the world (Runevik)
+y 88 [The Age of Mills] * stores of grain in barrels — the people learned to keep a surplus against the hungry season (Runevik)
+y 88 [The Age of Mills]   glass-vessels takes its place in the world (Runevik)
+y 88 [The Age of Mills] * clear glass vessels catching the light — the people learned to melt sand into something you can see through (Runevik)
+y 88 [The Age of Mills]   green-bench takes its place in the world (Runevik)
+y 88 [The Age of Mills] * a bench by the green — somewhere to sit, and so somewhere to talk (Runevik)
+y 88 [The Age of Mills] . the people begin to listen when Halvar speaks (Halvarhaven)
+y 89 [The Age of Mills] . want owned the hand — Maja steals
+y 89 [The Age of Mills]   Orm II is born
+y 89 [The Age of Mills] * rediscovered — the ruin is raised again (Halvarhaven)
+y 89 [The Age of Mills]   temple takes its place in the world (Halvarhaven)
+y 89 [The Age of Mills] * a temple raised to the sky-faith — the cosmology that began with one soul watching the stars now has a house and a keeper. (Halvarhaven)
+y 89 [The Age of Mills]   mason-stones takes its place in the world (Halvarhaven)
+y 89 [The Age of Mills] * cut and dressed stone blocks — masonry, the knowledge of shaping stone to build things meant to last (Halvarhaven)
+y 89 [The Age of Mills]   docks takes its place in the world (Halvarhaven)
+y 89 [The Age of Mills] * wooden docks reaching into the water — where the hulls are tied and the day's catch comes in (Halvarhaven)
+y 89 [The Age of Mills]   casks takes its place in the world (Halvarhaven)
+y 89 [The Age of Mills] * stores and casks stacked by the wall — a settled village keeps more than it can carry (Halvarhaven)
+y 89 [The Age of Mills]   crates takes its place in the world (Halvarhaven)
+y 89 [The Age of Mills] * crates stacked beside the path — goods waiting to change hands (Halvarhaven)
+y 89 [The Age of Mills] * sails turned to the wind on the hill — grinding grain where no river runs (Halvarhaven)
+y 90 [The Age of Mills]   Eira II is born
+y 90 [The Age of Mills]   Ask II is born
+y 90 [The Age of Mills]   Embla II is born
+y 90 [The Age of Mills]   Torv II is born
+y 90 [The Age of Mills] . temple falls to ruin (Halvarhaven)
+y 90 [The Age of Mills] * the knowledge was lost — where it stood, only a ruin remains (Halvarhaven)
+y 90 [The Age of Mills]   mason-stones is gone (Halvarhaven)
+y 90 [The Age of Mills]   docks is gone (Halvarhaven)
+y 90 [The Age of Mills]   casks is gone (Halvarhaven)
+y 90 [The Age of Mills]   crates is gone (Halvarhaven)
+y 90 [The Age of Mills]   windmill is gone (Halvarhaven)
+y 90 [The Age of Mills]   market takes its place in the world (Sagastead)
+y 90 [The Age of Mills] * a market stall — where enough hands and crafts gather in one place, goods begin to change hands (Sagastead)

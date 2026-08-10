@@ -1,2 +1,2 @@
-DONE 21:38:54 verdict=GREEN entries=120
+DONE 09:30:40 verdict=GREEN entries=795
 see Reports/fas4-artifact.txt

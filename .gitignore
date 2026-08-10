@@ -67,3 +67,6 @@ Reports/store-cap/
 # via the RUN_GITCOMMIT one-shot, kept out here (store-cap pattern)
 Assets/Emergence/Scenes/TerrainData_generated.asset
 Assets/Emergence/Scenes/TerrainData_generated.asset.meta
+
+# session 2026-08-10: pre-retake backup copies in Reports (VM mount cannot delete files, D-127)
+Reports/*.bak
