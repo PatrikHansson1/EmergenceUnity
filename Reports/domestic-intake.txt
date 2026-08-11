@@ -1,0 +1,25 @@
+EMERGENCE — DOMESTIC ANIMAL INTAKE (free track 2, 2026-08-10)
+generated 2026-08-10 11:50:16
+question: does the OWNED CC0 set make a farm-animal purchase unnecessary?
+
+Alpaca       OK   skins=1 clips=13 coreMissing=[] headLow=yes shaders=[Universal Render Pipeline/Lit]
+             clip inventory: AnimalArmature|Attack_Headbutt, AnimalArmature|Attack_Kick, AnimalArmature|Death, AnimalArmature|Eating, AnimalArmature|Gallop, AnimalArmature|Gallop_Jump, AnimalArmature|Idle, AnimalArmature|Idle_2, AnimalArmature|Idle_Headlow, AnimalArmature|Idle_HitReact_Left, AnimalArmature|Idle_HitReact_Right, AnimalArmature|Jump_toIdle, AnimalArmature|Walk
+Bull         OK   skins=1 clips=12 coreMissing=[] headLow=yes shaders=[Universal Render Pipeline/Lit]
+             clip inventory: AnimalArmature|Attack_Headbutt, AnimalArmature|Attack_Kick, AnimalArmature|Death, AnimalArmature|Eating, AnimalArmature|Gallop, AnimalArmature|Gallop_Jump, AnimalArmature|Idle, AnimalArmature|Idle_2, AnimalArmature|Idle_Headlow, AnimalArmature|Idle_HitReact_Left, AnimalArmature|Jump_toIdle, AnimalArmature|Walk
+Cow          OK   skins=1 clips=12 coreMissing=[] headLow=yes shaders=[Universal Render Pipeline/Lit]
+             clip inventory: AnimalArmature|Attack_Headbutt, AnimalArmature|Attack_Kick, AnimalArmature|Death, AnimalArmature|Eating, AnimalArmature|Gallop, AnimalArmature|Gallop_Jump, AnimalArmature|Idle, AnimalArmature|Idle_2, AnimalArmature|Idle_Headlow, AnimalArmature|Idle_HitReact_Left, AnimalArmature|Jump_toIdle, AnimalArmature|Walk
+Donkey       OK   skins=1 clips=13 coreMissing=[] headLow=yes shaders=[Universal Render Pipeline/Lit]
+             clip inventory: AnimalArmature|Attack_Headbutt, AnimalArmature|Attack_Kick, AnimalArmature|Death, AnimalArmature|Eating, AnimalArmature|Gallop, AnimalArmature|Gallop_Jump, AnimalArmature|Idle, AnimalArmature|Idle_2, AnimalArmature|Idle_Headlow, AnimalArmature|Idle_HitReact_Left, AnimalArmature|Idle_HitReact_Right, AnimalArmature|Jump_toIdle, AnimalArmature|Walk
+Horse        OK   skins=1 clips=13 coreMissing=[] headLow=yes shaders=[Universal Render Pipeline/Lit]
+             clip inventory: AnimalArmature|Attack_Headbutt, AnimalArmature|Attack_Kick, AnimalArmature|Death, AnimalArmature|Eating, AnimalArmature|Gallop, AnimalArmature|Gallop_Jump, AnimalArmature|Idle, AnimalArmature|Idle_2, AnimalArmature|Idle_Headlow, AnimalArmature|Idle_HitReact_Left, AnimalArmature|Idle_HitReact_Right, AnimalArmature|Jump_toIdle, AnimalArmature|Walk
+Horse_White  OK   skins=1 clips=13 coreMissing=[] headLow=yes shaders=[Universal Render Pipeline/Lit]
+             clip inventory: AnimalArmature|Attack_Headbutt, AnimalArmature|Attack_Kick, AnimalArmature|Death, AnimalArmature|Eating, AnimalArmature|Gallop, AnimalArmature|Gallop_Jump, AnimalArmature|Idle, AnimalArmature|Idle_2, AnimalArmature|Idle_Headlow, AnimalArmature|Idle_HitReact_Left, AnimalArmature|Idle_HitReact_Right, AnimalArmature|Jump_toIdle, AnimalArmature|Walk
+Husky        OK   skins=1 clips=12 coreMissing=[] headLow=yes shaders=[Universal Render Pipeline/Lit]
+             clip inventory: AnimalArmature|Attack, AnimalArmature|Death, AnimalArmature|Eating, AnimalArmature|Gallop, AnimalArmature|Gallop_Jump, AnimalArmature|Idle, AnimalArmature|Idle_2, AnimalArmature|Idle_2_HeadLow, AnimalArmature|Idle_HitReact_Left, AnimalArmature|Idle_HitReact_Right, AnimalArmature|Jump_ToIdle, AnimalArmature|Walk
+ShibaInu     OK   skins=1 clips=12 coreMissing=[] headLow=yes shaders=[Universal Render Pipeline/Lit]
+             clip inventory: AnimalArmature|Attack, AnimalArmature|Death, AnimalArmature|Eating, AnimalArmature|Gallop, AnimalArmature|Gallop_Jump, AnimalArmature|Idle, AnimalArmature|Idle_2, AnimalArmature|Idle_2_HeadLow, AnimalArmature|Idle_HitReact_Left, AnimalArmature|Idle_HitReact_Right, AnimalArmature|Jump_ToIdle, AnimalArmature|Walk
+
+pass=8/8 fail=0 shaderSuspects=0
+note: NOT wired into the world — S.animals exports only deer/wolf types; domestic
+      placement waits for an engine-lane export (documentary truth, D-078 r4).
+verdict: GREEN — farm-animal purchase UNNECESSARY (owned CC0 set is rig-complete)

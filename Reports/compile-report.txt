@@ -1,3 +1,7 @@
-COMPILE CLEAN — 2026-08-10 02:10:56
-errors=0 warnings=0 warningsBaseline=16 newUniqueWarnings=0
+COMPILE CLEAN — 2026-08-10 11:49:40
+errors=0 warnings=3 warningsBaseline=16 newUniqueWarnings=0
 
+## WARNINGS
+  Assembly-CSharp-Editor.dll: Assets\Emergence\Editor\StoreCaptureRig.cs(99) Assets\Emergence\Editor\StoreCaptureRig.cs(99,89): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+  Assembly-CSharp-Editor.dll: Assets\Emergence\Editor\StoreCaptureRig.cs(99) Assets\Emergence\Editor\StoreCaptureRig.cs(99,36): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+  Assembly-CSharp-Editor.dll: Assets\Emergence\Fas2\Editor\Fas2MoveProbe.cs(40) Assets\Emergence\Fas2\Editor\Fas2MoveProbe.cs(40,34): warning CS0414: The field 'Fas2MoveProbe._cuts' is assigned but its value is never used
