@@ -35,6 +35,12 @@ namespace Emergence.Runtime
             public string kind;     // arrival | birth | death | milestone | asset | steal | raid | feud | mourn | gift | leader | giftway (E1.5)
             public string text;
             public string key;      // dedupe identity: year|type|id|data
+            // FAS 4 PROSE WIRING (2026-08-13): the engine's own causes for this beat, already
+            // RESOLVED to reader-ready phrases by the export (see WorldModel.WorldEvent). Empty
+            // when the beat has no engine event behind it (codex milestones, asset placements)
+            // or when an old export/fixture carries no events[] — the why-line then says so.
+            public string[] causes;
+            public int eventId;     // engine event id, -1 when unmatched
         }
 
         public const int Capacity = 4096;          // bounded like the bus — a feed can never grow without limit
@@ -172,9 +178,76 @@ namespace Emergence.Runtime
             string vname = VillageName(e.VillageId);
             if (vname != null) text += " (" + vname + ")";
 
-            _entries.Add(new Entry { year = e.Year, era = e.Era, salience = salience, kind = kind, text = text, key = key });
+            int evId; var causes = CausesFor(kind, e, out evId);
+            _entries.Add(new Entry { year = e.Year, era = e.Era, salience = salience, kind = kind, text = text, key = key, causes = causes, eventId = evId });
             if (_entries.Count > Capacity)
             { _keys.Remove(_entries[0].key); _entries.RemoveAt(0); DroppedOldest++; }
+        }
+
+        // ---- FAS 4 PROSE WIRING: the engine's causes, matched to the beat the body just witnessed ----
+        //
+        // The body's bus events are DERIVED from applied state (a state diff), while the engine's
+        // causes[] ride the engine's own event log. They are two accounts of the same moment, so the
+        // wiring is a MATCH, not a lookup: the applied snapshot carries a bounded tail of the
+        // engine's causes-bearing events (WorldState.events, see Fas3SimDriver.ExportJs), and each
+        // chronicle kind names the engine event types that can stand behind it.
+        //
+        // Matching is on ACTOR + TYPE, not on year: the engine counts years 1-based and the body
+        // 0-based, and the exported tail is by construction already only the recent past — adding a
+        // year predicate would buy nothing and risk a silent off-by-one that drops every cause.
+        // Newest match wins (the tail is oldest-first, so we scan backward). No match -> null, and
+        // the why-line honestly says the chronicle records no cause.
+        //
+        // Pure read (D-078 r4): LastState is set by Fas3WorldRuntime.Apply BEFORE the event burst,
+        // exactly as the NAME resolution above relies on. Nothing is written, no RNG is consumed.
+        static readonly Dictionary<string, string[]> KindTypes = new Dictionary<string, string[]>
+        {
+            { "birth",   new[] { "child" } },
+            { "death",   new[] { "death" } },
+            { "feud",    new[] { "feud" } },
+            { "raid",    new[] { "raid" } },
+            { "steal",   new[] { "steal" } },
+            { "mourn",   new[] { "mourn" } },
+            { "gift",    new[] { "sharing", "giftway" } },
+            { "leader",  new[] { "leader" } },
+            { "giftway", new[] { "giftway" } },
+        };
+
+        public int CauseMatches { get; private set; }   // proof: beats that found their engine causes
+        public int CauseMisses  { get; private set; }   // proof: beats with no engine event behind them
+
+        string[] CausesFor(string kind, PresentationEvent e, out int eventId)
+        {
+            eventId = -1;
+            string[] types;
+            if (!KindTypes.TryGetValue(kind, out types)) { CauseMisses++; return null; }
+
+            var w = World();
+            var S = w != null ? w.LastState : null;
+            if (S == null || S.events == null || S.events.Length == 0) { CauseMisses++; return null; }
+
+            int agentId = AgentIdOf(e.Id);
+            string village = VillageName(e.VillageId);
+
+            for (int i = S.events.Length - 1; i >= 0; i--)
+            {
+                var ev = S.events[i];
+                if (ev == null || ev.causes == null || ev.causes.Length == 0) continue;
+                if (System.Array.IndexOf(types, ev.type) < 0) continue;
+                if (agentId >= 0) { if (ev.agent != agentId) continue; }
+                else if (!string.IsNullOrEmpty(village)) { if (ev.village != village) continue; }
+                else continue;
+                eventId = ev.id; CauseMatches++;
+                return ev.causes;
+            }
+            CauseMisses++; return null;
+        }
+
+        static int AgentIdOf(string eventId)
+        {
+            int id;
+            if (eventId != null && eventId.StartsWith("agent-") && int.TryParse(eventId.Substring(6), out id)) return id;
+            return -1;
         }
 
         /// <summary>Backward scrub: drop everything later than the presentation year; firsts recompute.</summary>

@@ -1,2 +1,2 @@
-DONE 09:14:10 verdict=GREEN crossfadesAtCheck=2 eraAtCheck=2
+DONE 00:13:00 verdict=GREEN crossfadesAtCheck=2 eraAtCheck=2
 see Reports/fas6-era-ambience.txt

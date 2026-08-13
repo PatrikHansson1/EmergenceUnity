@@ -75,3 +75,13 @@ RUN_COMPILE.trigger.stale
 # LLMUnity native backend — large, regenerable by LLMUnity setup (D-167 pack-limit protection)
 Assets/StreamingAssets/LlamaLib-*/
 Assets/StreamingAssets/LlamaLib-*.meta
+
+# --- OWNED MUSIC PACKS (2026-08-13, same law as D-167) ---
+# 903 MB of uncompressed WAV between the two packs. The GitHub pack limit is what forced the
+# history slim in the first place; purchased/owned art and audio lives on disk and in the Asset
+# Store account, never in the repo. The Fas6MusicCatalog asset IS committed (it is the studio's
+# own work) and simply re-resolves its clips on a machine that has the packs imported.
+Assets/Viking Music Pack/
+Assets/Viking Music Pack.meta
+Assets/10 Fantasy Medieval Ambient Tracks/
+Assets/10 Fantasy Medieval Ambient Tracks.meta

@@ -7,9 +7,12 @@
 //   FEED — docked right edge during play: the latest witnessed entries, salience filter,
 //          newest at the BOTTOM (the running feed reads downward, as in v0).
 //   BOOK — fullscreen READ view: newest FIRST (the reference's order), year badges, the full
-//          scrollable history, why-expander STUB per entry ("orsakskedjan väntar på motorns
-//          causes[]" — ordered in MOTOR-LANE-ORDER-R2-FAS4; the UI surface exists, the data
-//          arrives with the engine delivery). Opening the book PAUSES the presentation clock;
+//          scrollable history, and the WHY-EXPANDER — no longer a stub: since 2026-08-13 the feed
+//          carries the engine's own resolved causes[] (FAS4-PROSE-DIRECTOR-ORDER §1/§2), and an
+//          expanded row asks Fas4ProseDirector to phrase them. With useProse OFF (the default) that
+//          is the deterministic rule-based line and the answer is instant; with it ON the same line
+//          comes from the local model, cached per entry, and the row shows "…" until it lands.
+//          Opening the book PAUSES the presentation clock;
 //          closing restores the prior pause state. The view touches the clock in NO other way.
 //
 // Data source: the SAME Fas4ChronicleFeed (no new truth). The view is a pure reader — it
@@ -24,6 +27,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Emergence.Fas4;   // Fas4ProseDirector — the why-line service (presentation-only, A5)
 
 namespace Emergence.Runtime
 {
@@ -62,10 +66,22 @@ namespace Emergence.Runtime
         ScrollView _bookScroll;
         readonly List<Button> _filterButtons = new List<Button>();
 
-        sealed class BookRow { public int year; public int salience; public string key; public VisualElement stub; }
+        sealed class BookRow { public int year; public int salience; public string key; public Label stub; public string text; public string[] causes; }
         readonly List<BookRow> _bookRows = new List<BookRow>();
         readonly List<int> _feedRowSaliences = new List<int>();
         readonly HashSet<string> _expandedKeys = new HashSet<string>();   // survives rebuilds — the reader's open pages
+        // The why-lines already answered, keyed by entry — survives rebuilds AND never re-asks the
+        // model for a page the reader has already opened (the director caches too; this keeps the UI
+        // honest across a rebuild, which drops the element the answer was written into).
+        readonly Dictionary<string, string> _whyCache = new Dictionary<string, string>();
+        sealed class PendingWhy { public string key; public System.Threading.Tasks.Task<string> task; }
+        readonly List<PendingWhy> _pendingWhy = new List<PendingWhy>();
+        Fas4ProseDirector _prose;
+        /// <summary>Proof seam: why-lines answered from the director (rule-based or model).</summary>
+        public int WhyResolvedCount { get; private set; }
+        public string LastWhy { get; private set; } = "";
+        const string WhyWaiting = "…";
+        Fas4ProseDirector Prose() { if (_prose == null) _prose = FindAnyObjectByType<Fas4ProseDirector>(); return _prose; }
 
         bool _pausedBefore;
         long _lastSig = long.MinValue;
@@ -96,6 +112,7 @@ namespace Emergence.Runtime
         void Update()
         {
             if (!Ready) return;
+            DrainPendingWhy();
             var f = Feed(); if (f == null) return;
             long sig = ((long)f.Entries.Count << 24) ^ ((long)f.TrimCount << 16) ^ ((long)f.DroppedOldest << 8)
                        ^ (long)f.minSalience ^ ((long)PresYear() << 32) ^ (BookOpen ? 1L << 60 : 0L);
@@ -135,7 +152,9 @@ namespace Emergence.Runtime
         public int BookRowYear(int i) => i >= 0 && i < _bookRows.Count ? _bookRows[i].year : -1;
         public int FeedRowSalience(int i) => i >= 0 && i < _feedRowSaliences.Count ? _feedRowSaliences[i] : -1;
 
-        /// <summary>Why-expander STUB: toggles the stub line under book row i; true if now visible.</summary>
+        /// <summary>Why-expander: toggles the why-line under book row i; true if now visible. Opening a
+        /// row for the first time asks Fas4ProseDirector for the line — instantly when prose is off
+        /// (rule-based, no model, no await), otherwise "…" until the model answers (DrainPendingWhy).</summary>
         public bool ExpandBookRow(int i)
         {
             if (i < 0 || i >= _bookRows.Count) return false;
@@ -143,8 +162,77 @@ namespace Emergence.Runtime
             bool show = !_expandedKeys.Contains(row.key);
             if (show) _expandedKeys.Add(row.key); else _expandedKeys.Remove(row.key);
             row.stub.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
+            if (show) AskWhy(row);
             return show;
         }
+
+        /// <summary>Resolve one row's why-line. Cache first, then the director; never throws, never blocks.</summary>
+        void AskWhy(BookRow row)
+        {
+            string cached;
+            if (_whyCache.TryGetValue(row.key, out cached)) { row.stub.text = cached; return; }
+            foreach (var p in _pendingWhy) if (p.key == row.key) { row.stub.text = WhyWaiting; return; }
+
+            var d = Prose();
+            if (d == null)
+            {
+                // no director in the scene: the same deterministic rule-based line, straight from the
+                // service's static law — the reader is never shown an empty page.
+                Answer(row.key, Fas4ProseDirector.RuleBasedWhy(row.text, row.causes));
+                row.stub.text = _whyCache[row.key];
+                return;
+            }
+
+            System.Threading.Tasks.Task<string> t;
+            try { t = d.WhyProse(row.text, row.causes); }
+            catch (System.Exception e)
+            {
+                Debug.LogWarning("[Fas4ChronicleView] why: " + e.Message);
+                Answer(row.key, Fas4ProseDirector.RuleBasedWhy(row.text, row.causes));
+                row.stub.text = _whyCache[row.key]; return;
+            }
+
+            if (t == null) { Answer(row.key, Fas4ProseDirector.RuleBasedWhy(row.text, row.causes)); row.stub.text = _whyCache[row.key]; return; }
+            if (t.IsCompleted) { Answer(row.key, Safe(t, row)); row.stub.text = _whyCache[row.key]; return; }
+            row.stub.text = WhyWaiting;
+            _pendingWhy.Add(new PendingWhy { key = row.key, task = t });
+        }
+
+        /// <summary>Main-thread drain of model answers — UI Toolkit is touched from Update only.</summary>
+        void DrainPendingWhy()
+        {
+            for (int i = _pendingWhy.Count - 1; i >= 0; i--)
+            {
+                var p = _pendingWhy[i];
+                if (p.task == null) { _pendingWhy.RemoveAt(i); continue; }
+                if (!p.task.IsCompleted) continue;
+                _pendingWhy.RemoveAt(i);
+                BookRow row = null;
+                foreach (var r in _bookRows) if (r.key == p.key) { row = r; break; }
+                Answer(p.key, Safe(p.task, row));
+                if (row != null) row.stub.text = _whyCache[p.key];
+            }
+        }
+
+        string Safe(System.Threading.Tasks.Task<string> t, BookRow row)
+        {
+            try
+            {
+                if (t.IsFaulted || t.IsCanceled) throw new System.Exception(t.Exception != null ? t.Exception.Message : "cancelled");
+                var r = t.Result;
+                if (!string.IsNullOrEmpty(r)) return r;
+            }
+            catch (System.Exception e) { Debug.LogWarning("[Fas4ChronicleView] why: " + e.Message); }
+            return Fas4ProseDirector.RuleBasedWhy(row != null ? row.text : "", row != null ? row.causes : null);
+        }
+
+        void Answer(string key, string line)
+        {
+            _whyCache[key] = line; LastWhy = line; WhyResolvedCount++;
+        }
+
+        /// <summary>Probe seam: the why-line standing under an entry key ("" if never opened).</summary>
+        public string WhyFor(string key) { string v; return _whyCache.TryGetValue(key, out v) ? v : ""; }
 
         /// <summary>Store/probe seam (trailer round, slot 5): scrolls the BOOK so the first row with
         /// year &lt;= yearTarget sits at the top of the viewport. Rows are newest-first, so this finds
@@ -310,8 +398,10 @@ namespace Emergence.Runtime
                 line.Add(t);
                 row.Add(line);
 
-                // why-expander STUB — the surface exists; causes[] is ordered from the engine lane
-                var stub = new Label("orsakskedjan väntar på motorns causes[] — beställd (MOTOR-LANE-ORDER-R2-FAS4)");
+                // why-expander — the engine's causes, phrased by the prose director (rule-based by
+                // default). A page the reader already opened keeps its answered line across rebuilds.
+                string why; if (!_whyCache.TryGetValue(e.key, out why)) why = WhyWaiting;
+                var stub = new Label(why);
                 stub.style.color = ColSub; stub.style.fontSize = 12;
                 stub.style.marginLeft = 64; stub.style.marginTop = 3;
                 stub.style.backgroundColor = ColPanel2;
@@ -321,7 +411,7 @@ namespace Emergence.Runtime
 
                 int idx = _bookRows.Count;
                 row.RegisterCallback<ClickEvent>(_ => ExpandBookRow(idx));
-                _bookRows.Add(new BookRow { year = e.year, salience = e.salience, key = e.key, stub = stub });
+                _bookRows.Add(new BookRow { year = e.year, salience = e.salience, key = e.key, stub = stub, text = e.text, causes = e.causes });
                 _bookScroll.Add(row);
             }
         }

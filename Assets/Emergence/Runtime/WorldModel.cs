@@ -38,6 +38,23 @@ namespace Emergence.Runtime
     // D-106 fill-pass: tier = milestone|dressing|part (legibility law); statMeaning feeds the STATS/Almanac pillar (Fas 5).
     [Serializable] public class CodexEntry { public string id, prefab, category, requiresTech, requiresCustom, desc, placement, tier, statMeaning; public int era, minPop, minCrafts, minGen, count; public float scale; public int ruinOnLoss; public string ruinPrefab; public float ruinScale; }
     [Serializable] public class Codex { public CodexEntry[] objects; }
+    // FAS 4 PROSE WIRING (2026-08-13, FAS4-PROSE-DIRECTOR-ORDER §1): the engine has carried
+    // causes[] on every event since R2 ink. 1 (D-172), but nothing crossed into the body — the live
+    // export shipped STATE only, never S.events, so the why-expander had no data and the prose
+    // director no substrate. The driver's export JS now additively reads a BOUNDED tail of the
+    // engine's own causes-bearing events and RESOLVES each reference ('ev:<id>' | 'agent:<id>' |
+    // 'tech:<id>' | 'cause:<key>') into a plain phrase engine-side, where the lookup data lives.
+    // Pure READ (D-078 r4): the engine JS is untouched, no sim state is written, no RNG is consumed.
+    // Old snapshots/checkpoints/fixtures lack the field -> null -> the rule-based "why" stands.
+    [Serializable] public class WorldEvent
+    {
+        public int id;          // stable engine event id (index in S.events at emission)
+        public int year;        // engine-side year (1-based; the body's S.years is 0-based)
+        public string type;     // child | death | steal | raid | feud | mourn | sharing | leader | giftway | ...
+        public int agent;       // acting soul's id, -1 when the event is not agent-scoped
+        public string village;  // village name for village-scope events, "" otherwise
+        public string[] causes; // RESOLVED, reader-ready cause phrases (never raw refs)
+    }
     [Serializable] public class WorldState
     {
         public string engineVersion; public int seed, years, tick; public bool ended; public string season;
@@ -51,6 +68,8 @@ namespace Emergence.Runtime
         public int W, H; public string tileTypes; public int[] tileN;
         public WorldAgent[] agents; public WorldHut[] huts; public WorldFire[] fires;
         public WorldField[] fields; public WorldVillage[] villages; public WorldAnimal[] animals;
+        // FAS 4 prose wiring: bounded tail of causes-bearing engine events for this snapshot year.
+        public WorldEvent[] events;
     }
 
     /// <summary>D-147: presentation-side era naming — the D-146 finding was that the bus's Era slot

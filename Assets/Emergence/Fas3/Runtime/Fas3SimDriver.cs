@@ -72,6 +72,15 @@ namespace Emergence.Runtime
         // E1.5 (MOTOR-LANE-ORDER-E15-DRAMATIK, engine 2.4.0): ADDITIVE again — agents[].wealth
         // (E.wealthOf, the Almanac's wealth sort), villages[].leader (recognized-leader name or '')
         // and villages[].gift (the named gift-way or ''). Nothing removed or renamed.
+        // FAS 4 PROSE WIRING (2026-08-13, FAS4-PROSE-DIRECTOR-ORDER §1): ADDITIVE again —
+        // events[] = a BOUNDED (<=64, newest-last) tail of the engine's own causes-bearing events,
+        // each cause reference RESOLVED here to a reader-ready phrase (the lookup tables — S.events,
+        // S.agents, S.knowledge, E.TECH — live engine-side, so resolving anywhere else would mean
+        // shipping the whole log). Pure READ: the engine JS is untouched, nothing is written back to
+        // The tail is filtered to the event types the chronicle can actually stand behind (child /
+        // death / the E1.5 acts / leader / giftway), so the 64 slots hold matchable beats instead of
+        // being flooded by tech+hoard events the body never witnesses as their own entries.
+        // S, no RNG is consumed, and the golden master runs a different path entirely (harness.js).
         // VILLAGE-SCOPE (MOTOR-LANE-ORDER-VILLAGE-SCOPE 2026-08-09, TD-085): ADDITIVE again —
         // villages[] merges E.villageScope(S) {pop,maxGen,avgAge,crafts,knows[]} (same order as
         // S.villages, the engine's ONE census law) so the Almanac's village dossier and the
@@ -91,6 +100,7 @@ fields:S.fields.map(function(f){return {x:f.x,y:f.y,stage:f.stage,owner:''+(f.ow
 villages:(function(){var sc=E.villageScope(S);return S.villages.map(function(v,i){var s=sc[i];return {x:v.x,y:v.y,name:''+v.name,leader:''+(v.leaderName||''),gift:''+(v.giftName||''),pop:s.pop,maxGen:s.maxGen,avgAge:s.avgAge,crafts:s.crafts,knows:s.knows}})})(),
 animals:S.animals.map(function(an){return {id:an.id,type:''+an.type,x:an.x,y:an.y}}),
 pathUse:S.pathUse||[],
+events:(function(){var A=S.events,n=A.length,o=[],lim=64,KEEP={child:1,death:1,steal:1,raid:1,feud:1,mourn:1,sharing:1,giftway:1,leader:1};var nm=function(id){for(var i=0;i<S.agents.length;i++)if(S.agents[i].id===id)return ''+S.agents[i].name;return 'someone'};var tn=function(t){var k=S.knowledge[t],q=E.TECH[t];var a=k&&k.name?''+k.name:(q?''+q.base:''+t);return(q&&k&&k.name)?a+' ('+q.base+')':a};var strip=function(t){t=(''+(t||'')).replace(/<[^>]*>/g,' ');t=t.replace(/[^\x20-\x7E\u00A0-\u024F\u2010-\u203A]/g,' ');t=t.replace(/\s+/g,' ').trim();var c=t.search(/[.!?]/);if(c>20)t=t.slice(0,c);t=t.replace(/[\s\-\u2013\u2014,;:]+$/,'');return t.length>110?t.slice(0,107).replace(/\s+\S*$/,'')+'\u2026':t};var res=function(r){r=''+r;var c=r.indexOf(':');if(c<0)return r;var k=r.slice(0,c),v=r.slice(c+1);if(k==='ev'){var j=+v;if(!(j>=0&&j<n&&A[j]))return '';var e2=A[j];return e2.tech?tn(e2.tech):strip(e2.txt)}if(k==='agent')return nm(+v);if(k==='tech')return tn(v);if(k==='cause')return v;return r};for(var i=n-1;i>=0&&o.length<lim;i--){var e=A[i];if(!KEEP[e.type])continue;if(!e.causes||!e.causes.length)continue;var cs=[],seen={};for(var q=0;q<e.causes.length&&cs.length<4;q++){var rr=res(e.causes[q]);if(rr&&!seen[rr]){seen[rr]=1;cs.push(rr)}}if(!cs.length)continue;o.push({id:e.id,year:e.year,type:''+e.type,agent:(e.agent===undefined?-1:e.agent),village:''+(e.village||''),causes:cs})}return o.reverse()})(),
 dna:JSON.stringify(E.computeDNA(S))})})()";
 
         void Start()

@@ -63,6 +63,12 @@ namespace Emergence.Runtime
             if (FindAnyObjectByType<Fas6StateAmbience>() == null)
                 new GameObject("Fas6StateAmbience").AddComponent<Fas6StateAmbience>();
 
+            // the score (Fas 6, 2026-08-13): written music above the procedural beds — era ->
+            // ambient, winter -> the cold bed, drama -> a viking action cue, all a pure function of
+            // the applied state. Disarms itself if the music catalog is missing; the beds stand alone.
+            if (FindAnyObjectByType<Fas6MusicDirector>() == null)
+                new GameObject("Fas6MusicDirector").AddComponent<Fas6MusicDirector>();
+
             // the story (Fas 4 v0): consumer #3 — the chronicle feed, READ's first organ
             if (FindAnyObjectByType<Fas4ChronicleFeed>() == null)
                 new GameObject("Fas4ChronicleFeed").AddComponent<Fas4ChronicleFeed>();
@@ -71,6 +77,13 @@ namespace Emergence.Runtime
             // book on demand; disarms itself (IMGUI stays) if the UI assets are missing
             if (FindAnyObjectByType<Fas4ChronicleView>() == null)
                 new GameObject("Fas4ChronicleView").AddComponent<Fas4ChronicleView>();
+
+            // the story's WHY (Fas 4, prose wiring 2026-08-13): the why-expander's service. Raised
+            // ALWAYS and unconditionally — it costs nothing without a model (useProse defaults OFF,
+            // character null), and raising it here means the book can answer "why" in every vehicle,
+            // editor and player alike, instead of only where a scene happened to carry one.
+            if (FindAnyObjectByType<Emergence.Fas4.Fas4ProseDirector>() == null)
+                new GameObject("Fas4ProseDirector").AddComponent<Emergence.Fas4.Fas4ProseDirector>();
 
             // the patterns (Fas 5 v0): consumer #4 — the metrics recorder + the Almanac's native
             // face (Overview). Same pause law as the book; disarms itself if the UI assets are missing

@@ -1,0 +1,42 @@
+EMERGENCE — FAS 6 music catalog
+generated 2026-08-14 00:24:31
+source: the two OWNED packs' Loops folders (loops, not one-shot tracks — a score must not end)
+
+  viking     ACTION   Echoes of Valhalla         -4,4 dB  clip OK (99 s)
+  viking     ACTION   Northern Lights            -3,5 dB  clip OK (117 s)   << EAR CHECK
+  viking     ACTION   Saga of the Sea Wolves     -2,6 dB  clip OK (122 s)
+  viking     ACTION   Frostbound Horizons        -4,9 dB  clip OK (154 s)   << EAR CHECK
+  viking     ambient  Odin's Whisper              8,4 dB  clip OK (164 s)
+  viking     ambient  Throne of the Fjords       -0,3 dB  clip OK (118 s)   << EAR CHECK
+  medieval   ambient  Moonspire                   9,0 dB  clip OK (182 s)
+  medieval   ambient  Elven Dawn                  3,6 dB  clip OK (177 s)
+  medieval   ambient  Winds of Valor              2,0 dB  clip OK (184 s)
+  medieval   ambient  Darkwood Path               5,7 dB  clip OK (185 s)
+  medieval   ambient  Frostbound                  5,3 dB  clip OK (205 s)
+  medieval   ambient  Emberlight                  3,5 dB  clip OK (198 s)
+  medieval   ambient  Silverbrook                 0,2 dB  clip OK (190 s)
+  medieval   ambient  Mystic Grove                2,2 dB  clip OK (186 s)
+  medieval   ambient  Throne of Storms            3,4 dB  clip OK (180 s)
+  medieval   ambient  Sorrow’s Edge              -1,0 dB  clip OK (188 s)
+
+entries: 16   action: 4   ambient: 12   awaiting the ear: 3
+
+ERA TABLE (the director's declared opinion — every name must exist above):
+  era 0 (dawn)  -> Elven Dawn   [found]
+  era 1 (stone)  -> Darkwood Path   [found]
+  era 2 (bronze)  -> Emberlight   [found]
+  era 3 (iron)  -> Winds of Valor   [found]
+  era 4 (mill)  -> Silverbrook   [found]
+  era 5 (print)  -> Moonspire   [found]
+  era 6 (steam)  -> Throne of Storms   [found]
+  season winter          -> Frostbound   [found]
+
+LEVEL MATCH: every track is gained to -24 dBFS. The two packs are mastered 14 dB
+  apart, so without this the score would jump audibly the moment drama pulled a viking cue in.
+
+ON PATRIK (ear check, THREE tracks only): the split is now MEASURED, not guessed — but the
+  measurement disagreed with the title on these, and an ear is worth more than either:
+    - Northern Lights  (now ACTION; the title reads ambient)
+    - Frostbound Horizons  (now ACTION; the title reads ambient)
+    - Throne of the Fjords  (now AMBIENT; the title reads action)
+  Move one and rebuild — the law does not change, only the pool.

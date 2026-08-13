@@ -7,7 +7,8 @@
 //   3. filter switches: "vändpunkter" shows only ★ rows, count matches; back to "allt" restores;
 //   4. BOOK mode: opening PAUSES the clock, tps untouched (the only permitted clock touch);
 //   5. book holds the WHOLE history, newest FIRST (the reference's order), gold year badges;
-//   6. why-expander STUB expands on click (the surface for the ordered engine causes[]);
+//   6. why-expander expands on click and HOLDS its answer across a rebuild (since 2026-08-13 the
+//      line is the engine's own causes phrased by Fas4ProseDirector, not a stub);
 //   7. closing the book RESTORES the prior pause state; feed panel returns;
 //   8. evidence PNGs (book + feed) grabbed END-OF-FRAME with the blankness guard (D-142 law);
 //   9. DISARM branch (gate review 2026-07-22 villkor 2): a view pointed at a bogus PanelSettings
@@ -205,7 +206,7 @@ namespace Emergence.Editor
                 bool stubShown = _view.ExpandBookRow(0);
                 _view.RefreshNow();   // expansion must SURVIVE a rebuild — and be in the evidence PNG
                 bool stubHeld = stubShown && !_view.ExpandBookRow(0) && _view.ExpandBookRow(0);   // was open post-rebuild; toggle back on
-                _n6 = $"why-expander stub: click row 0 -> visible {(stubShown ? "OK" : "FAIL")}, survives rebuild {(stubHeld ? "OK" : "FAIL")} (causes[] ordered in MOTOR-LANE-ORDER-R2-FAS4)";
+                _n6 = $"why-expander: click row 0 -> visible {(stubShown ? "OK" : "FAIL")}, survives rebuild {(stubHeld ? "OK" : "FAIL")} (line = engine causes[] via Fas4ProseDirector, prose wiring 2026-08-13)";
 
                 var g = new GameObject("Fas4NativeGrabberBook").AddComponent<Fas4NativeGrabber>();
                 g.Path = PngBook; g.OnGrabbed = note => { _n8a = "book " + note; };
@@ -270,7 +271,7 @@ namespace Emergence.Editor
                 foreach (var n in new[] { _n1, _n2, _n3, _n4, _n5, _n6, _n7, _n8a, _n8b, _n9 })
                     sb.AppendLine(n.Length > 0 ? n : "check never reached (FAIL)");
                 sb.AppendLine();
-                sb.AppendLine("caveat: why-expander is a STUB by design (engine causes[] ordered); three scales + LLM prose out of v1 scope.");
+                sb.AppendLine("caveat: three scales are out of v1 scope. The why-expander is LIVE (engine causes[] -> Fas4ProseDirector); LLM prose itself stays flag-gated OFF until a model passes RUN_FAS4PROSELIVE on tone.");
                 bool green = !overtime
                     && _n1.Contains("(OK)") && _n2.Contains("(OK)") && _n3.EndsWith("OK") && !_n3.Contains("FAIL")
                     && _n4.Contains("OK") && !_n4.Contains("FAIL")

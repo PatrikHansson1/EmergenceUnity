@@ -1,0 +1,84 @@
+EMERGENCE — FAS 6 PROBE: the music director (score layer)
+generated 2026-08-14 00:26:54
+the law: winter -> the cold bed; drama -> a viking action cue; else the era's ambient bed
+
+1. THE CATALOG (built from the two OWNED packs)
+  PASS  catalog asset present
+  PASS  entries: 16
+  PASS  action pool: 4 (Echoes of Valhalla, Northern Lights, Saga of the Sea Wolves, Frostbound Horizons)
+  PASS  ambient pool: 12
+  PASS  every entry has a role — none stranded
+  PASS  the packs REALLY are mastered apart (13,9 dB of correction across the catalog)
+  PASS  the loudest viking cue is turned DOWN (0,60x)
+  PASS  the quietest medieval bed is turned UP (2,82x)
+  PASS  an unknown track gains 1x, never silence
+  PASS  the title-judged split is FLAGGED for the ear (3 entries)
+
+2+3. THE LAW IS PURE, AND THE ERA DRIVES THE BED
+  PASS  era 0 (dawn) -> 'Elven Dawn', twice identically
+  PASS  era 0 uses its own declared bed
+  PASS  era 0's bed resolves to a clip
+  PASS  era 1 (stone) -> 'Darkwood Path', twice identically
+  PASS  era 1 uses its own declared bed
+  PASS  era 1's bed resolves to a clip
+  PASS  era 2 (bronze) -> 'Emberlight', twice identically
+  PASS  era 2 uses its own declared bed
+  PASS  era 2's bed resolves to a clip
+  PASS  era 3 (iron) -> 'Winds of Valor', twice identically
+  PASS  era 3 uses its own declared bed
+  PASS  era 3's bed resolves to a clip
+  PASS  era 4 (mill) -> 'Silverbrook', twice identically
+  PASS  era 4 uses its own declared bed
+  PASS  era 4's bed resolves to a clip
+  PASS  era 5 (print) -> 'Moonspire', twice identically
+  PASS  era 5 uses its own declared bed
+  PASS  era 5's bed resolves to a clip
+  PASS  era 6 (steam) -> 'Throne of Storms', twice identically
+  PASS  era 6 uses its own declared bed
+  PASS  era 6's bed resolves to a clip
+  PASS  all seven eras sound DIFFERENT (7 distinct beds)
+
+4. WINTER OVERRIDES THE ERA
+  PASS  era 0 in winter -> 'Frostbound'
+  PASS  era 1 in winter -> 'Frostbound'
+  PASS  era 2 in winter -> 'Frostbound'
+  PASS  the winter bed resolves to a clip
+
+5. DRAMA OVERRIDES BOTH — deterministic pick out of the ACTION pool
+  PASS  a soul mid-raid IS drama
+  PASS  the same world at work is NOT drama
+  PASS  the same drama picks the same cue twice: 'Saga of the Sea Wolves'
+  PASS  the cue comes from the ACTION pool
+  PASS  drama beats even winter
+  PASS  and the calm world falls back to winter
+  PASS  an engine FEUD event in the tail is drama on its own
+  PASS  the drama is located by the engine's own village name
+  PASS  25 village/year combinations: every one picked the SAME cue on re-ask
+  PASS  different villages/years reach more than one action cue (4 of 4)
+  PASS  the anti-flicker HOLD keeps the action cue after the drama leaves the state
+
+6+8. REAL EXPORTS THROUGH THE LAW (nothing written; the cue reported for the EAR)
+  PASS  seq-8919-y000-genesis: state byte-identical after the law ran
+  PASS  seq-8919-y000-genesis: cue 'Elven Dawn' resolves to a clip
+     y0  era=0 (dawn)  season=spring  drama=False   ->  Elven Dawn   [pre-R2 export: no era field -> reads as dawn, D-147]
+  PASS  seq-8919-y055: state byte-identical after the law ran
+  PASS  seq-8919-y055: cue 'Elven Dawn' resolves to a clip
+     y55  era=0 (dawn)  season=spring  drama=False   ->  Elven Dawn   [pre-R2 export: no era field -> reads as dawn, D-147]
+  PASS  seq-8919-y120: state byte-identical after the law ran
+  PASS  seq-8919-y120: cue 'Elven Dawn' resolves to a clip
+     y120  era=0 (dawn)  season=spring  drama=False   ->  Elven Dawn   [pre-R2 export: no era field -> reads as dawn, D-147]
+  PASS  world-4242-y120-dusk: state byte-identical after the law ran
+  PASS  world-4242-y120-dusk: cue 'Frostbound' resolves to a clip
+     y120  era=0 (dawn)  season=winter  drama=False   ->  Frostbound   [pre-R2 export: no era field -> reads as dawn, D-147]
+  PASS  world-1066-t13857-e15: state byte-identical after the law ran
+  PASS  world-1066-t13857-e15: cue 'Moonspire' resolves to a clip
+     y96  era=5 (The Age of the Press)  season=spring  drama=False   ->  Moonspire
+
+7. THE DISARM BRANCH (no catalog -> the procedural beds stand alone)
+  PASS  director instantiable with no scene wiring
+  PASS  a null state falls back to the first bed, never to silence or an exception
+
+VERDICT: GREEN  (59/59)
+ON PATRIK (ear check): the viking action/ambient split and the era table are DECLARED judgements
+  made by title. Nothing above proves they sound right — only that they are law-abiding.
+declared limit: Awake/disarm and the crossfade are play-mode behaviour; this probe asserts the LAW.

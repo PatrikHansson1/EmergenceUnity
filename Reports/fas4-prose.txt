@@ -1,0 +1,45 @@
+EMERGENCE — FAS 4 PROBE: prose director safe properties (no model, useProse OFF)
+generated 2026-08-14 00:00:15
+scope: the properties every shipped build depends on. Live inference = order §5 (screen-driven).
+
+1. RULE-BASED DETERMINISM (the default path is a pure function)
+  PASS  two calls, identical line: "It followed from what came before: Ask the Firebringer, and hunger."
+  PASS  a different cause set gives a different line: "It followed from one thing: the long winter."
+  PASS  no causes -> an honest line, never empty: "The chronicle records no cause — it simply happened."
+
+2. KEY + SEED (stable across calls, distinct across entries)
+  PASS  KeyFor stable
+  PASS  KeyFor distinguishes cause sets
+  PASS  SeedFor stable (1714870651)
+  PASS  SeedFor distinguishes entries (1714870651 vs 924513467)
+  PASS  SeedFor non-negative
+
+3+4. FLAG AND NO-MODEL HONESTY (instant, synchronous, model-free)
+  PASS  useProse=false -> task already completed on return (no await)
+  PASS  useProse=false -> exactly the rule-based line
+  PASS  useProse=true, character=null -> same instant fallback
+
+5. WORD-BAN GUARD (a slipped technical word is refused, not shipped)
+  PASS  Sanitize reachable for test
+  PASS  a clean line passes, trimmed
+  PASS  "simulation" -> refused (caller falls back)
+  PASS  "ENGINE" -> refused case-insensitively
+
+6+7+8. THE WIRING (feed matches engine causes; the view answers; the sim is untouched)
+  PASS  fixture present: Assets/Emergence/WorldStates/seq-8919-y055.json
+  PASS  fixture parses: 22 souls
+  PASS  two beats witnessed (2)
+  PASS  the steal beat CARRIES the engine's causes (Hunger owned the hand | the long winter)
+  PASS  matched the right engine event (id=41, expected 41)
+  PASS  match bookkeeping honest: matches=1 misses=1
+  PASS  the milestone beat has NO engine causes and says so (never invented)
+  PASS  the why-line SPEAKS the engine's cause: "It followed from what came before: Hunger owned the hand, and the long winter."
+  PASS  the causeless beat answers honestly: "The chronicle records no cause — it simply happened."
+  why (steal)     : It followed from what came before: Hunger owned the hand, and the long winter.
+  why (milestone) : The chronicle records no cause — it simply happened.
+  PASS  NO SIM MUTATION: applied state byte-identical before/after (30774 chars)
+
+VERDICT: GREEN  (25/25)
+declared limits: no model is loaded here by design — live inference (identical line twice + tone) is order §5.
+declared fixture: the events[] set is an in-memory DECLARED fixture in the exporter's exact schema (the standing
+  seq-8919-y055.json predates the §1 export). It proves the MATCH LAW; a live world proves the volume.

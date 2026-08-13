@@ -1,8 +1,8 @@
 EMERGENCE — FAS 6 PROBE: the state ear — pure intensity law + live village rise + fire points
-generated 2026-07-23 09:09:51
+generated 2026-08-14 00:15:38
 data source = applied WorldState fires/huts/season (read-only; presentation follows applied state — the Almanac's law)
 
-## PLAY PHASE (frames=16630)
+## PLAY PHASE (frames=15999)
 determinism: activity x2 identical + crackle x2 identical=True, activity!=crackle=True (OK)
 pure law: null=0 empty=0 2f+3h=0,960(want 0,960) winter=0,720(want 0,720) (OK)
 genesis silence: fires=0 huts=0 intensityTarget=0 points=0 @y0 (OK)

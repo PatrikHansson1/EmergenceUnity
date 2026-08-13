@@ -1,0 +1,7 @@
+EMERGENCE — FAS 4 prose scene setup (order §3)
+generated 2026-08-13 23:52:19
+model store : C:\Users\patri\AppData\Roaming\LLMUnity\models
+model found : C:\Users\patri\AppData\Roaming\LLMUnity\models\llama-3.2-1b-instruct-q4_k_m.gguf
+LLM node    : LMM  model=llama-3.2-1b-instruct-q4_k_m.gguf
+character   : ChronicleNarrator  temp=0 numPredict=60 save=''
+director    : useProse=True  character bound=True
