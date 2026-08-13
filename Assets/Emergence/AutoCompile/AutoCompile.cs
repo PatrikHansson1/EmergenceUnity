@@ -44,6 +44,10 @@ namespace Emergence.AutoCompileTool
             "ImpostorDataHolder.cs|UAC1001",
             "NPCAnimationController.cs|UAC1001",
             "StoreCaptureRig.cs|CS0618",
+            // 2026-08-11: LLM for Unity (LLMUnity v3.0.3) + a third-party lighting script imported —
+            // both benign obsolete-API (CS0618 FindObjectsSortMode). Audited: not Emergence core.
+            "LLMClient.cs|CS0618",
+            "LightingPresetManager.cs|CS0618",
         };
 
         /// <summary>"<file>|<code>" identity for a warning line, or null if unparsable (unparsable => treated as NEW).</summary>

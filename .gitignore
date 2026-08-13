@@ -70,3 +70,8 @@ Assets/Emergence/Scenes/TerrainData_generated.asset.meta
 
 # session 2026-08-10: pre-retake backup copies in Reports (VM mount cannot delete files, D-127)
 Reports/*.bak
+RUN_COMPILE.trigger.stale
+
+# LLMUnity native backend — large, regenerable by LLMUnity setup (D-167 pack-limit protection)
+Assets/StreamingAssets/LlamaLib-*/
+Assets/StreamingAssets/LlamaLib-*.meta
