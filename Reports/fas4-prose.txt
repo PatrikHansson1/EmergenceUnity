@@ -1,11 +1,11 @@
 EMERGENCE — FAS 4 PROBE: prose director safe properties (no model, useProse OFF)
-generated 2026-08-14 00:00:15
+generated 2026-08-14 01:03:28
 scope: the properties every shipped build depends on. Live inference = order §5 (screen-driven).
 
 1. RULE-BASED DETERMINISM (the default path is a pure function)
   PASS  two calls, identical line: "It followed from what came before: Ask the Firebringer, and hunger."
   PASS  a different cause set gives a different line: "It followed from one thing: the long winter."
-  PASS  no causes -> an honest line, never empty: "The chronicle records no cause — it simply happened."
+  PASS  no causes -> an honest line, never empty: "No cause was set down beside it."
 
 2. KEY + SEED (stable across calls, distinct across entries)
   PASS  KeyFor stable
@@ -16,14 +16,55 @@ scope: the properties every shipped build depends on. Live inference = order §5
 
 3+4. FLAG AND NO-MODEL HONESTY (instant, synchronous, model-free)
   PASS  useProse=false -> task already completed on return (no await)
-  PASS  useProse=false -> exactly the rule-based line
+  PASS  useProse=false -> the rule-based line, at the voice this world can hold: "Ask the Firebringer had come first. Other things too, not kept."
   PASS  useProse=true, character=null -> same instant fallback
+  PASS  a caller passing a FROZEN tier gets that tier, not the world's current one
 
 5. WORD-BAN GUARD (a slipped technical word is refused, not shipped)
   PASS  Sanitize reachable for test
   PASS  a clean line passes, trimmed
   PASS  "simulation" -> refused (caller falls back)
   PASS  "ENGINE" -> refused case-insensitively
+
+5b. THE ANACHRONISM LAW IS DERIVED, NOT DECREED
+  PASS  "financial" REFUSED in a world of fire and rope
+  PASS  "coin" REFUSED before coinage exists
+  PASS  "coin" ACCEPTED once the world has invented coinage — the world EARNED the word
+  PASS  "court" REFUSED before law exists
+  PASS  "court" ACCEPTED once law is known
+  PASS  "healer" REFUSED before medicine exists
+  PASS  "healer" ACCEPTED once medicine is known
+  PASS  "wrote" ACCEPTED once writing is known
+  PASS  "wrote" REFUSED before writing is known
+  PASS  "insurance" refused even in the LATEST world — the engine models no such thing anywhere
+  PASS  an honest, DARK line about hunger and winter passes untouched — dark is not the enemy, false is
+  PASS  blood-feud language passes untouched in the stone age
+  PASS  KnownTechs unions the villages' own knowledge (3 techs)
+  PASS  and claims nothing the world has not learned
+  PASS  a null world knows nothing — the strictest reading, never a crash
+
+5c. THE VOICE MATURES WITH THE WORLD — and never rewrites its own past
+  PASS  a world of fire and rope REMEMBERS
+  PASS  storytelling -> it is TOLD
+  PASS  writing -> it is WRITTEN
+  PASS  philosophy -> it is WEIGHED
+  PASS  numbers WITHOUT writing does NOT lift the voice — the ladder is monotonic even though `numbers` has pre:[]
+  PASS  an unknown world gets the STRICTEST voice
+  remembered : winter had come first. Other things too, not kept.
+  told       : They say it came of winter, Saga, and desperation.
+  written    : It followed from what came before: winter, Saga, and desperation.
+  weighed    : It followed from winter, Saga, and desperation. Little else could have followed.
+  PASS  four tiers, four different voices
+  PASS  each tier is deterministic
+  PASS  REMEMBERED keeps only the nearest cause (the class-ordered first), not the chain
+  PASS  ...and SAYS that there were others — 'allt hände' survives 'we remember only one', not a page pretending there was one
+  PASS  TOLD hedges — a telling is hearsay
+  PASS  WRITTEN stops hedging — this is what was set down
+  PASS  WEIGHED judges what else could have followed
+  PASS  even silence is said differently at each tier
+  PASS  the village that cannot write REMEMBERS — even though its neighbour philosophises (D-086: villages diverge)
+  PASS  and the village that can, WEIGHS
+  PASS  BEFORE THE FIRST VILLAGE the world's own knowledge speaks — the opening is not silenced by an empty array
 
 6+7+8. THE WIRING (feed matches engine causes; the view answers; the sim is untouched)
   PASS  fixture present: Assets/Emergence/WorldStates/seq-8919-y055.json
@@ -33,13 +74,14 @@ scope: the properties every shipped build depends on. Live inference = order §5
   PASS  matched the right engine event (id=41, expected 41)
   PASS  match bookkeeping honest: matches=1 misses=1
   PASS  the milestone beat has NO engine causes and says so (never invented)
-  PASS  the why-line SPEAKS the engine's cause: "It followed from what came before: Hunger owned the hand, and the long winter."
-  PASS  the causeless beat answers honestly: "The chronicle records no cause — it simply happened."
-  why (steal)     : It followed from what came before: Hunger owned the hand, and the long winter.
-  why (milestone) : The chronicle records no cause — it simply happened.
-  PASS  NO SIM MUTATION: applied state byte-identical before/after (30774 chars)
+  PASS  every entry froze its voice tier at witness time (steal=weighed)
+  PASS  the why-line SPEAKS the engine's cause: "It followed from Hunger owned the hand, and the long winter. Little else could have followed."
+  PASS  the causeless beat answers honestly: "No cause was set down beside it — and not all that happens leaves one to find."
+  why (steal)     : It followed from Hunger owned the hand, and the long winter. Little else could have followed.
+  why (milestone) : No cause was set down beside it — and not all that happens leaves one to find.
+  PASS  NO SIM MUTATION: applied state byte-identical before/after (30790 chars)
 
-VERDICT: GREEN  (25/25)
+VERDICT: GREEN  (59/59)
 declared limits: no model is loaded here by design — live inference (identical line twice + tone) is order §5.
 declared fixture: the events[] set is an in-memory DECLARED fixture in the exporter's exact schema (the standing
   seq-8919-y055.json predates the §1 export). It proves the MATCH LAW; a live world proves the volume.

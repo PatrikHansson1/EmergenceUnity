@@ -41,6 +41,11 @@ namespace Emergence.Runtime
             // or when an old export/fixture carries no events[] — the why-line then says so.
             public string[] causes;
             public int eventId;     // engine event id, -1 when unmatched
+            // FROZEN AT WITNESS TIME (2026-08-14, hostile review inv. 4+5): the voice this entry was
+            // written in. Never recomputed — the book does not rewrite its own past when the people
+            // learn something new, and it does not grow dumber when they forget. A shared seed + year
+            // must reproduce a quoted line, or the chronicle stops being evidence (condition B).
+            public int voiceTier;
         }
 
         public const int Capacity = 4096;          // bounded like the bus — a feed can never grow without limit
@@ -179,7 +184,12 @@ namespace Emergence.Runtime
             if (vname != null) text += " (" + vname + ")";
 
             int evId; var causes = CausesFor(kind, e, out evId);
-            _entries.Add(new Entry { year = e.Year, era = e.Era, salience = salience, kind = kind, text = text, key = key, causes = causes, eventId = evId });
+            // the voice of the community that WITNESSED this — scoped to its village, not unioned
+            // over the world (the engine dropped global knowledge in 2.1/D-086 for the same reason)
+            var wNow = World();
+            int tier = Emergence.Fas4.Fas4ProseDirector.VoiceTier(
+                Emergence.Fas4.Fas4ProseDirector.KnownTechs(wNow != null ? wNow.LastState : null, e.VillageId));
+            _entries.Add(new Entry { year = e.Year, era = e.Era, salience = salience, kind = kind, text = text, key = key, causes = causes, eventId = evId, voiceTier = tier });
             if (_entries.Count > Capacity)
             { _keys.Remove(_entries[0].key); _entries.RemoveAt(0); DroppedOldest++; }
         }

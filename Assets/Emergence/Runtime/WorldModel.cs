@@ -70,6 +70,11 @@ namespace Emergence.Runtime
         public WorldField[] fields; public WorldVillage[] villages; public WorldAnimal[] animals;
         // FAS 4 prose wiring: bounded tail of causes-bearing engine events for this snapshot year.
         public WorldEvent[] events;
+        // FAS 4 voice ladder (2026-08-14, fientlig granskning inv. 2): villages[].knows is EMPTY
+        // before the first village is founded, and again after a collapse empties them — so a
+        // union over villages would silence the whole opening by an accident of the data model
+        // rather than by law. The world's own living knowledge closes that hole. Pure read.
+        public string[] worldKnows;
     }
 
     /// <summary>D-147: presentation-side era naming — the D-146 finding was that the bus's Era slot

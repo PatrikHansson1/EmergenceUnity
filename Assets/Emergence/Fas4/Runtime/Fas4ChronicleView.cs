@@ -66,7 +66,7 @@ namespace Emergence.Runtime
         ScrollView _bookScroll;
         readonly List<Button> _filterButtons = new List<Button>();
 
-        sealed class BookRow { public int year; public int salience; public string key; public Label stub; public string text; public string[] causes; }
+        sealed class BookRow { public int year; public int salience; public string key; public Label stub; public string text; public string[] causes; public int voiceTier; }
         readonly List<BookRow> _bookRows = new List<BookRow>();
         readonly List<int> _feedRowSaliences = new List<int>();
         readonly HashSet<string> _expandedKeys = new HashSet<string>();   // survives rebuilds — the reader's open pages
@@ -178,21 +178,21 @@ namespace Emergence.Runtime
             {
                 // no director in the scene: the same deterministic rule-based line, straight from the
                 // service's static law — the reader is never shown an empty page.
-                Answer(row.key, Fas4ProseDirector.RuleBasedWhy(row.text, row.causes));
+                Answer(row.key, Fas4ProseDirector.RuleBasedWhy(row.text, row.causes, row.voiceTier));
                 row.stub.text = _whyCache[row.key];
                 return;
             }
 
             System.Threading.Tasks.Task<string> t;
-            try { t = d.WhyProse(row.text, row.causes); }
+            try { t = d.WhyProse(row.text, row.causes, row.voiceTier); }
             catch (System.Exception e)
             {
                 Debug.LogWarning("[Fas4ChronicleView] why: " + e.Message);
-                Answer(row.key, Fas4ProseDirector.RuleBasedWhy(row.text, row.causes));
+                Answer(row.key, Fas4ProseDirector.RuleBasedWhy(row.text, row.causes, row.voiceTier));
                 row.stub.text = _whyCache[row.key]; return;
             }
 
-            if (t == null) { Answer(row.key, Fas4ProseDirector.RuleBasedWhy(row.text, row.causes)); row.stub.text = _whyCache[row.key]; return; }
+            if (t == null) { Answer(row.key, Fas4ProseDirector.RuleBasedWhy(row.text, row.causes, row.voiceTier)); row.stub.text = _whyCache[row.key]; return; }
             if (t.IsCompleted) { Answer(row.key, Safe(t, row)); row.stub.text = _whyCache[row.key]; return; }
             row.stub.text = WhyWaiting;
             _pendingWhy.Add(new PendingWhy { key = row.key, task = t });
@@ -223,7 +223,7 @@ namespace Emergence.Runtime
                 if (!string.IsNullOrEmpty(r)) return r;
             }
             catch (System.Exception e) { Debug.LogWarning("[Fas4ChronicleView] why: " + e.Message); }
-            return Fas4ProseDirector.RuleBasedWhy(row != null ? row.text : "", row != null ? row.causes : null);
+            return Fas4ProseDirector.RuleBasedWhy(row != null ? row.text : "", row != null ? row.causes : null, row != null ? row.voiceTier : Fas4ProseDirector.TierWritten);
         }
 
         void Answer(string key, string line)
@@ -411,7 +411,7 @@ namespace Emergence.Runtime
 
                 int idx = _bookRows.Count;
                 row.RegisterCallback<ClickEvent>(_ => ExpandBookRow(idx));
-                _bookRows.Add(new BookRow { year = e.year, salience = e.salience, key = e.key, stub = stub, text = e.text, causes = e.causes });
+                _bookRows.Add(new BookRow { year = e.year, salience = e.salience, key = e.key, stub = stub, text = e.text, causes = e.causes, voiceTier = e.voiceTier });
                 _bookScroll.Add(row);
             }
         }

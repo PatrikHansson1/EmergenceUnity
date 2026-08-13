@@ -1,5 +1,5 @@
 EMERGENCE — FAS 4 PROBE: LIVE INFERENCE (order §5)
-generated 2026-08-13 23:59:37
+generated 2026-08-14 00:59:37
 beats = REAL turning points with the engine's own resolved causes (§1 export, seeds 8919/97013)
 
 1. THE MODEL LOADS IN THIS VEHICLE
@@ -10,38 +10,38 @@ beats = REAL turning points with the engine's own resolved causes (§1 export, s
 2+3. THE SAME TURNING POINT READS THE SAME WAY TWICE — CACHE BYPASSED
   beat 1 : want owned the hand — Saga steals (Torvhaven)
     causes  : Winter closes over the world | Saga | desperation
-    line A  : The winter closure of the world showed that resources were scarce and desperate people sought alternative means to acquire what they needed.
-    line B  : The winter closure of the world showed that resources were scarce and desperate people sought alternative means to acquire what they needed.   (2,5 s for both)
-  PASS  beat 1: two cold directors, byte-identical line (140 chars)
+    line A  : Desperation drove Saga to steal Torvhaven's owner's hand in a desperate attempt to gain power and control.
+    line B  : Desperation drove Saga to steal Torvhaven's owner's hand in a desperate attempt to gain power and control.   (2,0 s for both)
+  PASS  beat 1: two cold directors, byte-identical line (106 chars)
   PASS  beat 1: the cache returns exactly what was inferred
   beat 2 : death finds the people for the first time — Ask departs
     causes  : age
-    line A  : The body's natural decay process began after the individual reached a certain age.
-    line B  : The body's natural decay process began after the individual reached a certain age.   (1,8 s for both)
-  PASS  beat 2: two cold directors, byte-identical line (82 chars)
+    line A  : Death found the people for the first time when they were young and strong.
+    line B  : Death found the people for the first time when they were young and strong.   (2,0 s for both)
+  PASS  beat 2: two cold directors, byte-identical line (74 chars)
   PASS  beat 2: the cache returns exactly what was inferred
   beat 3 : a first child is born — Liv
     causes  : Ask | Embla
-    line A  : It followed from what came before: Ask, and Embla.
-    line B  : It followed from what came before: Ask, and Embla.   (2,5 s for both)
-  PASS  beat 3: two cold directors, byte-identical line (50 chars)
+    line A  : The birth was prompted by a request made to the people who had just welcomed their first child into the world.
+    line B  : The birth was prompted by a request made to the people who had just welcomed their first child into the world.   (2,4 s for both)
+  PASS  beat 3: two cold directors, byte-identical line (110 chars)
   PASS  beat 3: the cache returns exactly what was inferred
   PASS  beat 1 and beat 2 read DIFFERENTLY
   PASS  beat 1 and beat 3 read DIFFERENTLY
   PASS  beat 2 and beat 3 read DIFFERENTLY
 
 4. THE VOICE HOLDS (the machine half; TONE is judged by a human below)
-  PASS  no banned word in: "The winter closure of the world showed that resources were scarce a..."
-  PASS  no markup in: "The winter closure of the world showed that resources were scarce a..."
-  PASS  book-row length (140 chars)
+  PASS  no banned word in: "Desperation drove Saga to steal Torvhaven's owner's hand in a despe..."
+  PASS  no markup in: "Desperation drove Saga to steal Torvhaven's owner's hand in a despe..."
+  PASS  book-row length (106 chars)
   PASS  no exclamation mark
-  PASS  no banned word in: "The body's natural decay process began after the individual reached..."
-  PASS  no markup in: "The body's natural decay process began after the individual reached..."
-  PASS  book-row length (82 chars)
+  PASS  no banned word in: "Death found the people for the first time when they were young and ..."
+  PASS  no markup in: "Death found the people for the first time when they were young and ..."
+  PASS  book-row length (74 chars)
   PASS  no exclamation mark
-  PASS  no banned word in: "It followed from what came before: Ask, and Embla."
-  PASS  no markup in: "It followed from what came before: Ask, and Embla."
-  PASS  book-row length (50 chars)
+  PASS  no banned word in: "The birth was prompted by a request made to the people who had just..."
+  PASS  no markup in: "The birth was prompted by a request made to the people who had just..."
+  PASS  book-row length (110 chars)
   PASS  no exclamation mark
 5. THE INVENTION GUARD (a name not in the facts is a lie, not a blemish)
   PASS  a soul who is in no world is CAUGHT ("Astrid")
@@ -50,23 +50,23 @@ beats = REAL turning points with the engine's own resolved causes (§1 export, s
   PASS  line 1 names nobody the facts do not name
   PASS  line 2 names nobody the facts do not name
   PASS  line 3 names nobody the facts do not name
-  PASS  line 1 fits a book row (140 chars)
+  PASS  line 1 fits a book row (106 chars)
   PASS  line 1 is ONE line, no paragraphs
-  PASS  line 2 fits a book row (82 chars)
+  PASS  line 2 fits a book row (74 chars)
   PASS  line 2 is ONE line, no paragraphs
-  PASS  line 3 fits a book row (50 chars)
+  PASS  line 3 fits a book row (110 chars)
   PASS  line 3 is ONE line, no paragraphs
-  guards ruled: accepted=2 refused(word-ban)=1 refused(invention)=0
+  guards ruled: accepted=3 refused(word-ban)=0 refused(invention)=0
 
   ---- FOR THE HUMAN EYE (D-008): read these as chronicle lines ----
    want owned the hand — Saga steals (Torvhaven)
-      why: The winter closure of the world showed that resources were scarce and desperate people sought alternative means to acquire what they needed.
+      why: Desperation drove Saga to steal Torvhaven's owner's hand in a desperate attempt to gain power and control.
    death finds the people for the first time — Ask departs
-      why: The body's natural decay process began after the individual reached a certain age.
+      why: Death found the people for the first time when they were young and strong.
    a first child is born — Liv
-      why: It followed from what came before: Ask, and Embla.
+      why: The birth was prompted by a request made to the people who had just welcomed their first child into the world.
 
-elapsed: 7,9 s
+elapsed: 7,5 s
 VERDICT: GREEN  (36/36)
 declared: this proves the SERVICE under a real model. Reproducibility is asserted across two cold
   directors on the same loaded model + backend — the pin the setup doc states (CPU inference,

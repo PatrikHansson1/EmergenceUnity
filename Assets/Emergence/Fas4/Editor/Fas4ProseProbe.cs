@@ -26,6 +26,7 @@
 // Menu: Emergence/Fas4/RUN PROSE PROBE.  Headless: drop Reports/RUN_FAS4PROSE.trigger.
 #if UNITY_EDITOR
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using UnityEditor;
@@ -107,12 +108,16 @@ namespace Emergence.Editor
                 {
                     var d = host.AddComponent<Fas4ProseDirector>();
                     d.useProse = false; d.character = null;
+                    // no Fas3WorldRuntime in this scene -> no world -> the STRICTEST voice (remembered)
+                    string rStrict = Fas4ProseDirector.RuleBasedWhy("Embla departs", causesA, Fas4ProseDirector.TierRemembered);
                     var t = d.WhyProse("Embla departs", causesA);
                     Check(t.IsCompleted, "useProse=false -> task already completed on return (no await)");
-                    Check(t.Result == r1, "useProse=false -> exactly the rule-based line");
+                    Check(t.Result == rStrict, "useProse=false -> the rule-based line, at the voice this world can hold: \"" + t.Result + "\"");
                     d.useProse = true;   // flag on, but no model present
                     var t2 = d.WhyProse("Embla departs", causesA);
-                    Check(t2.IsCompleted && t2.Result == r1, "useProse=true, character=null -> same instant fallback");
+                    Check(t2.IsCompleted && t2.Result == rStrict, "useProse=true, character=null -> same instant fallback");
+                    Check(d.WhyProse("Embla departs", causesA, Fas4ProseDirector.TierWeighed).Result != rStrict,
+                          "a caller passing a FROZEN tier gets that tier, not the world's current one");
                     sb.AppendLine();
 
                     // ---------- 5. word-ban guard ----------
@@ -128,6 +133,102 @@ namespace Emergence.Editor
                         Check(string.IsNullOrEmpty(dirty), "\"simulation\" -> refused (caller falls back)");
                         Check(string.IsNullOrEmpty(dirty2), "\"ENGINE\" -> refused case-insensitively");
                     }
+                    sb.AppendLine();
+
+                    // ---------- 5b. THE ANACHRONISM LAW, DERIVED FROM THE WORLD'S ONTOLOGY ----------
+                    // The point Patrik pressed on (2026-08-14): we do not remove dark stories, we remove
+                    // FALSE ones — and a hand-written blacklist cannot tell the difference. This asserts
+                    // the replacement: the same word is refused in a world that cannot hold it and
+                    // ACCEPTED in a world that has invented it. Nothing has to be unbanned by hand.
+                    sb.AppendLine("5b. THE ANACHRONISM LAW IS DERIVED, NOT DECREED");
+                    var stoneAge = new HashSet<string>(new[] { "fire", "sharp", "rope", "hut" });
+                    var lateWorld = new HashSet<string>(new[] { "fire", "writing", "coinage", "law", "medicine", "smithing" });
+
+                    Check(Fas4ProseDirector.AnachronismIn("The father agreed to provide financial support.", stoneAge) != null,
+                          "\"financial\" REFUSED in a world of fire and rope");
+                    Check(Fas4ProseDirector.AnachronismIn("She paid a coin for the grain.", stoneAge) != null,
+                          "\"coin\" REFUSED before coinage exists");
+                    Check(Fas4ProseDirector.AnachronismIn("She paid a coin for the grain.", lateWorld) == null,
+                          "\"coin\" ACCEPTED once the world has invented coinage — the world EARNED the word");
+                    Check(Fas4ProseDirector.AnachronismIn("The court would not hear him.", stoneAge) != null,
+                          "\"court\" REFUSED before law exists");
+                    Check(Fas4ProseDirector.AnachronismIn("The court would not hear him.", lateWorld) == null,
+                          "\"court\" ACCEPTED once law is known");
+                    Check(Fas4ProseDirector.AnachronismIn("No healer could help; the wound went bad.", stoneAge) != null,
+                          "\"healer\" REFUSED before medicine exists");
+                    Check(Fas4ProseDirector.AnachronismIn("No healer could help; the wound went bad.", lateWorld) == null,
+                          "\"healer\" ACCEPTED once medicine is known");
+                    Check(Fas4ProseDirector.AnachronismIn("He wrote it down so it would outlast him.", lateWorld) == null,
+                          "\"wrote\" ACCEPTED once writing is known");
+                    Check(Fas4ProseDirector.AnachronismIn("He wrote it down so it would outlast him.", stoneAge) != null,
+                          "\"wrote\" REFUSED before writing is known");
+                    Check(Fas4ProseDirector.AnachronismIn("The insurance would not cover it.", lateWorld) != null,
+                          "\"insurance\" refused even in the LATEST world — the engine models no such thing anywhere");
+                    Check(Fas4ProseDirector.AnachronismIn("Hunger owned the hand, and winter took the rest.", stoneAge) == null,
+                          "an honest, DARK line about hunger and winter passes untouched — dark is not the enemy, false is");
+                    Check(Fas4ProseDirector.AnachronismIn("He came for an old wrong and answered it with blood.", stoneAge) == null,
+                          "blood-feud language passes untouched in the stone age");
+
+                    // the ontology is READ from the world, never assumed
+                    var Sk = new WorldState { villages = new[] {
+                        new WorldVillage { name = "Torvhaven", knows = new[] { "fire", "writing" } },
+                        new WorldVillage { name = "Bjornheim", knows = new[] { "fire", "coinage" } } } };
+                    var known = Fas4ProseDirector.KnownTechs(Sk);
+                    Check(known.Contains("writing") && known.Contains("coinage"), "KnownTechs unions the villages' own knowledge (" + known.Count + " techs)");
+                    Check(!known.Contains("law"), "and claims nothing the world has not learned");
+                    Check(Fas4ProseDirector.KnownTechs(null).Count == 0, "a null world knows nothing — the strictest reading, never a crash");
+                    sb.AppendLine();
+
+                    // ---------- 5c. THE VOICE LADDER (reviewed 2026-08-14; v1 lost five arguments) --
+                    sb.AppendLine("5c. THE VOICE MATURES WITH THE WORLD — and never rewrites its own past");
+                    var oral    = new HashSet<string> { "fire", "rope" };
+                    var told    = new HashSet<string> { "fire", "storytelling" };
+                    var written = new HashSet<string> { "fire", "storytelling", "writing" };
+                    var weighed = new HashSet<string> { "fire", "storytelling", "writing", "philosophy" };
+                    var counts  = new HashSet<string> { "fire", "numbers" };   // numbers has pre:[] — it CAN come first
+
+                    Check(Fas4ProseDirector.VoiceTier(oral) == Fas4ProseDirector.TierRemembered, "a world of fire and rope REMEMBERS");
+                    Check(Fas4ProseDirector.VoiceTier(told) == Fas4ProseDirector.TierTold, "storytelling -> it is TOLD");
+                    Check(Fas4ProseDirector.VoiceTier(written) == Fas4ProseDirector.TierWritten, "writing -> it is WRITTEN");
+                    Check(Fas4ProseDirector.VoiceTier(weighed) == Fas4ProseDirector.TierWeighed, "philosophy -> it is WEIGHED");
+                    Check(Fas4ProseDirector.VoiceTier(counts) == Fas4ProseDirector.TierRemembered,
+                          "numbers WITHOUT writing does NOT lift the voice — the ladder is monotonic even though `numbers` has pre:[]");
+                    Check(Fas4ProseDirector.VoiceTier(null) == Fas4ProseDirector.TierRemembered, "an unknown world gets the STRICTEST voice");
+
+                    var cs3 = new[] { "winter", "Saga", "desperation" };
+                    string l0 = Fas4ProseDirector.RuleBasedWhy("x", cs3, 0);
+                    string l1 = Fas4ProseDirector.RuleBasedWhy("x", cs3, 1);
+                    string l2 = Fas4ProseDirector.RuleBasedWhy("x", cs3, 2);
+                    string l3 = Fas4ProseDirector.RuleBasedWhy("x", cs3, 3);
+                    sb.AppendLine("  remembered : " + l0);
+                    sb.AppendLine("  told       : " + l1);
+                    sb.AppendLine("  written    : " + l2);
+                    sb.AppendLine("  weighed    : " + l3);
+                    Check(l0 != l1 && l1 != l2 && l2 != l3 && l0 != l3, "four tiers, four different voices");
+                    Check(l0 == Fas4ProseDirector.RuleBasedWhy("x", cs3, 0), "each tier is deterministic");
+                    Check(l0.Contains("winter") && !l0.Contains("Saga"),
+                          "REMEMBERED keeps only the nearest cause (the class-ordered first), not the chain");
+                    Check(l0.Contains("not kept"),
+                          "...and SAYS that there were others — 'allt hände' survives 'we remember only one', not a page pretending there was one");
+                    Check(l1.Contains("They say"), "TOLD hedges — a telling is hearsay");
+                    Check(!l2.Contains("They say"), "WRITTEN stops hedging — this is what was set down");
+                    Check(l3.Contains("Little else"), "WEIGHED judges what else could have followed");
+                    Check(Fas4ProseDirector.RuleBasedWhy("x", null, 0) != Fas4ProseDirector.RuleBasedWhy("x", null, 3),
+                          "even silence is said differently at each tier");
+
+                    // scoping: the WITNESSING village's knowledge, not a union over the world
+                    var Sv = new WorldState {
+                        worldKnows = new[] { "fire", "storytelling", "writing", "philosophy" },
+                        villages = new[] {
+                            new WorldVillage { name = "Torvhaven", knows = new[] { "fire", "rope" } },
+                            new WorldVillage { name = "Bjornheim", knows = new[] { "fire", "storytelling", "writing", "philosophy" } } } };
+                    Check(Fas4ProseDirector.VoiceTier(Fas4ProseDirector.KnownTechs(Sv, 0)) == Fas4ProseDirector.TierRemembered,
+                          "the village that cannot write REMEMBERS — even though its neighbour philosophises (D-086: villages diverge)");
+                    Check(Fas4ProseDirector.VoiceTier(Fas4ProseDirector.KnownTechs(Sv, 1)) == Fas4ProseDirector.TierWeighed,
+                          "and the village that can, WEIGHS");
+                    var Spre = new WorldState { worldKnows = new[] { "fire", "storytelling", "writing" }, villages = new WorldVillage[0] };
+                    Check(Fas4ProseDirector.VoiceTier(Fas4ProseDirector.KnownTechs(Spre, -1)) == Fas4ProseDirector.TierWritten,
+                          "BEFORE THE FIRST VILLAGE the world's own knowledge speaks — the opening is not silenced by an empty array");
                     sb.AppendLine();
 
                     // ---------- 6+7+8. the wiring, end to end, on a real fixture ----------
@@ -180,10 +281,17 @@ namespace Emergence.Editor
                             Check(feed.CauseMatches == 1 && feed.CauseMisses == 1, "match bookkeeping honest: matches=" + feed.CauseMatches + " misses=" + feed.CauseMisses);
                             Check(mileEntry.causes == null && mileEntry.eventId == -1, "the milestone beat has NO engine causes and says so (never invented)");
 
-                            string whySteal = Fas4ProseDirector.RuleBasedWhy(stealEntry.text, stealEntry.causes);
-                            string whyMile  = Fas4ProseDirector.RuleBasedWhy(mileEntry.text, mileEntry.causes);
-                            Check(whySteal.Contains("the long winter"), "the why-line SPEAKS the engine's cause: \"" + whySteal + "\"");
-                            Check(whyMile.Contains("no cause"), "the causeless beat answers honestly: \"" + whyMile + "\"");
+                            // the FROZEN tier is what the line is written in — never today's tier
+                            Check(stealEntry.voiceTier >= 0 && mileEntry.voiceTier >= 0,
+                                  "every entry froze its voice tier at witness time (steal=" + Fas4ProseDirector.TierName(stealEntry.voiceTier) + ")");
+                            string whySteal = Fas4ProseDirector.RuleBasedWhy(stealEntry.text, stealEntry.causes, stealEntry.voiceTier);
+                            string whyMile  = Fas4ProseDirector.RuleBasedWhy(mileEntry.text, mileEntry.causes, mileEntry.voiceTier);
+                            Check(whySteal.Contains("the long winter") || whySteal.Contains("Hunger owned the hand"),
+                                  "the why-line SPEAKS the engine's cause: \"" + whySteal + "\"");
+                            Check(whyMile.IndexOf("reason", System.StringComparison.OrdinalIgnoreCase) >= 0
+                               || whyMile.IndexOf("cause", System.StringComparison.OrdinalIgnoreCase) >= 0
+                               || whyMile.IndexOf("not why", System.StringComparison.OrdinalIgnoreCase) >= 0,
+                                  "the causeless beat answers honestly: \"" + whyMile + "\"");
                             sb.AppendLine("  why (steal)     : " + whySteal);
                             sb.AppendLine("  why (milestone) : " + whyMile);
 

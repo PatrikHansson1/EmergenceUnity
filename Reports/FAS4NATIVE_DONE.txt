@@ -1,2 +1,2 @@
-DONE 00:03:13 verdict=GREEN feedRows=8 bookRows=8
+DONE 01:06:03 verdict=GREEN feedRows=8 bookRows=8
 see Reports/fas4-native-view.txt
