@@ -53,11 +53,31 @@ namespace Emergence.Runtime
 
         /// <summary>Resolve the engine source path. 2.3 re-baseline (D-093): the canon Engine/ copy is
         /// read-only-locked on disk, so the writable 2.3 twin lives in StreamingAssets — prefer it when present.</summary>
+        /// <summary>D-225: THE FALLBACK WAS SILENT, AND A SILENT FALLBACK TO A DIFFERENT ENGINE IS
+        /// THE WORST FAILURE THIS PROJECT COULD HAVE.
+        ///
+        /// The living engine is the StreamingAssets twin (2.4.1, 53 techs). Assets/Emergence/Engine
+        /// held a 2.0.1 relic with 17 techs that this method would quietly fall back to if
+        /// StreamingAssets were ever missing — no error, no warning, just a DIFFERENT WORLD from the
+        /// same seed. Determinism is the product; a fallback that changes the simulation without
+        /// saying so is not a safety net, it is a trapdoor.
+        ///
+        /// The relic is archived (see _ARCHIVE/2026-08-14-engine-relic/README.md — it cost a wrong
+        /// codex audit to prove the point) and the fallback now FAILS LOUDLY instead of substituting
+        /// an engine. If StreamingAssets is missing, that is a broken install and the honest answer
+        /// is to say so, not to run something else and call it Emergence.</summary>
         public static string EngineSourcePath(string engineDir)
         {
             var sa = Path.Combine(UnityEngine.Application.streamingAssetsPath, "Emergence", "emergence-engine.js");
             if (File.Exists(sa)) return sa;
-            return Path.Combine(engineDir, "emergence-engine.js");
+            var legacy = Path.Combine(engineDir, "emergence-engine.js");
+            if (File.Exists(legacy))
+                throw new FileNotFoundException(
+                    "The living engine (StreamingAssets/Emergence/emergence-engine.js) is missing, and " +
+                    "Assets/Emergence/Engine holds an engine file. That file is a 2.0.1 RELIC with 17 techs; " +
+                    "the game runs 2.4.1 with 53. Running it would silently produce a different world from " +
+                    "the same seed. Restore StreamingAssets instead — see _ARCHIVE/2026-08-14-engine-relic/.");
+            throw new FileNotFoundException("Engine source not found: " + sa);
         }
 
         /// <summary>Read engine + prelude (+ optional harness) from a directory laid out like Assets/Emergence/Engine/.</summary>
