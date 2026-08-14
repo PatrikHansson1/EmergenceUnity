@@ -39,6 +39,46 @@ MonoBehaviour:
     prefab: {fileID: 2894322392308190667, guid: 034ea9b7bed61594aaa82e9a22a764e6, type: 3}
   - name: Prefab_Flower_04
     prefab: {fileID: 4307904433006370069, guid: 5b0f9cb08ae1d8044bfa44cdf5cd1d4a, type: 3}
+  - name: Prefab_TreeLarge_01
+    prefab: {fileID: 2118840309929815125, guid: bb5ef018996d1c842a3fda7ef67595e9, type: 3}
+  - name: Prefab_TreeLarge_02
+    prefab: {fileID: 6021622013396635853, guid: 10b4c149ea70f1347a52ea09807bfb56, type: 3}
+  - name: Prefab_TreeLarge_03
+    prefab: {fileID: 1886321769886341428, guid: d5791b48d5a368745ab610ece80216ea, type: 3}
+  - name: Prefab_TreeLarge_04
+    prefab: {fileID: 5226316510126817088, guid: dbe24c59355c97e44a773f2bea8a279f, type: 3}
+  - name: Prefab_Birch_01
+    prefab: {fileID: 1844897081636531020, guid: 2832e458df8616d459183adb0dfa9083, type: 3}
+  - name: Prefab_Birch_02
+    prefab: {fileID: 1374899979308285549, guid: 32d3db38af308cc4a86540a04c1e129f, type: 3}
+  - name: Prefab_Birch_04
+    prefab: {fileID: 427588332354682805, guid: 320a2153c306f124e9df52b52a0f4e19, type: 3}
+  - name: Prefab_Birch_05
+    prefab: {fileID: 5194611686949037208, guid: 61bdbc13522514f4e9095e7fec63a76e, type: 3}
+  - name: Prefab_RockFormation_01
+    prefab: {fileID: 6299899493707373080, guid: 7f673df2de98f354ca69d8d4571871d3, type: 3}
+  - name: Prefab_RockFormation_02
+    prefab: {fileID: 8709076328338050862, guid: 318cd40688c3c714ea0bc6151138b9e9, type: 3}
+  - name: Prefab_RockFormation_03
+    prefab: {fileID: 2464843867196060693, guid: 966dbb131254b764da9c8aec1b056832, type: 3}
+  - name: Prefab_RockFormation_04
+    prefab: {fileID: 2921132140309449108, guid: ca21edac250d713449ce116707447d89, type: 3}
+  - name: P_ENV_stone_01
+    prefab: {fileID: 0}
+  - name: Prefab_Bush_01
+    prefab: {fileID: 4974463672623675875, guid: 33ecd0ef342d8ee4188c82a8b5761ab5, type: 3}
+  - name: Prefab_Bush_02
+    prefab: {fileID: 5648544150296794767, guid: f1acfe97b07f9f54ca6dc5555723aba1, type: 3}
+  - name: Prefab_Bush_03
+    prefab: {fileID: 1051078274315369266, guid: ed60867ab2e84f944925106afee949be, type: 3}
+  - name: P_PROP_treetrunk_01
+    prefab: {fileID: 7642714241296846559, guid: 21d25390e2982794d8ea9cffc197c7ec, type: 3}
+  - name: P_PROP_treetrunk_02
+    prefab: {fileID: 1166314740754180048, guid: 331cd993ddfaf9447920ed1b003bfc2f, type: 3}
+  - name: P_PROP_treetrunk_03
+    prefab: {fileID: 987989193244980787, guid: ca8d30c67ce48494bbfe4e7234fa81f3, type: 3}
+  - name: P_PROP_treetrunk_04
+    prefab: {fileID: 8749945001493306586, guid: accd3985c8454a54199ab2589ec45c56, type: 3}
   - name: P_PROP_flag_01
     prefab: {fileID: 1525057500783216557, guid: 319a3e76f3abd7a43b206990bf62733f, type: 3}
   - name: mill.glb

@@ -110,7 +110,16 @@ namespace Emergence.Editor
             var optional = new[] { "VFX_Fire_01_Medium", "VFX_Fire_01_Big", "P_FX_fire", "PF_FX_fire", "fire",
                                    "msVFX_Stylized Smoke 1", "msVFX_Stylized Smoke 2",
                                    "Prefab_Grass_01_Detail", "Prefab_Grass_Group_01_Detail", "Prefab_Grass_03_Detail",
-                                   "SM_Flower_01_Unity", "Prefab_Flower_02", "Prefab_Flower_04" };
+                                   "SM_Flower_01_Unity", "Prefab_Flower_02", "Prefab_Flower_04",
+                                   // VÅG 1.1 (rest): the natural world — the dresser found these with an editor
+                                   // prefix query, which is why the living loop had no trees, rocks or bushes.
+                                   // Exact names, in the dresser's own preference order.
+                                   "Prefab_TreeLarge_01", "Prefab_TreeLarge_02", "Prefab_TreeLarge_03", "Prefab_TreeLarge_04",
+                                   "Prefab_Birch_01", "Prefab_Birch_02", "Prefab_Birch_04", "Prefab_Birch_05",
+                                   "Prefab_RockFormation_01", "Prefab_RockFormation_02", "Prefab_RockFormation_03", "Prefab_RockFormation_04",
+                                   "P_ENV_stone_01",
+                                   "Prefab_Bush_01", "Prefab_Bush_02", "Prefab_Bush_03",
+                                   "P_PROP_treetrunk_01", "P_PROP_treetrunk_02", "P_PROP_treetrunk_03", "P_PROP_treetrunk_04" };
             int optOk = 0;
             foreach (var name in optional.Where(n => !wanted.Contains(n, StringComparer.OrdinalIgnoreCase)))
             {

@@ -185,6 +185,11 @@ namespace Emergence.Editor
                     Check(textured >= 5, textured + " of " + td.terrainLayers.Length + " layers carry a REAL texture (a fallback layer is flat white tinted)");
                     Check(td.detailPrototypes.Length > 0, "the meadow has detail prototypes (" + td.detailPrototypes.Length + " grass/flower)");
                     sb.AppendLine();
+                    sb.AppendLine("3b. THE NATURAL WORLD (trees, rocks, bushes — the rest of step 1.1)");
+                    sb.AppendLine("     " + (world != null ? world.NatureNote : "(no world)"));
+                    Check(world != null && world.NatureCount > 100, "the living world has a natural world in it ("
+                          + (world != null ? world.NatureCount : 0) + " placed)");
+                    sb.AppendLine();
                 }
 
                 // ---------- 5. THE WORLD INVENTORY: scale, sinking, and materials ----------
@@ -196,7 +201,7 @@ namespace Emergence.Editor
                 var rends = UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsSortMode.None);
                 float villagerH = 0f;
                 var rows = new List<string>();
-                int sunk = 0, defaultMat = 0, measured = 0;
+                int sunk = 0, defaultMat = 0, measured = 0, bedded = 0;
                 float tallest = 0f; string tallestName = "";
                 var byShader = new Dictionary<string, int>();
 
@@ -232,10 +237,16 @@ namespace Emergence.Editor
                     {
                         float gy = terrain.SampleHeight(b.center) + terrain.transform.position.y;
                         sink = gy - b.min.y;          // >0 means the object's base is BELOW the ground
-                        if (sink > 0.05f) sunk++;
+                            // THE LAW IS ABOUT BUILT THINGS AND PEOPLE, NOT BOULDERS. A rock formation
+                        // half-bedded in the hillside is correct — geology, not a bug; a house or a
+                        // villager sunk to the knee is neither. Natural scatter is therefore exempt,
+                        // and the exemption is named here rather than quietly widening the threshold.
+                        bool natural = rr.transform.root != null && rr.transform.root.name == "Nature_Live";
+                        if (sink > 0.05f && !natural) sunk++;
+                        else if (sink > 0.05f) bedded++;
                     }
                     if (b.size.y > tallest) { tallest = b.size.y; tallestName = go.name + " [" + (mat != null ? mat.name : "none") + "]"; }
-                    if (rows.Count < 14 && (isDefault || sink > 0.05f || (villagerH > 0.1f && b.size.y > villagerH * 4f)))
+                    if (rows.Count < 14 && (isDefault || (sink > 0.05f && !(rr.transform.root != null && rr.transform.root.name == "Nature_Live")) || (villagerH > 0.1f && b.size.y > villagerH * 4f)))
                         rows.Add("       " + go.name.PadRight(26).Substring(0, Math.Min(26, go.name.Length)).PadRight(26)
                                  + " h=" + b.size.y.ToString("F1") + "m"
                                  + (villagerH > 0.1f ? " (" + (b.size.y / villagerH).ToString("F1") + "x villager)" : "")
@@ -281,7 +292,7 @@ namespace Emergence.Editor
                 foreach (var e3 in big.OrderByDescending(x => x.vol).Take(10)) sb.AppendLine(e3.line);
                 Check(measured > 0, "there is something standing on the ground at all (" + measured + " renderers)");
                 Check(defaultMat == 0, "NOTHING wears Unity's default material (" + defaultMat + " do — that IS the grey checker Patrik saw)");
-                Check(sunk == 0, "NOTHING sinks through the ground (" + sunk + " do)");
+                Check(sunk == 0, "no BUILT thing or person sinks through the ground (" + sunk + " do; " + bedded + " natural props bedded into it, which is correct)");
                 if (villagerH > 0.1f)
                     Check(tallest < villagerH * 8f, "nothing is absurdly out of scale (tallest = " + (tallest / villagerH).ToString("F1") + "x a villager)");
                 sb.AppendLine();

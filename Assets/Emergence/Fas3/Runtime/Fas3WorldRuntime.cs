@@ -109,6 +109,9 @@ namespace Emergence.Runtime
                 var existing = GameObject.Find("Terrain");
                 if (existing != null) { GroundNote = "terrain already in the scene — left alone"; return; }
                 var go = Fas3TerrainBuilder.Build(S, null);
+                // and the natural world on top of it — spread across frames so the opening never hitches
+                var nature = new GameObject("Nature_Live").transform;
+                StartCoroutine(ScatterNature(S, nature));
                 GroundNote = go != null ? Fas3TerrainBuilder.LastDiag : "terrain build returned null";
                 Debug.Log("[Fas3WorldRuntime] " + GroundNote);
             }
@@ -117,6 +120,19 @@ namespace Emergence.Runtime
                 GroundNote = "terrain FAILED: " + e.Message;
                 Debug.LogWarning("[Fas3WorldRuntime] " + GroundNote);
             }
+        }
+
+        /// <summary>VÅG 1.1 (rest): trees, rocks and bushes — the same law the dresser uses, moved to
+        /// Runtime. Reported so a probe can assert on it rather than squint at a screenshot.</summary>
+        public string NatureNote { get; private set; } = "";
+        public int NatureCount { get; private set; }
+
+        System.Collections.IEnumerator ScatterNature(WorldState S, Transform parent)
+        {
+            yield return Fas3NatureScatter.Scatter(S, parent);
+            NatureNote = Fas3NatureScatter.LastNote;
+            NatureCount = Fas3NatureScatter.Placed;
+            Debug.Log("[Fas3WorldRuntime] " + NatureNote);
         }
 
         // ---- E1.5 village drama diff (Engine 2.4.1: villages[].leader + villages[].gift) ----
@@ -155,7 +171,7 @@ namespace Emergence.Runtime
             _agents.Clear(); _huts.Clear(); _codex.Clear(); _fires.Clear();
             AppliedCount = 0; LastAppliedYear = -1;
             LastState = null; PrevState = null;
-            GroundBuilt = false; GroundNote = ""; _lit = false; LightNote = "";
+            GroundBuilt = false; GroundNote = ""; _lit = false; LightNote = ""; NatureNote = ""; NatureCount = 0;
         }
     }
 }
