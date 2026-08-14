@@ -1,0 +1,20 @@
+EMERGENCE — forced pack reimport (VÅG 1.2, the white-house investigation)
+generated 2026-08-14 09:16:36
+
+BEFORE:
+  texture asset loads: YES  2048x2048  format=DXT1  mips=12
+  material loads: YES  shader=Universal Render Pipeline/Lit
+  material's base texture: T_wood_05_BC (Texture2D)
+  material base colour: RGBA(1.000, 1.000, 1.000, 1.000)
+
+  reimported 83 files in Assets/Fantastic Village Pack/2d/textures
+  reimported 52 files in Assets/Fantastic Village Pack/materials
+  reimported 91 files in Assets/Fantastic City Pack/2d/textures
+  reimported 55 files in Assets/Fantastic City Pack/materials
+
+files reimported: 281
+
+AFTER:
+  texture asset loads: YES  2048x2048  format=DXT1  mips=12
+  material's base texture: T_wood_05_BC
+  pack materials without a base texture: 10 of 52

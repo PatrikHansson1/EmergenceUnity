@@ -179,6 +179,17 @@ MonoBehaviour:
   - key: elder-f
     controller: {fileID: 22100000, guid: a36b553aea1872844b49fe9b4849346e, type: 2}
   codexJson: {fileID: 4900000, guid: 1598ad12beb7e214fb08c8d26721cd42, type: 3}
+  skyboxes:
+  - name: Sky_Dusk
+    material: {fileID: 2100000, guid: 02cf0fc3a01ccef47a417906875d0db7, type: 2}
+  - name: M_ENV_SKYBOX_day
+    material: {fileID: 2100000, guid: 32d128f14cc5fa6458e5368bfa853ab6, type: 2}
+  - name: Sky_Noon
+    material: {fileID: 2100000, guid: 9aa9efb342e8ba148a24cf58765b8e22, type: 2}
+  - name: M_ENV_SKYBOX_night
+    material: {fileID: 2100000, guid: 566cc8e80ca8fe5449dfb0f0dfc4ba37, type: 2}
+  - name: Sky_Night
+    material: {fileID: 2100000, guid: f98594ecad8fe044086ae0bc477ff1f6, type: 2}
   terrainLayers:
   - name: Layer_Grass
     layer: {fileID: 8574412962073106934, guid: a52c1ccfba5ea9648acb65bb5108524e, type: 2}

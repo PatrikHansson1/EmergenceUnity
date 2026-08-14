@@ -20,6 +20,7 @@
 // Menu: Emergence/Fas1/RUN GROUND CAPTURE.  Headless: drop Reports/RUN_GROUNDCAP.trigger.
 #if UNITY_EDITOR
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -176,9 +177,83 @@ namespace Emergence.Editor
                     sb.AppendLine();
                 }
 
+                // ---------- 5. THE WORLD INVENTORY: scale, sinking, and materials ----------
+                // Steps 1.2a / 1.2 / 1.3 measured in one pass, because all three are the same question
+                // asked three ways: is what stands on this ground the right size, at the right height,
+                // wearing the right skin? Patrik felt all three at once ("stones too big, trunks too
+                // big and sliding under the ground") — so measure them together.
+                sb.AppendLine("5. WHAT STANDS ON THE GROUND (scale / sinking / materials)");
+                var rends = UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsSortMode.None);
+                float villagerH = 0f;
+                var rows = new List<string>();
+                int sunk = 0, defaultMat = 0, measured = 0;
+                float tallest = 0f; string tallestName = "";
+                var byShader = new Dictionary<string, int>();
+
+                // the human yardstick first — everything is judged against a person's height
+                foreach (var rr in rends)
+                {
+                    if (rr == null || !rr.enabled) continue;
+                    var t = rr.transform;
+                    bool isAgent = t.root != null && (t.root.name.Contains("agent") || t.root.name.Contains("Agent") || t.root.name.Contains("villager"));
+                    if (isAgent && rr.bounds.size.y > villagerH) villagerH = rr.bounds.size.y;
+                }
+                sb.AppendLine("     the yardstick: tallest villager renderer = " + villagerH.ToString("F2") + " m");
+
+                foreach (var rr in rends)
+                {
+                    if (rr == null || !rr.enabled) continue;
+                    if (rr is ParticleSystemRenderer) continue;
+                    var go = rr.gameObject;
+                    if (go.GetComponent<Terrain>() != null) continue;
+                    var b = rr.bounds;
+                    if (b.size.y <= 0.001f) continue;
+                    measured++;
+
+                    var mat = rr.sharedMaterial;
+                    string shader = mat != null && mat.shader != null ? mat.shader.name : "NO MATERIAL";
+                    byShader[shader] = byShader.TryGetValue(shader, out var c0) ? c0 + 1 : 1;
+                    // Unity's default material is what renders as the grey CHECKER — the placeholder look
+                    bool isDefault = mat == null || mat.name.StartsWith("Default-") || mat.name == "Lit";
+                    if (isDefault) defaultMat++;
+
+                    float sink = 0f;
+                    if (terrain != null)
+                    {
+                        float gy = terrain.SampleHeight(b.center) + terrain.transform.position.y;
+                        sink = gy - b.min.y;          // >0 means the object's base is BELOW the ground
+                        if (sink > 0.05f) sunk++;
+                    }
+                    if (b.size.y > tallest) { tallest = b.size.y; tallestName = go.name + " [" + (mat != null ? mat.name : "none") + "]"; }
+                    if (rows.Count < 14 && (isDefault || sink > 0.05f || (villagerH > 0.1f && b.size.y > villagerH * 4f)))
+                        rows.Add("       " + go.name.PadRight(26).Substring(0, Math.Min(26, go.name.Length)).PadRight(26)
+                                 + " h=" + b.size.y.ToString("F1") + "m"
+                                 + (villagerH > 0.1f ? " (" + (b.size.y / villagerH).ToString("F1") + "x villager)" : "")
+                                 + (sink > 0.05f ? "  SINKS " + sink.ToString("F2") + "m" : "")
+                                 + (isDefault ? "  DEFAULT MATERIAL" : "  " + (mat != null ? mat.name : "-")));
+                }
+                sb.AppendLine("     renderers measured: " + measured);
+                sb.AppendLine("     shaders in use: " + string.Join(" | ", byShader.OrderByDescending(k => k.Value).Take(6).Select(k => k.Key + " x" + k.Value)));
+                sb.AppendLine("     tallest object: " + tallestName + " = " + tallest.ToString("F1") + " m"
+                              + (villagerH > 0.1f ? " (" + (tallest / villagerH).ToString("F1") + "x a villager)" : ""));
+                foreach (var r2 in rows) sb.AppendLine(r2);
+                Check(measured > 0, "there is something standing on the ground at all (" + measured + " renderers)");
+                Check(defaultMat == 0, "NOTHING wears Unity's default material (" + defaultMat + " do — that IS the grey checker Patrik saw)");
+                Check(sunk == 0, "NOTHING sinks through the ground (" + sunk + " do)");
+                if (villagerH > 0.1f)
+                    Check(tallest < villagerH * 8f, "nothing is absurdly out of scale (tallest = " + (tallest / villagerH).ToString("F1") + "x a villager)");
+                sb.AppendLine();
+
                 // ---------- the eye-level picture ----------
                 sb.AppendLine("4. THE EYE-LEVEL PICTURE (what a person standing there would see)");
                 int magenta = Capture("ground-eye-level", terrain, out string camNote);
+                // A/B the light phase: the store shots were all taken at DUSK, and the day rig runs
+                // sun 1.3 + fill 0.6 + trilight ambient. If the pack's light textures are blowing out
+                // to white in daylight, dusk will show them correctly — and that, not a missing
+                // material, is what the grey "checker" is.
+                Fas3LightRig.Apply("spring", "dusk");
+                Capture("ground-eye-level-dusk", terrain, out _);
+                Fas3LightRig.Apply("spring", "day");
                 sb.AppendLine("     " + camNote);
                 Check(magenta >= 0, "capture written");
                 Check(magenta == 0, "no missing-material magenta in frame (" + magenta + " px)");

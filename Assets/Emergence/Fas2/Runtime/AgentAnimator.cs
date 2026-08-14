@@ -158,9 +158,9 @@ namespace Emergence.Runtime
         /// <summary>Reconciler-facing (v2, D-129): walk to the new sim position instead of teleporting.</summary>
         public void GlideTo(Vector3 target)
         {
-            if (!Application.isPlaying) { transform.position = target; return; }
+            if (!Application.isPlaying) { transform.position = Grounded(target); return; }
             float d = Vector3.Distance(transform.position, target);
-            if (d < 0.05f || d > MaxGlide) { transform.position = target; if (_transit) EndTransit(); return; }
+            if (d < 0.05f || d > MaxGlide) { transform.position = Grounded(target); if (_transit) EndTransit(); return; }
             _glideTarget = target;
             _speed = 1.15f + (Hash((uint)agentId * 2654435761u + 41u) & 0xffu) / 255f * 0.35f;   // 1.15–1.50 u/s
             if (!_transit) { _transit = true; if (_anim != null) Apply(false); }
@@ -180,7 +180,7 @@ namespace Emergence.Runtime
                 }
                 return;
             }
-            if (_anim == null) { transform.position = _glideTarget; _transit = false; return; }
+            if (_anim == null) { transform.position = Grounded(_glideTarget); _transit = false; return; }
             var pos = transform.position;
             var to = _glideTarget - pos; to.y = 0f;
             float step = _speed * Time.deltaTime;
@@ -192,10 +192,34 @@ namespace Emergence.Runtime
 
         void EndTransit() { _transit = false; _state = ""; Apply(false); }   // re-read the task state
 
-        static Vector3 Grounded(Vector3 w)
+        // VÅG 1.2 (2026-08-14): THE FOOT OFFSET. Grounding put the PIVOT on the terrain, which was
+        // harmless while the world was a flat plane at y=0 — but the living loop now has 17.9 m of
+        // real relief (D-210), and the ground-capture probe measured villagers standing 0.19–0.53 m
+        // INTO the hillside. A model's pivot is not necessarily its soles: whatever sits between the
+        // pivot and the lowest point of the mesh has to be given back, or the people wade through
+        // the ground. Measured ONCE per body (a bounds query per agent per frame would be 111 of
+        // them) and cached; re-measured if the body is rebuilt.
+        float _foot = float.NaN;
+
+        float FootOffset()
+        {
+            if (!float.IsNaN(_foot)) return _foot;
+            _foot = 0f;
+            var rs = GetComponentsInChildren<Renderer>();
+            if (rs.Length == 0) return _foot;
+            var b = rs[0].bounds;
+            for (int i = 1; i < rs.Length; i++) b.Encapsulate(rs[i].bounds);
+            _foot = Mathf.Max(0f, transform.position.y - b.min.y);   // never LIFT a model, only stop it sinking
+            return _foot;
+        }
+
+        /// <summary>Forget the cached foot offset — call when the body is swapped or rescaled.</summary>
+        public void InvalidateFoot() { _foot = float.NaN; }
+
+        Vector3 Grounded(Vector3 w)
         {
             var t = Terrain.activeTerrain;
-            if (t != null) w.y = t.SampleHeight(w) + t.transform.position.y;
+            if (t != null) w.y = t.SampleHeight(w) + t.transform.position.y + FootOffset();
             return w;
         }
 

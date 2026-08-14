@@ -141,6 +141,7 @@ namespace Emergence.Runtime
             float yaw = HouseYaw(S, h, greens, hx, hy);
             go.transform.rotation = Quaternion.Euler(0, yaw, 0);
             go.transform.localScale = Vector3.one * HouseScale;
+            SitOnGround(go);          // VÅG 1.2: the pivot is not the sill (see below)
             go.name = $"hut_{h.owner}";
             rec.house = go;
 
@@ -282,6 +283,41 @@ namespace Emergence.Runtime
             var t = Terrain.activeTerrain;
             if (t != null) world.y = t.SampleHeight(world) + t.transform.position.y;
             return world + Vector3.up * lift;
+        }
+
+        /// <summary>VÅG 1.2 (2026-08-14): SIT THE BUILDING ON THE GROUND, not through it.
+        /// Placement puts the PIVOT at terrain height, which was harmless while the world was a flat
+        /// plane at y=0 — but the living loop now has real relief (D-210) and the ground-capture probe
+        /// measured door sills 6-12 cm INTO the hillside. Whatever sits between a prefab's pivot and
+        /// the lowest point of its mesh has to be given back. Measured once at raise (buildings do not
+        /// move) and only ever LIFTS — a model is never pushed down into the ground to satisfy this.</summary>
+        static void SitOnGround(GameObject go)
+        {
+            var rs = go.GetComponentsInChildren<Renderer>();
+            if (rs.Length == 0) return;
+            var b = rs[0].bounds;
+            for (int i = 1; i < rs.Length; i++) b.Encapsulate(rs[i].bounds);
+            // A building is FLAT and the ground is not: on a slope the pivot-height sample is the
+            // middle, so the uphill edge digs in whatever the pivot offset is. Sit on the HIGHEST
+            // ground under the footprint — nothing buried, at the cost of a hair of daylight downhill
+            // (which reads as a levelled building plot, and the village pads are levelled anyway).
+            var t = Terrain.activeTerrain;
+            float ground = go.transform.position.y;
+            if (t != null)
+            {
+                float hi = float.NegativeInfinity;
+                for (int cx = 0; cx <= 2; cx++)
+                    for (int cz = 0; cz <= 2; cz++)
+                    {
+                        var p = new Vector3(Mathf.Lerp(b.min.x, b.max.x, cx * 0.5f), 0f,
+                                            Mathf.Lerp(b.min.z, b.max.z, cz * 0.5f));
+                        float gy = t.SampleHeight(p) + t.transform.position.y;
+                        if (gy > hi) hi = gy;
+                    }
+                if (!float.IsNegativeInfinity(hi)) ground = hi;
+            }
+            float below = ground - b.min.y;
+            if (below > 0.001f) go.transform.position += Vector3.up * below;
         }
 
         static uint Hash(int x, int y, int salt) { unchecked { uint h = (uint)(x * 73856093 ^ y * 19349663 ^ salt * 83492791); h ^= h >> 13; h *= 2246822519; h ^= h >> 16; return h; } }

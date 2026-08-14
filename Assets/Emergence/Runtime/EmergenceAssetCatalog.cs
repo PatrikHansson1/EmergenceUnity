@@ -23,6 +23,7 @@ namespace Emergence.Runtime
         [Serializable] public struct PrefabEntry { public string name; public GameObject prefab; }
         [Serializable] public struct ControllerEntry { public string key; public RuntimeAnimatorController controller; }
         [Serializable] public struct TerrainLayerEntry { public string name; public TerrainLayer layer; }
+        [Serializable] public struct MaterialEntry { public string name; public Material material; }
 
         [Tooltip("Every prefab/GLB the runtime reconcilers may ask for, by bare name (no path/extension).")]
         public List<PrefabEntry> prefabs = new List<PrefabEntry>();
@@ -35,6 +36,9 @@ namespace Emergence.Runtime
         // which is exactly why the player's world was a flat green plane: the whole dresser sits
         // behind #if UNITY_EDITOR and simply cannot run in a build. Same catalog school as the
         // prefabs (D-137): resolve once in the editor, load through Resources at runtime.
+        [Tooltip("Skybox materials by name (Sky_Dusk, M_ENV_SKYBOX_day, Sky_Night...) — the light rig's only editor binding.")]
+        public List<MaterialEntry> skyboxes = new List<MaterialEntry>();
+
         [Tooltip("Terrain layers by name (Layer_Grass, Layer_farmfield, Layer_Dirt, Layer_Rock, Layer_Cobblestone...).")]
         public List<TerrainLayerEntry> terrainLayers = new List<TerrainLayerEntry>();
 
@@ -71,6 +75,15 @@ namespace Emergence.Runtime
                     if (terrainLayers[i].layer != null &&
                         string.Equals(terrainLayers[i].name, nm, StringComparison.OrdinalIgnoreCase))
                         return terrainLayers[i].layer;
+            return null;
+        }
+
+        /// <summary>A skybox material by exact name, or null.</summary>
+        public Material Skybox(string name)
+        {
+            for (int i = 0; i < skyboxes.Count; i++)
+                if (skyboxes[i].material != null && string.Equals(skyboxes[i].name, name, StringComparison.OrdinalIgnoreCase))
+                    return skyboxes[i].material;
             return null;
         }
 

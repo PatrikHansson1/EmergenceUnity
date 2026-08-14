@@ -164,6 +164,23 @@ namespace Emergence.Editor
             }
             sb.AppendLine($"terrain layers resolved: {lok}/{wantedLayers.Length}  [{string.Join(", ", cat.terrainLayers.Where(t => t.layer != null).Select(t => t.name))}]");
 
+            // VÅG 1.2: skybox materials for the RUNTIME light rig (its only editor binding was Sky()).
+            cat.skyboxes.Clear();
+            var wantedSky = new[] { "Sky_Dusk", "M_ENV_SKYBOX_day", "Sky_Noon", "M_ENV_SKYBOX_night", "Sky_Night" };
+            int sok = 0;
+            foreach (var sn in wantedSky)
+            {
+                Material m = null;
+                foreach (var g in AssetDatabase.FindAssets($"t:Material {sn}"))
+                {
+                    var p = AssetDatabase.GUIDToAssetPath(g);
+                    if (Path.GetFileNameWithoutExtension(p) == sn) { m = AssetDatabase.LoadAssetAtPath<Material>(p); break; }
+                }
+                cat.skyboxes.Add(new EmergenceAssetCatalog.MaterialEntry { name = sn, material = m });
+                if (m != null) sok++;
+            }
+            sb.AppendLine($"skyboxes resolved: {sok}/{wantedSky.Length}  [{string.Join(", ", cat.skyboxes.Where(x => x.material != null).Select(x => x.name))}]");
+
             cat.codexJson = AssetDatabase.LoadAssetAtPath<TextAsset>(CodexPath);
             if (cat.codexJson == null) { missing++; sb.AppendLine("  MISSING: object-codex.json as TextAsset"); }
 
