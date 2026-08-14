@@ -69,6 +69,8 @@ namespace Emergence.Runtime
             { LastNote = "no nature prefabs in the catalog — run BUILD ASSET CATALOG"; yield break; }
 
             int budget = 0, treeN = 0, rockN = 0, bushN = 0, trunkN = 0, tuftN = 0;
+            var tuftRoot = new GameObject("Tufts").transform;
+            tuftRoot.SetParent(parent, false);
             for (int y = 0; y < S.H; y++)
                 for (int x = 0; x < S.W; x++)
                 {
@@ -97,17 +99,89 @@ namespace Emergence.Runtime
                     else if (t == 's' && rocks.Count > 0) rockN += Place(S, parent, rocks, x, y, RocksPerStoneTile, 43, ref budget, Bed.Boulder, true);
                     else if (t == 'b' && bushes.Count > 0) bushN += Place(S, parent, bushes, x, y, BushesPerBerryTile, 47, ref budget, Bed.Shrub, true);
 
-                    // grass tufts on open meadow and forest floor - the ground the player walks on
+                    // grass tufts on open meadow and forest floor - the ground the player walks on.
+                    // Kept under their OWN parent so the batching pass can find them without guessing.
                     if ((t == 'g' || t == 'f') && tufts.Count > 0)
-                        tuftN += Place(S, parent, tufts, x, y, TuftsPerMeadowTile, 59, ref budget, Bed.Tuft, true);
+                        tuftN += Place(S, tuftRoot, tufts, x, y, TuftsPerMeadowTile, 59, ref budget, Bed.Tuft, true);
 
                     if (budget >= PlacementsPerFrame) { budget = 0; yield return null; }
                 }
 
+            // D-224: THE MEADOW COST ONE DRAW CALL PER BLADE.
+            //
+            // The probe priced the world honestly for the first time and the number was blunt: 8 810
+            // renderers producing 8 427 draw calls — one call per renderer, i.e. NOTHING batched —
+            // and the 6 255 tufts were nearly all of it. They exist as separate objects only because
+            // Unity's terrain detail system would not draw them (D-215d): that decision saved the
+            // picture and moved the cost here, which was the right trade at the time and is not the
+            // right place to leave it.
+            //
+            // The remedy is the cheapest kind: MERGE THEM. Tufts never move, never animate and never
+            // respond to state, so a block of them is one mesh as truthfully as it is six hundred.
+            // Combining per 48 m block turns ~6 255 renderers into a few hundred without changing a
+            // single blade's position — the placement law above is untouched, and the picture is
+            // byte-identical. Merging is done AFTER placement rather than instead of it, so the
+            // grounding, bedding and tilt laws stay exactly one implementation.
+            int tuftDrawn = CombineTufts(tuftRoot);
+
             Placed = treeN + rockN + bushN + trunkN + tuftN;
             LastNote = "nature: " + treeN + " trees, " + rockN + " rocks, " + bushN + " bushes, " + trunkN + " fallen trunks, "
-                     + tuftN + " grass tufts"
+                     + tuftN + " grass tufts merged into " + tuftDrawn + " meshes"
                      + "  (sets: " + trees.Count + "/" + rocks.Count + "/" + bushes.Count + "/" + tufts.Count + ")";
+        }
+
+        /// <summary>Merge the scattered tufts into one mesh per (block, material). Blocks are 48 m,
+        /// which is coarse enough to collapse the count and fine enough that frustum culling still
+        /// throws most of the meadow away. Returns the number of renderers left standing.</summary>
+        const float TuftBlock = 48f;
+
+        static int CombineTufts(Transform root)
+        {
+            if (root == null || root.childCount == 0) return 0;
+
+            var groups = new Dictionary<string, List<CombineInstance>>();
+            var mats = new Dictionary<string, Material>();
+            var doomed = new List<GameObject>();
+
+            for (int i = 0; i < root.childCount; i++)
+            {
+                var ch = root.GetChild(i);
+                doomed.Add(ch.gameObject);
+                foreach (var mf in ch.GetComponentsInChildren<MeshFilter>())
+                {
+                    if (mf.sharedMesh == null) continue;
+                    var mr = mf.GetComponent<MeshRenderer>();
+                    if (mr == null || mr.sharedMaterial == null || !mr.enabled) continue;
+                    var p = mf.transform.position;
+                    string key = Mathf.FloorToInt(p.x / TuftBlock) + "_" + Mathf.FloorToInt(p.z / TuftBlock)
+                               + "_" + mr.sharedMaterial.name;
+                    if (!groups.TryGetValue(key, out var list)) { list = new List<CombineInstance>(); groups[key] = list; mats[key] = mr.sharedMaterial; }
+                    list.Add(new CombineInstance { mesh = mf.sharedMesh, transform = mf.transform.localToWorldMatrix });
+                }
+            }
+
+            int made = 0;
+            foreach (var kv in groups)
+            {
+                if (kv.Value.Count == 0) continue;
+                var mesh = new Mesh { name = "Meadow_" + kv.Key };
+                // a 48 m block of tufts can exceed 65 535 vertices; say so in the format rather than
+                // silently truncating the meadow, which is how a merge quietly eats geometry.
+                mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+                mesh.CombineMeshes(kv.Value.ToArray(), true, true);
+                mesh.RecalculateBounds();
+
+                var go = new GameObject("Meadow_" + made);
+                go.transform.SetParent(root, false);
+                go.AddComponent<MeshFilter>().sharedMesh = mesh;
+                var mr = go.AddComponent<MeshRenderer>();
+                mr.sharedMaterial = mats[kv.Key];
+                mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;   // a blade casts nothing worth the cost
+                made++;
+            }
+
+            foreach (var g in doomed) if (g != null) Object.DestroyImmediate(g);
+            return made;
         }
 
         static List<GameObject> Resolve(EmergenceAssetCatalog cat, string[] names)
