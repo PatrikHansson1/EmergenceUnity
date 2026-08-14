@@ -67,6 +67,7 @@ namespace Emergence.Editor
         [MenuItem("Emergence/Fas3/BUILD ASSET CATALOG")]
         public static void Run()
         {
+            _exact = null;   // rebuilt per run: an asset imported since last time must be visible
             var sb = new StringBuilder();
             sb.AppendLine("EMERGENCE — CATALOG BUILD (D-137): runtime asset catalog for the player-runtime reconcilers");
             sb.AppendLine($"generated {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
@@ -89,6 +90,19 @@ namespace Emergence.Editor
                 {
                     if (!string.IsNullOrWhiteSpace(e.prefab)) wanted.Add(e.prefab.Trim());
                     if (!string.IsNullOrWhiteSpace(e.ruinPrefab)) wanted.Add(e.ruinPrefab.Trim());
+                    // D-244: AND EVERY OTHER NAME THE CODEX CAN PLACE. The reconciler asks
+                    // cat.Prefab(VariantOf(...)) and, when that returns null, falls back to e.prefab --
+                    // a fallback that is right (a missing model must never cost the object) and that hid
+                    // this completely. Only the anchor was ever resolved here, so D-243's 295 variants
+                    // and D-242's arrangement parts resolved to nothing at runtime: every crate in every
+                    // village was the same crate again, and the coverage number said otherwise. A variant
+                    // the catalog does not carry is not a variant. Missing ones now fail this pass by name.
+                    if (e.variants != null)
+                        foreach (var vn in e.variants)
+                            if (!string.IsNullOrWhiteSpace(vn)) wanted.Add(vn.Trim());
+                    if (e.arrangement != null)
+                        foreach (var pt in e.arrangement)
+                            if (pt != null && !string.IsNullOrWhiteSpace(pt.prefab)) wanted.Add(pt.prefab.Trim());
                 }
             wanted.Add("P_PROP_wall_stone_small_02");     // DefaultRuinPrefab (D-112)
 
@@ -225,14 +239,31 @@ namespace Emergence.Editor
             // villager base bodies are GLBs addressed by bare name
             var glb = AssetDatabase.LoadAssetAtPath<GameObject>(CharDir + name + ".glb");
             if (glb != null) return glb;
-            foreach (var g in AssetDatabase.FindAssets($"t:Prefab {name}"))
+            // D-244, AND THE CRASH THAT PAID FOR IT. This used to run AssetDatabase.FindAssets
+            // twice PER NAME. With the anchor alone that was ~120 searches and nobody noticed; the
+            // moment the codex's variants and arrangement parts came in it became ~1400 searches in
+            // one editor tick, and Unity died inside the asset-database iterator with the stack
+            // ending in this method. The work was always O(project) per name for an answer that does
+            // not change between names: ONE pass, indexed by exact base name, first hit wins in the
+            // database's own order. Same rule as before, one search instead of fourteen hundred.
+            if (_exact == null)
             {
-                var p = AssetDatabase.GUIDToAssetPath(g);
-                if (Path.GetFileNameWithoutExtension(p) == name) return AssetDatabase.LoadAssetAtPath<GameObject>(p);
+                _exact = new Dictionary<string, string>(StringComparer.Ordinal);
+                foreach (var g in AssetDatabase.FindAssets("t:Prefab"))
+                {
+                    var pp = AssetDatabase.GUIDToAssetPath(g);
+                    var bn = Path.GetFileNameWithoutExtension(pp);
+                    if (!_exact.ContainsKey(bn)) _exact[bn] = pp;
+                }
             }
+            if (_exact.TryGetValue(name, out var hit)) return AssetDatabase.LoadAssetAtPath<GameObject>(hit);
+            // no exact match: the old fuzzy fallback, kept so a name that resolved yesterday still
+            // resolves today. It now fires only for names that are genuinely absent, so it is rare.
             var guid = AssetDatabase.FindAssets($"t:Prefab {name}").FirstOrDefault();
             return guid == null ? null : AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(guid));
         }
+
+        static Dictionary<string, string> _exact;   // base name -> asset path, built once per Run
 
         static IEnumerable<GameObject> FindPrefabs(string prefix)
             => AssetDatabase.FindAssets($"t:Prefab {prefix}")

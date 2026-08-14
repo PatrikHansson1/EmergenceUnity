@@ -51,7 +51,17 @@ namespace Emergence.Runtime
         //
         // The towers are not deleted. They are the wrong DWELLING and they will be the right
         // something else — a hall, a mill, a temple — when the era law that earns them is built.
-        public static readonly int[] DwellingVariants = { 3, 6, 7, 8, 9, 11, 12, 13, 14 };
+        // D-245 — AND ONE OF THE NINE SURVIVORS WAS A WINDMILL.
+        // D-216 took the four towers out of the dwelling bag and left house_14 in it. The probe now
+        // names each hut by its largest MESH, and the village it photographed was: body_v06 x1,
+        // body_v07 x1, **windmill_sail x2**. Two of four homes were windmills, which is exactly the
+        // "every house looks the same" the EP reported — the eye reads two rotors, not two cottages.
+        // Same error as the towers, one building later: a bag of right things is not a bag of one KIND.
+        // THE CODEX GOVERNS IT NOW (EP, 2026-08-15): house_14 is the `windmill` row, gated on the
+        // windmill tech, where it is a milestone a people EARN. The codex row had been pointing at
+        // P_BLD_windmill_sail — the bare rotor with no mill under it — so the two were swapped: the
+        // building was handed out as a first shelter and the discovery got a floating sail.
+        public static readonly int[] DwellingVariants = { 3, 6, 7, 8, 9, 11, 12, 13 };
 
         // And the survivors still vary from 3,3x to 4,7x a person, which is the difference between a
         // cottage and a barn standing side by side for no reason the world can explain. Normalising

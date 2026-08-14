@@ -129,7 +129,13 @@
    "scale": 0.0,
    "ruinOnLoss": 0,
    "ruinPrefab": "",
-   "ruinScale": 0.0
+   "ruinScale": 0.0,
+   "variants": [
+    "P_PROP_rope_decoration_city_01",
+    "P_PROP_rope_decoration_city_02",
+    "P_PROP_rope_decoration_city_03",
+    "P_PROP_rope_decoration_city_04"
+   ]
   },
   {
    "id": "spear-rack",
@@ -199,7 +205,12 @@
    "ruinScale": 0.0,
    "variants": [
     "P_PROP_planks_02",
-    "P_PROP_planks_03"
+    "P_PROP_planks_03",
+    "P_PROP_logpile_city_01",
+    "P_PROP_logpile_city_02",
+    "P_PROP_logpile_city_03",
+    "P_PROP_plank_city_01",
+    "P_PROP_plank_city_02"
    ]
   },
   {
@@ -235,7 +246,33 @@
     "P_PROP_PLANT_pot_v3_04",
     "P_PROP_PLANT_pot_v4_01",
     "P_PROP_PLANT_pot_v5_01",
-    "P_PROP_PLANT_pot_v6_01"
+    "P_PROP_PLANT_pot_v6_01",
+    "COMP_PROP_plate_city_01",
+    "COMP_PROP_plate_city_02",
+    "COMP_PROP_plate_city_03",
+    "P_PROP_teapot_city",
+    "P_PROP_cup_city_01",
+    "P_PROP_cup_city_02",
+    "P_PROP_jug_city_01",
+    "P_PROP_jug_city_02",
+    "P_PROP_plate_city_01",
+    "P_PROP_plate_city_02",
+    "P_PROP_plate_city_03",
+    "P_PROP_plate_city_04",
+    "P_PROP_plate_city_05",
+    "P_PROP_planter_base_city_01",
+    "P_PROP_planter_base_city_02",
+    "P_PROP_planter_city_01",
+    "P_PROP_planter_city_02",
+    "P_PROP_planter_city_03",
+    "P_PROP_planter_city_04",
+    "P_PROP_pan_city",
+    "P_PROP_spoon_city",
+    "P_PROP_cup",
+    "P_PROP_pan",
+    "P_PROP_spoon_01",
+    "P_PROP_spoon_02",
+    "Prefab_Pan_01"
    ]
   },
   {
@@ -266,7 +303,8 @@
     "P_PROP_cookingpot_city_01",
     "P_PROP_cookingpot_city_02",
     "P_PROP_cookingpot_lid_city_01",
-    "P_PROP_cookingpot_small"
+    "P_PROP_cookingpot_small",
+    "COMP_PROP_cookingpot_city_01"
    ]
   },
   {
@@ -394,7 +432,10 @@
    "variants": [
     "P_PROP_bucket_02",
     "P_PROP_bucket_03",
-    "P_PROP_bucket_04"
+    "P_PROP_bucket_04",
+    "P_PROP_bucket_city_01",
+    "P_PROP_bucket_city_02",
+    "P_PROP_bucket_city_03"
    ]
   },
   {
@@ -444,7 +485,23 @@
     "P_PROP_bottle_06",
     "P_PROP_bottle_07",
     "P_PROP_bottle_08",
-    "P_PROP_bottle_09"
+    "P_PROP_bottle_09",
+    "P_PROP_bottle_city_01",
+    "P_PROP_bottle_city_02",
+    "P_PROP_bottle_city_03",
+    "P_PROP_bottle_city_04",
+    "P_PROP_bottle_city_07",
+    "P_PROP_bottle_city_08",
+    "P_PROP_vase_city_01",
+    "P_PROP_glass_city_01",
+    "P_PROP_glass_city_02",
+    "P_PROP_glass_city_03",
+    "P_PROP_glass_city_04",
+    "P_PROP_bottle_city_05",
+    "P_PROP_bottle_city_06",
+    "P_PROP_jar_city_01",
+    "P_PROP_jar_city_02",
+    "P_PROP_jar_city_03"
    ]
   },
   {
@@ -468,7 +525,14 @@
    "ruinScale": 0.0,
    "variants": [
     "P_PROP_cart_02",
-    "P_PROP_cart_03"
+    "P_PROP_cart_03",
+    "COMP_PROP_cart_city_01",
+    "COMP_PROP_cart_city_02",
+    "COMP_PROP_cart_city_03",
+    "P_PROP_cart_city_01",
+    "P_PROP_cart_city_02",
+    "P_PROP_cart_city_03",
+    "P_PROP_cart_city_04"
    ]
   },
   {
@@ -489,7 +553,11 @@
    "scale": 0.0,
    "ruinOnLoss": 0,
    "ruinPrefab": "",
-   "ruinScale": 0.0
+   "ruinScale": 0.0,
+   "variants": [
+    "P_PROP_cart_wheel_city",
+    "P_PROP_cart_wheel_small"
+   ]
   },
   {
    "id": "mill",
@@ -529,7 +597,11 @@
    "scale": 0.0,
    "ruinOnLoss": 0,
    "ruinPrefab": "",
-   "ruinScale": 0.0
+   "ruinScale": 0.0,
+   "variants": [
+    "P_PROP_watchtower_wood_01",
+    "P_PROP_watchtower_wood_02"
+   ]
   },
   {
    "id": "boat",
@@ -595,7 +667,9 @@
     "P_PROP_hay_03",
     "P_PROP_hay_04",
     "P_PROP_hay_05",
-    "P_PROP_hay_06"
+    "P_PROP_hay_06",
+    "P_PROP_hay_city_01",
+    "P_PROP_hay_city_02"
    ]
   },
   {
@@ -616,7 +690,10 @@
    "scale": 0.0,
    "ruinOnLoss": 0,
    "ruinPrefab": "",
-   "ruinScale": 0.0
+   "ruinScale": 0.0,
+   "variants": [
+    "P_PROP_trough_02"
+   ]
   },
   {
    "id": "writing-post",
@@ -636,7 +713,12 @@
    "scale": 0.0,
    "ruinOnLoss": 1,
    "ruinPrefab": "",
-   "ruinScale": 0.0
+   "ruinScale": 0.0,
+   "variants": [
+    "P_PROP_signpost_02",
+    "P_PROP_signpost_03",
+    "P_PROP_signpost_04"
+   ]
   },
   {
    "id": "notices",
@@ -668,7 +750,12 @@
     "P_PROP_sign_03",
     "P_PROP_sign_04",
     "P_PROP_sign_05",
-    "P_PROP_sign_06"
+    "P_PROP_sign_06",
+    "P_PROP_letter_city",
+    "P_PROP_paper_city_01",
+    "P_PROP_paper_city_02",
+    "P_PROP_paper_city_03",
+    "P_PROP_paper_city_04"
    ]
   },
   {
@@ -709,7 +796,11 @@
    "scale": 0.3,
    "ruinOnLoss": 1,
    "ruinPrefab": "",
-   "ruinScale": 0.0
+   "ruinScale": 0.0,
+   "variants": [
+    "well",
+    "P_PROP_well"
+   ]
   },
   {
    "id": "granary-store",
@@ -738,7 +829,19 @@
     "P_PROP_box_02",
     "P_PROP_box_03",
     "P_PROP_box_04",
-    "P_PROP_box_05"
+    "P_PROP_box_05",
+    "COMP_PROP_basket_city_01",
+    "COMP_PROP_basket_city_02",
+    "COMP_PROP_basket_city_03",
+    "COMP_PROP_basket_city_04",
+    "COMP_PROP_basket_city_05",
+    "COMP_PROP_basket_city_06",
+    "COMP_PROP_basket_city_07",
+    "COMP_PROP_basket_city_08",
+    "P_PROP_basket_city_01",
+    "P_PROP_basket_city_02",
+    "P_PROP_basket_city_03",
+    "P_PROP_basket_city_04"
    ]
   },
   {
@@ -759,7 +862,10 @@
    "scale": 0.0,
    "ruinOnLoss": 0,
    "ruinPrefab": "",
-   "ruinScale": 0.0
+   "ruinScale": 0.0,
+   "variants": [
+    "P_PROP_clothesline_03"
+   ]
   },
   {
    "id": "cloth-sacks",
@@ -790,7 +896,10 @@
     "P_PROP_sack_08",
     "P_PROP_sack_09",
     "P_PROP_sack_10",
-    "P_PROP_sack_11"
+    "P_PROP_sack_11",
+    "P_PROP_sack_city_01",
+    "P_PROP_sack_city_02",
+    "Prefab_Sack_01"
    ]
   },
   {
@@ -851,7 +960,11 @@
    "scale": 0.0,
    "ruinOnLoss": 1,
    "ruinPrefab": "",
-   "ruinScale": 0.0
+   "ruinScale": 0.0,
+   "variants": [
+    "COMP_PROP_cauldron_city_02",
+    "P_PROP_cauldron_city"
+   ]
   },
   {
    "id": "bronze-tools",
@@ -871,7 +984,12 @@
    "scale": 0.0,
    "ruinOnLoss": 0,
    "ruinPrefab": "",
-   "ruinScale": 0.0
+   "ruinScale": 0.0,
+   "variants": [
+    "P_PROP_knife_city_01",
+    "P_PROP_knife_city_02",
+    "P_PROP_knife_city_03"
+   ]
   },
   {
    "id": "docks",
@@ -1050,11 +1168,11 @@
   },
   {
    "id": "windmill",
-   "prefab": "P_BLD_windmill_sail",
+   "prefab": "P_BLD_house_14",
    "category": "craft",
    "requiresTech": "windmill",
    "requiresCustom": "",
-   "desc": "the wind put to work",
+   "desc": "the wind put to work — the first thing this people built that works while they sleep",
    "placement": "edge",
    "tier": "milestone",
    "statMeaning": "the windmill",
@@ -1126,7 +1244,11 @@
    "scale": 0.0,
    "ruinOnLoss": 1,
    "ruinPrefab": "",
-   "ruinScale": 0.0
+   "ruinScale": 0.0,
+   "variants": [
+    "COMP_PROP_bulletinboard_city_01",
+    "P_PROP_newspaper_city"
+   ]
   },
   {
    "id": "steam-works",
@@ -1226,7 +1348,29 @@
    "scale": 0.0,
    "ruinOnLoss": 0,
    "ruinPrefab": "",
-   "ruinScale": 0.0
+   "ruinScale": 0.0,
+   "variants": [
+    "P_PROP_canvas_city",
+    "P_PROP_easel_city",
+    "P_PROP_paint_palette_city",
+    "P_PROP_painting_city_01",
+    "P_PROP_painting_city_02",
+    "P_PROP_painting_city_04",
+    "P_PROP_sign_city_01",
+    "P_PROP_sign_city_02",
+    "P_PROP_sign_city_03",
+    "P_PROP_sign_city_04",
+    "P_PROP_sign_city_05",
+    "P_PROP_sign_city_06",
+    "P_PROP_sign_city_07",
+    "P_PROP_sign_city_08",
+    "P_PROP_sign_city_09",
+    "P_PROP_sign_city_10",
+    "P_PROP_sign_city_11",
+    "P_PROP_sign_city_12",
+    "P_PROP_sign_city_13",
+    "P_PROP_sign_city_14"
+   ]
   },
   {
    "id": "calendar-stone",
@@ -1266,7 +1410,10 @@
    "scale": 0.0,
    "ruinOnLoss": 0,
    "ruinPrefab": "",
-   "ruinScale": 0.0
+   "ruinScale": 0.0,
+   "variants": [
+    "P_PROP_alchemy_desk_city"
+   ]
   },
   {
    "id": "thinking-seat",
@@ -1326,7 +1473,10 @@
    "scale": 0.0,
    "ruinOnLoss": 0,
    "ruinPrefab": "",
-   "ruinScale": 0.0
+   "ruinScale": 0.0,
+   "variants": [
+    "P_PROP_coin_city_02"
+   ]
   },
   {
    "id": "school-bench",
@@ -1474,7 +1624,22 @@
     "P_PROP_table_01",
     "P_PROP_table_02",
     "P_PROP_table_03",
-    "P_PROP_table_04"
+    "P_PROP_table_04",
+    "COMP_PROP_table_city_01",
+    "COMP_PROP_table_city_02",
+    "COMP_PROP_table_city_03",
+    "COMP_PROP_table_city_04",
+    "COMP_PROP_table_city_05",
+    "COMP_PROP_table_city_06",
+    "COMP_PROP_table_city_07",
+    "COMP_PROP_table_city_08",
+    "COMP_PROP_table_city_09",
+    "P_PROP_bench_city_01",
+    "P_PROP_table_city_02",
+    "P_PROP_table_city_03",
+    "P_PROP_table_city_04",
+    "P_PROP_table_city_05",
+    "Prefab_Bench_01"
    ]
   },
   {
@@ -1503,7 +1668,10 @@
     "P_PROP_barrel_05",
     "P_PROP_barrel_06",
     "P_PROP_barrel_07",
-    "P_PROP_barrel_08"
+    "P_PROP_barrel_08",
+    "P_PROP_barrel_city_01",
+    "P_PROP_barrel_city_02",
+    "Prefab_Barrel_01"
    ]
   },
   {
@@ -1530,7 +1698,13 @@
     "P_PROP_flag_03",
     "P_PROP_flag_04",
     "P_PROP_flag_05",
-    "P_PROP_flag_06"
+    "P_PROP_flag_06",
+    "P_PROP_flag_city_01",
+    "P_PROP_flag_city_02",
+    "P_PROP_flag_city_03",
+    "P_PROP_flag_city_04",
+    "P_PROP_flag_city_05",
+    "P_PROP_flag_city_06"
    ]
   },
   {
@@ -1556,7 +1730,24 @@
     "P_PROP_crate_02",
     "P_PROP_crate_03",
     "P_PROP_crate_04",
-    "P_PROP_crate_05"
+    "P_PROP_crate_05",
+    "COMP_PROP_crate_city_01",
+    "COMP_PROP_crate_city_02",
+    "COMP_PROP_crate_city_03",
+    "COMP_PROP_crate_city_04",
+    "COMP_PROP_crate_city_05",
+    "COMP_PROP_crate_city_06",
+    "COMP_PROP_crate_city_07",
+    "COMP_PROP_crate_city_08",
+    "COMP_PROP_crate_city_09",
+    "COMP_PROP_crate_city_10",
+    "COMP_PROP_crate_city_11",
+    "P_PROP_crate_city_01",
+    "P_PROP_crate_city_02",
+    "P_PROP_crate_city_03",
+    "P_PROP_crate_city_04",
+    "P_PROP_crate_city_05",
+    "Prefab_Crate_01"
    ]
   },
   {
@@ -1588,7 +1779,14 @@
     "P_PROP_market_v03_01",
     "P_PROP_market_v03_02",
     "P_PROP_market_v04_01",
-    "P_PROP_market_v04_02"
+    "P_PROP_market_v04_02",
+    "COMP_PROP_marketstall_city_01",
+    "COMP_PROP_marketstall_city_02",
+    "COMP_PROP_marketstall_city_03",
+    "P_PROP_marketstall_city_01",
+    "P_PROP_marketstall_city_02",
+    "P_PROP_marketstall_city_03",
+    "P_PROP_marketstall_city_04"
    ]
   },
   {
@@ -1609,7 +1807,12 @@
    "scale": 0.0,
    "ruinOnLoss": 0,
    "ruinPrefab": "",
-   "ruinScale": 0.0
+   "ruinScale": 0.0,
+   "variants": [
+    "COMP_PROP_statue_city_01",
+    "COMP_PROP_statue_city_02",
+    "COMP_PROP_statue_city_03"
+   ]
   },
   {
    "id": "lamps",
@@ -1637,7 +1840,15 @@
     "P_PROP_streetlamp_v02_01",
     "P_PROP_streetlamp_v02_02",
     "P_PROP_streetlamp_v02_03",
-    "P_PROP_streetlamp_v02_04"
+    "P_PROP_streetlamp_v02_04",
+    "P_PROP_lantern_city_01",
+    "P_PROP_lantern_city_02",
+    "P_PROP_lantern_city_03",
+    "P_PROP_lantern_city_04",
+    "P_PROP_lantern_city_05",
+    "P_PROP_lantern_01",
+    "P_PROP_lantern_02",
+    "P_PROP_lantern_03"
    ]
   },
   {
@@ -1658,7 +1869,11 @@
    "scale": 0.4,
    "ruinOnLoss": 1,
    "ruinPrefab": "",
-   "ruinScale": 0.0
+   "ruinScale": 0.0,
+   "variants": [
+    "forge",
+    "P_PROP_forge_city"
+   ]
   },
   {
    "id": "commons-fire",
@@ -1874,7 +2089,22 @@
       "tech": "numbers"
      }
     ]
-   }
+   },
+   "variants": [
+    "COMP_PROP_shelf_city_02",
+    "COMP_PROP_shelf_city_03",
+    "COMP_PROP_shelf_city_04",
+    "COMP_PROP_shelf_city_05",
+    "COMP_PROP_shelf_city_06",
+    "COMP_PROP_shelf_city_07",
+    "COMP_PROP_shelf_city_08",
+    "COMP_PROP_shelf_city_09",
+    "COMP_PROP_shelf_city_10",
+    "P_PROP_shelf_city_01",
+    "P_PROP_shelf_city_02",
+    "P_PROP_shelf_city_03",
+    "P_PROP_shelf_city_04"
+   ]
   },
   {
    "id": "ore-store",
@@ -2071,6 +2301,548 @@
     "P_PROP_food_watermelon_02",
     "P_PROP_food_watermelon_03",
     "P_PROP_food_watermelon_04"
+   ]
+  },
+  {
+   "id": "metal-bars",
+   "prefab": "P_PROP_ingot_copper_city",
+   "category": "craft",
+   "requiresTech": "smithing",
+   "requiresCustom": "",
+   "desc": "ore poured into a shape that can be carried, counted and traded — the moment metal stopped being a rock",
+   "placement": "edge",
+   "tier": "milestone",
+   "statMeaning": "craft: metal made portable",
+   "era": 3,
+   "minPop": 8,
+   "minCrafts": 0,
+   "minGen": 0,
+   "count": 1,
+   "scale": 0.0,
+   "ruinOnLoss": 1,
+   "ruinPrefab": "",
+   "ruinScale": 0.0,
+   "requires": {
+    "anyOf": [
+     {
+      "tech": "copper"
+     },
+     {
+      "tech": "bronze"
+     },
+     {
+      "tech": "steel"
+     }
+    ]
+   },
+   "variants": [
+    "P_PROP_ingot_iron_city",
+    "P_PROP_ingot_steel_city",
+    "P_PROP_ingot_gold_city"
+   ]
+  },
+  {
+   "id": "hand-tools",
+   "prefab": "P_PROP_hammer_city_01",
+   "category": "craft",
+   "requiresTech": "metaltools",
+   "requiresCustom": "",
+   "desc": "iron given a purpose for every hand — one edge became a hammer, a saw, a chisel, an awl",
+   "placement": "edge",
+   "tier": "dressing",
+   "statMeaning": "",
+   "era": 2,
+   "minPop": 6,
+   "minCrafts": 0,
+   "minGen": 0,
+   "count": 3,
+   "scale": 0.0,
+   "ruinOnLoss": 0,
+   "ruinPrefab": "",
+   "ruinScale": 0.0,
+   "variants": [
+    "P_PROP_hammer_city_02",
+    "P_PROP_saw_city_01",
+    "P_PROP_saw_city_02",
+    "P_PROP_chisel_city",
+    "P_PROP_pliers_city",
+    "P_PROP_awl_city",
+    "P_PROP_scissors_city",
+    "P_PROP_shovel_city",
+    "P_PROP_shovel_city_01",
+    "P_PROP_pickaxe_city",
+    "P_PROP_axe_city",
+    "P_PROP_toolbox_city",
+    "COMP_PROP_toolbox_city_01",
+    "P_PROP_ladder",
+    "P_PROP_ladder_city_01",
+    "P_PROP_stepladder"
+   ]
+  },
+  {
+   "id": "candles",
+   "prefab": "P_PROP_candle_city_01",
+   "category": "craft",
+   "requiresTech": "fire",
+   "requiresCustom": "",
+   "desc": "a light small enough to carry into a room — the evening stopped ending at sundown",
+   "placement": "green",
+   "tier": "dressing",
+   "statMeaning": "",
+   "era": 2,
+   "minPop": 8,
+   "minCrafts": 4,
+   "minGen": 0,
+   "count": 2,
+   "scale": 0.0,
+   "ruinOnLoss": 0,
+   "ruinPrefab": "",
+   "ruinScale": 0.0,
+   "variants": [
+    "P_PROP_candle_city_02",
+    "P_PROP_candle_city_03",
+    "P_PROP_candle_city_04",
+    "P_PROP_candle_city_05",
+    "P_PROP_candle_city_06",
+    "COMP_PROP_candle_city_01",
+    "COMP_PROP_candle_city_02",
+    "COMP_PROP_candle_city_03",
+    "COMP_PROP_candle_city_04",
+    "COMP_PROP_candle_city_05",
+    "COMP_PROP_candle_city_06"
+   ]
+  },
+  {
+   "id": "herb-store",
+   "prefab": "P_PROP_herbs_city_01",
+   "category": "knowledge",
+   "requiresTech": "medicine",
+   "requiresCustom": "",
+   "desc": "what was gathered because it helped, hung where it can dry and be found again",
+   "placement": "edge",
+   "tier": "dressing",
+   "statMeaning": "",
+   "era": 3,
+   "minPop": 8,
+   "minCrafts": 0,
+   "minGen": 0,
+   "count": 2,
+   "scale": 0.0,
+   "ruinOnLoss": 0,
+   "ruinPrefab": "",
+   "ruinScale": 0.0,
+   "variants": [
+    "P_PROP_herbs_city_02",
+    "P_PROP_herbs_city_03",
+    "P_PROP_herbs_city_04",
+    "P_PROP_blossoms_city_01",
+    "P_PROP_blossoms_city_02",
+    "P_PROP_mortar_city",
+    "P_PROP_mortar_pestle_city"
+   ]
+  },
+  {
+   "id": "drying-rack",
+   "prefab": "P_PROP_dryingrack_city",
+   "category": "farm",
+   "requiresTech": "farming",
+   "requiresCustom": "",
+   "desc": "food kept without fire — a harvest made to last by air alone",
+   "placement": "edge",
+   "tier": "dressing",
+   "statMeaning": "",
+   "era": 1,
+   "minPop": 6,
+   "minCrafts": 0,
+   "minGen": 0,
+   "count": 1,
+   "scale": 0.0,
+   "ruinOnLoss": 0,
+   "ruinPrefab": "",
+   "ruinScale": 0.0,
+   "variants": [
+    "COMP_PROP_dryingrack_city_01",
+    "COMP_PROP_dryingrack_city_02"
+   ]
+  },
+  {
+   "id": "tanning-rack",
+   "prefab": "P_PROP_tanningrack_city",
+   "category": "craft",
+   "requiresTech": "sharp",
+   "requiresCustom": "",
+   "desc": "hide stretched and scraped — the first thing this people made that outlasted the animal",
+   "placement": "edge",
+   "tier": "dressing",
+   "statMeaning": "",
+   "era": 1,
+   "minPop": 6,
+   "minCrafts": 2,
+   "minGen": 0,
+   "count": 1,
+   "scale": 0.0,
+   "ruinOnLoss": 0,
+   "ruinPrefab": "",
+   "ruinScale": 0.0,
+   "variants": [
+    "P_PROP_leather_city"
+   ]
+  },
+  {
+   "id": "tailor-bench",
+   "prefab": "COMP_PROP_tailoring_station_city",
+   "category": "craft",
+   "requiresTech": "weaving",
+   "requiresCustom": "",
+   "desc": "cloth cut to fit one person instead of wrapped around anyone",
+   "placement": "edge",
+   "tier": "milestone",
+   "statMeaning": "craft: the garment made to measure",
+   "era": 3,
+   "minPop": 12,
+   "minCrafts": 3,
+   "minGen": 0,
+   "count": 1,
+   "scale": 0.0,
+   "ruinOnLoss": 1,
+   "ruinPrefab": "",
+   "ruinScale": 0.0,
+   "variants": [
+    "P_PROP_dressform_city",
+    "P_PROP_thread_spool_city"
+   ]
+  },
+  {
+   "id": "woodworking-bench",
+   "prefab": "COMP_PROP_woodworking_station_city",
+   "category": "craft",
+   "requiresTech": "axe",
+   "requiresCustom": "",
+   "desc": "wood shaped to a plan and not to the grain it happened to have",
+   "placement": "edge",
+   "tier": "milestone",
+   "statMeaning": "craft: work given a place of its own",
+   "era": 2,
+   "minPop": 10,
+   "minCrafts": 0,
+   "minGen": 0,
+   "count": 1,
+   "scale": 0.0,
+   "ruinOnLoss": 1,
+   "ruinPrefab": "",
+   "ruinScale": 0.0,
+   "requires": {
+    "allOf": [
+     {
+      "tech": "metaltools"
+     }
+    ]
+   },
+   "variants": [
+    "P_PROP_woodworking_station_city_01",
+    "P_PROP_cuttingboard_city",
+    "P_PROP_grinder_city"
+   ]
+  },
+  {
+   "id": "board-game",
+   "prefab": "P_PROP_checkers_board_city",
+   "category": "culture",
+   "requiresTech": "storytelling",
+   "requiresCustom": "",
+   "desc": "a game with rules both players agreed to before it began — time that no longer had to be spent surviving",
+   "placement": "green",
+   "tier": "dressing",
+   "statMeaning": "",
+   "era": 3,
+   "minPop": 12,
+   "minCrafts": 0,
+   "minGen": 0,
+   "count": 1,
+   "scale": 0.0,
+   "ruinOnLoss": 0,
+   "ruinPrefab": "",
+   "ruinScale": 0.0,
+   "variants": [
+    "COMP_PROP_checkers_board_city",
+    "P_PROP_checkers_piece_city_01",
+    "P_PROP_checkers_piece_city_02",
+    "P_PROP_cards_city_01",
+    "P_PROP_cards_city_02",
+    "P_PROP_cards_city_03"
+   ]
+  },
+  {
+   "id": "way-post",
+   "prefab": "P_PROP_waypoint_city_01",
+   "category": "commerce",
+   "requiresTech": "road",
+   "requiresCustom": "",
+   "desc": "the way marked for whoever comes next, by people who knew they would not be there to point",
+   "placement": "edge",
+   "tier": "dressing",
+   "statMeaning": "",
+   "era": 4,
+   "minPop": 12,
+   "minCrafts": 0,
+   "minGen": 0,
+   "count": 2,
+   "scale": 0.0,
+   "ruinOnLoss": 0,
+   "ruinPrefab": "",
+   "ruinScale": 0.0,
+   "variants": [
+    "P_PROP_waypoint_city_02",
+    "P_PROP_waypoint_city_03",
+    "COMP_PROP_waypoint_city_01",
+    "COMP_PROP_waypoint_city_02",
+    "P_PROP_streetsign_city_01",
+    "P_PROP_streetsign_city_02"
+   ]
+  },
+  {
+   "id": "fireplace",
+   "prefab": "P_PROP_fireplace_city",
+   "category": "craft",
+   "requiresTech": "brick",
+   "requiresCustom": "",
+   "desc": "fire given a wall of its own, and a way out for the smoke",
+   "placement": "edge",
+   "tier": "milestone",
+   "statMeaning": "shelter: the fire brought indoors",
+   "era": 3,
+   "minPop": 10,
+   "minCrafts": 0,
+   "minGen": 0,
+   "count": 1,
+   "scale": 0.0,
+   "ruinOnLoss": 1,
+   "ruinPrefab": "",
+   "ruinScale": 0.0,
+   "variants": [
+    "COMP_PROP_fireplace_city"
+   ]
+  },
+  {
+   "id": "village-bell",
+   "prefab": "P_PROP_bell_city_01",
+   "category": "culture",
+   "requiresTech": "bronze",
+   "requiresCustom": "",
+   "desc": "a sound that reaches everyone at once — the first thing this people owned together",
+   "placement": "green",
+   "tier": "milestone",
+   "statMeaning": "culture: the common signal",
+   "era": 3,
+   "minPop": 16,
+   "minCrafts": 0,
+   "minGen": 0,
+   "count": 1,
+   "scale": 0.0,
+   "ruinOnLoss": 1,
+   "ruinPrefab": "",
+   "ruinScale": 0.0,
+   "variants": [
+    "P_PROP_bell_city_02"
+   ]
+  },
+  {
+   "id": "gallows",
+   "prefab": "P_PROP_gallows",
+   "category": "culture",
+   "requiresTech": "law",
+   "requiresCustom": "",
+   "desc": "a judgement the whole village is made to look at",
+   "placement": "edge",
+   "tier": "milestone",
+   "statMeaning": "law: the sentence made public",
+   "era": 4,
+   "minPop": 14,
+   "minCrafts": 0,
+   "minGen": 0,
+   "count": 1,
+   "scale": 0.0,
+   "ruinOnLoss": 1,
+   "ruinPrefab": "",
+   "ruinScale": 0.0,
+   "variants": [
+    "P_PROP_guillotine",
+    "P_PROP_chains_city_01"
+   ]
+  },
+  {
+   "id": "coffin",
+   "prefab": "P_PROP_coffin",
+   "category": "culture",
+   "requiresTech": "",
+   "requiresCustom": "",
+   "desc": "the dead kept rather than left — a people old enough to have buried their own",
+   "placement": "edge",
+   "tier": "dressing",
+   "statMeaning": "",
+   "era": 1,
+   "minPop": 6,
+   "minCrafts": 0,
+   "minGen": 2,
+   "count": 1,
+   "scale": 0.0,
+   "ruinOnLoss": 0,
+   "ruinPrefab": "",
+   "ruinScale": 0.0
+  },
+  {
+   "id": "outhouse",
+   "prefab": "P_PROP_outhouse",
+   "category": "shelter",
+   "requiresTech": "hut",
+   "requiresCustom": "",
+   "desc": "the small building nobody tells stories about, and the first sign of a place meant to be lived in",
+   "placement": "edge",
+   "tier": "dressing",
+   "statMeaning": "",
+   "era": 1,
+   "minPop": 8,
+   "minCrafts": 0,
+   "minGen": 0,
+   "count": 1,
+   "scale": 0.0,
+   "ruinOnLoss": 0,
+   "ruinPrefab": "",
+   "ruinScale": 0.0
+  },
+  {
+   "id": "weathervane",
+   "prefab": "P_PROP_weathervane",
+   "category": "knowledge",
+   "requiresTech": "farming",
+   "requiresCustom": "",
+   "desc": "the wind watched on purpose, by people whose harvest depends on the answer",
+   "placement": "green",
+   "tier": "dressing",
+   "statMeaning": "",
+   "era": 3,
+   "minPop": 10,
+   "minCrafts": 0,
+   "minGen": 0,
+   "count": 1,
+   "scale": 0.0,
+   "ruinOnLoss": 0,
+   "ruinPrefab": "",
+   "ruinScale": 0.0,
+   "requires": {
+    "allOf": [
+     {
+      "tech": "numbers"
+     }
+    ]
+   }
+  },
+  {
+   "id": "strong-chest",
+   "prefab": "P_PROP_chest_city_01",
+   "category": "commerce",
+   "requiresTech": "coinage",
+   "requiresCustom": "",
+   "desc": "worth kept behind a lid — the first thing here that had to be shut",
+   "placement": "edge",
+   "tier": "dressing",
+   "statMeaning": "",
+   "era": 4,
+   "minPop": 12,
+   "minCrafts": 0,
+   "minGen": 0,
+   "count": 1,
+   "scale": 0.0,
+   "ruinOnLoss": 0,
+   "ruinPrefab": "",
+   "ruinScale": 0.0,
+   "variants": [
+    "P_PROP_chest_city_02",
+    "P_PROP_treasurechest"
+   ]
+  },
+  {
+   "id": "old-growth",
+   "prefab": "P_ENV_ivy_city_01",
+   "category": "shelter",
+   "requiresTech": "",
+   "requiresCustom": "",
+   "desc": "ivy and flowers on a wall no one has touched in a lifetime — the village grown into its own place",
+   "placement": "edge",
+   "tier": "dressing",
+   "statMeaning": "",
+   "era": 2,
+   "minPop": 8,
+   "minCrafts": 0,
+   "minGen": 3,
+   "count": 2,
+   "scale": 0.0,
+   "ruinOnLoss": 0,
+   "ruinPrefab": "",
+   "ruinScale": 0.0,
+   "variants": [
+    "P_ENV_ivy_city_02",
+    "P_ENV_flower_city_01",
+    "P_ENV_flower_city_02",
+    "P_ENV_flower_city_03"
+   ]
+  },
+  {
+   "id": "books",
+   "prefab": "P_PROP_book_city_01",
+   "category": "knowledge",
+   "requiresTech": "writing",
+   "requiresCustom": "",
+   "desc": "knowing bound so it can be carried out of the room it was learned in",
+   "placement": "green",
+   "tier": "dressing",
+   "statMeaning": "",
+   "era": 5,
+   "minPop": 12,
+   "minCrafts": 0,
+   "minGen": 0,
+   "count": 1,
+   "scale": 0.0,
+   "ruinOnLoss": 0,
+   "ruinPrefab": "",
+   "ruinScale": 0.0,
+   "requires": {
+    "allOf": [
+     {
+      "tech": "school"
+     }
+    ]
+   },
+   "variants": [
+    "P_PROP_book_city_02",
+    "P_PROP_book_city_03",
+    "P_PROP_book_city_04",
+    "P_PROP_reading_stand_city"
+   ]
+  },
+  {
+   "id": "stable",
+   "prefab": "COMP_PROP_horsestable_city",
+   "category": "farm",
+   "requiresTech": "farming",
+   "requiresCustom": "",
+   "desc": "beasts housed rather than followed — the animal became property, and the work it does became a plan",
+   "placement": "edge",
+   "tier": "milestone",
+   "statMeaning": "economy: the animal kept",
+   "era": 2,
+   "minPop": 14,
+   "minCrafts": 3,
+   "minGen": 0,
+   "count": 1,
+   "scale": 0.0,
+   "ruinOnLoss": 1,
+   "ruinPrefab": "",
+   "ruinScale": 0.0,
+   "variants": [
+    "P_PROP_horsestable_city",
+    "P_PROP_horsestation",
+    "P_PROP_horsestation_city"
    ]
   }
  ],

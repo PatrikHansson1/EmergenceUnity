@@ -71,8 +71,6 @@ MonoBehaviour:
     prefab: {fileID: 5648544150296794767, guid: f1acfe97b07f9f54ca6dc5555723aba1, type: 3}
   - name: Prefab_Bush_03
     prefab: {fileID: 1051078274315369266, guid: ed60867ab2e84f944925106afee949be, type: 3}
-  - name: P_PROP_treetrunk_01
-    prefab: {fileID: 7642714241296846559, guid: 21d25390e2982794d8ea9cffc197c7ec, type: 3}
   - name: P_PROP_treetrunk_02
     prefab: {fileID: 1166314740754180048, guid: 331cd993ddfaf9447920ed1b003bfc2f, type: 3}
   - name: P_PROP_treetrunk_03
@@ -83,60 +81,1278 @@ MonoBehaviour:
     prefab: {fileID: 3593693710694803282, guid: 9e07e81fe6664ed44a479288857d4fc0, type: 3}
   - name: SM_WaterRiver
     prefab: {fileID: 6049760999353382768, guid: ba1754ab13eeb98428a85de2adf1c526, type: 3}
-  - name: P_PROP_flag_01
-    prefab: {fileID: 1525057500783216557, guid: 319a3e76f3abd7a43b206990bf62733f, type: 3}
-  - name: mill.glb
-    prefab: {fileID: 8919934127225428127, guid: 16f269505c7ce3244897da36f4009793, type: 3}
-  - name: P_PROP_signpost_01
-    prefab: {fileID: 1618310165938123508, guid: ac82f76def940e141b1e072e746a312f, type: 3}
-  - name: P_PROP_market_shelf_01
-    prefab: {fileID: 3948062172000380339, guid: 6b13403843386944a9a1317f19d0fa75, type: 3}
-  - name: Prefab_RuneRock_01
-    prefab: {fileID: 2921669142860546498, guid: 62827684f2773b04c9a21b55023bf41b, type: 3}
-  - name: BLD_03_16x8_Ext_Arch_01
-    prefab: {fileID: 4074985016414696614, guid: bb6a60f829e09f946a5c609d7ab0394c, type: 3}
-  - name: BLD_03_L_Ext_01
-    prefab: {fileID: 4142231140047830824, guid: 86381e6f2a75c7a41908b38bcb405ae2, type: 3}
-  - name: forge.glb
-    prefab: {fileID: 8919934127225428127, guid: a8bb55d0c03ccd3448c5b8877d4d9094, type: 3}
-  - name: P_PROP_scroll
-    prefab: {fileID: 837259620937065759, guid: 19fe2e3398baa90458c890fb2bb5c3f9, type: 3}
-  - name: P_PROP_rowboat
-    prefab: {fileID: 2086265219946859027, guid: 0254b0f9ed3bbb54687a88a46f5a8504, type: 3}
-  - name: P_PROP_cart_01
-    prefab: {fileID: 6758660250289803375, guid: c7c1d22f58af4214591facb23bcaba24, type: 3}
+  - name: P_PROP_firepit
+    prefab: {fileID: 3371278342463507448, guid: 7ab8c01c8442a864ca2cf0aa160ebda8, type: 3}
+  - name: P_PROP_firepit_woodpile
+    prefab: {fileID: 5926364760295643609, guid: 2fa061b03fd6ed5469408cdf9f9cdf99, type: 3}
+  - name: P_PROP_brazier_01
+    prefab: {fileID: 1065541308502623948, guid: 796fd411805d2ff40ac66d143d7767f6, type: 3}
+  - name: P_PROP_brazier_02
+    prefab: {fileID: 1061737072811450060, guid: 86a3361ab4973c94786f5cd77def4900, type: 3}
+  - name: P_PROP_brazier_03
+    prefab: {fileID: 8700213420381108265, guid: e4b8145a1454f6b4c9af2a29cebbc689, type: 3}
+  - name: P_PROP_brazier_04
+    prefab: {fileID: 4361424653252234233, guid: 453bb9a0353f55942ba8dfbd6f215a84, type: 3}
+  - name: P_PROP_brazier_05
+    prefab: {fileID: 6499763217898972513, guid: c8e43199aee48944f8ac29cdfc00d450, type: 3}
+  - name: P_PROP_knife_01
+    prefab: {fileID: 1687252694807861145, guid: f418ef320797acc4a8df7557bb2b5730, type: 3}
+  - name: P_PROP_stone_01
+    prefab: {fileID: 984417395619347120, guid: 8dd7247f530778b4491d1a4a1bf78011, type: 3}
+  - name: P_PROP_stone_02
+    prefab: {fileID: 3571500212762631605, guid: 3d3659277aa894541b418a35040b965c, type: 3}
+  - name: P_PROP_stone_03
+    prefab: {fileID: 1551748858873020221, guid: 45e139b210d606145bd379d36d23beed, type: 3}
+  - name: P_PROP_stone_04
+    prefab: {fileID: 340053700566192400, guid: f03ee22cd53d2274ab0a4db097761304, type: 3}
   - name: P_PROP_clothesline_01
     prefab: {fileID: 4946818265098746284, guid: c4f6e404697eb7349bb05ff3af77e013, type: 3}
-  - name: P_PROP_barrel_03
-    prefab: {fileID: 518489810725554595, guid: 81ee253099686f647ab56365aeeeff03, type: 3}
+  - name: P_PROP_rope_decoration_city_01
+    prefab: {fileID: 5164364242365616500, guid: 549845094856d4045aeec969cc897b10, type: 3}
+  - name: P_PROP_rope_decoration_city_02
+    prefab: {fileID: 6123046751306244580, guid: 0e8c532d34d4cf140b25d2276d91adce, type: 3}
+  - name: P_PROP_rope_decoration_city_03
+    prefab: {fileID: 6201861214765985096, guid: 32e2864a0c812b64997f2684aef8a141, type: 3}
+  - name: P_PROP_rope_decoration_city_04
+    prefab: {fileID: 9021960856386286559, guid: 6ad2378ccc778c941801882369e7810d, type: 3}
+  - name: P_PROP_spikes_v01_01
+    prefab: {fileID: 5377875420688215958, guid: 83cf86418f2a00043887ab8c9a414a9d, type: 3}
+  - name: P_PROP_spikes_v01_02
+    prefab: {fileID: 7789413188076671251, guid: e4f89f01a6a07ae40ad64b346d5f4d40, type: 3}
+  - name: P_PROP_spikes_v01_03
+    prefab: {fileID: 4685476520143211870, guid: d7974f897250d1943856766cd9da1c04, type: 3}
+  - name: P_PROP_spikes_v02_01
+    prefab: {fileID: 3061150661513793498, guid: c72890d3149b4ce4e892486b7bb97b47, type: 3}
+  - name: P_PROP_spikes_v02_02
+    prefab: {fileID: 7641498589768680676, guid: fc7a5df1e0d89a24cbe23a30a1ef4430, type: 3}
+  - name: P_PROP_spikes_v02_03
+    prefab: {fileID: 8942579246603410571, guid: 450a7d991dcab5e49b91f9f6ad9f3244, type: 3}
+  - name: P_PROP_treetrunk_01
+    prefab: {fileID: 7642714241296846559, guid: 21d25390e2982794d8ea9cffc197c7ec, type: 3}
+  - name: P_PROP_planks_01
+    prefab: {fileID: 5450062107363932231, guid: 6567704810e833b4699ec28628e3f7b4, type: 3}
+  - name: P_PROP_planks_02
+    prefab: {fileID: 6030944680496779402, guid: 224bab12277bc5e4b8be0b79e284c6f1, type: 3}
+  - name: P_PROP_planks_03
+    prefab: {fileID: 6299897437214338928, guid: 0d507354aec9db74e9fd9d0eedf3e0c2, type: 3}
+  - name: P_PROP_logpile_city_01
+    prefab: {fileID: 1638661967144739232, guid: fa0f35953b370e446a6892bdc8c48a3a, type: 3}
+  - name: P_PROP_logpile_city_02
+    prefab: {fileID: 6779715644600502588, guid: e0ea109fce1939841865a80b921f2e75, type: 3}
+  - name: P_PROP_logpile_city_03
+    prefab: {fileID: 5839914731242887276, guid: 885bb3546f557fa49acb03e1958c8433, type: 3}
+  - name: P_PROP_plank_city_01
+    prefab: {fileID: 4727011116273792643, guid: a896ee3d80c215741940db0eb8377357, type: 3}
+  - name: P_PROP_plank_city_02
+    prefab: {fileID: 58368632907123636, guid: 5f5e8f4fbc3532d4fbe3095aeef8f645, type: 3}
   - name: P_PROP_PLANT_pot_v1_01
     prefab: {fileID: 398806270613768478, guid: 0d69fa3600fa7cc4097e932b8516eab7, type: 3}
+  - name: P_PROP_PLANT_pot_v1_02
+    prefab: {fileID: 8726736588739316180, guid: 84999e91cfe28af4489fa867ee3fa238, type: 3}
+  - name: P_PROP_PLANT_pot_v1_03
+    prefab: {fileID: 8455391381226934404, guid: ced2a23f0ad5fd04298a12ce334e7442, type: 3}
+  - name: P_PROP_PLANT_pot_v1_04
+    prefab: {fileID: 4406163052936904257, guid: c7db634c190b67c41bf67a6df50300b0, type: 3}
+  - name: P_PROP_PLANT_pot_v2_01
+    prefab: {fileID: 5668803422172261583, guid: 10bed568fd9a2084980b2b037691e4a2, type: 3}
+  - name: P_PROP_PLANT_pot_v2_02
+    prefab: {fileID: 4417450862326603018, guid: 75df3eca9ac3a1840b08ff6532eaceaa, type: 3}
+  - name: P_PROP_PLANT_pot_v2_03
+    prefab: {fileID: 2558255421726245728, guid: ad00bd8e985eb4a4d9086099cfb1f79e, type: 3}
+  - name: P_PROP_PLANT_pot_v2_04
+    prefab: {fileID: 5207897457176481888, guid: 1a82c2b6c971ccf42a85419e32454c6c, type: 3}
+  - name: P_PROP_PLANT_pot_v3_01
+    prefab: {fileID: 6205961351010089170, guid: a6e5d59a4a45eca448ab1928b1c8c19c, type: 3}
+  - name: P_PROP_PLANT_pot_v3_02
+    prefab: {fileID: 4750973281151454349, guid: c0bfc954a52419c4abbb607442fe8c70, type: 3}
+  - name: P_PROP_PLANT_pot_v3_03
+    prefab: {fileID: 5824132989845706832, guid: 29755488000a23140a62b8fcd31f155a, type: 3}
+  - name: P_PROP_PLANT_pot_v3_04
+    prefab: {fileID: 5267612118823640257, guid: 458a96cc08f53424baff863a97f3c1c1, type: 3}
+  - name: P_PROP_PLANT_pot_v4_01
+    prefab: {fileID: 1320984839690287164, guid: b8ae1ddc8e2616a45ba49506f05eab19, type: 3}
+  - name: P_PROP_PLANT_pot_v5_01
+    prefab: {fileID: 8932106972558784638, guid: f91da038dabf5eb42a3aac7f367c1e91, type: 3}
+  - name: P_PROP_PLANT_pot_v6_01
+    prefab: {fileID: 2297025970457429406, guid: dee399c23911a0642904a5ba7c8ffbcb, type: 3}
+  - name: COMP_PROP_plate_city_01
+    prefab: {fileID: 8227238220230871266, guid: f52624953c2810d4e8f9b78f6395de67, type: 3}
+  - name: COMP_PROP_plate_city_02
+    prefab: {fileID: 5304826469957243024, guid: 66d9b66931c9b6b46a4f649049557b90, type: 3}
+  - name: COMP_PROP_plate_city_03
+    prefab: {fileID: 4886599969028073683, guid: 35e3ddbe56f48e144b016b0e9c6c0115, type: 3}
+  - name: P_PROP_teapot_city
+    prefab: {fileID: 4859251671738556506, guid: 128cf32796d6cea43b7db8b235e36e9e, type: 3}
+  - name: P_PROP_cup_city_01
+    prefab: {fileID: 7478943959976530409, guid: cee629677c1878044871cf2e3b9c48bf, type: 3}
+  - name: P_PROP_cup_city_02
+    prefab: {fileID: 6027300439427937786, guid: 208dbd1fd1bb003408ca101628035da5, type: 3}
+  - name: P_PROP_jug_city_01
+    prefab: {fileID: 6662399765839962657, guid: 215af99f2064032438a7dfd0f2bf8c80, type: 3}
+  - name: P_PROP_jug_city_02
+    prefab: {fileID: 706238470084122227, guid: 5a981f53bd939204da5b4a2c8487affb, type: 3}
+  - name: P_PROP_plate_city_01
+    prefab: {fileID: 23038367098285921, guid: 5c8775b2cfe5e244390b9b04456d04ea, type: 3}
+  - name: P_PROP_plate_city_02
+    prefab: {fileID: 229495578016942807, guid: c17a3202822848f458e277d16785f2b8, type: 3}
+  - name: P_PROP_plate_city_03
+    prefab: {fileID: 7151521075745810861, guid: 424a61c475cf1344789340a2fe1754c2, type: 3}
+  - name: P_PROP_plate_city_04
+    prefab: {fileID: 1030154586050878546, guid: c347a9136e8babc4686ad085014e069e, type: 3}
+  - name: P_PROP_plate_city_05
+    prefab: {fileID: 8807392531962396926, guid: 596235e78cecaea41b2013aa4e2ce107, type: 3}
+  - name: P_PROP_planter_base_city_01
+    prefab: {fileID: 3930909900119191585, guid: f74a76ff93a544f4384d5d766f077155, type: 3}
+  - name: P_PROP_planter_base_city_02
+    prefab: {fileID: 2309509582591444643, guid: a3e626807c4d2e5409a66b55e9f5a082, type: 3}
+  - name: P_PROP_planter_city_01
+    prefab: {fileID: 511394234956822372, guid: 6a3bba126a250d346a11093b1c6d2966, type: 3}
+  - name: P_PROP_planter_city_02
+    prefab: {fileID: 4162804931182062719, guid: 1016709933324f141ade2b67f31b04a4, type: 3}
+  - name: P_PROP_planter_city_03
+    prefab: {fileID: 4029944255593007658, guid: 42a951c7e5e174a4b816b4bc253e492f, type: 3}
+  - name: P_PROP_planter_city_04
+    prefab: {fileID: 6813904147071367841, guid: 2e33422365f36ac4cad4f51c33b78c42, type: 3}
+  - name: P_PROP_pan_city
+    prefab: {fileID: 8197635026047819744, guid: f02c85ccdd0a38d4383e13233ed71d4e, type: 3}
+  - name: P_PROP_spoon_city
+    prefab: {fileID: 6647996243964834609, guid: faacb0234a9b6754faecfa9b1565b064, type: 3}
+  - name: P_PROP_cup
+    prefab: {fileID: 2183163069880698675, guid: 64b502b75196ce644b1e5ccf62681ed3, type: 3}
+  - name: P_PROP_pan
+    prefab: {fileID: 7464358826500390320, guid: e8276ab4a9d483d4f86ce6009e7ba184, type: 3}
+  - name: P_PROP_spoon_01
+    prefab: {fileID: 8133454107176085447, guid: 4f7cae6c34e365d409e6ec9ddc024b64, type: 3}
+  - name: P_PROP_spoon_02
+    prefab: {fileID: 5902921102807965786, guid: 3262799ca9121964cbdfd66423fd0b1a, type: 3}
+  - name: Prefab_Pan_01
+    prefab: {fileID: 4067120543034252268, guid: 6ff025d5894dc834c8ad4b843f87430a, type: 3}
+  - name: P_PROP_cookingpot_big
+    prefab: {fileID: 4531881932215259971, guid: b0faa79c84c40cf4eb3961c8747d4c99, type: 3}
+  - name: P_PROP_bowl_wood_01
+    prefab: {fileID: 6252702514526614549, guid: 14b977276b0131c45a4f40286a794fe9, type: 3}
+  - name: P_PROP_bowl_wood_02
+    prefab: {fileID: 8317199899030714524, guid: 5edb198db39a17244b4d993fab59f16c, type: 3}
+  - name: P_PROP_bowl_wood_03
+    prefab: {fileID: 2184536099628591286, guid: 640173b9692c1934f8def9aaabff3077, type: 3}
+  - name: P_PROP_bowl_wood_04
+    prefab: {fileID: 2167993946162966823, guid: 69d3388febd49924ab953be0e9108e91, type: 3}
+  - name: P_PROP_bowl_wood_05
+    prefab: {fileID: 5961669050294034013, guid: b5913198557447f46b81e1cf82753ba0, type: 3}
+  - name: P_PROP_cookingpot_city_01
+    prefab: {fileID: 8126975935364377659, guid: d3f63e55117983d49830ccbdfce42f11, type: 3}
+  - name: P_PROP_cookingpot_city_02
+    prefab: {fileID: 8694657924122386104, guid: 8fd7b946611ccb449beee762ff9d6d78, type: 3}
+  - name: P_PROP_cookingpot_lid_city_01
+    prefab: {fileID: 1321376576767068331, guid: fa150299ebedc1249a97f5c675fde79d, type: 3}
+  - name: P_PROP_cookingpot_small
+    prefab: {fileID: 7295809412857762636, guid: 52291a752abb0fe4197371face4cd100, type: 3}
+  - name: COMP_PROP_cookingpot_city_01
+    prefab: {fileID: 5655670929726722426, guid: 2b1b4cb5b8e6a2748ae93b99494d4b90, type: 3}
+  - name: P_PROP_foundation_wood_01
+    prefab: {fileID: 5854610538743996375, guid: 5148720a29930b04db37f6de1245cd95, type: 3}
+  - name: P_PROP_foundation_wood_02
+    prefab: {fileID: 1655894662401954941, guid: b126bda5871cb30429b415521da49a2b, type: 3}
+  - name: P_PROP_foundation_wood_03
+    prefab: {fileID: 4762312740641220459, guid: 54101636d97343e479ef66b5254382e6, type: 3}
+  - name: P_PROP_foundation_wood_04
+    prefab: {fileID: 7616728163311556269, guid: 3814f566acac2364286a1f8440f5325b, type: 3}
+  - name: P_PROP_foundation_wood_05
+    prefab: {fileID: 1650677907652992818, guid: 0d4af62435304f64f9707e01117d9b22, type: 3}
+  - name: P_PROP_fence_v01_01
+    prefab: {fileID: 266120588002549390, guid: 5ea4f6e9c46459347b94958600481fb5, type: 3}
+  - name: P_PROP_fence_v01_02
+    prefab: {fileID: 5481532227005971904, guid: 9e1d867523a4b6044a66c76442c43a5d, type: 3}
+  - name: P_PROP_fence_v01_03
+    prefab: {fileID: 8687275365099233527, guid: b3ecc3dd30e0a9b4f959638fc82bbd6e, type: 3}
+  - name: P_PROP_fence_v01_04
+    prefab: {fileID: 4485873240062448177, guid: 71ce4797219513c46bb80e5530c446ee, type: 3}
+  - name: P_PROP_fence_v01_05
+    prefab: {fileID: 3401235650558318353, guid: 7e722a03869e3bf46a8e857d2bd8c41b, type: 3}
+  - name: P_PROP_fence_v02_01
+    prefab: {fileID: 820987899510364367, guid: 51693898e7d64064bb7ae2870c337988, type: 3}
+  - name: P_PROP_fence_v02_02
+    prefab: {fileID: 258393473779942524, guid: 2040d09d3495b1542961c54cd922f7b1, type: 3}
+  - name: P_PROP_fence_v02_03
+    prefab: {fileID: 2163038887391244665, guid: 322ebeaa417b08d439741e2f537a8628, type: 3}
+  - name: P_PROP_fence_v02_04
+    prefab: {fileID: 221068624743690471, guid: 045059c79b3915b46b4ae67e30c9f573, type: 3}
+  - name: P_PROP_fence_v03_01
+    prefab: {fileID: 8200897472859757661, guid: d984e08dc7ae3434292e393c082c4566, type: 3}
+  - name: P_PROP_fence_v03_02
+    prefab: {fileID: 8260790134320926652, guid: 801bf681f348aa84590df4837af21fa2, type: 3}
+  - name: P_PROP_fence_v03_03
+    prefab: {fileID: 3735013347023203583, guid: d0c5170eec1678746aa0bba3b913c182, type: 3}
+  - name: P_PROP_fence_v03_04
+    prefab: {fileID: 9039460889739228719, guid: 4340ff73481e41b4da015148b1ebf709, type: 3}
+  - name: P_PROP_fence_v04_01
+    prefab: {fileID: 6498213198010698908, guid: 8fcfe192efc5e2a46a71c31220e0674d, type: 3}
+  - name: P_PROP_fence_v04_02
+    prefab: {fileID: 3394693433439665563, guid: fc8f51e61c68a7d4e9bb0fb5b8cda8ae, type: 3}
+  - name: P_PROP_fence_v04_03
+    prefab: {fileID: 3065299695450769967, guid: ea526325c0babd24987b9dc8a6518cd5, type: 3}
+  - name: kiln.glb
+    prefab: {fileID: 8919934127225428127, guid: cfb8b94c740c10440953ef4b60309501, type: 3}
+  - name: COMP_PROP_blacksmith_station_city
+    prefab: {fileID: 6231826952530932228, guid: 28b4f139f9ea1fd4a991164b9e8bb03a, type: 3}
+  - name: P_PROP_bucket_01
+    prefab: {fileID: 3599639538761866819, guid: 34047cc28841ca44593947dee396e8e6, type: 3}
+  - name: P_PROP_bucket_02
+    prefab: {fileID: 3170543750682445910, guid: 29575b0c013e32f40a1210c820df5638, type: 3}
+  - name: P_PROP_bucket_03
+    prefab: {fileID: 1339069277495501687, guid: 340962a4742b61647b75d12cbfe725db, type: 3}
+  - name: P_PROP_bucket_04
+    prefab: {fileID: 616598250478781827, guid: ff4b4eee0843b184b8d5ab7894545f01, type: 3}
+  - name: P_PROP_bucket_city_01
+    prefab: {fileID: 5081212526275159199, guid: b73ca09c96bf76b4eac406b8d51b7c25, type: 3}
+  - name: P_PROP_bucket_city_02
+    prefab: {fileID: 713152796555164845, guid: 3f1e2fa06edcdcc408c8eba21a04c75d, type: 3}
+  - name: P_PROP_bucket_city_03
+    prefab: {fileID: 2142736380227009680, guid: 3806296806f407d40b5ffd10373ecb91, type: 3}
+  - name: P_PROP_pitchfork
+    prefab: {fileID: 8302794244689776398, guid: e1719a52489dec540ae3a05134822497, type: 3}
+  - name: P_PROP_bottle_04
+    prefab: {fileID: 2041679349197019933, guid: 5c7cb65fdec6a0140a2f04a921b9c0dd, type: 3}
+  - name: P_PROP_bottle_01
+    prefab: {fileID: 2720622057549455491, guid: 6847eb46affb403428b3318ca1c16b7f, type: 3}
+  - name: P_PROP_bottle_02
+    prefab: {fileID: 654544485776084747, guid: 757c9ef934ea29e4cae13cd8554da777, type: 3}
+  - name: P_PROP_bottle_03
+    prefab: {fileID: 5060476534284452565, guid: df8d26b26f870794e8a6d758cc669ae8, type: 3}
+  - name: P_PROP_bottle_05
+    prefab: {fileID: 6402540757168263483, guid: 2713123f8434a9a4cb505741392f7f1c, type: 3}
+  - name: P_PROP_bottle_06
+    prefab: {fileID: 4592451724918669825, guid: 4c776cf40e0c29b4381100f381be1d90, type: 3}
+  - name: P_PROP_bottle_07
+    prefab: {fileID: 8629888338258610205, guid: efdb19f496c434a48b35c70ed5dd90a1, type: 3}
+  - name: P_PROP_bottle_08
+    prefab: {fileID: 5203248644984538851, guid: 582eedd7eee3fed4bba03e2eb99af041, type: 3}
+  - name: P_PROP_bottle_09
+    prefab: {fileID: 8952052594516440383, guid: 2e93956a9ebc49a41b1710d96f65f9d4, type: 3}
+  - name: P_PROP_bottle_city_01
+    prefab: {fileID: 309970610315569970, guid: 4a72f14496e84544c81f9ae5fc6cbc06, type: 3}
+  - name: P_PROP_bottle_city_02
+    prefab: {fileID: 3947063802562534165, guid: de5ff931cc4a56d4ea9ecce30800b131, type: 3}
+  - name: P_PROP_bottle_city_03
+    prefab: {fileID: 4936457760929228556, guid: 8bcc09ed6201eef40bdbb76005478c33, type: 3}
+  - name: P_PROP_bottle_city_04
+    prefab: {fileID: 2072558566400550362, guid: e96b29cb20380b3478954fe22c4c695c, type: 3}
+  - name: P_PROP_bottle_city_07
+    prefab: {fileID: 6712577620061325053, guid: 28d526aab883b5f46802a35a78c3e8ca, type: 3}
+  - name: P_PROP_bottle_city_08
+    prefab: {fileID: 4414005521171571086, guid: 9e05d40727aa33a4da7ee66e8143bd79, type: 3}
+  - name: P_PROP_vase_city_01
+    prefab: {fileID: 8396947979540069212, guid: 16aa7d9d2dc5576449205c10e9b1a18f, type: 3}
+  - name: P_PROP_glass_city_01
+    prefab: {fileID: 1800478833196330262, guid: 2f000c68786d3bb4695ce03e483a0105, type: 3}
+  - name: P_PROP_glass_city_02
+    prefab: {fileID: 684427298552375798, guid: 5a46f7e8f1ade7143a203d8f25b40d65, type: 3}
+  - name: P_PROP_glass_city_03
+    prefab: {fileID: 775328441749954623, guid: a7520307b0b75a843b53ada317abc71d, type: 3}
+  - name: P_PROP_glass_city_04
+    prefab: {fileID: 270119633358376214, guid: 72eb1e811d9bbdd4697c7a5b176d81b9, type: 3}
+  - name: P_PROP_bottle_city_05
+    prefab: {fileID: 2964836693078365063, guid: 16659ed083b8a214a934664ce82fd728, type: 3}
+  - name: P_PROP_bottle_city_06
+    prefab: {fileID: 3517742026335478612, guid: b26c66c1b7844474b93e44f658066408, type: 3}
+  - name: P_PROP_jar_city_01
+    prefab: {fileID: 6645490856671270623, guid: 48a8f11a57ac67f49ad41bf517cbd458, type: 3}
+  - name: P_PROP_jar_city_02
+    prefab: {fileID: 4486410283258654827, guid: d0dc9633b732c894fa86ab8155dfadb8, type: 3}
+  - name: P_PROP_jar_city_03
+    prefab: {fileID: 1605389453322617061, guid: 98dfc4e92ca34a74fa0d44c5aaad1b90, type: 3}
+  - name: P_PROP_cart_01
+    prefab: {fileID: 6758660250289803375, guid: c7c1d22f58af4214591facb23bcaba24, type: 3}
+  - name: P_PROP_cart_02
+    prefab: {fileID: 8106673767351880195, guid: 8d75aa598155a334bbba4be2b0c1cc7d, type: 3}
+  - name: P_PROP_cart_03
+    prefab: {fileID: 4055985977343826442, guid: eed308f7ea8cc874d839d7b4d3bf603d, type: 3}
+  - name: COMP_PROP_cart_city_01
+    prefab: {fileID: 7705433180950708900, guid: 3d4d2c4f161f11e46adec30d1f4e43b3, type: 3}
+  - name: COMP_PROP_cart_city_02
+    prefab: {fileID: 7944864718240986658, guid: 10d6cd7d0162d8b44a54dcb8cbf5d229, type: 3}
+  - name: COMP_PROP_cart_city_03
+    prefab: {fileID: 1141957088330619101, guid: 3813df7b724a57a48a8c5c50321e123e, type: 3}
+  - name: P_PROP_cart_city_01
+    prefab: {fileID: 8513382626807032925, guid: 175f21cac2996e4469eb6380acb497cf, type: 3}
+  - name: P_PROP_cart_city_02
+    prefab: {fileID: 8489495995944812119, guid: f089473b8a4b64d478e38a5fcc1dbb9c, type: 3}
+  - name: P_PROP_cart_city_03
+    prefab: {fileID: 4180406105543351386, guid: b60e791a3e77fde4bbfbc024bd71b539, type: 3}
+  - name: P_PROP_cart_city_04
+    prefab: {fileID: 4515547296089654398, guid: c66666b9d26007840aa43f38d63aa28a, type: 3}
+  - name: P_PROP_cart_wheel_big
+    prefab: {fileID: 7764677207711358095, guid: aa520ef88144d984bb7a61cb6945a724, type: 3}
+  - name: P_PROP_cart_wheel_city
+    prefab: {fileID: 5543536211634374282, guid: 230e8f3d0a14efc4db8a8586aa481b5f, type: 3}
+  - name: P_PROP_cart_wheel_small
+    prefab: {fileID: 7452869415572602400, guid: bfe6ec9d46d9d074095689bcd94fe9c0, type: 3}
+  - name: mill.glb
+    prefab: {fileID: 8919934127225428127, guid: 16f269505c7ce3244897da36f4009793, type: 3}
+  - name: P_PROP_watchtower_wood_02_small
+    prefab: {fileID: 5976175354287838475, guid: 77c84fd2956591a4ea015fb36fae0ee1, type: 3}
+  - name: P_PROP_watchtower_wood_01
+    prefab: {fileID: 5102925817491644108, guid: 1e5454edfbee8924db92b99bb31347f4, type: 3}
+  - name: P_PROP_watchtower_wood_02
+    prefab: {fileID: 2246046377119428459, guid: 2500f16b3948eff4e88693d885c2fb55, type: 3}
+  - name: P_PROP_rowboat
+    prefab: {fileID: 2086265219946859027, guid: 0254b0f9ed3bbb54687a88a46f5a8504, type: 3}
+  - name: P_PROP_food_fish_01
+    prefab: {fileID: 2129397341412540919, guid: 27953f015db2c1a4c9c2c22512797377, type: 3}
+  - name: P_PROP_hay_02
+    prefab: {fileID: 695087458049713834, guid: 0e4cc67b99b021d4db04a26c9ae18d46, type: 3}
+  - name: P_PROP_hay_01
+    prefab: {fileID: 7046783382748685624, guid: f60c526e86449ca49a88be2edf4c893e, type: 3}
+  - name: P_PROP_hay_03
+    prefab: {fileID: 8602134720034844174, guid: 0957d63485050b64dbe5b62aaa9823cf, type: 3}
+  - name: P_PROP_hay_04
+    prefab: {fileID: 4731626777726773868, guid: 1ba4a7565c68ac6439cf5408cd263c83, type: 3}
+  - name: P_PROP_hay_05
+    prefab: {fileID: 7314068640703357757, guid: 9e514672a7230384d8fe43324d6e8a50, type: 3}
+  - name: P_PROP_hay_06
+    prefab: {fileID: 3544718074216047626, guid: 03df60c8134c1cc4aa1f86e3eb73cc2a, type: 3}
+  - name: P_PROP_hay_city_01
+    prefab: {fileID: 8076916387379368755, guid: eb46564922f00d145a077822b409173f, type: 3}
+  - name: P_PROP_hay_city_02
+    prefab: {fileID: 1986146926657267125, guid: 3fcbc1cb635d77544bfb93ae98f9f67a, type: 3}
+  - name: P_PROP_trough_01
+    prefab: {fileID: 9221700670759350393, guid: fd73157d1c283de4797127fb6af8cb45, type: 3}
+  - name: P_PROP_trough_02
+    prefab: {fileID: 8637202690130821793, guid: fd8dbba26e9bc0545ba77f5f9845f6aa, type: 3}
+  - name: P_PROP_signpost_01
+    prefab: {fileID: 1618310165938123508, guid: ac82f76def940e141b1e072e746a312f, type: 3}
+  - name: P_PROP_signpost_02
+    prefab: {fileID: 6902668103472760074, guid: a4cf5171cfc362c448ef39e999ba02ac, type: 3}
+  - name: P_PROP_signpost_03
+    prefab: {fileID: 4204884612506115137, guid: fe6f31c73df0f424e8ef60fa5c1ac64d, type: 3}
+  - name: P_PROP_signpost_04
+    prefab: {fileID: 2113116465530841242, guid: 8c37c5bd5fbf25e44a2640918b683483, type: 3}
+  - name: P_PROP_poster_01
+    prefab: {fileID: 3368974518962328081, guid: 4a659486acc91054fb69ddadc48341fa, type: 3}
+  - name: P_PROP_paper_01
+    prefab: {fileID: 4609726923483524817, guid: f2b378517f9407f4eb6bb3d9f4cbd47f, type: 3}
+  - name: P_PROP_paper_02
+    prefab: {fileID: 7807094965065011675, guid: a5b9da343efc71d46abc6f85d36161a3, type: 3}
+  - name: P_PROP_paper_03
+    prefab: {fileID: 7210752112724613863, guid: 41c8aac63e5d0f6429402aebc1a2df61, type: 3}
+  - name: P_PROP_paper_04
+    prefab: {fileID: 5111171429504501659, guid: f22aa20c9e75c654e81850c758767dcc, type: 3}
+  - name: P_PROP_poster_02
+    prefab: {fileID: 7634689291639556778, guid: d1fa8c151ca38ff499361c28e558903a, type: 3}
+  - name: P_PROP_sign_01
+    prefab: {fileID: 3709849667850344618, guid: bcc882486aeb69a42a5ec73174bdfa14, type: 3}
+  - name: P_PROP_sign_02
+    prefab: {fileID: 4665757243697639442, guid: d7282338ce571fc4787a5da5091a58c5, type: 3}
+  - name: P_PROP_sign_03
+    prefab: {fileID: 8464347694909753947, guid: 20bbaa95342005245bf4d2a5c21015d9, type: 3}
+  - name: P_PROP_sign_04
+    prefab: {fileID: 5836416787983086825, guid: 2c814444514ad5b428284dd1ff272f64, type: 3}
+  - name: P_PROP_sign_05
+    prefab: {fileID: 2577214685473365793, guid: fe26eb136afa61f4182cea1dc543e73d, type: 3}
+  - name: P_PROP_sign_06
+    prefab: {fileID: 6123418780655966123, guid: 25084c7b475961442a32b507b08fd763, type: 3}
+  - name: P_PROP_letter_city
+    prefab: {fileID: 6592332092404731834, guid: ecd5daac26124a14e92e60e4e96ea6e0, type: 3}
+  - name: P_PROP_paper_city_01
+    prefab: {fileID: 3039070091220416237, guid: 431b6837f97f0a146a6803b658fe77ec, type: 3}
+  - name: P_PROP_paper_city_02
+    prefab: {fileID: 3445600810860592576, guid: 998e8015db003dd47b8a19316f4a0328, type: 3}
+  - name: P_PROP_paper_city_03
+    prefab: {fileID: 6798520706963540348, guid: 1bfab35a78eb5744bb624465bb8fec27, type: 3}
+  - name: P_PROP_paper_city_04
+    prefab: {fileID: 1971939979836216453, guid: 4119bdbd1155cec4b8f50ec8c296d874, type: 3}
   - name: P_PROP_wall_stone_small_01
     prefab: {fileID: 8368246807289434873, guid: 41a4bea1efb252c4aad5ea2649e5cb08, type: 3}
   - name: well.glb
     prefab: {fileID: 8919934127225428127, guid: d05f236f2c86a3845b10ea9c6b2247ab, type: 3}
+  - name: well
+    prefab: {fileID: 1784516968236288167, guid: 576b32009623a7d48b69e54c123b3e04, type: 3}
+  - name: P_PROP_well
+    prefab: {fileID: 1784516968236288167, guid: 576b32009623a7d48b69e54c123b3e04, type: 3}
+  - name: P_PROP_barrel_03
+    prefab: {fileID: 518489810725554595, guid: 81ee253099686f647ab56365aeeeff03, type: 3}
+  - name: P_PROP_basket_01
+    prefab: {fileID: 7937405017386761406, guid: cddf71153fbcd11499e3af0c4c5b1946, type: 3}
+  - name: P_PROP_basket_02
+    prefab: {fileID: 6682925773325136177, guid: d5db01e4f1630f848bbfa989b5eb7146, type: 3}
+  - name: P_PROP_basket_03
+    prefab: {fileID: 8580618622399731261, guid: 734a207263959e44691cb3ebab8b03d9, type: 3}
+  - name: P_PROP_box_01
+    prefab: {fileID: 2047763408474926474, guid: 398c1d62cf73ef64f9492dcebfea9d0e, type: 3}
+  - name: P_PROP_box_02
+    prefab: {fileID: 8179129495661290037, guid: 3b4664c6ab26e0c40a77e8ab3b588670, type: 3}
+  - name: P_PROP_box_03
+    prefab: {fileID: 7192109887047284267, guid: 5bab0418ca308274a87d2b5288480ab1, type: 3}
+  - name: P_PROP_box_04
+    prefab: {fileID: 6269245973108876301, guid: d12bf69575fd8eb4cb6e20267f4c06f0, type: 3}
+  - name: P_PROP_box_05
+    prefab: {fileID: 223641291381166980, guid: 7451c03c073dd074795e801bd6368f3c, type: 3}
+  - name: COMP_PROP_basket_city_01
+    prefab: {fileID: 4716647592940607367, guid: 1193d7d2affac574ebcfe59dec218128, type: 3}
+  - name: COMP_PROP_basket_city_02
+    prefab: {fileID: 4005267173241285370, guid: 3733b48cee9823345b7c90c7a491681d, type: 3}
+  - name: COMP_PROP_basket_city_03
+    prefab: {fileID: 2132667389578576450, guid: 23edf134a70b17347bc69a0267989a13, type: 3}
+  - name: COMP_PROP_basket_city_04
+    prefab: {fileID: 1335863439175634437, guid: 0f6e7fcb22ca1684299e0a0cd52a1c48, type: 3}
+  - name: COMP_PROP_basket_city_05
+    prefab: {fileID: 3369051556993012387, guid: cbe8c1a28165ad348adfedb7589fdcfb, type: 3}
+  - name: COMP_PROP_basket_city_06
+    prefab: {fileID: 2436325392028269039, guid: a7a577230ae7c1a458adbee38cd10be8, type: 3}
+  - name: COMP_PROP_basket_city_07
+    prefab: {fileID: 2071891992464709247, guid: 7d80c86d80b49174eb772eb9cbcf6b8b, type: 3}
+  - name: COMP_PROP_basket_city_08
+    prefab: {fileID: 760433472699201942, guid: e13f11d6524baeb4ebbd7fe15c1182d6, type: 3}
+  - name: P_PROP_basket_city_01
+    prefab: {fileID: 2490641641880724776, guid: 20c364d129c3c6043b3fccf44fb761ae, type: 3}
+  - name: P_PROP_basket_city_02
+    prefab: {fileID: 4092785399315354629, guid: 7cb89f664aba9334d89b5dc019325283, type: 3}
+  - name: P_PROP_basket_city_03
+    prefab: {fileID: 1367358019360567772, guid: 12b9b406aa4490042920ef505a729d0f, type: 3}
+  - name: P_PROP_basket_city_04
+    prefab: {fileID: 7744168309127137852, guid: 2f539f81893e5204489c3e38a340002d, type: 3}
+  - name: P_PROP_clothesline_02
+    prefab: {fileID: 8746480015820230150, guid: 89b217b83cb43b644951013ead1840b2, type: 3}
+  - name: P_PROP_clothesline_03
+    prefab: {fileID: 5280891265829314913, guid: 887a50b5d6250c04fa2afe2a7f1022f7, type: 3}
+  - name: P_PROP_sack_02
+    prefab: {fileID: 8630674136278851334, guid: 73d8a2aa10fd2e840b580a80b5b9d900, type: 3}
+  - name: P_PROP_sack_01
+    prefab: {fileID: 2156907609363681740, guid: c13e95589473fe947aff75e177b9ac3e, type: 3}
+  - name: P_PROP_sack_03
+    prefab: {fileID: 8111975153976208121, guid: 2aabd76f021d3524a9fa4514ed264577, type: 3}
+  - name: P_PROP_sack_04
+    prefab: {fileID: 572034210147796440, guid: 24b317b908f71d445839ae0bec04db73, type: 3}
+  - name: P_PROP_sack_05
+    prefab: {fileID: 3573375112432459386, guid: 45271558acf19184dafa94281716439d, type: 3}
+  - name: P_PROP_sack_06
+    prefab: {fileID: 1098331785449414310, guid: 55f84756b656fde4e9bdcbbb4df1bbe0, type: 3}
+  - name: P_PROP_sack_07
+    prefab: {fileID: 8671165448498183424, guid: f0ba411cac01d124689af863bd99889f, type: 3}
+  - name: P_PROP_sack_08
+    prefab: {fileID: 6237010031939132307, guid: 2fdbc7526ea037d40a84664653ed508f, type: 3}
+  - name: P_PROP_sack_09
+    prefab: {fileID: 1064439773922391324, guid: 1eb68f1e6d92a2f42bff27870237180a, type: 3}
+  - name: P_PROP_sack_10
+    prefab: {fileID: 6354915679810562542, guid: 54c0220c1bbe1794baebb6719c9e7071, type: 3}
+  - name: P_PROP_sack_11
+    prefab: {fileID: 300602768184738492, guid: 32c56108f8e7ae84cb8ec5066968f4c6, type: 3}
+  - name: P_PROP_sack_city_01
+    prefab: {fileID: 2644581207329585871, guid: 77366d05ab10d1e448e7ea124e22de7a, type: 3}
+  - name: P_PROP_sack_city_02
+    prefab: {fileID: 9095660011537757829, guid: 146c6b74cc70aaa41a1bfbfe3a0f1bb4, type: 3}
+  - name: Prefab_Sack_01
+    prefab: {fileID: 7755774712005803203, guid: 60fe20d1b809696448e59201ba7c7430, type: 3}
+  - name: COMP_PROP_cauldron_city_01
+    prefab: {fileID: 4977281693137128393, guid: ce84b6d41a23b8e4088b6be4946ba4e8, type: 3}
+  - name: COMP_PROP_cauldron_city_02
+    prefab: {fileID: 2940451675938744195, guid: 5cc229e36d9010b4d8023876951eeb7e, type: 3}
+  - name: P_PROP_cauldron_city
+    prefab: {fileID: 8872004190169824595, guid: d5c56bc631247a3409084d9011976fa7, type: 3}
+  - name: P_PROP_knife_02
+    prefab: {fileID: 4740824579670374177, guid: d93e961216dc91944b96755ad5ea0e34, type: 3}
+  - name: P_PROP_knife_city_01
+    prefab: {fileID: 8751609846897641903, guid: af50a0e18f777c8448c6d850a3523578, type: 3}
+  - name: P_PROP_knife_city_02
+    prefab: {fileID: 2662416705430196660, guid: a5757caba5d0b2441bee13288cb09d5e, type: 3}
+  - name: P_PROP_knife_city_03
+    prefab: {fileID: 3541542426002655581, guid: f43292d2a882e9549800f78a736c708a, type: 3}
   - name: Prefab_Docks
     prefab: {fileID: 4651159602645118614, guid: 6f9ab3fd6f6bcfe4eaa41b1536e0ef1c, type: 3}
-  - name: COMP_PROP_blacksmith_station_city
-    prefab: {fileID: 6231826952530932228, guid: 28b4f139f9ea1fd4a991164b9e8bb03a, type: 3}
-  - name: COMP_PROP_alchemy_desk_city
-    prefab: {fileID: 4517731200185769165, guid: af2dfd30b817f524f89a7eadb4470f46, type: 3}
-  - name: P_PROP_bottle_04
-    prefab: {fileID: 2041679349197019933, guid: 5c7cb65fdec6a0140a2f04a921b9c0dd, type: 3}
-  - name: P_PROP_bulletinboard_city_01
-    prefab: {fileID: 8855117161862801446, guid: f3a41916cc9caa34cb521128d23cb0fa, type: 3}
-  - name: P_PROP_statue_city_01
-    prefab: {fileID: 5497549704154495164, guid: d4c03a1c35a44114386d2a4e423b97c4, type: 3}
-  - name: P_PROP_barrel_04
-    prefab: {fileID: 3945006696232732720, guid: 00d1b3dc9b5b4b943a45d7e338a0dec4, type: 3}
-  - name: COMP_PROP_crate_city_03
-    prefab: {fileID: 1965231361189708667, guid: 55b8a123f00abd14e8382e31641bc150, type: 3}
-  - name: P_PROP_bench_01
-    prefab: {fileID: 2711560758631186161, guid: b0e5077bcdd916645bfc6e991f0f7572, type: 3}
-  - name: Prefab_Campfire_Unlit
-    prefab: {fileID: 9046428374051729307, guid: 97a710fea04bf0b4ab7b7c36ee526700, type: 3}
   - name: P_PROP_wall_stone_small_02
     prefab: {fileID: 5750198853607023804, guid: d18f1adad3bc433448799703bdb56ee5, type: 3}
+  - name: P_PROP_wall_stone_small_03
+    prefab: {fileID: 3465843553857192038, guid: d9ba620d91ad03f41b59894489fccd45, type: 3}
+  - name: P_PROP_wall_stone_small_04
+    prefab: {fileID: 933709530982543382, guid: ab4c9daa2c6ea9f4386d81140178096d, type: 3}
+  - name: BLD_03_L_Ext_01
+    prefab: {fileID: 4142231140047830824, guid: 86381e6f2a75c7a41908b38bcb405ae2, type: 3}
+  - name: P_PROP_walkway_wood
+    prefab: {fileID: 1056961574012701915, guid: b83d99e79187e1f44be4db377b93482f, type: 3}
+  - name: P_PROP_bridge_stone_01
+    prefab: {fileID: 6218360208693245314, guid: 1d391866cd64ad340aff8f1e9e6faa73, type: 3}
+  - name: P_BLD_house_14
+    prefab: {fileID: 4566541305947615035, guid: 50ecca85cbe99874495e85667b0ef7b2, type: 3}
+  - name: P_PROP_lantern_04
+    prefab: {fileID: 435931504015303272, guid: 070255671461c7645886ed4f04484ed5, type: 3}
+  - name: P_PROP_bulletinboard_city_01
+    prefab: {fileID: 8855117161862801446, guid: f3a41916cc9caa34cb521128d23cb0fa, type: 3}
+  - name: COMP_PROP_bulletinboard_city_01
+    prefab: {fileID: 7845651709065520992, guid: 2997c30628a0f944f96867d0b702333a, type: 3}
+  - name: P_PROP_newspaper_city
+    prefab: {fileID: 252924689926997061, guid: 47b4618e7caa24d47b7d743d8e9392f9, type: 3}
+  - name: P_PROP_blacksmith_tank_city
+    prefab: {fileID: 3264684882241780090, guid: c341fef31b855b44483926601f6bf8ab, type: 3}
+  - name: P_PROP_bench_01
+    prefab: {fileID: 2711560758631186161, guid: b0e5077bcdd916645bfc6e991f0f7572, type: 3}
+  - name: P_PROP_flag_02
+    prefab: {fileID: 552195023076999605, guid: d01a9e34ac4d742469eb09605cee6395, type: 3}
+  - name: P_PROP_canvas_city
+    prefab: {fileID: 895374064295908442, guid: e12be57df32053046bff9afd957f1cf6, type: 3}
+  - name: P_PROP_easel_city
+    prefab: {fileID: 2159853574435824735, guid: 6f194329f90a5ad498feca837390ff7b, type: 3}
+  - name: P_PROP_paint_palette_city
+    prefab: {fileID: 4549921886447766232, guid: e56bc1dd73314144093c9a91ea323063, type: 3}
+  - name: P_PROP_painting_city_01
+    prefab: {fileID: 7046300478731786562, guid: a2566b82e3655c34e85c890544791855, type: 3}
+  - name: P_PROP_painting_city_02
+    prefab: {fileID: 1322539460276780673, guid: 07551af6e39a32f49853dccf9f5cf383, type: 3}
+  - name: P_PROP_painting_city_04
+    prefab: {fileID: 221883662700646408, guid: 77080bd0ebfc3834ab7d30439ee61c30, type: 3}
+  - name: P_PROP_sign_city_01
+    prefab: {fileID: 3283301086181018327, guid: a0c8a35477364094eb336c494bad3626, type: 3}
+  - name: P_PROP_sign_city_02
+    prefab: {fileID: 447449704701523328, guid: 7660b8af33ec5e64988b09b3e3e5bf3f, type: 3}
+  - name: P_PROP_sign_city_03
+    prefab: {fileID: 7407214355286677103, guid: d2db8cd892738c346bc0e0b336b2c3e6, type: 3}
+  - name: P_PROP_sign_city_04
+    prefab: {fileID: 3895354566690467553, guid: 1abe99511cf6505439d2915f027dd761, type: 3}
+  - name: P_PROP_sign_city_05
+    prefab: {fileID: 5585203555859656049, guid: c48432cd7a9293946894bf02ee18005f, type: 3}
+  - name: P_PROP_sign_city_06
+    prefab: {fileID: 46811580035829794, guid: 94a5426345be8264e8121cc891b22478, type: 3}
+  - name: P_PROP_sign_city_07
+    prefab: {fileID: 4618697357882922856, guid: 1f675932960e58141b03bedf5e28ff06, type: 3}
+  - name: P_PROP_sign_city_08
+    prefab: {fileID: 5773596375822134704, guid: 7a8137b7fda08fe49971a517967c58b8, type: 3}
+  - name: P_PROP_sign_city_09
+    prefab: {fileID: 1393727007964129792, guid: f357d68126437de4e89de6ab305a5c2d, type: 3}
+  - name: P_PROP_sign_city_10
+    prefab: {fileID: 699499135698134647, guid: 45b29831d4b571044871f3a03c515dde, type: 3}
+  - name: P_PROP_sign_city_11
+    prefab: {fileID: 7394371523264472313, guid: c7d6cbd7395a89842b12a20742da880e, type: 3}
+  - name: P_PROP_sign_city_12
+    prefab: {fileID: 7928153429266878417, guid: eecda65291b499b408388d2ebddcc4e7, type: 3}
+  - name: P_PROP_sign_city_13
+    prefab: {fileID: 7574185022744861139, guid: 34f5549f821083a4ba48cd1342ed3620, type: 3}
+  - name: P_PROP_sign_city_14
+    prefab: {fileID: 1459397715053886363, guid: 17516308fa3be4f48b7f592c014452eb, type: 3}
+  - name: Prefab_RuneRock_01
+    prefab: {fileID: 2921669142860546498, guid: 62827684f2773b04c9a21b55023bf41b, type: 3}
+  - name: COMP_PROP_alchemy_desk_city
+    prefab: {fileID: 4517731200185769165, guid: af2dfd30b817f524f89a7eadb4470f46, type: 3}
+  - name: P_PROP_alchemy_desk_city
+    prefab: {fileID: 3813781715962560745, guid: 8a95fcbb04aabfb4c9dc2ae9b3b6be4b, type: 3}
+  - name: P_PROP_stool_01
+    prefab: {fileID: 7570389208097689640, guid: 023d3304c20349e41aca5551ab004cb3, type: 3}
+  - name: P_PROP_coin_city_01
+    prefab: {fileID: 2235951402428654160, guid: d48de63f6c296734b9cac952388acd39, type: 3}
+  - name: P_PROP_coin_city_02
+    prefab: {fileID: 8153047718757902299, guid: 6e9a9667d6bddb944a7eadec63432625, type: 3}
+  - name: P_PROP_bench_02
+    prefab: {fileID: 3632152987673254678, guid: 1e282c887e6979f4d90e2047cc572442, type: 3}
+  - name: BLD_03_16x8_Ext_Arch_01
+    prefab: {fileID: 4074985016414696614, guid: bb6a60f829e09f946a5c609d7ab0394c, type: 3}
+  - name: P_PROP_scroll
+    prefab: {fileID: 837259620937065759, guid: 19fe2e3398baa90458c890fb2bb5c3f9, type: 3}
+  - name: BLD_03_L_Int_Blacksmith
+    prefab: {fileID: 1325634136373328895, guid: ba1e42849db8753419fdd1be03f96e70, type: 3}
+  - name: P_PROP_market_shelf_01
+    prefab: {fileID: 3948062172000380339, guid: 6b13403843386944a9a1317f19d0fa75, type: 3}
+  - name: P_PROP_stool_02
+    prefab: {fileID: 6266264304791691307, guid: ea15d2ca35ff8ba41a5ec5e9f81af611, type: 3}
+  - name: P_PROP_table_01
+    prefab: {fileID: 7058783731519798887, guid: 8819a1032981b1a43932629879ba59a4, type: 3}
+  - name: P_PROP_table_02
+    prefab: {fileID: 5607069915461252539, guid: c15731fb485fda144b87e8d20157dbe8, type: 3}
+  - name: P_PROP_table_03
+    prefab: {fileID: 8160955722134693241, guid: 7b0c3460f2a2bbb42b7d51df4fab003c, type: 3}
+  - name: P_PROP_table_04
+    prefab: {fileID: 5422938237576740499, guid: 66913d5ce47fbde47880b8625c60a811, type: 3}
+  - name: COMP_PROP_table_city_01
+    prefab: {fileID: 6777940722181048400, guid: f5359b592f1384c45b45e958e63fd30c, type: 3}
+  - name: COMP_PROP_table_city_02
+    prefab: {fileID: 1435828669556268495, guid: 14e2496b0a0c832448e8287cda2f4b80, type: 3}
+  - name: COMP_PROP_table_city_03
+    prefab: {fileID: 4347355209321046878, guid: ed53fd2f7e07f554ea9d2f7c641467bd, type: 3}
+  - name: COMP_PROP_table_city_04
+    prefab: {fileID: 9034189357973426829, guid: fac30e8f3bf96f249b6a4881fab4450f, type: 3}
+  - name: COMP_PROP_table_city_05
+    prefab: {fileID: 4225844724275083572, guid: ee6e29624b276af428e95f0457b91329, type: 3}
+  - name: COMP_PROP_table_city_06
+    prefab: {fileID: 6161123408333782647, guid: 1b14cddf4a9bf9744b5e8a807446425f, type: 3}
+  - name: COMP_PROP_table_city_07
+    prefab: {fileID: 723870310513098737, guid: 0a4ef2acd37913b408e946247f6b9f4e, type: 3}
+  - name: COMP_PROP_table_city_08
+    prefab: {fileID: 6926522810975324740, guid: b63d1c224edcfc2459e6787aa0091d94, type: 3}
+  - name: COMP_PROP_table_city_09
+    prefab: {fileID: 3897088317241291611, guid: 7d8bfca6265d9ad42ad0e3a914eaf179, type: 3}
+  - name: P_PROP_bench_city_01
+    prefab: {fileID: 8695918141081265378, guid: 5864201b46525624790f6337ba7968d4, type: 3}
+  - name: P_PROP_table_city_02
+    prefab: {fileID: 1170506845935902707, guid: dfbf7b53626333147877148ae1d825f0, type: 3}
+  - name: P_PROP_table_city_03
+    prefab: {fileID: 4813418275019834297, guid: 8c316f8c2557b7a4e9ba485f7e3859cb, type: 3}
+  - name: P_PROP_table_city_04
+    prefab: {fileID: 4954443505866709629, guid: bd94d9e3c67b8b540885cf370898065d, type: 3}
+  - name: P_PROP_table_city_05
+    prefab: {fileID: 5037351034876535673, guid: d1663d2c73b87804abee859f407a3a8c, type: 3}
+  - name: Prefab_Bench_01
+    prefab: {fileID: 3275069170339242878, guid: 603dad0ae9cfd544991134db4a5533a1, type: 3}
+  - name: P_PROP_barrel_04
+    prefab: {fileID: 3945006696232732720, guid: 00d1b3dc9b5b4b943a45d7e338a0dec4, type: 3}
+  - name: P_PROP_barrel_01
+    prefab: {fileID: 3402897644945875016, guid: 00e0f5af2fd2f2f48a85afdfad85ac48, type: 3}
+  - name: P_PROP_barrel_02
+    prefab: {fileID: 1143248677326112234, guid: f97c7a40290a5ef44abb88fac83b7a81, type: 3}
+  - name: P_PROP_barrel_05
+    prefab: {fileID: 8354404576475655613, guid: 4058c7f8dd5c0c14d9bf6d69ed7affed, type: 3}
+  - name: P_PROP_barrel_06
+    prefab: {fileID: 6754864925310123226, guid: 24351bef9a887ab4e93c069f6e23d974, type: 3}
+  - name: P_PROP_barrel_07
+    prefab: {fileID: 8137228327827684743, guid: d27c9318bdb287a49a80c942bb9986af, type: 3}
+  - name: P_PROP_barrel_08
+    prefab: {fileID: 6935655127556696439, guid: 7091d02ca925f0f478648196c2f60cfc, type: 3}
+  - name: P_PROP_barrel_city_01
+    prefab: {fileID: 4465715667053933140, guid: 2733af58b76f55a4c8e54477ce2113d2, type: 3}
+  - name: P_PROP_barrel_city_02
+    prefab: {fileID: 593035067433373437, guid: 14f83851f3953de47b0c43e92311fe6d, type: 3}
+  - name: Prefab_Barrel_01
+    prefab: {fileID: 4537843221184939248, guid: 3670d4666796ffd4ebd3ad7ea6d5d145, type: 3}
+  - name: P_PROP_flag_01
+    prefab: {fileID: 1525057500783216557, guid: 319a3e76f3abd7a43b206990bf62733f, type: 3}
+  - name: P_PROP_flag_03
+    prefab: {fileID: 252524071290596681, guid: 6d886053fd322e94fbc8be0c44f2802b, type: 3}
+  - name: P_PROP_flag_04
+    prefab: {fileID: 8304493171764988292, guid: 4d3ea6b07d3426e49991c2fed299211e, type: 3}
+  - name: P_PROP_flag_05
+    prefab: {fileID: 5435938574785489658, guid: d6ef5a49ccb609b429fe77fcfbb3e404, type: 3}
+  - name: P_PROP_flag_06
+    prefab: {fileID: 3538054465508556092, guid: c1bc80436480c1843848313538b76041, type: 3}
+  - name: P_PROP_flag_city_01
+    prefab: {fileID: 4385980612822650449, guid: 0585806636ea38f4b9b14e31764e985b, type: 3}
+  - name: P_PROP_flag_city_02
+    prefab: {fileID: 1855739124896806659, guid: 4c5d3ffbd85661849a398848f2405b9f, type: 3}
+  - name: P_PROP_flag_city_03
+    prefab: {fileID: 1767516679998400824, guid: f451bb919f801454186e7bb6e030f02d, type: 3}
+  - name: P_PROP_flag_city_04
+    prefab: {fileID: 1057087952643549604, guid: 18205aa6208d1a946ab84e995c278971, type: 3}
+  - name: P_PROP_flag_city_05
+    prefab: {fileID: 200361025635283215, guid: 075b5c5148f9ba849b93f0c65a700d92, type: 3}
+  - name: P_PROP_flag_city_06
+    prefab: {fileID: 8064685790771281584, guid: 7d21de57d76516746856c84bde8ecd6a, type: 3}
+  - name: P_PROP_crate_01
+    prefab: {fileID: 5240462788006214415, guid: bfa26d9d4a2c65541a441db41de7a084, type: 3}
+  - name: P_PROP_crate_02
+    prefab: {fileID: 2291241934032824242, guid: b5e8e64cc2c7d824e8522a1fe02d45cc, type: 3}
+  - name: P_PROP_crate_03
+    prefab: {fileID: 7570038294095717962, guid: f843dca3045eace41a48c6508b818cb3, type: 3}
+  - name: P_PROP_crate_04
+    prefab: {fileID: 8516590817931931724, guid: a81599a5721836945a8bc0bb3df7c476, type: 3}
+  - name: P_PROP_crate_05
+    prefab: {fileID: 1476101303206221532, guid: 4c6fc8af70b292f44a412f6a4e0a1679, type: 3}
+  - name: COMP_PROP_crate_city_01
+    prefab: {fileID: 4785872124208208055, guid: f523062d9e97bdc4fba1ce2e69738d0f, type: 3}
+  - name: COMP_PROP_crate_city_02
+    prefab: {fileID: 7095711001985445776, guid: bddbbae119cbb7541bffc1e0f7e37570, type: 3}
+  - name: COMP_PROP_crate_city_03
+    prefab: {fileID: 1965231361189708667, guid: 55b8a123f00abd14e8382e31641bc150, type: 3}
+  - name: COMP_PROP_crate_city_04
+    prefab: {fileID: 9205679679569660096, guid: d4f7358a96ffbca43ac56c3827a2a7f1, type: 3}
+  - name: COMP_PROP_crate_city_05
+    prefab: {fileID: 8935667341802241456, guid: 5e1bea8223ac53a4ebfdfbf93642acef, type: 3}
+  - name: COMP_PROP_crate_city_06
+    prefab: {fileID: 327303804353826273, guid: 05a17a22c9eb054438666d4d04101f8f, type: 3}
+  - name: COMP_PROP_crate_city_07
+    prefab: {fileID: 2493907518433012110, guid: 6553e3c7ffca20a468add4bf102f8367, type: 3}
+  - name: COMP_PROP_crate_city_08
+    prefab: {fileID: 3600135374590999011, guid: caf3e9b58fe0ab34eb7ba9a6b9e8078a, type: 3}
+  - name: COMP_PROP_crate_city_09
+    prefab: {fileID: 1657902107949846330, guid: fd154edca6cd2e245b51a80c86420ce0, type: 3}
+  - name: COMP_PROP_crate_city_10
+    prefab: {fileID: 1122912077082995647, guid: 94e66ef7437e776449c5cca474e0c784, type: 3}
+  - name: COMP_PROP_crate_city_11
+    prefab: {fileID: 3698638880871866642, guid: 663b04028c3eaf148997f8cfa776a672, type: 3}
+  - name: P_PROP_crate_city_01
+    prefab: {fileID: 5388126965401811290, guid: 64e9671d6e1b72d4abde54cce44ce078, type: 3}
+  - name: P_PROP_crate_city_02
+    prefab: {fileID: 3692529613156010504, guid: de4e69d7d21ec734fb7b13e9d2c03673, type: 3}
+  - name: P_PROP_crate_city_03
+    prefab: {fileID: 4078522797074189435, guid: 62754154234b5314fb6600721324f2d0, type: 3}
+  - name: P_PROP_crate_city_04
+    prefab: {fileID: 3702708191958315281, guid: ee18bc375f7eadf4889cb34008fff8b2, type: 3}
+  - name: P_PROP_crate_city_05
+    prefab: {fileID: 4321798944323490644, guid: 90dac0e6630d0754ab568b2c67effa35, type: 3}
+  - name: Prefab_Crate_01
+    prefab: {fileID: 8613687716295502494, guid: 34d3153c8557afa4e8bf30b36d96f1c5, type: 3}
+  - name: P_PROP_market_v01_01
+    prefab: {fileID: 2493668378160724548, guid: d3facbed16a1da248b356bc949ea54e7, type: 3}
+  - name: P_PROP_market_shelf_02
+    prefab: {fileID: 2152099540665675039, guid: 7b2b2d91eb166ed478accd87142f9a37, type: 3}
+  - name: P_PROP_market_shelf_03
+    prefab: {fileID: 4643740665675980963, guid: b5c8bdf331cf93e47b4f6dfb22e8d10d, type: 3}
+  - name: P_PROP_market_v01_02
+    prefab: {fileID: 7265918225950492937, guid: 1468441fa1c3bf74dbf83df4d12f4651, type: 3}
+  - name: P_PROP_market_v02_01
+    prefab: {fileID: 8192105050692310429, guid: 1786df2ff14948b4399d552c256b7134, type: 3}
+  - name: P_PROP_market_v02_02
+    prefab: {fileID: 3345766286736469913, guid: ca57f0caa1b5b0d439f043c6f99f9632, type: 3}
+  - name: P_PROP_market_v03_01
+    prefab: {fileID: 4974829996980021418, guid: ffd9b880ab509864d835b5526929052a, type: 3}
+  - name: P_PROP_market_v03_02
+    prefab: {fileID: 6842245838254090871, guid: ab297afe17b000f49acf69db46ab2c37, type: 3}
+  - name: P_PROP_market_v04_01
+    prefab: {fileID: 1825494792318402346, guid: 8e49f6518c0194f4a9af59e8dc363ff6, type: 3}
+  - name: P_PROP_market_v04_02
+    prefab: {fileID: 7741703152599520081, guid: 2ab4fc49a800a374a9df8024d8671777, type: 3}
+  - name: COMP_PROP_marketstall_city_01
+    prefab: {fileID: 9075884652864585272, guid: b50c78f31e0e79c4bb036d995ee4a334, type: 3}
+  - name: COMP_PROP_marketstall_city_02
+    prefab: {fileID: 8372842722153000532, guid: 3df1bd2853a40df43849e71ed6cf9a6b, type: 3}
+  - name: COMP_PROP_marketstall_city_03
+    prefab: {fileID: 7669064677310372779, guid: 94b2a4785827edc40b64eb568465843d, type: 3}
+  - name: P_PROP_marketstall_city_01
+    prefab: {fileID: 1910235861526171649, guid: 5d72061c11840c141a01ab74cd58c635, type: 3}
+  - name: P_PROP_marketstall_city_02
+    prefab: {fileID: 9055865802755999806, guid: 2fc497fc26bb179429d1ad32ca3be988, type: 3}
+  - name: P_PROP_marketstall_city_03
+    prefab: {fileID: 8234878345067731699, guid: 1302aea9d7891894f97022eab76dc338, type: 3}
+  - name: P_PROP_marketstall_city_04
+    prefab: {fileID: 7279055271449914069, guid: 3fc86aad4d74c4f4aba600c427b20840, type: 3}
+  - name: P_PROP_statue_city_01
+    prefab: {fileID: 5497549704154495164, guid: d4c03a1c35a44114386d2a4e423b97c4, type: 3}
+  - name: COMP_PROP_statue_city_01
+    prefab: {fileID: 5769150039013576082, guid: 419125f98251abc4c88fd7a36021fc43, type: 3}
+  - name: COMP_PROP_statue_city_02
+    prefab: {fileID: 7884197322340832318, guid: 6ef798d0deed7c54f96c832c58bf280b, type: 3}
+  - name: COMP_PROP_statue_city_03
+    prefab: {fileID: 5202035012476182776, guid: 8158dd74a1f4e2c45aab3e98ee12d28b, type: 3}
+  - name: P_PROP_streetlamp_v01_01
+    prefab: {fileID: 2670117899017521379, guid: c2ba22648ccbffd4dac7ea7a63a454e1, type: 3}
+  - name: P_PROP_streetlamp_v01_02
+    prefab: {fileID: 2414815361667836002, guid: 2b702c0acfe12ef4b939fe934d90ad02, type: 3}
+  - name: P_PROP_streetlamp_v01_03
+    prefab: {fileID: 2100623788310367646, guid: 5bbc21fa8749ef945ba71e2299360722, type: 3}
+  - name: P_PROP_streetlamp_v01_04
+    prefab: {fileID: 9168642585047516219, guid: 82923f3405a8c9941b23f7b67443f59e, type: 3}
+  - name: P_PROP_streetlamp_v02_01
+    prefab: {fileID: 9105984125136157460, guid: 4b1c95ef468f0ad42b07857ca0836f4f, type: 3}
+  - name: P_PROP_streetlamp_v02_02
+    prefab: {fileID: 409429888059836882, guid: 8bf2e32d07a00b34fa1965aec587c32c, type: 3}
+  - name: P_PROP_streetlamp_v02_03
+    prefab: {fileID: 3231345594287531518, guid: 547ab797e216d7347827966c2732449e, type: 3}
+  - name: P_PROP_streetlamp_v02_04
+    prefab: {fileID: 4354486722730461533, guid: e01450a6c024ac54d8faabcedcf4ae8d, type: 3}
+  - name: P_PROP_lantern_city_01
+    prefab: {fileID: 490248774986933188, guid: a48cbafb90358c040a6c970ba0c00f8c, type: 3}
+  - name: P_PROP_lantern_city_02
+    prefab: {fileID: 1567476485989535473, guid: 562dcfb468c7bb84f9ed2312d5b9eff0, type: 3}
+  - name: P_PROP_lantern_city_03
+    prefab: {fileID: 3997192370278607723, guid: ff8f95c490aceb8429ae46b5308faebe, type: 3}
+  - name: P_PROP_lantern_city_04
+    prefab: {fileID: 9178798476120368697, guid: cdefb58e2a3e8594da30a65a446ce455, type: 3}
+  - name: P_PROP_lantern_city_05
+    prefab: {fileID: 1825711278706829225, guid: 3b732b5c1cf27614a8b85e4ba8d64931, type: 3}
+  - name: P_PROP_lantern_01
+    prefab: {fileID: 1848226375451237612, guid: 91a59a864683ad74ab4caf74600f299c, type: 3}
+  - name: P_PROP_lantern_02
+    prefab: {fileID: 8552739089209403531, guid: 28cb4185461d9fc468a2af44ea6966b5, type: 3}
+  - name: P_PROP_lantern_03
+    prefab: {fileID: 5721002685740477416, guid: b0462047cbfc1924fa2708da721336c7, type: 3}
+  - name: forge.glb
+    prefab: {fileID: 8919934127225428127, guid: a8bb55d0c03ccd3448c5b8877d4d9094, type: 3}
+  - name: forge
+    prefab: {fileID: 5663365183671349530, guid: fc522f7d253b0194c993d1907c90c9bd, type: 3}
+  - name: P_PROP_forge_city
+    prefab: {fileID: 5663365183671349530, guid: fc522f7d253b0194c993d1907c90c9bd, type: 3}
+  - name: Prefab_Campfire_Unlit
+    prefab: {fileID: 9046428374051729307, guid: 97a710fea04bf0b4ab7b7c36ee526700, type: 3}
+  - name: COMP_PROP_shelf_city_01
+    prefab: {fileID: 4059758348326241768, guid: bca2c914f9832ca4885200be0f7629cc, type: 3}
+  - name: COMP_PROP_shelf_city_02
+    prefab: {fileID: 4699229245648931573, guid: c813c688aa938f748a670a6d593665e8, type: 3}
+  - name: COMP_PROP_shelf_city_03
+    prefab: {fileID: 5317170140445632376, guid: 9c56eec8ecfbf0346b8b5bac6b3bf313, type: 3}
+  - name: COMP_PROP_shelf_city_04
+    prefab: {fileID: 3507333982010184100, guid: 47b801e9f3a44114681aee582a873c11, type: 3}
+  - name: COMP_PROP_shelf_city_05
+    prefab: {fileID: 7110824370737540555, guid: e153fa5cef95ccb4f82e8c8943f32383, type: 3}
+  - name: COMP_PROP_shelf_city_06
+    prefab: {fileID: 5720771971316919115, guid: da3e645f17b14914a941f2370d3adbac, type: 3}
+  - name: COMP_PROP_shelf_city_07
+    prefab: {fileID: 6862542784387549830, guid: 50b1335c2b797124484b8b7f98d9f597, type: 3}
+  - name: COMP_PROP_shelf_city_08
+    prefab: {fileID: 8974509590528559385, guid: 684a52f4f6d9e8f47a42ac80cc966acc, type: 3}
+  - name: COMP_PROP_shelf_city_09
+    prefab: {fileID: 3421692973823885455, guid: 79e5aeeb60bc1494eb03a2f9b8858653, type: 3}
+  - name: COMP_PROP_shelf_city_10
+    prefab: {fileID: 900606344500379919, guid: ff54bba82e2aa8a49b5541ed18307f74, type: 3}
+  - name: P_PROP_shelf_city_01
+    prefab: {fileID: 3899739938675740121, guid: eee91f2843499b442a021b0b96a50a3e, type: 3}
+  - name: P_PROP_shelf_city_02
+    prefab: {fileID: 6200842002013783512, guid: 3637f05fa3467d24fb095d3475c899a4, type: 3}
+  - name: P_PROP_shelf_city_03
+    prefab: {fileID: 8607799612257304461, guid: 3a50d1d4b69c779458be10be7a282869, type: 3}
+  - name: P_PROP_shelf_city_04
+    prefab: {fileID: 3772649672887230451, guid: 34875db8ca1da5749a83f134e23e6ad4, type: 3}
+  - name: P_PROP_food_apple
+    prefab: {fileID: 4389747130641419598, guid: 87f5ac6c4eb9aaa47adfc19ff8b280eb, type: 3}
+  - name: P_PROP_food_asparagus_city
+    prefab: {fileID: 8431397745521845142, guid: 7da681d99663e944ea4cbe24b1431861, type: 3}
+  - name: P_PROP_food_banana_01
+    prefab: {fileID: 5155773503131555742, guid: d391d44ef7c8ccc458a5d8c3b4a8f8d5, type: 3}
+  - name: P_PROP_food_banana_02
+    prefab: {fileID: 3153927684384016771, guid: bc8728bef4cf65442aa6513155592fc6, type: 3}
+  - name: P_PROP_food_bellpepper
+    prefab: {fileID: 3582371482668526016, guid: e5632c20fd1352b41b07190db10bcf45, type: 3}
+  - name: P_PROP_food_bread_01
+    prefab: {fileID: 4102080597140611281, guid: ea150aeccfa1c9e44b1eb098c23faa4b, type: 3}
+  - name: P_PROP_food_bread_02
+    prefab: {fileID: 4752971039140752815, guid: 8feefbe7b2c632a41974d6a4058f844a, type: 3}
+  - name: P_PROP_food_bread_03
+    prefab: {fileID: 1241550892944858174, guid: 8a4b3071375ac0b45996c2a71ef225fa, type: 3}
+  - name: P_PROP_food_bread_04
+    prefab: {fileID: 7058160953514416578, guid: f8c4cbf74720c3e4d97abaf46521fd3e, type: 3}
+  - name: P_PROP_food_bread_05
+    prefab: {fileID: 4570777937148545890, guid: 638a9cb46c402e74ab436a1e37526cf6, type: 3}
+  - name: P_PROP_food_bread_06
+    prefab: {fileID: 5755647703157228310, guid: da8267c48c0220e4eb2b24866d096387, type: 3}
+  - name: P_PROP_food_bread_07
+    prefab: {fileID: 1135741475722933857, guid: f6c4628172a47c646b4c013a7af0e042, type: 3}
+  - name: P_PROP_food_bread_08
+    prefab: {fileID: 6397487871127557207, guid: 561d93084fe95724381ddaa053674baf, type: 3}
+  - name: P_PROP_food_bread_09
+    prefab: {fileID: 1656103629993420827, guid: 1aab7545db512364980201132a8e189b, type: 3}
+  - name: P_PROP_food_bread_10
+    prefab: {fileID: 9189241635985976961, guid: 898efcf9002f539428fa5d7c3e6ed30b, type: 3}
+  - name: P_PROP_food_bread_11
+    prefab: {fileID: 951143449141511227, guid: 918fff58123bc0640b35f101a7d99b75, type: 3}
+  - name: P_PROP_food_bread_city_01
+    prefab: {fileID: 4573478292289321333, guid: 74c74b4a5ac3a6d4590dd7c298036b6b, type: 3}
+  - name: P_PROP_food_bread_city_02
+    prefab: {fileID: 7282160011514395395, guid: 945931a9642950c429258443ca40d0f9, type: 3}
+  - name: P_PROP_food_bread_city_03
+    prefab: {fileID: 6475564871000361119, guid: 0dcfd20cde7131243bcee6e271d79efe, type: 3}
+  - name: P_PROP_food_bread_city_04
+    prefab: {fileID: 6013047211362584567, guid: 44a04d789f8fdc44dbcc8573c462c75b, type: 3}
+  - name: P_PROP_food_broccoli
+    prefab: {fileID: 1698756759957843220, guid: 6174f21ae4cc6784ab6f2cd43cce7b80, type: 3}
+  - name: P_PROP_food_carrot_01
+    prefab: {fileID: 6508368572341610824, guid: bb722541b960b3f48ba861a22790b2f9, type: 3}
+  - name: P_PROP_food_carrot_02
+    prefab: {fileID: 4139758064107362858, guid: b01dd5012a7cbea4492dcddd01f52464, type: 3}
+  - name: P_PROP_food_cauliflower
+    prefab: {fileID: 6121049913125866403, guid: 2878edff2bb75c3429d91fcd62830cea, type: 3}
+  - name: P_PROP_food_cheese_01
+    prefab: {fileID: 9198176430494400281, guid: b63c417240b21d543a22690d7b248afa, type: 3}
+  - name: P_PROP_food_cheese_02
+    prefab: {fileID: 6583271688085148283, guid: b8154311b645e9f4aa021535a2e7f699, type: 3}
+  - name: P_PROP_food_cheese_03
+    prefab: {fileID: 2890338431619679580, guid: 538019a8afb590543ae814570e819b80, type: 3}
+  - name: P_PROP_food_cheese_04
+    prefab: {fileID: 251637319074867178, guid: 0d3731a9e4984b94a90435e799d2f1ff, type: 3}
+  - name: P_PROP_food_cheese_05
+    prefab: {fileID: 163301785439617672, guid: a0ac88843b771d84ca8a42236052eb7a, type: 3}
+  - name: P_PROP_food_cheese_06
+    prefab: {fileID: 8331889196689036794, guid: f4ac6b565d4e6594087bb7099a335bc7, type: 3}
+  - name: P_PROP_food_chili_01
+    prefab: {fileID: 3283383284261271503, guid: e7d4a0b1f4258294ca5f67aff4893ecb, type: 3}
+  - name: P_PROP_food_chili_02
+    prefab: {fileID: 3882415443503772292, guid: 45f88e3210509804aa453dce727df11c, type: 3}
+  - name: P_PROP_food_chili_03
+    prefab: {fileID: 1321748809128218789, guid: 62dd4c53e4a858e4bb222af2b70c3b38, type: 3}
+  - name: P_PROP_food_chili_04
+    prefab: {fileID: 6339830251368409405, guid: 500b91dd5cdb70b44a635c80af0b0834, type: 3}
+  - name: P_PROP_food_coconut_01
+    prefab: {fileID: 52025286744913324, guid: 0bce0f6c67ddedf43aea550fa5438b5e, type: 3}
+  - name: P_PROP_food_coconut_02
+    prefab: {fileID: 2801698798130525374, guid: 71e4d4e06e3259544b665e4e93d970d2, type: 3}
+  - name: P_PROP_food_corn
+    prefab: {fileID: 8639445970646006169, guid: 8901568afe8f56c41910906f6ee36279, type: 3}
+  - name: P_PROP_food_croissant_city
+    prefab: {fileID: 2975554147244442025, guid: cc3670c4e712f694583dc9749b1bafe4, type: 3}
+  - name: P_PROP_food_cucumber_01
+    prefab: {fileID: 3993997198084004464, guid: e5729929d17fb3a49b0598f024bf005f, type: 3}
+  - name: P_PROP_food_cucumber_02
+    prefab: {fileID: 504282786104291247, guid: ebd0c806c149e89408eb69040dc1120b, type: 3}
+  - name: P_PROP_food_cucumber_03
+    prefab: {fileID: 4223405123127003983, guid: 154996cfb50c3c54ea8af6f7386bf27e, type: 3}
+  - name: P_PROP_food_cupcake_city_01
+    prefab: {fileID: 6304080323558836951, guid: 6bbf2472f80dd854d8ba794f44487865, type: 3}
+  - name: P_PROP_food_cupcake_city_02
+    prefab: {fileID: 6769671974807141953, guid: dc70ed5bf18495c4fbc29f4b17dff2f5, type: 3}
+  - name: P_PROP_food_cupcake_city_03
+    prefab: {fileID: 273951290707997171, guid: d595e3023452d90458e06768f037d84d, type: 3}
+  - name: P_PROP_food_donut_city
+    prefab: {fileID: 2219524617861120339, guid: 9afccc05dd7a68142809145774e434fa, type: 3}
+  - name: P_PROP_food_eclair_city
+    prefab: {fileID: 9150278680900327538, guid: 77e0a0823b3cf044dbe947dca9581a30, type: 3}
+  - name: P_PROP_food_egg_01
+    prefab: {fileID: 4574704123574907231, guid: b726332c84a54b145b86b07829497c34, type: 3}
+  - name: P_PROP_food_egg_02
+    prefab: {fileID: 2733117787493930664, guid: ea36410498d6a344fb9b5f4a2ab8260f, type: 3}
+  - name: P_PROP_food_egg_03
+    prefab: {fileID: 3796715006557804701, guid: 98df97e87209fc3438ce49816b3ea971, type: 3}
+  - name: P_PROP_food_egg_04
+    prefab: {fileID: 715577411495377324, guid: c077b19df1938c34e9aa42829d150d30, type: 3}
+  - name: P_PROP_food_egg_05
+    prefab: {fileID: 1286305400259386300, guid: 8a9cec36f6b71af4283dbe203eeee49f, type: 3}
+  - name: P_PROP_food_fish_02
+    prefab: {fileID: 1343426206790823282, guid: 54de0a02a64f5a5439415a6ee552f588, type: 3}
+  - name: P_PROP_food_fish_city_01
+    prefab: {fileID: 257854217237033452, guid: 70ddb8e011a647048b1589f09309a60e, type: 3}
+  - name: P_PROP_food_fish_city_02
+    prefab: {fileID: 373107506891113264, guid: 75faf5a092372244e9a8de7b9bb4c306, type: 3}
+  - name: P_PROP_food_fish_city_03
+    prefab: {fileID: 1463230091581585890, guid: 7839ef99a8ec8854d98243aee399440a, type: 3}
+  - name: P_PROP_food_fish_city_04
+    prefab: {fileID: 6573357372650988002, guid: 37f9eea96f1b8ac4eaed3161a7a6f21b, type: 3}
+  - name: P_PROP_food_fish_city_05
+    prefab: {fileID: 5733890002417338206, guid: 1110e66504487c94f89c6fe6d6c6c2fb, type: 3}
+  - name: P_PROP_food_fish_city_06
+    prefab: {fileID: 2535180080921189925, guid: 67629bd63fa6f9840b3cb69678249ddf, type: 3}
+  - name: P_PROP_food_garlic
+    prefab: {fileID: 6430697509357712133, guid: acfd2f35466c0b14d90a28f3bf27b9ba, type: 3}
+  - name: P_PROP_food_garlic_city_01
+    prefab: {fileID: 4046098241063091227, guid: 0e104b6ad534cdd44b94fd98445e1d59, type: 3}
+  - name: P_PROP_food_garlic_city_02
+    prefab: {fileID: 8715950470710105117, guid: e9e981c3e82b7de4a80b27d2627b6127, type: 3}
+  - name: P_PROP_food_grapes_01
+    prefab: {fileID: 6476316203062641596, guid: 5bf5e911046b23040abe71f47b15b962, type: 3}
+  - name: P_PROP_food_grapes_02
+    prefab: {fileID: 6614072184434300893, guid: b7356e768dce08c45ae75990af0078fa, type: 3}
+  - name: P_PROP_food_leek
+    prefab: {fileID: 319869999937978543, guid: 419b2d07cf578474ab3938d3bf4eafd6, type: 3}
+  - name: P_PROP_food_lemon_01
+    prefab: {fileID: 8836325927070610200, guid: d451c279b1cdf5a4dbb60dce7f9d631c, type: 3}
+  - name: P_PROP_food_lemon_02
+    prefab: {fileID: 949373760808350655, guid: d9386f4b179699d40a8f16650dc29616, type: 3}
+  - name: P_PROP_food_lemon_03
+    prefab: {fileID: 8977704087391940628, guid: 8830d462d9a6fd24bb22031fbe3d2109, type: 3}
+  - name: P_PROP_food_lemon_city_01
+    prefab: {fileID: 7627206818605411451, guid: a04af88c3c7ce3945bebe7be9ee58811, type: 3}
+  - name: P_PROP_food_lemon_city_02
+    prefab: {fileID: 4745505949408087780, guid: 85699b64eb3856f4a8ec9f4d0a43f7e0, type: 3}
+  - name: P_PROP_food_lettuce_city_01
+    prefab: {fileID: 2481671018074808660, guid: 9a0bbfd83d7b1404599253abd155342a, type: 3}
+  - name: P_PROP_food_lettuce_city_02
+    prefab: {fileID: 4418722825917829700, guid: 20aace4aba852e64fb04aca704c0f6f4, type: 3}
+  - name: P_PROP_food_mango_01
+    prefab: {fileID: 8176290493521455326, guid: 88e0dd6e057c72d4fb48842cda95401d, type: 3}
+  - name: P_PROP_food_mango_02
+    prefab: {fileID: 1344011583847336904, guid: bda5468d9d785b549a7642e07674c41c, type: 3}
+  - name: P_PROP_food_meat_01
+    prefab: {fileID: 8567125398466875706, guid: dd5317e5ccebd6948b4feb7588e956f4, type: 3}
+  - name: P_PROP_food_meat_02
+    prefab: {fileID: 6336564098134638649, guid: 03af79d3e0a19ac419bfabc87a5ce3e3, type: 3}
+  - name: P_PROP_food_meat_03
+    prefab: {fileID: 4811356879279400472, guid: 352003ebd25f3144aaf131ca9329b533, type: 3}
+  - name: P_PROP_food_meat_04
+    prefab: {fileID: 1875523987141516916, guid: 9c933cee8607161489e2e79d2eb91fc6, type: 3}
+  - name: P_PROP_food_meat_05
+    prefab: {fileID: 8616485298618226273, guid: ec7bf72280f67a740a461a2b3bbda650, type: 3}
+  - name: P_PROP_food_meat_06
+    prefab: {fileID: 2592343607264705846, guid: 2e54e9a2f6b929846a20ac393878917c, type: 3}
+  - name: P_PROP_food_meat_07
+    prefab: {fileID: 1022165900115240324, guid: 60c1dab9a63be2c46a8ebcdcbe5241cb, type: 3}
+  - name: P_PROP_food_meat_08
+    prefab: {fileID: 4066220246723984684, guid: 5175c868f698cb34fa454ab3cecaebdc, type: 3}
+  - name: P_PROP_food_meat_09
+    prefab: {fileID: 1108381635350756234, guid: 5275aec6baee265419d8802e98125bb2, type: 3}
+  - name: P_PROP_food_meat_10
+    prefab: {fileID: 5499669740293569698, guid: 550680d45c82ac9448b4c4cad281a725, type: 3}
+  - name: P_PROP_food_meat_11
+    prefab: {fileID: 2774883148400869291, guid: eace5ee8da3e5114288691618e46557d, type: 3}
+  - name: P_PROP_food_meat_city_01
+    prefab: {fileID: 1487079528392015485, guid: 5d7e5bcba4852d545844cfa1fb17efc5, type: 3}
+  - name: P_PROP_food_meat_city_02
+    prefab: {fileID: 26217802318364891, guid: 622f64a4025af024db8535d2854895b1, type: 3}
+  - name: P_PROP_food_meat_city_03
+    prefab: {fileID: 4322067074929867671, guid: 165ca7d165a5a06478e63e361964f977, type: 3}
+  - name: P_PROP_food_meat_city_04
+    prefab: {fileID: 1939752129410172875, guid: 05347d5cd87397444a7f349e4fce3b4c, type: 3}
+  - name: P_PROP_food_meat_city_05
+    prefab: {fileID: 3890228096871523412, guid: dca5b635f76f83c498bf6c1a2dadb599, type: 3}
+  - name: P_PROP_food_mushroom_01
+    prefab: {fileID: 2497325050791407926, guid: a20f42271a567c14489957780dc5b901, type: 3}
+  - name: P_PROP_food_mushroom_02
+    prefab: {fileID: 3608321194438257905, guid: 20b810aa61b187f42a2c60eb2a326da6, type: 3}
+  - name: P_PROP_food_onion
+    prefab: {fileID: 8394081376653336255, guid: ca3d037f4deb5f8438c33879ac9129bf, type: 3}
+  - name: P_PROP_food_orange_01
+    prefab: {fileID: 1586863574342275462, guid: e0396297d79e008478c887c661c8da87, type: 3}
+  - name: P_PROP_food_orange_02
+    prefab: {fileID: 1451745650880648541, guid: add9cb89020fa6a4992bd7b89315132f, type: 3}
+  - name: P_PROP_food_oyster_city
+    prefab: {fileID: 8561823569407805424, guid: 76ad2ed07eceabf43869b7dbc31a9ee0, type: 3}
+  - name: P_PROP_food_pear
+    prefab: {fileID: 2081339969621732401, guid: 1f868206c0fe655469037629a7533b50, type: 3}
+  - name: P_PROP_food_peppershaker_city
+    prefab: {fileID: 6884525220508413060, guid: 255f7b280f2fcca41a165ce95aadaa7a, type: 3}
+  - name: P_PROP_food_plane_almonds_city_01
+    prefab: {fileID: 2080773717428624895, guid: 694f5d1438e6042408c123113849d9c2, type: 3}
+  - name: P_PROP_food_plane_almonds_city_02
+    prefab: {fileID: 5882187500238471555, guid: 4125e89fa17c0494a85a4ef88b150901, type: 3}
+  - name: P_PROP_food_plane_coffee_city_01
+    prefab: {fileID: 9120252790918378992, guid: f81b16e4b684bcf43b2318ca5e5028c7, type: 3}
+  - name: P_PROP_food_plane_coffee_city_02
+    prefab: {fileID: 2600970064918143080, guid: 73c3663cc1a27574cac12ab926f7407f, type: 3}
+  - name: P_PROP_food_plane_ice_city_01
+    prefab: {fileID: 2190631738853479119, guid: 3ffc9311a3df48545974580b93a94005, type: 3}
+  - name: P_PROP_food_plane_ice_city_02
+    prefab: {fileID: 463760794981039254, guid: 36b83ead2fa296b46979817fe9e062da, type: 3}
+  - name: P_PROP_food_plane_risotto_city
+    prefab: {fileID: 147669155555010823, guid: 364139ab69facb744bb47a9b8b5fb100, type: 3}
+  - name: P_PROP_food_plate_city_04
+    prefab: {fileID: 1277756376982374636, guid: 1ed392e24eb6b2b46a47b6c5c5effd92, type: 3}
+  - name: P_PROP_food_plate_city_05
+    prefab: {fileID: 2445343786485632239, guid: 0e02a4c4fdf714b4090dbf217549df88, type: 3}
+  - name: P_PROP_food_plate_city_06
+    prefab: {fileID: 3771888530899786582, guid: b6e68bb8696128345a9848b0091c171a, type: 3}
+  - name: P_PROP_food_plum
+    prefab: {fileID: 3137446229324456715, guid: 260b7cd804a331048a6b80af64cee1dd, type: 3}
+  - name: P_PROP_food_potato_01
+    prefab: {fileID: 1425430787941656898, guid: e495a9fb4f3345f4fbc76507e29fd950, type: 3}
+  - name: P_PROP_food_potato_02
+    prefab: {fileID: 4297543205875134461, guid: 57c84bbc9faf6574abec806c0fa09415, type: 3}
+  - name: P_PROP_food_potato_03
+    prefab: {fileID: 2786366867395469642, guid: fec38d2189b71f4499bcb819a8377440, type: 3}
+  - name: P_PROP_food_pumpkin_01
+    prefab: {fileID: 1705188077610655466, guid: 9d467d21ac06a5a4185d60cd738a298c, type: 3}
+  - name: P_PROP_food_pumpkin_02
+    prefab: {fileID: 6035889894754048994, guid: cf93177af0cfa95449967d221bb2469f, type: 3}
+  - name: P_PROP_food_pumpkin_03
+    prefab: {fileID: 2723949517217663246, guid: 7f5dd8133a6861e4597b67dcdba39d6c, type: 3}
+  - name: P_PROP_food_pumpkin_04
+    prefab: {fileID: 4850610180117883222, guid: 1dfbd9b7c1b7b8b4ea1b2064f4d55301, type: 3}
+  - name: P_PROP_food_salad
+    prefab: {fileID: 6709784582389744818, guid: 831afb7b79d0c2b46a64e4dafdbf8ea0, type: 3}
+  - name: P_PROP_food_salmon_city
+    prefab: {fileID: 8563200100768922565, guid: c76466b0df72ebc4c873ad195d293502, type: 3}
+  - name: P_PROP_food_saltshaker_city
+    prefab: {fileID: 8085219542035546115, guid: 8caa9c063db754b41baf2960fa8bd689, type: 3}
+  - name: P_PROP_food_sauce_city
+    prefab: {fileID: 1815833155037228438, guid: 67e97dac38721c04f805bf13ccfd3d81, type: 3}
+  - name: P_PROP_food_sausage_01
+    prefab: {fileID: 2782601241706206715, guid: 7ff4f13f30c614b4cbdd6c22e38a3aee, type: 3}
+  - name: P_PROP_food_sausage_02
+    prefab: {fileID: 8297712804614439168, guid: e7f8bf207547ef540835a9926f0cbdb4, type: 3}
+  - name: P_PROP_food_sausage_03
+    prefab: {fileID: 5138149070821107907, guid: 1989f1676a383254a89a45553c61a780, type: 3}
+  - name: P_PROP_food_sausage_04
+    prefab: {fileID: 4538927908455264349, guid: e32b2e39d36ad4f41b15b26d95e7bcd0, type: 3}
+  - name: P_PROP_food_sausage_05
+    prefab: {fileID: 3796245789936863649, guid: ff116254e5b5bef48b1ed1d3699a3e6f, type: 3}
+  - name: P_PROP_food_sausage_06
+    prefab: {fileID: 4213526727460910891, guid: 32155248344515540b86b0cb1b32685d, type: 3}
+  - name: P_PROP_food_sausage_city_01
+    prefab: {fileID: 39792977932044582, guid: 794a3692c41be0a488035e93f3ded6b4, type: 3}
+  - name: P_PROP_food_sausage_city_02
+    prefab: {fileID: 6565289396791829315, guid: de0ca5dbf5487814da79f61099a76397, type: 3}
+  - name: P_PROP_food_sausage_city_03
+    prefab: {fileID: 8053780212418354462, guid: 6ff3912176b1c114890e2974fe261d42, type: 3}
+  - name: P_PROP_food_sausage_city_04
+    prefab: {fileID: 5312466081331944635, guid: ce4665c44bb38f541bacc52a298717ec, type: 3}
+  - name: P_PROP_food_sausage_city_05
+    prefab: {fileID: 2043662421710148628, guid: 9c0b82ddace8b2c40b3e0f54e3e04bd5, type: 3}
+  - name: P_PROP_food_sausage_city_06
+    prefab: {fileID: 6769127612453359820, guid: 48823f81a1558ec4eaa697d911aa4b89, type: 3}
+  - name: P_PROP_food_shrimp_city
+    prefab: {fileID: 369228313726429673, guid: a19c2fb34ac91c941863f5ada516f46a, type: 3}
+  - name: P_PROP_food_springonion
+    prefab: {fileID: 1039933201682606040, guid: d1abbcb0607f73149a117335d027affb, type: 3}
+  - name: P_PROP_food_tart_city_01
+    prefab: {fileID: 1451608392573874926, guid: a37011fbc34c3284ead1b2c6f62431c3, type: 3}
+  - name: P_PROP_food_tomato
+    prefab: {fileID: 3850438653281240398, guid: 9718a320649be0a468b6f84130938c2b, type: 3}
+  - name: P_PROP_food_turnip
+    prefab: {fileID: 4166968332481319441, guid: 9fea5ed455010494ab52ab971bb95c25, type: 3}
+  - name: P_PROP_food_watermelon_01
+    prefab: {fileID: 3821298253466367772, guid: dff219736331467458b71f98e3d338d7, type: 3}
+  - name: P_PROP_food_watermelon_02
+    prefab: {fileID: 3138539798943960359, guid: af1382ed8b144794bb31d19db93be1e1, type: 3}
+  - name: P_PROP_food_watermelon_03
+    prefab: {fileID: 3339790566395060410, guid: 80ce41945de06814891faa9e03d91cf7, type: 3}
+  - name: P_PROP_food_watermelon_04
+    prefab: {fileID: 6453246403151783494, guid: 55f2f3ae9a9cc0d40b47c3799d69afdf, type: 3}
+  - name: P_PROP_ingot_copper_city
+    prefab: {fileID: 3647479682031752200, guid: b83d2857c2b7b9b40a18052cc7a2465e, type: 3}
+  - name: P_PROP_ingot_iron_city
+    prefab: {fileID: 875434070099818264, guid: fd868909acd13ba4faf55dc1f15e0310, type: 3}
+  - name: P_PROP_ingot_steel_city
+    prefab: {fileID: 8038003981925209028, guid: 128a58f573b35fe48a5da51d12d06abf, type: 3}
+  - name: P_PROP_ingot_gold_city
+    prefab: {fileID: 9213710734976337332, guid: c52c67dbf53d47545812fd33a1ba04d0, type: 3}
+  - name: P_PROP_hammer_city_01
+    prefab: {fileID: 4650976412802073475, guid: f59704f62f87dab40a5460210ea8356a, type: 3}
+  - name: P_PROP_hammer_city_02
+    prefab: {fileID: 4329600615882213413, guid: 5e6de09e65dd1be4ea58f1cda5d3dac4, type: 3}
+  - name: P_PROP_saw_city_01
+    prefab: {fileID: 8137656088987298696, guid: d52a5e189f7502b4ca7640d2b568207f, type: 3}
+  - name: P_PROP_saw_city_02
+    prefab: {fileID: 6661359027538154206, guid: 8fd7ffed020be4b41b937726da859946, type: 3}
+  - name: P_PROP_chisel_city
+    prefab: {fileID: 8320442019516810565, guid: b83e006b8cee58849be35a85c3a44b83, type: 3}
+  - name: P_PROP_pliers_city
+    prefab: {fileID: 4478412056962898771, guid: a58085ff6d884c24cad729f919d854c0, type: 3}
+  - name: P_PROP_awl_city
+    prefab: {fileID: 5605263538784285097, guid: f2d80f7efe8eebb4f97b9c3fe2dbcfc2, type: 3}
+  - name: P_PROP_scissors_city
+    prefab: {fileID: 4067879865928328355, guid: 2179464779d935b40bda3f61a98d83df, type: 3}
+  - name: P_PROP_shovel_city
+    prefab: {fileID: 6745100917920183803, guid: f76d28177905cd143a9fff091c01a635, type: 3}
+  - name: P_PROP_shovel_city_01
+    prefab: {fileID: 8985199655999162612, guid: 453b95a676672b8409df14bbf1e91ad7, type: 3}
+  - name: P_PROP_pickaxe_city
+    prefab: {fileID: 4515946426722021979, guid: d8dbadf37a3aa544cb429e419e7f4017, type: 3}
+  - name: P_PROP_axe_city
+    prefab: {fileID: 3048987115003183628, guid: 49b2512d65e839340b2d6d5fb545dded, type: 3}
+  - name: P_PROP_toolbox_city
+    prefab: {fileID: 7812385173629455912, guid: 76d0533b0483c1f4cb0afbb9b057d445, type: 3}
+  - name: COMP_PROP_toolbox_city_01
+    prefab: {fileID: 5395838044550103700, guid: ce2c50da9d413804dafbbaa8ec551246, type: 3}
+  - name: P_PROP_ladder
+    prefab: {fileID: 419051426444536605, guid: 9a0ba27396c5ade45969e932f0f37457, type: 3}
+  - name: P_PROP_ladder_city_01
+    prefab: {fileID: 2181716873981921124, guid: a3a3dde66fbf4964893873f8a7e44c0b, type: 3}
+  - name: P_PROP_stepladder
+    prefab: {fileID: 6918483325931659738, guid: 7751d3513e0511246b6941424c152269, type: 3}
+  - name: P_PROP_candle_city_01
+    prefab: {fileID: 3546457357374576319, guid: b7fee193a78174c43bedd911f0f8ef63, type: 3}
+  - name: P_PROP_candle_city_02
+    prefab: {fileID: 6708472410321789546, guid: f65f3ffb2f5cb434283f4bfd1364fcd2, type: 3}
+  - name: P_PROP_candle_city_03
+    prefab: {fileID: 1129709049166264912, guid: 994dbeb2511857c41b51321ad939cef7, type: 3}
+  - name: P_PROP_candle_city_04
+    prefab: {fileID: 2147758207592700657, guid: 1422c2f5931da764eb6e16c519daecd2, type: 3}
+  - name: P_PROP_candle_city_05
+    prefab: {fileID: 2576778456572576856, guid: 3c6c0a5c27dd6d34bafdff05cec476c6, type: 3}
+  - name: P_PROP_candle_city_06
+    prefab: {fileID: 6199637896819666768, guid: d005ea579e1691249a56baee2c62df33, type: 3}
+  - name: COMP_PROP_candle_city_01
+    prefab: {fileID: 210782730454498199, guid: 45f1cc7199be47540a02001bd9b9d90e, type: 3}
+  - name: COMP_PROP_candle_city_02
+    prefab: {fileID: 6314691974653528826, guid: d36e4c99aab154c458f7beede5de2b59, type: 3}
+  - name: COMP_PROP_candle_city_03
+    prefab: {fileID: 6588531039785633245, guid: 736101f90a004d246a5a4501cdc33fcc, type: 3}
+  - name: COMP_PROP_candle_city_04
+    prefab: {fileID: 562750351227762167, guid: 9d7861fbe813fbd46bd21cfd3ac43630, type: 3}
+  - name: COMP_PROP_candle_city_05
+    prefab: {fileID: 2476751973728030210, guid: 708c58f43bbf59943b196d57f25d061a, type: 3}
+  - name: COMP_PROP_candle_city_06
+    prefab: {fileID: 4115554323367453622, guid: d84adb1f7ed54e5448c6781d91ab49af, type: 3}
+  - name: P_PROP_herbs_city_01
+    prefab: {fileID: 3150957427761610783, guid: 5fa35fba31629e44ba1c0240071de1e5, type: 3}
+  - name: P_PROP_herbs_city_02
+    prefab: {fileID: 1354253978614283423, guid: a039329bc016bbb4494b95279112ee47, type: 3}
+  - name: P_PROP_herbs_city_03
+    prefab: {fileID: 7632155000058749873, guid: 606b502f5ad09df4185ff5ccafb8e01c, type: 3}
+  - name: P_PROP_herbs_city_04
+    prefab: {fileID: 649496316634298850, guid: d9989ef07b1229142b2579388b4de929, type: 3}
+  - name: P_PROP_blossoms_city_01
+    prefab: {fileID: 6099721986476776786, guid: df0d3256618144645844026e3a18d3b4, type: 3}
+  - name: P_PROP_blossoms_city_02
+    prefab: {fileID: 8304057455237212611, guid: 0a4a426083d69654881e4feb888448c7, type: 3}
+  - name: P_PROP_mortar_city
+    prefab: {fileID: 8279484546180428690, guid: d8bdcbc1d89991d48b0ba853f438fab9, type: 3}
+  - name: P_PROP_mortar_pestle_city
+    prefab: {fileID: 8380561256449731293, guid: 7f8792fb2866d474a8f39a13236db618, type: 3}
+  - name: P_PROP_dryingrack_city
+    prefab: {fileID: 4399813280636292536, guid: 06fb7726cf686144093f03247c83557f, type: 3}
+  - name: COMP_PROP_dryingrack_city_01
+    prefab: {fileID: 7969047407208106976, guid: ad275be824252ad40adac2d2cf5e79c7, type: 3}
+  - name: COMP_PROP_dryingrack_city_02
+    prefab: {fileID: 2779483509925992309, guid: fd5b9c4da7fc7534f931d394bcf824d4, type: 3}
+  - name: P_PROP_tanningrack_city
+    prefab: {fileID: 8085933078751198886, guid: 1f07c9ab405f75841bcc761c5e9144af, type: 3}
+  - name: P_PROP_leather_city
+    prefab: {fileID: 7111530676559561881, guid: 895b6fa913575b543b54458db3baac1f, type: 3}
+  - name: COMP_PROP_tailoring_station_city
+    prefab: {fileID: 4373098480964071332, guid: fd0d40d7b6263ff4986e23b42770b2e3, type: 3}
+  - name: P_PROP_dressform_city
+    prefab: {fileID: 4826406092771105415, guid: 69bc0730f99a1194b8a124635d528fe2, type: 3}
+  - name: P_PROP_thread_spool_city
+    prefab: {fileID: 7256629734125897234, guid: 7095eb4de498c3d489f4e1cd510a6fca, type: 3}
+  - name: COMP_PROP_woodworking_station_city
+    prefab: {fileID: 7161693285067389215, guid: 08d4d2654c7a8904a8d1557be96e9f32, type: 3}
+  - name: P_PROP_woodworking_station_city_01
+    prefab: {fileID: 4686312063714531341, guid: a808ca45d528d354c92d27d5722616a9, type: 3}
+  - name: P_PROP_cuttingboard_city
+    prefab: {fileID: 4404109788187122729, guid: cd369822a5d0f1d4589f3685c9b25d77, type: 3}
+  - name: P_PROP_grinder_city
+    prefab: {fileID: 3162870724542298520, guid: 124b2abb252258d44b63aabcc68cee05, type: 3}
+  - name: P_PROP_checkers_board_city
+    prefab: {fileID: 3446869974092503927, guid: dd39f4854cf658b43be5d2a05da83144, type: 3}
+  - name: COMP_PROP_checkers_board_city
+    prefab: {fileID: 3578903819955454060, guid: 14731b4e858a3dd4196d05d071890eee, type: 3}
+  - name: P_PROP_checkers_piece_city_01
+    prefab: {fileID: 168722009840040403, guid: 003641f221e35f34cafa14e215074914, type: 3}
+  - name: P_PROP_checkers_piece_city_02
+    prefab: {fileID: 570643751148381391, guid: 33212cec5c5bac7479e0ad81f553c24e, type: 3}
+  - name: P_PROP_cards_city_01
+    prefab: {fileID: 8259541710777273319, guid: a491ff74f473a84448a6bf8b75828d97, type: 3}
+  - name: P_PROP_cards_city_02
+    prefab: {fileID: 5933116173265439964, guid: ed603c5973d962e4dba16c59568ada93, type: 3}
+  - name: P_PROP_cards_city_03
+    prefab: {fileID: 8811550308238143675, guid: c204cef24b219c34f8e4d79bfecab765, type: 3}
+  - name: P_PROP_waypoint_city_01
+    prefab: {fileID: 3869528231408894724, guid: de5b4a9cc311e1641af61d8c5293f711, type: 3}
+  - name: P_PROP_waypoint_city_02
+    prefab: {fileID: 5205049465665536233, guid: 75ff7f19aede4ca4e8b9663f8d488134, type: 3}
+  - name: P_PROP_waypoint_city_03
+    prefab: {fileID: 3711345271758622616, guid: 252610c75307b4e47825b443efb213f8, type: 3}
+  - name: COMP_PROP_waypoint_city_01
+    prefab: {fileID: 951140980591892852, guid: edb55d8b1880805478b8b39f6a927082, type: 3}
+  - name: COMP_PROP_waypoint_city_02
+    prefab: {fileID: 3992931970955089935, guid: 396ab7a95a524fe489dae106db709728, type: 3}
+  - name: P_PROP_streetsign_city_01
+    prefab: {fileID: 856469953537237171, guid: 1637511a6e03a4b4e964fc2ca55e25dd, type: 3}
+  - name: P_PROP_streetsign_city_02
+    prefab: {fileID: 3991807141953910080, guid: 5905804733480694f8f8dbabd81def1a, type: 3}
+  - name: P_PROP_fireplace_city
+    prefab: {fileID: 752854671956796521, guid: 57601f5bfbe7dbd47951d3571992089a, type: 3}
+  - name: COMP_PROP_fireplace_city
+    prefab: {fileID: 696069013860830607, guid: 7c08d5a5534dff042be59a14e470e0ed, type: 3}
+  - name: P_PROP_bell_city_01
+    prefab: {fileID: 8485362569335714239, guid: 873394a88c4e2da4fb203cb4ee72845f, type: 3}
+  - name: P_PROP_bell_city_02
+    prefab: {fileID: 4799914121236464463, guid: e4f0214a802113642ada562cf3572d12, type: 3}
+  - name: P_PROP_gallows
+    prefab: {fileID: 9072790718339321556, guid: 62eab64d8904bea499b8438bcb1d5cf4, type: 3}
+  - name: P_PROP_guillotine
+    prefab: {fileID: 8340272080280967404, guid: fb57c6bce96e44348baa7e9bc25adb93, type: 3}
+  - name: P_PROP_chains_city_01
+    prefab: {fileID: 1956110507112943825, guid: d2c89cdf70880bb429c60bd44f6806ec, type: 3}
+  - name: P_PROP_coffin
+    prefab: {fileID: 6763023751169122556, guid: 6cd6441808a80ef4ba111aea5199fe38, type: 3}
+  - name: P_PROP_outhouse
+    prefab: {fileID: 5504841900585495991, guid: 569efa62f7d052e43bcf7dd944c6b19b, type: 3}
+  - name: P_PROP_weathervane
+    prefab: {fileID: 3616249597569689315, guid: 382b026d3970f7b48bf6fb378169d9cc, type: 3}
+  - name: P_PROP_chest_city_01
+    prefab: {fileID: 4494542889491419444, guid: 5fd3fc6b9a736d549a36547d427000a8, type: 3}
+  - name: P_PROP_chest_city_02
+    prefab: {fileID: 6919504969559686448, guid: ba73c5f7ed3ff654a977031118e8015a, type: 3}
+  - name: P_PROP_treasurechest
+    prefab: {fileID: 2769568623919297241, guid: 1ee5710fbb2b073409a4c6843a75c377, type: 3}
+  - name: P_ENV_ivy_city_01
+    prefab: {fileID: 5493843778046086659, guid: 1af3bfc31b9663c4396a84b52f972c40, type: 3}
+  - name: P_ENV_ivy_city_02
+    prefab: {fileID: 6429493878965631632, guid: a61b0ce31a00db14182bdb20c95ce0d4, type: 3}
+  - name: P_ENV_flower_city_01
+    prefab: {fileID: 7436801761753446048, guid: 895a1f2c10be45848aa075f2af532280, type: 3}
+  - name: P_ENV_flower_city_02
+    prefab: {fileID: 7252202715539985256, guid: 304b6f213ef17234eb1692501c3cbbfa, type: 3}
+  - name: P_ENV_flower_city_03
+    prefab: {fileID: 1286789902628373079, guid: ac795d6fce60dd5489f4174053d9466e, type: 3}
+  - name: P_PROP_book_city_01
+    prefab: {fileID: 115962187611204723, guid: 133e80e59f2f71f4494de50bb953ae61, type: 3}
+  - name: P_PROP_book_city_02
+    prefab: {fileID: 1440742694582186779, guid: 00cf22752082a754ebb70eb8b3e0f0d5, type: 3}
+  - name: P_PROP_book_city_03
+    prefab: {fileID: 6541292824264928736, guid: 005ec0d0578baf34fbb55486e0d81763, type: 3}
+  - name: P_PROP_book_city_04
+    prefab: {fileID: 3040899796243829132, guid: 44d27ce2c6d2cd44c878cd3eeb5cc1cd, type: 3}
+  - name: P_PROP_reading_stand_city
+    prefab: {fileID: 9202406735864722794, guid: 57755db5d7ed91645a3fb58cfec32aa3, type: 3}
+  - name: COMP_PROP_horsestable_city
+    prefab: {fileID: 5321005455630448683, guid: 2becba284eddf1d44806e72e93a94089, type: 3}
+  - name: P_PROP_horsestable_city
+    prefab: {fileID: 3149962966034781942, guid: 85ce10f8f82bc9a479c9efc3cfee2524, type: 3}
+  - name: P_PROP_horsestation
+    prefab: {fileID: 4464627407572763632, guid: 1210fede7bdb03749b179c5b42708b5f, type: 3}
+  - name: P_PROP_horsestation_city
+    prefab: {fileID: 8461686677262153377, guid: 3c888fd2134526a4e9f35f3c5d8ab6ad, type: 3}
   - name: P_BLD_house_01
     prefab: {fileID: 4566541305947615035, guid: 95faf56cb7779194d8e7f31984ca12ee, type: 3}
   - name: P_BLD_house_02
@@ -163,40 +1379,10 @@ MonoBehaviour:
     prefab: {fileID: 7197837000303595854, guid: 7a439fd9b3adf9142b5a4384bd84442f, type: 3}
   - name: P_BLD_house_13
     prefab: {fileID: 8681033655019677861, guid: c0cacda008ac5324598ff77198b809b2, type: 3}
-  - name: P_BLD_house_14
-    prefab: {fileID: 4566541305947615035, guid: 50ecca85cbe99874495e85667b0ef7b2, type: 3}
-  - name: P_PROP_cart_02
-    prefab: {fileID: 8106673767351880195, guid: 8d75aa598155a334bbba4be2b0c1cc7d, type: 3}
-  - name: P_PROP_barrel_01
-    prefab: {fileID: 3402897644945875016, guid: 00e0f5af2fd2f2f48a85afdfad85ac48, type: 3}
-  - name: P_PROP_crate_01
-    prefab: {fileID: 5240462788006214415, guid: bfa26d9d4a2c65541a441db41de7a084, type: 3}
-  - name: P_PROP_crate_03
-    prefab: {fileID: 7570038294095717962, guid: f843dca3045eace41a48c6508b818cb3, type: 3}
-  - name: P_PROP_sack_02
-    prefab: {fileID: 8630674136278851334, guid: 73d8a2aa10fd2e840b580a80b5b9d900, type: 3}
-  - name: P_PROP_sack_05
-    prefab: {fileID: 3573375112432459386, guid: 45271558acf19184dafa94281716439d, type: 3}
-  - name: P_PROP_firepit_woodpile
-    prefab: {fileID: 5926364760295643609, guid: 2fa061b03fd6ed5469408cdf9f9cdf99, type: 3}
-  - name: P_PROP_hay_02
-    prefab: {fileID: 695087458049713834, guid: 0e4cc67b99b021d4db04a26c9ae18d46, type: 3}
-  - name: P_PROP_hay_04
-    prefab: {fileID: 4731626777726773868, guid: 1ba4a7565c68ac6439cf5408cd263c83, type: 3}
-  - name: P_PROP_bucket_01
-    prefab: {fileID: 3599639538761866819, guid: 34047cc28841ca44593947dee396e8e6, type: 3}
-  - name: P_PROP_trough_01
-    prefab: {fileID: 9221700670759350393, guid: fd73157d1c283de4797127fb6af8cb45, type: 3}
-  - name: P_PROP_foundation_wood_01
-    prefab: {fileID: 5854610538743996375, guid: 5148720a29930b04db37f6de1245cd95, type: 3}
-  - name: P_PROP_foundation_wood_03
-    prefab: {fileID: 4762312740641220459, guid: 54101636d97343e479ef66b5254382e6, type: 3}
   - name: P_PROP_board_01
     prefab: {fileID: 8904886276359077443, guid: 55f6825c08382af4990cfda6343bd768, type: 3}
   - name: P_PROP_board_02
     prefab: {fileID: 8728584993128696057, guid: efab06575e5c59f4db8edbd01e50a69c, type: 3}
-  - name: P_PROP_cart_wheel_small
-    prefab: {fileID: 7452869415572602400, guid: bfe6ec9d46d9d074095689bcd94fe9c0, type: 3}
   - name: villager
     prefab: {fileID: 8771091787928289351, guid: b2508b974552e4d4492242ce53a05347, type: 3}
   - name: villager-f
@@ -209,8 +1395,6 @@ MonoBehaviour:
     prefab: {fileID: 8771091787928289351, guid: 829c97cb839fb974c8ecefe8cc7e2a0e, type: 3}
   - name: villager-elder-f
     prefab: {fileID: 8771091787928289351, guid: 1878358932cd32842a2fa6439aaa7849, type: 3}
-  - name: COMP_PROP_basket_city_01
-    prefab: {fileID: 4716647592940607367, guid: 1193d7d2affac574ebcfe59dec218128, type: 3}
   controllers:
   - key: adult
     controller: {fileID: 9100000, guid: 26b1fbb5674aad342a7da49d83eec01e, type: 2}

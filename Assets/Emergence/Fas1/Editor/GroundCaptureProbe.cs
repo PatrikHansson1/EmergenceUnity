@@ -229,13 +229,26 @@ namespace Emergence.Editor
                             for (int yy = 0; yy < td.detailHeight; yy++)
                                 for (int xx = 0; xx < td.detailWidth; xx++) bl += map[xx, yy];
                             blades += bl;
-                            var pr = td.detailPrototypes[p].prototype;
+                            var dpp = td.detailPrototypes[p];
+                            var pr = dpp.prototype;
                             bool hasMesh = pr != null && pr.GetComponentInChildren<MeshRenderer>(true) != null;
-                            sb.AppendLine("       detail " + p + ": " + (pr != null ? pr.name : "NULL").PadRight(28)
+                            // D-245: this line used to read the MESH slot only, and printed "NULL /
+                            // nothing to draw" for a billboard prototype that is drawing perfectly
+                            // well from a TEXTURE. A probe that reports a defect that is not there
+                            // sends the next reader hunting the wrong thing, which is worse than
+                            // silence. Print what the prototype actually IS, and let Unity itself
+                            // say whether it will be drawn.
+                            string err; bool valid = dpp.Validate(out err);
+                            string src = dpp.usePrototypeMesh
+                                ? "mesh:" + (pr != null ? pr.name : "NULL") + (hasMesh ? "" : " (no MeshRenderer!)")
+                                : "tex:" + (dpp.prototypeTexture != null
+                                            ? dpp.prototypeTexture.name + " " + dpp.prototypeTexture.width + "px"
+                                            : "NULL — a billboard with no texture draws NOTHING");
+                            sb.AppendLine("       detail " + p + ": " + src.PadRight(46)
                                           + " instances=" + bl
-                                          + "  mesh=" + (hasMesh ? "yes" : "NO — nothing to draw")
-                                          + "  mode=" + td.detailPrototypes[p].renderMode
-                                          + "  instanced=" + td.detailPrototypes[p].useInstancing);
+                                          + "  mode=" + dpp.renderMode
+                                          + "  h=" + dpp.minHeight.ToString("F1") + ".." + dpp.maxHeight.ToString("F1") + "m"
+                                          + (valid ? "  VALID" : "  INVALID: " + err));
                         }
                         sb.AppendLine("       detail map " + td.detailWidth + "x" + td.detailHeight
                                       + ", terrain: distance=" + (terr0 != null ? terr0.detailObjectDistance : -1f)
@@ -603,6 +616,51 @@ namespace Emergence.Editor
 
                     // and the village: stand among the huts, not above them
                     var hutRoot = GameObject.Find(Emergence.Runtime.HutReconciler.LayerName);   // "Huts_Live" - "Huts" found nothing
+                    // D-245: WHICH HOUSES, NOT HOW MANY. "Every house looks the same" is a claim
+                    // about a DISTRIBUTION, and the report had no distribution in it — only a count.
+                    // The pick is hash(tile) over nine dwellings, so a flat histogram is the pass and
+                    // a spike is the defect; either way it is now written down instead of eyeballed.
+                    if (hutRoot != null && hutRoot.transform.childCount > 0)
+                    {
+                        var hist = new System.Collections.Generic.SortedDictionary<string, int>();
+                        foreach (Transform ht in hutRoot.transform)
+                        {
+                            // NOT PrefabUtility: a runtime Instantiate keeps no prefab link, so that
+                            // asked every hut its source and got "(unknown)" four times — which then
+                            // read as "1 distinct model" and looked exactly like the defect it was
+                            // supposed to detect. A measurement that fails the same way the world
+                            // fails is worse than none. The MESH is the identity that survives.
+                            string src = "(no mesh)";
+                            float best = -1f;
+                            foreach (var mf in ht.GetComponentsInChildren<MeshFilter>(true))
+                            {
+                                if (mf.sharedMesh == null) continue;
+                                var b = mf.sharedMesh.bounds.size;
+                                float vol = b.x * b.y * b.z;
+                                if (vol > best) { best = vol; src = mf.sharedMesh.name; }
+                            }
+                            hist[src] = hist.TryGetValue(src, out var hc) ? hc + 1 : 1;
+                        }
+                        int hutN = hutRoot.transform.childCount;
+                        var top = new System.Text.StringBuilder();
+                        int distinct = 0, topCount = 0;
+                        foreach (var kv in hist)
+                        {
+                            distinct++; if (kv.Value > topCount) topCount = kv.Value;
+                            top.Append(top.Length > 0 ? ", " : "").Append(kv.Key).Append(" x").Append(kv.Value);
+                        }
+                        sb.AppendLine("     houses raised: " + hutN + " over " + distinct + " distinct models"
+                                      + " (pool = " + Emergence.Runtime.HutReconciler.DwellingVariants.Length + ")");
+                        sb.AppendLine("       " + top);
+                        // Four huts drawn from eight models repeat by ordinary chance, so a village
+                        // this small cannot be asked about variety at all — the first version of this
+                        // check went RED on a world that was behaving correctly, which is how a probe
+                        // teaches the next reader to ignore it. Ask only when the sample can answer.
+                        Check(hutN < 8 || distinct >= 3,
+                              "the village is built of more than two models (" + distinct + " distinct over " + hutN + " huts)");
+                        Check(hutN < 6 || topCount <= (hutN * 2 + 2) / 3,
+                              "no single model is more than two thirds of the village (" + topCount + "/" + hutN + ")");
+                    }
                     if (hutRoot != null && hutRoot.transform.childCount > 0)
                     {
                         // ONE VILLAGE, NOT ALL OF THEM. At year 8 there were two huts and the
