@@ -1,0 +1,20 @@
+EMERGENCE — TIDY PASS (D-231)
+generated 2026-08-14 17:51:30
+kept in Reports: 164   archived: 16   destination: _ARCHIVE/2026-08-14-tidy/
+
+  · fas6-fire-a.png  —  evidence image already judged (22 days old)
+  · fas6-fire-b.png  —  evidence image already judged (22 days old)
+  · fas6-fire.png  —  evidence image already judged (23 days old)
+  · fas4-artifact-book.png  —  evidence image already judged (4 days old)
+  · fas5-almanac.png  —  evidence image already judged (5 days old)
+  · fas5-souls.png  —  evidence image already judged (5 days old)
+  · fas5-villages.png  —  evidence image already judged (5 days old)
+  · fas6-expression.png  —  evidence image already judged (5 days old)
+  · fas7-closs-post.png  —  evidence image already judged (5 days old)
+  · fas7-closs-pre.png  —  evidence image already judged (5 days old)
+  · fas7-e15body-almanac.png  —  evidence image already judged (5 days old)
+  · fas7-e15body-pose.png  —  evidence image already judged (5 days old)
+  · fas7-r2body.png  —  evidence image already judged (5 days old)
+  · fas7-r2body-era.png  —  evidence image already judged (5 days old)
+  · fas7-saveload.png  —  evidence image already judged (5 days old)
+  · chronicle-8919-y090.pre-HEAD-retake.bak  —  explicitly marked stale

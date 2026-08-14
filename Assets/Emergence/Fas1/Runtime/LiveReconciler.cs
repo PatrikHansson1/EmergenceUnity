@@ -62,9 +62,11 @@ namespace Emergence.Runtime
             for (int vi = 0; vi < S.villages.Length; vi++)
             {
                 var v = S.villages[vi];
-                foreach (var e in codex.objects)
+                // C4+C5 (D-230): not every qualified object at once. A village raises what its
+                // hands can raise, oldest first — see CodexBuildOrder for why knowledge is the
+                // wrong pacer and hands are the right one.
+                foreach (var e in CodexBuildOrder.Allowed(v, codex.objects))
                 {
-                    if (!CodexQualifies(v, e)) continue;
                     int cnt = Mathf.Max(1, e.count);
                     for (int k = 0; k < cnt; k++)
                         desired[$"{vi}:{e.id}:{k}"] = (e, v, k, cnt, vi);
@@ -191,16 +193,9 @@ namespace Emergence.Runtime
         static int ParseVi(string[] parts) => (parts.Length > 0 && int.TryParse(parts[0], out var i)) ? i : -1;
 
         // ---- placement mirrors WorldDresser exactly (so overlay == full-build overlay) ----
-        static bool CodexQualifies(WorldVillage v, CodexEntry e)
-        {
-            if (!string.IsNullOrEmpty(e.requiresTech) && (v.knows == null || Array.IndexOf(v.knows, e.requiresTech) < 0)) return false;
-            if (!string.IsNullOrEmpty(e.requiresCustom))
-            {
-                if (e.requiresCustom == "cosmos") { if (string.IsNullOrEmpty(v.cosmos)) return false; }
-                else if (v.beliefs == null || Array.IndexOf(v.beliefs, e.requiresCustom) < 0) return false;
-            }
-            return v.pop >= e.minPop && v.crafts >= e.minCrafts && v.maxGen >= e.minGen;
-        }
+        // the gate itself moved to CodexBuildOrder.Qualifies — it was two copies of one law,
+        // here and in WorldDresser, and a law with two copies is a law with two futures.
+        static bool CodexQualifies(WorldVillage v, CodexEntry e) => CodexBuildOrder.Qualifies(v, e);
 
         static Vector2 CodexPlacement(WorldVillage v, CodexEntry e, int k, int cnt)
         {

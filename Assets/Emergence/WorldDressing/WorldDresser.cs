@@ -1440,9 +1440,8 @@ namespace Emergence.Editor
             var parent = new GameObject("CodexObjects").transform; parent.SetParent(root, true);
             int placed = 0;
             foreach (var v in S.villages)
-                foreach (var e in codex.objects)
+                foreach (var e in CodexBuildOrder.Allowed(v, codex.objects))   // C4+C5 (D-230): oldest first, capped by hands
                 {
-                    if (!CodexQualifies(v, e)) continue;
                     var pf = LoadCodexPrefab(e.prefab);
                     if (pf == null) continue;
                     int cnt = Mathf.Max(1, e.count);
@@ -1461,16 +1460,8 @@ namespace Emergence.Editor
             Debug.Log($"[Dresser] codex: {placed} discovery-driven objects across {S.villages.Length} villages (the world reads its own development)");
         }
 
-        static bool CodexQualifies(WorldVillage v, CodexEntry e)
-        {
-            if (!string.IsNullOrEmpty(e.requiresTech) && (v.knows == null || Array.IndexOf(v.knows, e.requiresTech) < 0)) return false;
-            if (!string.IsNullOrEmpty(e.requiresCustom))
-            {
-                if (e.requiresCustom == "cosmos") { if (string.IsNullOrEmpty(v.cosmos)) return false; }
-                else if (v.beliefs == null || Array.IndexOf(v.beliefs, e.requiresCustom) < 0) return false;
-            }
-            return v.pop >= e.minPop && v.crafts >= e.minCrafts && v.maxGen >= e.minGen;
-        }
+        // the gate lives in CodexBuildOrder.Qualifies (D-230). The copy that stood here is gone:
+        // one law, one implementation, or the two drift and the editor world stops matching the played one.
 
         static Vector2 CodexPlacement(WorldVillage v, CodexEntry e, int k, int cnt)
         {
