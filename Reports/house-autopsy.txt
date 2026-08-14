@@ -1,0 +1,141 @@
+EMERGENCE — house autopsy: every renderer, EVERY material slot
+generated 2026-08-14 09:28:58
+the blind spot this closes: earlier checks read sharedMaterial = SLOT 0 only.
+
+### P_BLD_house_01
+  P_BLD_beam_big_v01_01    mesh=SM_BLD_beam_big_v01_01  verts=304  subMeshes=2  uv=304
+      slot 0: M_wood_05              Universal Render Pipeline/Lit          tex=T_wood_05_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 1: M_metal_02             Universal Render Pipeline/Lit          tex=T_metal_02_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+  P_BLD_door_v01_01        mesh=SM_BLD_door_v01_01  verts=397  subMeshes=5  uv=397
+      slot 0: M_wood_05              Universal Render Pipeline/Lit          tex=T_wood_05_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 1: M_wall_02              Universal Render Pipeline/Lit          tex=T_wall_02_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 2: M_wood_06              Universal Render Pipeline/Lit          tex=T_wood_06_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 3: M_rooftiles_01         Universal Render Pipeline/Lit          tex=T_rooftiles_01_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 4: M_metal_01             Universal Render Pipeline/Lit          tex=T_metal_01_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+  P_BLD_window_v02_01      mesh=SM_BLD_window_v02_01  verts=404  subMeshes=5  uv=404
+      slot 0: M_wood_05              Universal Render Pipeline/Lit          tex=T_wood_05_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 1: M_wood_06              Universal Render Pipeline/Lit          tex=T_wood_06_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 2: M_wall_02              Universal Render Pipeline/Lit          tex=T_wall_02_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 3: M_rooftiles_01         Universal Render Pipeline/Lit          tex=T_rooftiles_01_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 4: M_CLR_yellow_E         Universal Render Pipeline/Lit          tex=*** NONE ***  baseColor=RGBA(1.000, 0.953, 0.788, 1.000)
+  P_BLD_chimney_v01_03     mesh=SM_BLD_chimney_v01_03  verts=284  subMeshes=2  uv=284
+      slot 0: M_stonebrick_02        Universal Render Pipeline/Lit          tex=T_stonebrick_02_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 1: M_metal_01             Universal Render Pipeline/Lit          tex=T_metal_01_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+  P_PROP_weathervane       mesh=SM_PROP_weathervane  verts=226  subMeshes=1  uv=226
+      slot 0: M_metal_01             Universal Render Pipeline/Lit          tex=T_metal_01_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+  P_BLD_window_v05_01      mesh=SM_BLD_window_v05_01  verts=447  subMeshes=5  uv=447
+      slot 0: M_wall_02              Universal Render Pipeline/Lit          tex=T_wall_02_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 1: M_wood_05              Universal Render Pipeline/Lit          tex=T_wood_05_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 2: M_CLR_yellow_E         Universal Render Pipeline/Lit          tex=*** NONE ***  baseColor=RGBA(1.000, 0.953, 0.788, 1.000)
+      slot 3: M_wood_06              Universal Render Pipeline/Lit          tex=T_wood_06_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 4: M_rooftiles_01         Universal Render Pipeline/Lit          tex=T_rooftiles_01_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+  P_BLD_window_v08_04      mesh=SM_BLD_window_v08_04  verts=140  subMeshes=3  uv=140
+      slot 0: M_wood_05              Universal Render Pipeline/Lit          tex=T_wood_05_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 1: M_CLR_yellow_E         Universal Render Pipeline/Lit          tex=*** NONE ***  baseColor=RGBA(1.000, 0.953, 0.788, 1.000)
+      slot 2: M_wood_06              Universal Render Pipeline/Lit          tex=T_wood_06_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+  P_BLD_window_v08_04 (1)  mesh=SM_BLD_window_v08_04  verts=140  subMeshes=3  uv=140
+      slot 0: M_wood_05              Universal Render Pipeline/Lit          tex=T_wood_05_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 1: M_CLR_yellow_E         Universal Render Pipeline/Lit          tex=*** NONE ***  baseColor=RGBA(1.000, 0.953, 0.788, 1.000)
+      slot 2: M_wood_06              Universal Render Pipeline/Lit          tex=T_wood_06_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+  P_PROP_PLANT_pot_v1_01   mesh=SM_PROP_PLANT_pot_v1_01  verts=193  subMeshes=2  uv=193
+      slot 0: M_wood_07              Universal Render Pipeline/Lit          tex=T_wood_07_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 1: M_PROP_potplants       Universal Render Pipeline/Lit          tex=T_PROP_potplants  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+  P_PROP_PLANT_pot_v1_01 (1) mesh=SM_PROP_PLANT_pot_v1_01  verts=193  subMeshes=2  uv=193
+      slot 0: M_wood_07              Universal Render Pipeline/Lit          tex=T_wood_07_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 1: M_PROP_potplants       Universal Render Pipeline/Lit          tex=T_PROP_potplants  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+  P_BLD_window_v08_04 (2)  mesh=SM_BLD_window_v08_04  verts=140  subMeshes=3  uv=140
+      slot 0: M_wood_05              Universal Render Pipeline/Lit          tex=T_wood_05_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 1: M_CLR_yellow_E         Universal Render Pipeline/Lit          tex=*** NONE ***  baseColor=RGBA(1.000, 0.953, 0.788, 1.000)
+      slot 2: M_wood_06              Universal Render Pipeline/Lit          tex=T_wood_06_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+  P_BLD_window_v08_04 (3)  mesh=SM_BLD_window_v08_04  verts=140  subMeshes=3  uv=140
+      slot 0: M_wood_05              Universal Render Pipeline/Lit          tex=T_wood_05_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 1: M_CLR_yellow_E         Universal Render Pipeline/Lit          tex=*** NONE ***  baseColor=RGBA(1.000, 0.953, 0.788, 1.000)
+      slot 2: M_wood_06              Universal Render Pipeline/Lit          tex=T_wood_06_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+  P_BLD_body_v01_01        mesh=SM_BLD_body_v01_01  verts=2331  subMeshes=4  uv=2331
+      slot 0: M_wood_05              Universal Render Pipeline/Lit          tex=T_wood_05_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 1: M_wall_02              Universal Render Pipeline/Lit          tex=T_wall_02_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 2: M_stonebrick_02        Universal Render Pipeline/Lit          tex=T_stonebrick_02_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 3: M_rooftiles_01         Universal Render Pipeline/Lit          tex=T_rooftiles_01_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+
+### P_BLD_house_02
+  P_BLD_beam_big_v02_02    mesh=SM_BLD_beam_big_v02_02  verts=430  subMeshes=3  uv=430
+      slot 0: M_wood_05              Universal Render Pipeline/Lit          tex=T_wood_05_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 1: M_wood_detail_01       Universal Render Pipeline/Lit          tex=T_wood_detail_01_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 2: M_metal_02             Universal Render Pipeline/Lit          tex=T_metal_02_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+  P_BLD_chimney_v01_01     mesh=SM_BLD_chimney_v01_01  verts=100  subMeshes=1  uv=100
+      slot 0: M_stonebrick_02        Universal Render Pipeline/Lit          tex=T_stonebrick_02_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+  Particle_steam_FVP       (no MeshFilter — ParticleSystemRenderer)
+      slot 0: M_FX_steam             Universal Render Pipeline/Particles/Unlit tex=T_FX_sprite_steam_village_BC  baseColor=RGBA(1.000, 1.000, 1.000, 0.302)
+  P_BLD_window_v09_03      mesh=SM_BLD_window_v09_03  verts=125  subMeshes=3  uv=125
+      slot 0: M_stonebrick_02        Universal Render Pipeline/Lit          tex=T_stonebrick_02_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 1: M_metal_01             Universal Render Pipeline/Lit          tex=T_metal_01_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 2: M_CLR_yellow_E         Universal Render Pipeline/Lit          tex=*** NONE ***  baseColor=RGBA(1.000, 0.953, 0.788, 1.000)
+  P_BLD_window_v04_01 (1)  mesh=SM_BLD_window_v04_01  verts=781  subMeshes=5  uv=781
+      slot 0: M_wood_06              Universal Render Pipeline/Lit          tex=T_wood_06_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 1: M_rooftiles_01         Universal Render Pipeline/Lit          tex=T_rooftiles_01_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 2: M_wood_05              Universal Render Pipeline/Lit          tex=T_wood_05_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 3: M_wall_02              Universal Render Pipeline/Lit          tex=T_wall_02_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 4: M_CLR_yellow_E         Universal Render Pipeline/Lit          tex=*** NONE ***  baseColor=RGBA(1.000, 0.953, 0.788, 1.000)
+  P_BLD_door_v02_01        mesh=SM_BLD_door_v02_01  verts=536  subMeshes=5  uv=536
+      slot 0: M_wood_05              Universal Render Pipeline/Lit          tex=T_wood_05_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 1: M_rooftiles_01         Universal Render Pipeline/Lit          tex=T_rooftiles_01_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 2: M_wood_06              Universal Render Pipeline/Lit          tex=T_wood_06_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 3: M_metal_01             Universal Render Pipeline/Lit          tex=T_metal_01_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 4: M_CLR_yellow_E         Universal Render Pipeline/Lit          tex=*** NONE ***  baseColor=RGBA(1.000, 0.953, 0.788, 1.000)
+  P_BLD_window_v07_01      mesh=SM_BLD_window_v07_01  verts=118  subMeshes=3  uv=118
+      slot 0: M_wood_05              Universal Render Pipeline/Lit          tex=T_wood_05_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 1: M_CLR_yellow_E         Universal Render Pipeline/Lit          tex=*** NONE ***  baseColor=RGBA(1.000, 0.953, 0.788, 1.000)
+      slot 2: M_wood_06              Universal Render Pipeline/Lit          tex=T_wood_06_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+  P_BLD_window_v07_01 (1)  mesh=SM_BLD_window_v07_01  verts=118  subMeshes=3  uv=118
+      slot 0: M_wood_05              Universal Render Pipeline/Lit          tex=T_wood_05_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 1: M_CLR_yellow_E         Universal Render Pipeline/Lit          tex=*** NONE ***  baseColor=RGBA(1.000, 0.953, 0.788, 1.000)
+      slot 2: M_wood_06              Universal Render Pipeline/Lit          tex=T_wood_06_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+  P_BLD_window_v08_02      mesh=SM_BLD_window_v08_02  verts=188  subMeshes=3  uv=188
+      slot 0: M_wood_06              Universal Render Pipeline/Lit          tex=T_wood_06_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 1: M_wood_05              Universal Render Pipeline/Lit          tex=T_wood_05_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 2: M_CLR_yellow_E         Universal Render Pipeline/Lit          tex=*** NONE ***  baseColor=RGBA(1.000, 0.953, 0.788, 1.000)
+  P_PROP_PLANT_pot_v1_04   mesh=SM_PROP_PLANT_pot_v1_04  verts=186  subMeshes=2  uv=186
+      slot 0: M_wood_07              Universal Render Pipeline/Lit          tex=T_wood_07_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 1: M_PROP_potplants       Universal Render Pipeline/Lit          tex=T_PROP_potplants  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+  P_BLD_window_v08_02 (1)  mesh=SM_BLD_window_v08_02  verts=188  subMeshes=3  uv=188
+      slot 0: M_wood_06              Universal Render Pipeline/Lit          tex=T_wood_06_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 1: M_wood_05              Universal Render Pipeline/Lit          tex=T_wood_05_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 2: M_CLR_yellow_E         Universal Render Pipeline/Lit          tex=*** NONE ***  baseColor=RGBA(1.000, 0.953, 0.788, 1.000)
+  P_BLD_body_v02_01        mesh=SM_BLD_body_v02_01  verts=1596  subMeshes=6  uv=1596
+      slot 0: M_metal_02             Universal Render Pipeline/Lit          tex=T_metal_02_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 1: M_wood_05              Universal Render Pipeline/Lit          tex=T_wood_05_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 2: M_wood_detail_01       Universal Render Pipeline/Lit          tex=T_wood_detail_01_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 3: M_rooftiles_01         Universal Render Pipeline/Lit          tex=T_rooftiles_01_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 4: M_stonebrick_02        Universal Render Pipeline/Lit          tex=T_stonebrick_02_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 5: M_wall_02              Universal Render Pipeline/Lit          tex=T_wall_02_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+
+### P_BLD_body_v01_01
+  P_BLD_body_v01_01        mesh=SM_BLD_body_v01_01  verts=2331  subMeshes=4  uv=2331
+      slot 0: M_wood_05              Universal Render Pipeline/Lit          tex=T_wood_05_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 1: M_wall_02              Universal Render Pipeline/Lit          tex=T_wall_02_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 2: M_stonebrick_02        Universal Render Pipeline/Lit          tex=T_stonebrick_02_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+      slot 3: M_rooftiles_01         Universal Render Pipeline/Lit          tex=T_rooftiles_01_BC  baseColor=RGBA(1.000, 1.000, 1.000, 1.000)
+
+SUMMARY
+  material slots inspected: 82, WITHOUT a base texture: 13
+  meshes inspected: 25, WITHOUT UVs: 0
+
+OFFENDERS
+   NO TEXTURE: P_BLD_window_v02_01 slot 4 -> M_CLR_yellow_E (Universal Render Pipeline/Lit)  baseColor=RGBA(1.000, 0.953, 0.788, 1.000)
+   NO TEXTURE: P_BLD_window_v05_01 slot 2 -> M_CLR_yellow_E (Universal Render Pipeline/Lit)  baseColor=RGBA(1.000, 0.953, 0.788, 1.000)
+   NO TEXTURE: P_BLD_window_v08_04 slot 1 -> M_CLR_yellow_E (Universal Render Pipeline/Lit)  baseColor=RGBA(1.000, 0.953, 0.788, 1.000)
+   NO TEXTURE: P_BLD_window_v08_04 (1) slot 1 -> M_CLR_yellow_E (Universal Render Pipeline/Lit)  baseColor=RGBA(1.000, 0.953, 0.788, 1.000)
+   NO TEXTURE: P_BLD_window_v08_04 (2) slot 1 -> M_CLR_yellow_E (Universal Render Pipeline/Lit)  baseColor=RGBA(1.000, 0.953, 0.788, 1.000)
+   NO TEXTURE: P_BLD_window_v08_04 (3) slot 1 -> M_CLR_yellow_E (Universal Render Pipeline/Lit)  baseColor=RGBA(1.000, 0.953, 0.788, 1.000)
+   NO TEXTURE: P_BLD_window_v09_03 slot 2 -> M_CLR_yellow_E (Universal Render Pipeline/Lit)  baseColor=RGBA(1.000, 0.953, 0.788, 1.000)
+   NO TEXTURE: P_BLD_window_v04_01 (1) slot 4 -> M_CLR_yellow_E (Universal Render Pipeline/Lit)  baseColor=RGBA(1.000, 0.953, 0.788, 1.000)
+   NO TEXTURE: P_BLD_door_v02_01 slot 4 -> M_CLR_yellow_E (Universal Render Pipeline/Lit)  baseColor=RGBA(1.000, 0.953, 0.788, 1.000)
+   NO TEXTURE: P_BLD_window_v07_01 slot 1 -> M_CLR_yellow_E (Universal Render Pipeline/Lit)  baseColor=RGBA(1.000, 0.953, 0.788, 1.000)
+   NO TEXTURE: P_BLD_window_v07_01 (1) slot 1 -> M_CLR_yellow_E (Universal Render Pipeline/Lit)  baseColor=RGBA(1.000, 0.953, 0.788, 1.000)
+   NO TEXTURE: P_BLD_window_v08_02 slot 2 -> M_CLR_yellow_E (Universal Render Pipeline/Lit)  baseColor=RGBA(1.000, 0.953, 0.788, 1.000)
+   NO TEXTURE: P_BLD_window_v08_02 (1) slot 2 -> M_CLR_yellow_E (Universal Render Pipeline/Lit)  baseColor=RGBA(1.000, 0.953, 0.788, 1.000)
+
+ISOLATION SHOT (Reports/house-isolated.png)
+  house pixels: 34848   mean RGB = (65, 60, 54)
+  for comparison, the source textures average: wall (233,206,150) cream, rooftiles (51,101,114) DARK TEAL, wood (99,43,0) dark brown
+  VERDICT: textures ARE sampling (the house is not white in isolation) -> the fault is scene-level

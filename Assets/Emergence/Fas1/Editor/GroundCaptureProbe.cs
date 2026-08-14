@@ -254,6 +254,31 @@ namespace Emergence.Editor
                 Fas3LightRig.Apply("spring", "dusk");
                 Capture("ground-eye-level-dusk", terrain, out _);
                 Fas3LightRig.Apply("spring", "day");
+
+                // THE CLOSE-UP. The isolation shot proved the house renders perfectly on its own
+                // (teal shingles, timber, plaster). So the fault is scene-level — and the fastest way
+                // to corner it is the same object at the same range, but IN the living scene.
+                var hut = GameObject.Find("Huts");
+                Renderer nearest = null; float bestSize = 0f;
+                foreach (var rr2 in UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsSortMode.None))
+                {
+                    if (rr2 == null || rr2.gameObject.GetComponent<Terrain>() != null) continue;
+                    if (!rr2.name.StartsWith("P_BLD")) continue;
+                    if (rr2.bounds.size.y > bestSize) { bestSize = rr2.bounds.size.y; nearest = rr2; }
+                }
+                if (nearest != null)
+                {
+                    var bb2 = nearest.bounds;
+                    float d2 = bb2.size.magnitude * 1.1f;
+                    cam2Note = "close-up on " + nearest.name + " (" + bb2.size.y.ToString("F1") + " m) from " + d2.ToString("F0") + " m";
+                    var c2 = Camera.main;
+                    c2.transform.position = bb2.center + new Vector3(d2 * 0.7f, d2 * 0.45f, d2 * 0.7f);
+                    c2.transform.LookAt(bb2.center);
+                    bool fogWas = RenderSettings.fog; RenderSettings.fog = false;
+                    CaptureRaw("house-in-scene");
+                    RenderSettings.fog = fogWas;
+                    sb.AppendLine("     " + cam2Note + " -> Reports/house-in-scene.png");
+                }
                 sb.AppendLine("     " + camNote);
                 Check(magenta >= 0, "capture written");
                 Check(magenta == 0, "no missing-material magenta in frame (" + magenta + " px)");
@@ -281,6 +306,23 @@ namespace Emergence.Editor
 
         /// <summary>Stand a camera at a person's height on the land and look across it. Manual RT capture
         /// (D-125: ScreenCapture yields a white frame on an unattended editor).</summary>
+        static string cam2Note = "";
+
+        /// <summary>Grab whatever the camera is currently looking at, without re-framing.</summary>
+        static void CaptureRaw(string name)
+        {
+            var cam = Camera.main; if (cam == null) return;
+            const int w = 1280, h = 720;
+            var rt = new RenderTexture(w, h, 24);
+            cam.targetTexture = rt; cam.Render();
+            RenderTexture.active = rt;
+            var tex = new Texture2D(w, h, TextureFormat.RGB24, false);
+            tex.ReadPixels(new Rect(0, 0, w, h), 0, 0); tex.Apply();
+            cam.targetTexture = null; RenderTexture.active = null;
+            try { File.WriteAllBytes("Reports/" + name + ".png", tex.EncodeToPNG()); } catch { }
+            UnityEngine.Object.Destroy(tex); UnityEngine.Object.Destroy(rt);
+        }
+
         static int Capture(string name, Terrain terrain, out string note)
         {
             note = "";
