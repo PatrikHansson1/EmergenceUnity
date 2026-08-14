@@ -1,0 +1,33 @@
+EMERGENCE — VÅG 1.1: does the LIVING world have ground?
+generated 2026-08-14 08:25:10
+scene = the self-composing opening ONLY. No WorldDresser, no capture rig, no editor-only path.
+
+1. WAS THE GROUND RAISED, BY THE LIVING LOOP ITSELF?
+  PASS  the living world runtime exists
+  PASS  ground build attempted from an applied snapshot
+     note: terrain: 100x70 tiles -> 800x560 m, relief 11,7..29,6 m (17,9 m of it), layers=5, details=5
+  PASS  a Terrain EXISTS in the living scene (Terrain)
+
+2. IS THE LAND ACTUALLY ROLLING? (the flat-plane test, in metres)
+     terrain 800 x 560 m, height span 72 m
+     relief actually built: 17,9 m   (low 11,7 m, high 29,6 m)
+  PASS  the land ROLLS — 17,9 m of relief (a plane would be ~0)
+     slope: mean 3,8 deg, max 53,2 deg
+  PASS  no cliff faces — max slope 53,2 deg (a wall would be 80+)
+
+3. IS IT REAL GROUND, OR A FLAT COLOUR?
+     layers: Layer_Grass, Layer_farmfield, Layer_Dirt, Layer_Rock, Layer_Cobblestone
+  PASS  at least four ground materials (5)
+  PASS  3 layers carry a REAL texture (a fallback layer is flat white tinted)
+  PASS  the meadow has detail prototypes (5 grass/flower)
+
+4. THE EYE-LEVEL PICTURE (what a person standing there would see)
+     eye at (483.0, 18.6, 281.3) (ground 16,2 m), looking at (517.0, 15.6, 315.3)
+  PASS  capture written
+  PASS  no missing-material magenta in frame (0 px)
+     year at capture: 8
+
+VERDICT: GREEN  (10/10)
+declared: this proves the GROUND is there and rolling. Prop scale, the pivot sinking and
+  the water body are steps 1.2-1.5 and are NOT claimed here. The picture is the real test —
+  a human (or the builder) must LOOK at it, per D-008.

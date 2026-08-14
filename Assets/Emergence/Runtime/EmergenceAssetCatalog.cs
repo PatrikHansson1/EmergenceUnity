@@ -22,6 +22,7 @@ namespace Emergence.Runtime
 
         [Serializable] public struct PrefabEntry { public string name; public GameObject prefab; }
         [Serializable] public struct ControllerEntry { public string key; public RuntimeAnimatorController controller; }
+        [Serializable] public struct TerrainLayerEntry { public string name; public TerrainLayer layer; }
 
         [Tooltip("Every prefab/GLB the runtime reconcilers may ask for, by bare name (no path/extension).")]
         public List<PrefabEntry> prefabs = new List<PrefabEntry>();
@@ -29,6 +30,14 @@ namespace Emergence.Runtime
         public List<ControllerEntry> controllers = new List<ControllerEntry>();
         [Tooltip("The object codex (object-codex.json) as a TextAsset — no file IO in the player.")]
         public TextAsset codexJson;
+        // VÅG 1.1 (2026-08-14, D-209): the terrain's own layers, so the LIVING loop can build ground
+        // that looks like ground. The dresser found them with AssetDatabase.FindAssets — editor-only,
+        // which is exactly why the player's world was a flat green plane: the whole dresser sits
+        // behind #if UNITY_EDITOR and simply cannot run in a build. Same catalog school as the
+        // prefabs (D-137): resolve once in the editor, load through Resources at runtime.
+        [Tooltip("Terrain layers by name (Layer_Grass, Layer_farmfield, Layer_Dirt, Layer_Rock, Layer_Cobblestone...).")]
+        public List<TerrainLayerEntry> terrainLayers = new List<TerrainLayerEntry>();
+
         [Tooltip("Age-mark moss prefabs, captured in the exact order WorldDresser's editor query returned them (parity).")]
         public List<GameObject> mossPrefabs = new List<GameObject>();
 
@@ -51,6 +60,19 @@ namespace Emergence.Runtime
 
         /// <summary>Editor probes re-run in one session — let a rebuilt catalog be picked up.</summary>
         public static void Invalidate() { _loaded = null; _loadTried = false; }
+
+        /// <summary>The first terrain layer matching any of these candidate names, or null. The dresser's
+        /// own preference order (Dreamscape's real textured layer first) is preserved by the caller.</summary>
+        public TerrainLayer TerrainLayer(string[] candidates)
+        {
+            if (candidates == null) return null;
+            foreach (var nm in candidates)
+                for (int i = 0; i < terrainLayers.Count; i++)
+                    if (terrainLayers[i].layer != null &&
+                        string.Equals(terrainLayers[i].name, nm, StringComparison.OrdinalIgnoreCase))
+                        return terrainLayers[i].layer;
+            return null;
+        }
 
         public GameObject Prefab(string name)
         {

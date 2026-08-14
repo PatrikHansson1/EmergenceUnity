@@ -1,0 +1,257 @@
+// EMERGENCE — VÅG 1.1 EVIDENCE: DOES THE LIVING WORLD HAVE GROUND?
+//
+// Patrik's field report (2026-08-14): the environment felt wrong — flat, angular, props sinking,
+// lakes odd, "it doesn't feel like we applied the environment we bought". The studio looked at real
+// screenshots and found the living world at year 120 was a flat green plane with one villager on
+// it, while the store rig's shots looked like a game. Root cause (D-209): the entire WorldDresser
+// sits behind #if UNITY_EDITOR, so it could never run in a build, and the living loop never called
+// it at all.
+//
+// This probe is the acceptance test for the fix. It boots the SAME self-composing opening the
+// player gets (Fas3Onboarding — no dresser, no capture rig, no editor-only anything), lets it run,
+// and asks the ground three questions:
+//
+//   1. Did the terrain get raised AT ALL, from the living loop's own applied state?
+//   2. Does it have RELIEF — is the land actually rolling, measured in metres, or still a plane?
+//   3. Does it have REAL GROUND MATERIALS — the pack's terrain layers, not a flat colour?
+//
+// And then it takes an EYE-LEVEL picture, from a person's height looking across the land, because
+// probe-framed close-ups are exactly how a flat green world got shipped past everyone for weeks.
+// Menu: Emergence/Fas1/RUN GROUND CAPTURE.  Headless: drop Reports/RUN_GROUNDCAP.trigger.
+#if UNITY_EDITOR
+using System;
+using System.IO;
+using System.Linq;
+using System.Text;
+using UnityEditor;
+using UnityEngine;
+using Emergence.Runtime;
+
+namespace Emergence.Editor
+{
+    [InitializeOnLoad]
+    public static class GroundCaptureProbe
+    {
+        const long Seed = 8919;
+        const double Watchdog = 280.0;
+        const int Horizon = 8;              // far enough for huts, close enough to be quick
+
+        static double _next;
+        static string Trigger => Path.Combine(Application.dataPath, "..", "Reports", "RUN_GROUNDCAP.trigger");
+        static string Done    => Path.Combine(Application.dataPath, "..", "Reports", "GROUNDCAP_DONE.txt");
+        const string Report   = "Reports/ground-capture.txt";
+        const string KeyPending = "emg.groundcap.pending", KeyStart = "emg.groundcap.start";
+
+        static int _frames;
+        static Fas3Onboarding _onb;
+
+        static GroundCaptureProbe() { EditorApplication.update += Tick; }
+
+        [MenuItem("Emergence/Fas1/RUN GROUND CAPTURE")]
+        public static void RunMenu() => EditPhase();
+
+        static void Tick()
+        {
+            if (EditorApplication.timeSinceStartup >= _next)
+            {
+                _next = EditorApplication.timeSinceStartup + 0.25;
+                try
+                {
+                    if (SessionState.GetInt(KeyPending, 0) == 0 && !EditorApplication.isPlayingOrWillChangePlaymode && File.Exists(Trigger))
+                    {
+                        File.Delete(Trigger);
+                        Directory.CreateDirectory("Reports");
+                        File.WriteAllText(Done, "RUNNING " + DateTime.Now.ToString("HH:mm:ss") + "\n");
+                        EditPhase();
+                        return;
+                    }
+                }
+                catch (Exception e) { Fail("arm: " + e.Message); }
+            }
+
+            if (SessionState.GetInt(KeyPending, 0) != 1) return;
+            float start = SessionState.GetFloat(KeyStart, (float)EditorApplication.timeSinceStartup);
+            bool overtime = EditorApplication.timeSinceStartup - start > Watchdog;
+
+            if (EditorApplication.isPlaying)
+            {
+                try
+                {
+                    _frames++;
+                    if (_frames == 2) Application.runInBackground = true;
+                    EditorApplication.isPaused = false;
+                    EditorApplication.QueuePlayerLoopUpdate();
+                    if (_onb == null) _onb = UnityEngine.Object.FindAnyObjectByType<Fas3Onboarding>();
+                    var clock = UnityEngine.Object.FindAnyObjectByType<Fas3PresentationClock>();
+                    if (overtime || (clock != null && clock.PresentationYear >= Horizon && _frames > 60))
+                        Finish(overtime);
+                }
+                catch (Exception e) { Fail("play: " + e.Message); }
+            }
+            else if (overtime) Fail("play mode did not start within watchdog");
+        }
+
+        static void EditPhase()
+        {
+            // A BARE scene on purpose: no WorldDresser, no capture rig. Whatever ground appears must
+            // have been raised by the living loop itself, or the fix did not work.
+            var scene = UnityEditor.SceneManagement.EditorSceneManager.NewScene(
+                UnityEditor.SceneManagement.NewSceneSetup.DefaultGameObjects,
+                UnityEditor.SceneManagement.NewSceneMode.Single);
+            PresentationEventBus.Clear();
+            PresentationEventBus.ResetSubscribers();
+
+            var cam = Camera.main;
+            if (cam == null) { var g = new GameObject("MainCamera") { tag = "MainCamera" }; cam = g.AddComponent<Camera>(); }
+            cam.farClipPlane = 3000f;
+
+            var onb = new GameObject("Fas3Onboarding").AddComponent<Fas3Onboarding>();
+            onb.seed = Seed; onb.targetYear = -1;
+
+            SessionState.SetInt(KeyPending, 1);
+            SessionState.SetFloat(KeyStart, (float)EditorApplication.timeSinceStartup);
+            _frames = 0; _onb = null;
+            EditorApplication.EnterPlaymode();
+        }
+
+        static void Finish(bool overtime)
+        {
+            var sb = new StringBuilder();
+            int pass = 0, fail = 0;
+            Action<bool, string> Check = (ok, m) => { if (ok) pass++; else fail++; sb.AppendLine((ok ? "  PASS  " : "  FAIL  ") + m); };
+
+            sb.AppendLine("EMERGENCE — VÅG 1.1: does the LIVING world have ground?");
+            sb.AppendLine("generated " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + (overtime ? "   (WATCHDOG cut)" : ""));
+            sb.AppendLine("scene = the self-composing opening ONLY. No WorldDresser, no capture rig, no editor-only path.");
+            sb.AppendLine();
+
+            try
+            {
+                var world = UnityEngine.Object.FindAnyObjectByType<Fas3WorldRuntime>();
+                var clock = UnityEngine.Object.FindAnyObjectByType<Fas3PresentationClock>();
+                sb.AppendLine("1. WAS THE GROUND RAISED, BY THE LIVING LOOP ITSELF?");
+                Check(world != null, "the living world runtime exists");
+                if (world != null)
+                {
+                    Check(world.GroundBuilt, "ground build attempted from an applied snapshot");
+                    sb.AppendLine("     note: " + world.GroundNote);
+                }
+                var terrain = UnityEngine.Object.FindAnyObjectByType<Terrain>();
+                Check(terrain != null, "a Terrain EXISTS in the living scene" + (terrain != null ? " (" + terrain.name + ")" : " — THE WORLD IS STILL A PLANE"));
+                sb.AppendLine();
+
+                if (terrain != null)
+                {
+                    var td = terrain.terrainData;
+                    sb.AppendLine("2. IS THE LAND ACTUALLY ROLLING? (the flat-plane test, in metres)");
+                    int r = td.heightmapResolution;
+                    var hs = td.GetHeights(0, 0, r, r);
+                    float lo = 1f, hi = 0f, sum = 0f;
+                    for (int y = 0; y < r; y++) for (int x = 0; x < r; x++) { float v = hs[y, x]; if (v < lo) lo = v; if (v > hi) hi = v; sum += v; }
+                    float reliefM = (hi - lo) * td.size.y;
+                    sb.AppendLine("     terrain " + td.size.x + " x " + td.size.z + " m, height span " + td.size.y + " m");
+                    sb.AppendLine("     relief actually built: " + reliefM.ToString("F1") + " m   (low " + (lo * td.size.y).ToString("F1") + " m, high " + (hi * td.size.y).ToString("F1") + " m)");
+                    Check(reliefM > 8f, "the land ROLLS — " + reliefM.ToString("F1") + " m of relief (a plane would be ~0)");
+                    // steepness: the thing Patrik felt as "too steep down to the lake"
+                    float maxSlope = 0f; double slopeSum = 0; int n = 0;
+                    for (int i = 0; i <= 60; i++)
+                        for (int j = 0; j <= 60; j++)
+                        {
+                            float sx = i / 60f, sy = j / 60f;
+                            float st = td.GetSteepness(sx, sy);
+                            if (st > maxSlope) maxSlope = st;
+                            slopeSum += st; n++;
+                        }
+                    sb.AppendLine("     slope: mean " + (slopeSum / n).ToString("F1") + " deg, max " + maxSlope.ToString("F1") + " deg");
+                    Check(maxSlope < 55f, "no cliff faces — max slope " + maxSlope.ToString("F1") + " deg (a wall would be 80+)");
+                    sb.AppendLine();
+
+                    sb.AppendLine("3. IS IT REAL GROUND, OR A FLAT COLOUR?");
+                    var names = td.terrainLayers.Select(l => l != null ? l.name : "null").ToArray();
+                    sb.AppendLine("     layers: " + string.Join(", ", names));
+                    Check(td.terrainLayers.Length >= 4, "at least four ground materials (" + td.terrainLayers.Length + ")");
+                    int textured = td.terrainLayers.Count(l => l != null && l.diffuseTexture != null && l.diffuseTexture != Texture2D.whiteTexture);
+                    Check(textured >= 3, textured + " layers carry a REAL texture (a fallback layer is flat white tinted)");
+                    Check(td.detailPrototypes.Length > 0, "the meadow has detail prototypes (" + td.detailPrototypes.Length + " grass/flower)");
+                    sb.AppendLine();
+                }
+
+                // ---------- the eye-level picture ----------
+                sb.AppendLine("4. THE EYE-LEVEL PICTURE (what a person standing there would see)");
+                int magenta = Capture("ground-eye-level", terrain, out string camNote);
+                sb.AppendLine("     " + camNote);
+                Check(magenta >= 0, "capture written");
+                Check(magenta == 0, "no missing-material magenta in frame (" + magenta + " px)");
+                sb.AppendLine("     year at capture: " + (clock != null ? clock.PresentationYear : -1));
+            }
+            catch (Exception e) { fail++; sb.AppendLine("  FAIL  exception: " + e); }
+
+            sb.AppendLine();
+            sb.AppendLine("VERDICT: " + (fail == 0 ? "GREEN" : "RED") + "  (" + pass + "/" + (pass + fail) + ")");
+            sb.AppendLine("declared: this proves the GROUND is there and rolling. Prop scale, the pivot sinking and");
+            sb.AppendLine("  the water body are steps 1.2-1.5 and are NOT claimed here. The picture is the real test —");
+            sb.AppendLine("  a human (or the builder) must LOOK at it, per D-008.");
+
+            try
+            {
+                Directory.CreateDirectory("Reports");
+                File.WriteAllText(Report, sb.ToString());
+                File.WriteAllText(Done, (fail == 0 ? "GREEN" : "RED") + " " + pass + "/" + (pass + fail) + " " + DateTime.Now.ToString("HH:mm:ss") + "\n");
+            }
+            catch { }
+            SessionState.SetInt(KeyPending, 0);
+            EditorApplication.ExitPlaymode();
+            Debug.Log("[GroundCaptureProbe] -> " + Report);
+        }
+
+        /// <summary>Stand a camera at a person's height on the land and look across it. Manual RT capture
+        /// (D-125: ScreenCapture yields a white frame on an unattended editor).</summary>
+        static int Capture(string name, Terrain terrain, out string note)
+        {
+            note = "";
+            var cam = Camera.main; if (cam == null) return -1;
+
+            // put the eye where the people are, not 55 m up on a map camera (D-131's lesson)
+            var world = UnityEngine.Object.FindAnyObjectByType<Fas3WorldRuntime>();
+            Vector3 look = Vector3.zero;
+            var S = world != null ? world.LastState : null;
+            if (S?.agents != null && S.agents.Length > 0)
+                look = new Vector3(S.agents[0].x * Fas3TerrainBuilder.TileSize, 0f, S.agents[0].y * Fas3TerrainBuilder.TileSize);
+            else if (terrain != null)
+                look = terrain.transform.position + new Vector3(terrain.terrainData.size.x * 0.5f, 0f, terrain.terrainData.size.z * 0.5f);
+
+            float gy = terrain != null ? terrain.SampleHeight(look) + terrain.transform.position.y : 0f;
+            look.y = gy + 1.0f;
+            // stand back and slightly above eye height so the LAND is the subject, not a face
+            var eye = look + new Vector3(-34f, 0f, -34f);
+            float ey = terrain != null ? terrain.SampleHeight(eye) + terrain.transform.position.y : 0f;
+            eye.y = ey + 2.4f;
+            cam.transform.position = eye;
+            cam.transform.LookAt(look);
+            cam.fieldOfView = 55f;
+            note = "eye at " + eye.ToString("F1") + " (ground " + ey.ToString("F1") + " m), looking at " + look.ToString("F1");
+
+            const int w = 1920, h = 1080;
+            var rt = new RenderTexture(w, h, 24);
+            cam.targetTexture = rt; cam.Render();
+            RenderTexture.active = rt;
+            var tex = new Texture2D(w, h, TextureFormat.RGB24, false);
+            tex.ReadPixels(new Rect(0, 0, w, h), 0, 0); tex.Apply();
+            cam.targetTexture = null; RenderTexture.active = null;
+
+            var px = tex.GetPixels32(); int magenta = 0;
+            foreach (var c in px) if (c.r > 220 && c.b > 220 && c.g < 80) magenta++;
+            try { Directory.CreateDirectory("Reports"); File.WriteAllBytes("Reports/" + name + ".png", tex.EncodeToPNG()); } catch { }
+            UnityEngine.Object.Destroy(tex); UnityEngine.Object.Destroy(rt);
+            return magenta;
+        }
+
+        static void Fail(string why)
+        {
+            try { Directory.CreateDirectory("Reports"); File.WriteAllText(Done, "RED " + why + " " + DateTime.Now.ToString("HH:mm:ss") + "\n"); } catch { }
+            SessionState.SetInt(KeyPending, 0);
+            Debug.LogWarning("[GroundCaptureProbe] " + why);
+        }
+    }
+}
+#endif

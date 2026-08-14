@@ -104,8 +104,13 @@ namespace Emergence.Editor
             // 3b) fires (Fas 6 ink. 3, D-158): FireReconciler's fallback chains — OPTIONAL names
             // (the dresser tolerates absent variants; a missing chain member is not a defect, so
             // these resolve into the catalog when present but never count toward `missing`)
+            // VÅG 1.1: the meadow's detail prototypes — grass clumps and wildflowers. The dresser found
+            // them with an editor prefab query, so the living loop never had a meadow. Optional by the
+            // same rule as the fire chain: an absent variant is not a defect.
             var optional = new[] { "VFX_Fire_01_Medium", "VFX_Fire_01_Big", "P_FX_fire", "PF_FX_fire", "fire",
-                                   "msVFX_Stylized Smoke 1", "msVFX_Stylized Smoke 2" };
+                                   "msVFX_Stylized Smoke 1", "msVFX_Stylized Smoke 2",
+                                   "Prefab_Grass_01_Detail", "Prefab_Grass_Group_01_Detail", "Prefab_Grass_03_Detail",
+                                   "SM_Flower_01_Unity", "Prefab_Flower_02", "Prefab_Flower_04" };
             int optOk = 0;
             foreach (var name in optional.Where(n => !wanted.Contains(n, StringComparer.OrdinalIgnoreCase)))
             {
@@ -140,6 +145,25 @@ namespace Emergence.Editor
             }
 
             // 6) the codex json itself, as a TextAsset reference (no Assets/-path file IO in the player)
+            // VÅG 1.1 (D-209): terrain layers, resolved here so the RUNTIME terrain builder needs no
+            // AssetDatabase. Names are exactly the dresser's own candidates, preference order intact.
+            cat.terrainLayers.Clear();
+            var wantedLayers = new[] { "Layer_Grass", "Layer_grass_01", "Layer_farmfield", "Layer_Dirt",
+                                       "Layer_Rock", "Layer_gravel_01", "Layer_Cobblestone", "Layer_pavingstone_01" };
+            int lok = 0;
+            foreach (var ln in wantedLayers)
+            {
+                TerrainLayer tl = null;
+                foreach (var g in AssetDatabase.FindAssets($"t:TerrainLayer {ln}"))
+                {
+                    var p = AssetDatabase.GUIDToAssetPath(g);
+                    if (Path.GetFileNameWithoutExtension(p) == ln) { tl = AssetDatabase.LoadAssetAtPath<TerrainLayer>(p); break; }
+                }
+                cat.terrainLayers.Add(new EmergenceAssetCatalog.TerrainLayerEntry { name = ln, layer = tl });
+                if (tl != null) lok++;
+            }
+            sb.AppendLine($"terrain layers resolved: {lok}/{wantedLayers.Length}  [{string.Join(", ", cat.terrainLayers.Where(t => t.layer != null).Select(t => t.name))}]");
+
             cat.codexJson = AssetDatabase.LoadAssetAtPath<TextAsset>(CodexPath);
             if (cat.codexJson == null) { missing++; sb.AppendLine("  MISSING: object-codex.json as TextAsset"); }
 

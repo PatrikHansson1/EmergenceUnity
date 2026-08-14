@@ -1,2 +1,2 @@
-DONE 01:03:06 verdict=CLEAN errors=0 warnings=15 newUnique=0
+DONE 08:23:08 verdict=CLEAN errors=0 warnings=3 newUnique=0
 see Reports/compile-report.txt

@@ -63,8 +63,12 @@ namespace Emergence.Runtime
         string _engineSrc, _preludeSrc, _checkpointDir = "";
         int _yearTicks = 12;
 
-        // node-exporter parity (minus tiles: the 2.3 flat grid is engine-internal and the dresser
-        // doesn't need tiles live — terrain is dressed once from a verified snapshot).
+        // VÅG 1.1 (2026-08-14, D-209): THE MAP IS NOW EXPORTED. The old note below said the dresser
+        // 'doesn't need tiles live — terrain is dressed once from a verified snapshot'. That was true
+        // of the editor dresser and it is exactly why the PLAYER never got ground: with no tiles in
+        // the live export, nothing downstream could build terrain even after the law moved to Runtime.
+        // 100x70 = 7000 tiles is 7 KB — less than pathUse, which was already exported every year.
+        // node-exporter parity otherwise unchanged.
         // R2 INK1 (MOTOR-LANE-ORDER-R2-FAS4, engine wave): ADDITIVE fields only — eraName (motor-owned
         // era canon, §5), agents[].verb (canonical work/carry verb, §verb) and pathUse (cumulative
         // footfall per tile, row-major y*W+x, §pathUse). The pre-existing fields and their values are
@@ -101,7 +105,7 @@ engineVersion:E.VERSION,seed:__seed,years:Math.floor(S.tick/E.YEAR),tick:S.tick,
 era:(function(){var m=0;S.agents.forEach(function(a){if(a.dead)return;a.knows.forEach(function(t){var q=E.TECH[t];if(q&&q.era>m)m=q.era})});return m})(),
 eraName:''+E.eraName(E.worldEra(S)),
 W:E.W,H:E.H,
-tileTypes:'',tileN:[],
+tileTypes:(function(){var o='';for(var y=0;y<E.H;y++)for(var x=0;x<E.W;x++)o+=(''+S.tiles[y][x].t).charAt(0);return o})(),tileN:(function(){var o=[];for(var y=0;y<E.H;y++)for(var x=0;x<E.W;x++)o.push(S.tiles[y][x].n);return o})(),
 agents:S.agents.filter(function(a){return !a.dead}).map(function(a){return {id:a.id,name:''+a.name,x:a.x,y:a.y,age:a.age,gen:a.gen,task:''+a.task,verb:''+E.verbOf(a.task),say:''+(a.say||''),sayAct:''+(a.sayAct||''),home:!!a.home,wealth:E.wealthOf(a)}}),
 dead:S.agents.filter(function(a){return a.dead}).length,
 huts:S.huts.map(function(h){return {x:h.x,y:h.y,owner:''+(h.owner||''),free:!!h.free}}),

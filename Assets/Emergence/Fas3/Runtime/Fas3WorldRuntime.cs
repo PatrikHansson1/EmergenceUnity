@@ -54,6 +54,7 @@ namespace Emergence.Runtime
             if (S == null) return;
             LastApplyWasFixture = FixtureInjection;   // I4: late readers ask the applied snapshot, not the flag
             PrevState = LastState; LastState = S;
+            EnsureGround(S);                          // VÅG 1.1: the world needs ground before anything stands on it
             _agents.Reconcile(S, false);
             _huts.Reconcile(S);
             try { _codex.Reconcile(S); LastCodexNote = "ok"; }
@@ -68,6 +69,38 @@ namespace Emergence.Runtime
             catch (Exception e) { Debug.LogWarning("[Fas3WorldRuntime] villages: " + e.Message); }
             AppliedCount++;
             LastAppliedYear = S.years;
+        }
+
+        // ---- VÅG 1.1 (D-209): THE GROUND ----
+        // The living loop built no terrain at all until today: the entire WorldDresser sits behind
+        // #if UNITY_EDITOR, so the player's world was a flat green plane while the capture rig's
+        // screenshots looked like a game. The terrain law now lives in Runtime (Fas3TerrainBuilder)
+        // and is raised HERE, from the first applied snapshot that carries a map — which is the
+        // genesis snapshot, since the map is fixed for the whole run.
+        //
+        // Idempotent and forgiving by design: an already-dressed scene (a probe, the store rig) is
+        // left alone, and a failure here must never break agents/huts — a world without ground still
+        // simulates, it just looks wrong, and GroundNote says so out loud.
+        public bool GroundBuilt { get; private set; }
+        public string GroundNote { get; private set; } = "";
+
+        void EnsureGround(WorldState S)
+        {
+            if (GroundBuilt || S == null || string.IsNullOrEmpty(S.tileTypes)) return;
+            GroundBuilt = true;                        // one attempt per session, success or not
+            try
+            {
+                var existing = GameObject.Find("Terrain");
+                if (existing != null) { GroundNote = "terrain already in the scene — left alone"; return; }
+                var go = Fas3TerrainBuilder.Build(S, null);
+                GroundNote = go != null ? Fas3TerrainBuilder.LastDiag : "terrain build returned null";
+                Debug.Log("[Fas3WorldRuntime] " + GroundNote);
+            }
+            catch (Exception e)
+            {
+                GroundNote = "terrain FAILED: " + e.Message;
+                Debug.LogWarning("[Fas3WorldRuntime] " + GroundNote);
+            }
         }
 
         // ---- E1.5 village drama diff (Engine 2.4.1: villages[].leader + villages[].gift) ----
@@ -106,6 +139,7 @@ namespace Emergence.Runtime
             _agents.Clear(); _huts.Clear(); _codex.Clear(); _fires.Clear();
             AppliedCount = 0; LastAppliedYear = -1;
             LastState = null; PrevState = null;
+            GroundBuilt = false; GroundNote = "";
         }
     }
 }
