@@ -1468,6 +1468,7 @@ namespace Emergence.Editor
                         go.transform.rotation = Quaternion.Euler(0f, Hash(Mathf.RoundToInt(v.x), Mathf.RoundToInt(v.y), e.id.Length + k) % 360u, 0f);
                         go.transform.localScale = Vector3.one * (e.scale <= 0f ? 1f : e.scale);
                         go.name = $"codex_{e.id}_{v.name}_{k}";
+                        RaiseArrangement(go, e);      // D-242: the same authored recipe as the played world
                         SettleCodex(go, v, e, k);     // D-239: the same age law the played world uses
                         StripImpostorLods(go);
                         placed++;
@@ -1483,6 +1484,26 @@ namespace Emergence.Editor
         // exactly where the studio takes its eye-height evidence. A law that cannot be seen in the pictures
         // we judge is a law nobody will ever check. Same constants, same hash, same re-derivation from the
         // ground; the editor builds once, so there is nothing here to accumulate onto.
+        // D-242: the arrangement template, identical law to LiveReconciler.RaiseArrangement — parts in the
+        // anchor's own frame, parented to it, missing prefabs skipped rather than leaving a gap.
+        static void RaiseArrangement(GameObject anchor, CodexEntry e)
+        {
+            if (anchor == null || e?.arrangement == null || e.arrangement.Length == 0) return;
+            var rot = anchor.transform.rotation;
+            for (int i = 0; i < e.arrangement.Length; i++)
+            {
+                var part = e.arrangement[i];
+                if (part == null || string.IsNullOrWhiteSpace(part.prefab)) continue;
+                var pf = LoadCodexPrefab(part.prefab);
+                if (pf == null) continue;
+                var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, anchor.transform);
+                go.transform.position = GroundW(anchor.transform.position + rot * new Vector3(part.dx, 0f, part.dz));
+                go.transform.rotation = rot * Quaternion.Euler(0f, part.yaw, 0f);
+                go.transform.localScale = Vector3.one * (part.scale <= 0f ? 1f : part.scale);
+                go.name = $"part_{e.id}_{i}";
+            }
+        }
+
         const float SettleSinkPerGen = 0.018f, SettleLeanPerGen = 0.30f;
         const int   SettleMaxGen     = 8;
         static void SettleCodex(GameObject go, WorldVillage v, CodexEntry e, int k)

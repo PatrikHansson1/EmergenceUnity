@@ -49,7 +49,16 @@ namespace Emergence.Runtime
         // C3 combination: when every named part is itself allowed here, those parts BECOME this whole —
         // the parts are then suppressed, because a market-square is not a market next to some crates.
         // Per OBJECT-CODEX-SPEC 5b.1: a combination with no resolvable prefab is TOLD, never shown broken.
-        public string[] combinesWith; }
+        public string[] combinesWith;
+        // ARRANGEMENT TEMPLATE (D-242, OBJECT-CODEX-SPEC §2b(1)). Without this a "whole" is only a
+        // prefab with a higher count standing where its parts used to stand — which is why the first
+        // combination entries read as less, not more. The template is the AUTHORED RECIPE: parts at
+        // fixed offsets in the whole's own frame, so a market square is a square and not a heap.
+        // Offsets are metres relative to the anchor, yaw is degrees added to the anchor's own facing,
+        // and every part is grounded and parented to the anchor — so the whole retires, ruins and
+        // settles as ONE thing. No RNG: the recipe is authored, the anchor is hash-placed (D-078 r4).
+        public CodexPart[] arrangement; }
+    [Serializable] public class CodexPart { public string prefab; public float dx, dz, yaw, scale; }
     [Serializable] public class Codex { public CodexEntry[] objects; }
     // FAS 4 PROSE WIRING (2026-08-13, FAS4-PROSE-DIRECTOR-ORDER §1): the engine has carried
     // causes[] on every event since R2 ink. 1 (D-172), but nothing crossed into the body — the live

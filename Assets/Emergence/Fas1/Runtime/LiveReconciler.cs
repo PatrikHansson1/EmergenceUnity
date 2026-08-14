@@ -192,6 +192,7 @@ namespace Emergence.Runtime
                 go.transform.rotation = Quaternion.Euler(0f, Hash(Mathf.RoundToInt(v.x), Mathf.RoundToInt(v.y), e.id.Length + k) % 360u, 0f);
                 go.transform.localScale = Vector3.one * (e.scale <= 0f ? 1f : e.scale);
                 go.name = $"codex_{e.id}_{v.name}_{k}";
+                RaiseArrangement(go, e, cat);   // D-242: a whole is a PLACE, not a bigger prop
                 Settle(go, v, e, k);
                 StripImpostorLods(go);
                 _placed[kv.Key] = go;
@@ -276,6 +277,31 @@ namespace Emergence.Runtime
             float yaw = Hash(Mathf.RoundToInt(v.x), Mathf.RoundToInt(v.y), e.id.Length + k) % 360u;
             go.transform.rotation = Quaternion.Euler(0f, yaw, 0f)
                                   * Quaternion.AngleAxis(lean, Quaternion.Euler(0f, dir, 0f) * Vector3.forward);
+        }
+
+        // D-242 (OBJECT-CODEX-SPEC §2b(1)): the authored arrangement. Parts are placed in the ANCHOR'S
+        // OWN FRAME and parented to it, so the composition rotates with the anchor and retires, ruins and
+        // settles as one thing — which is the whole point of calling it a whole. A part whose prefab does
+        // not resolve is skipped in silence rather than leaving a hole where a crate should be: the spec's
+        // rule is that a combination is told rather than shown broken, and half a market square is broken.
+        static void RaiseArrangement(GameObject anchor, CodexEntry e, EmergenceAssetCatalog cat)
+        {
+            if (anchor == null || e?.arrangement == null || e.arrangement.Length == 0 || cat == null) return;
+            var rot = anchor.transform.rotation;
+            for (int i = 0; i < e.arrangement.Length; i++)
+            {
+                var part = e.arrangement[i];
+                if (part == null || string.IsNullOrWhiteSpace(part.prefab)) continue;
+                var pf = cat.Prefab(part.prefab);
+                if (pf == null) continue;
+                var go = UnityEngine.Object.Instantiate(pf, anchor.transform);
+                var world = anchor.transform.position + rot * new Vector3(part.dx, 0f, part.dz);
+                go.transform.position = GroundW(world);
+                go.transform.rotation = rot * Quaternion.Euler(0f, part.yaw, 0f);
+                go.transform.localScale = Vector3.one * (part.scale <= 0f ? 1f : part.scale);
+                go.name = $"part_{e.id}_{i}";
+                StripImpostorLods(go);
+            }
         }
 
         static Vector2 CodexPlacement(WorldVillage v, CodexEntry e, int k, int cnt)

@@ -1,5 +1,5 @@
 EMERGENCE — CODEX COVERAGE (D-121, anti-orphan)
-generated 2026-08-14 21:47:18
+generated 2026-08-14 22:40:02
 codex entries: 78  (72 unique prefabs referenced, 0 told-not-shown)
 project assets (prefab/glb/fbx): 2803  =  1680 placeable  +  1123 structural parts
 PLACEABLE COVERAGE: 69/1680 = 4,1%  |  ORPHANS: 1611  |  DANGLING: 0
