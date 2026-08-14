@@ -97,3 +97,19 @@ plus a partner village's ground when they can reach it (the tin trade).
 
 Engine SHA: `2fc1647cc683ee856304931926e338d59919ed35ba04bbc529459f8d87132933` (was `b83e53803ea5…`).
 
+## DEEP HORIZON RE-BASELINED 2026-08-14 — t=8640 (60 years), ENGINE 2.6.0 — THE DEBT IS PAID
+The `t8640` goldens had been 2.4.1 since this morning and were declared stale in writing three times
+today rather than quietly carried. They are now regenerated against 2.6.0 and confirmed by a second
+full run: RED 4/4 -> new canon installed -> GREEN 4/4. Two passes, ~58 minutes each.
+
+| seed | t=8640 canonical SHA | secs |
+|---|---|---|
+| 97013 | `27ef6ac4caf0ce0d7fcc499c71595dfd88d9365d3e79c506513d80f9efad36a8` | 539 |
+| 4242 | `5c789cb8e11b009e4b03187b068037d249bdb45984c4dbb88bc9219a9f268eb2` | 1076 |
+| 20260718 | `f526a4385df9ba6065f0e81886aec4043d12ef4ea676b34cbd00146d060064f1` | 972 |
+| 4242-founders | `7ac885c8e8f80c28de105087ed88e0221907405d387f7c61557faad42c3ba603` | 890 |
+
+Engine SHA: `2fc1647cc683ee856304931926e338d59919ed35ba04bbc529459f8d87132933`.
+Both horizons now hash the SAME engine. `Reports/GOLDEN_DEPTH.txt` has been stood down so the
+per-step cadence is the fast t=720 quartet again (D-131).
+
