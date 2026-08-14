@@ -1,8 +1,8 @@
 EMERGENCE — FAS 4 PROBE: the native chronicle view (UI Toolkit, feed/book)
-generated 2026-08-14 13:20:49
+generated 2026-08-14 14:48:45
 data source = the SAME Fas4ChronicleFeed as v0 (no new truth); styling per almanac reference
 
-## PLAY PHASE (frames=15823)
+## PLAY PHASE (frames=16113)
 ready: view READY=True on Resources/Fas4PanelSettings, IMGUI v0 stood down=True (OK)
 feed rows: 8 rendered / expected 8 of 8 entries (OK)
 filter: vändpunkter -> only ★ rows, 2 shown OK; allt restored OK

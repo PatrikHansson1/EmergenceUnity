@@ -92,56 +92,80 @@ namespace Emergence.Runtime
             bool scrubbable = c != null && d.bufferMode && d.Year >= 1;
             EmergenceUI.Begin();          // draw in the Screen Bible's own 1280x800 reference space
 
-            // D-218 (Skärmbibeln §3): THE HEAD OF THIS PANEL WAS A DEBUG READOUT WEARING A BOX.
-            // "År 27   tick 3888   96 ticks/s   buffert +4 år" states four things and only ONE of
-            // them is a fact a witness has: the year. Ticks, ticks-per-second and buffer depth are
-            // the machine describing itself, and the Screen Bible's whole hierarchy argument is that
-            // when the player cannot act, every number they must justify to themselves is noise.
-            // The year is the anchor. The speed is the only verb. Everything else moves behind the
-            // diagnostics gate, where a developer can still see it and a screenshot cannot.
-            const int w = 332;
-            int headH = EmergenceUI.Sp5 + EmergenceUI.Sp2;
-            int h = EmergenceUI.Sp3 + headH + 26 + (scrubbable ? 30 : 0);
+            // D-218: the head of this panel was a debug readout wearing a box. It asserted four
+            // things and exactly ONE is a fact a witness has: the year. Ticks, ticks/s and buffer
+            // depth are the machine describing itself; they moved behind the diagnostics gate.
+            //
+            // D-220 — AND IT WAS STILL A BOX. Patrik, on seeing it: "stela och fyrkantiga". Right.
+            // THE PRICKED CORNER. This panel draws no rectangle at all. It is braced at two opposite
+            // corners and DISSOLVES at the other two, so there is no closed shape for the eye to read
+            // as a box — four identically treated edges IS a box and there is no way to draw one that
+            // is not. A pricking column (the marks a scribe made to SET the ruling) breaks the left
+            // edge with rhythm instead of a line. And the four speed buttons — four identical squares,
+            // the boxiest widget available — become a scribe's TALLY of rising strokes, so speed is
+            // carried by HEIGHT as well as by fill and survives colour-blindness and a glance.
+            const int w = 196;
+            int h = scrubbable ? 108 : 80;
             var r = new Rect(EmergenceUI.Sp6, EmergenceUI.Sp6, w, h);
-            EmergenceUI.DrawPanel(r);
+
+            var body = new Rect(r.x, r.y, r.width - 12f, r.height - 12f);
+            var fill = EmergenceUI.Surface1; fill.a = EmergenceUI.PanelAlpha;
+            var pc = GUI.color; GUI.color = fill;
+            GUI.DrawTexture(body, Texture2D.whiteTexture); GUI.color = pc;
+            EmergenceUI.FadeEdge(new Rect(r.x, r.y, r.width, r.height - 12f), fill, fill.a, true,  true, 12);
+            EmergenceUI.FadeEdge(new Rect(r.x, r.y, r.width - 12f, r.height), fill, fill.a, false, true, 12);
+            EmergenceUI.LayTooth(new Rect(r.x, r.y, r.width, r.height), EmergenceUI.ToothBody);
+
+            EmergenceUI.Bracket(body, EmergenceUI.Corner.TopLeft, EmergenceUI.Hairline);
+            EmergenceUI.Bracket(body, EmergenceUI.Corner.BottomRight, EmergenceUI.Hairline);
+            // the lamp is up and to the left, so that bracket alone catches a second, gold rule
+            EmergenceUI.Bracket(new Rect(body.x + 3, body.y + 3, body.width, body.height),
+                                EmergenceUI.Corner.TopLeft, EmergenceUI.GoldLeaf);
+            EmergenceUI.PrickColumn(r.x + EmergenceUI.PrickInset, r.y + EmergenceUI.Sp5,
+                                    body.height - EmergenceUI.Sp7, EmergenceUI.Hairline, 8);
 
             int year = c != null ? c.PresentationYear : d.Year;
-            GUI.Label(new Rect(r.x + EmergenceUI.Sp4, r.y + EmergenceUI.Sp3, 140, 24), "ÅR " + year, EmergenceUI.Label);
-            if (Paused)
-                GUI.Label(new Rect(r.x + EmergenceUI.Sp4 + 92, r.y + EmergenceUI.Sp3 + 2, 120, 22), "PAUSAD", EmergenceUI.Meta);
+            float tx = r.x + EmergenceUI.Sp5;
+            GUI.Label(new Rect(tx, r.y + EmergenceUI.Sp3, 60, 16), "ÅR", EmergenceUI.Meta);
+            GUI.Label(new Rect(tx, r.y + EmergenceUI.Sp3 + 12, 120, 38), year.ToString(), EmergenceUI.Display);
+            float numW = EmergenceUI.Display.CalcSize(new GUIContent(year.ToString())).x;
+            // the rubricator's underline, spanning exactly the numeral. The panel's only gold.
+            EmergenceUI.RuleH(tx, r.y + EmergenceUI.Sp3 + 48, numW, EmergenceUI.GoldLeaf, false);
+
             if (EmergenceUI.Diagnostics)
             {
                 string diag = c != null
-                    ? $"tick {(int)c.PresentationTick}   {EffectiveTps:F0} t/s   buffert +{c.BufferedYearsAhead}"
-                    : $"tick {d.Tick}   {EffectiveTps:F0} t/s";
-                GUI.Label(new Rect(r.x + EmergenceUI.Sp4, r.y + EmergenceUI.Sp3 + 22, w - 32, 18), diag, EmergenceUI.Meta);
+                    ? $"tick {(int)c.PresentationTick}  {EffectiveTps:F0} t/s  +{c.BufferedYearsAhead}"
+                    : $"tick {d.Tick}  {EffectiveTps:F0} t/s";
+                GUI.Label(new Rect(r.x + EmergenceUI.Sp5, r.y + h - 15, w - 30, 14), diag, EmergenceUI.Meta);
             }
 
-            // Four pips, and the active one is FILLED and LABELLED — two channels, so a player can
-            // never be unable to tell whether the world froze or the game hung. That ambiguity is
-            // the single largest generator of "I could not tell what was going on".
-            string[] labels = { "❚❚", "1×", "4×", "▶▶" };
-            int bw = (w - EmergenceUI.Sp4 * 2 - EmergenceUI.Sp2 * 3) / 4;
-            for (int i = 0; i < 4; i++)
+            // WORDS FOR STATE, MARKS FOR DEGREE.
+            // the pause mark is DRAWN, not implied: a tally alone tells a player how fast the world
+            // runs and never tells them they may stop it.
+            float pauseX = r.x + w - 76f, tallyX = pauseX + 16f, tallyBase = r.y + EmergenceUI.Sp3 + 46f;
+            EmergenceUI.PauseMark(pauseX, tallyBase, Paused, EmergenceUI.Ink100, EmergenceUI.Hairline, EmergenceUI.GoldLeaf);
+            EmergenceUI.Tally(tallyX, tallyBase, Mathf.Clamp(SpeedIndex - 1, 0, 2), Paused,
+                              EmergenceUI.Ink100, EmergenceUI.Hairline, EmergenceUI.GoldLeaf);
+            if (Paused)
+                GUI.Label(new Rect(r.x + EmergenceUI.Sp5, tallyBase + 6f, 90, 14), "PAUSAD", EmergenceUI.Dim);
+
+            if (GUI.Button(new Rect(pauseX - 4f, tallyBase - 16f, 16f, 22f), GUIContent.none, GUIStyle.none))
+                SetPause(!Paused);
+            for (int i = 0; i < 3; i++)
             {
-                bool active = Paused ? i == 0 : SpeedIndex == i;
-                var br = new Rect(r.x + EmergenceUI.Sp4 + i * (bw + EmergenceUI.Sp2), r.y + EmergenceUI.Sp3 + headH, bw, 22);
-                if (GUI.Button(br, labels[i], active ? EmergenceUI.ButtonOn : EmergenceUI.Button))
-                {
-                    if (i == 0) SetPause(!Paused);
-                    else SetSpeed(i);
-                }
+                var hit = new Rect(tallyX + i * 7f - 3f, tallyBase - 18f, 10f, 24f);
+                if (GUI.Button(hit, GUIContent.none, GUIStyle.none)) SetSpeed(i + 1);
             }
 
             // D-140: the TIMELINE — drag anywhere in produced history; released -> JumpToYear from the
-            // checkpoint grid (year-grained scrub, D-137). The slider shows presentation year against
-            // the producer's frontier; dragging never touches the sim (the grid re-enters, D-078 r4).
+            // checkpoint grid (year-grained scrub, D-137). Dragging never touches the sim.
             if (scrubbable)
             {
                 float shown = _scrubShown >= 0f ? _scrubShown : c.PresentationYear;
-                float sy = r.y + EmergenceUI.Sp3 + headH + 28;
-                float slid = GUI.HorizontalSlider(new Rect(r.x + EmergenceUI.Sp4, sy + 4, w - 84, 16), shown, 0f, d.Year);
-                GUI.Label(new Rect(r.x + w - 62, sy, 54, 20), $"{Mathf.RoundToInt(slid)}/{d.Year}", EmergenceUI.Meta);
+                float sy = r.y + 66f;
+                float slid = EmergenceUI.Slider(new Rect(r.x + EmergenceUI.Sp5, sy - 4f, w - 80f, 12f), shown, 0f, d.Year);
+                GUI.Label(new Rect(r.x + EmergenceUI.Sp5, sy + 17f, 130, 14), $"{Mathf.RoundToInt(slid)} av {d.Year}", EmergenceUI.Meta);
                 ScrubStep(slid, GUIUtility.hotControl != 0);
             }
             EmergenceUI.End();
