@@ -46,3 +46,23 @@ Previous baseline (ENGINE 2.4.0, E1.5, superseded 2026-08-09): engine SHA `7fc4a
 t720 canons `a90f3f5d…`/`14f4c9e0…`/`cc5bb8cf…`/`37f1cb27…`, t8640 `dbfe5398…`/`aaf6f577…`/
 `e3f87046…`/`7f3ed82f…` (full values in git history of this file). Earlier 2.0.1→2.3.2
 provenance likewise in git history.
+
+## RE-BASELINED 2026-08-14 — ENGINE 2.5.0 (M1+M2 of D-226 / D-228)
+Three insights (`weightsBalance`, `soundsRing`, `herbsHeal`) were defined in `OBS`, required by techs,
+and observed nowhere. `tryObserve` hooks were added at the moments the insight texts themselves name,
+and `printpress.pre` was repointed off a tech id that does not exist. `tryObserve` consumes `S.rand`,
+so the sim stream moves BY CONSTRUCTION — this is a deliberate, approved re-baseline, not a regression.
+
+| seed | t=720 canonical SHA |
+|---|---|
+| 97013 | `ca250f8908b43da8ab2a26d496ab84db33138844d78bf3d3a9f70ea05b3ec27c` |
+| 4242 | `d84809227af570c4fe1dd878bf01aa96854a56853ca1197d2d8aa578727f6c27` |
+| 20260718 | `e718ec6c2346d59180f0d989d25f55b064dcf4c42a35ee3d848bbbb97375518e` |
+| 4242-founders | `f80404f8827b47e316a2e57e5ec5b53f4a25c678c36754d6929c7275fde9bfed` |
+
+Engine SHA: `87a6576c119dd045e6c88ae46efa37030d90e008d31ff18cec6109c7d0a05868` (was `22e2ac053cd8…`).
+
+**DEBT, stated so it is not discovered later:** the `t8640` goldens in this folder are from 2.4.1 and are
+now STALE. The t720 quartet is the per-step cadence (D-131); the deep horizon must be re-baselined with
+`Reports/GOLDEN_DEPTH.txt` before the next full-depth gate.
+

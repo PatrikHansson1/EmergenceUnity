@@ -213,7 +213,7 @@ const TECHS=[
    flavor:'tamed a falling weight into steady, counted time', effect:'Time itself measured — the first true machine.'},
  {id:'optics',    icon:'🔎', base:'Optics',           alts:[{sand:3}],                pre:['glassblowing'], insights:['lensBends'], var:['the lens','spectacles','the glass eye'], era:5, branch:'mat',
    flavor:'ground clear glass until it bent light to the eye', effect:'The small made large, the far made near — the door to science.'},
- {id:'printpress',icon:'🖨️', base:'Printing press',  alts:[{steel:1,wood:4}],        pre:['printing','bronzetools'], insights:[], var:['the press','movable type','the print-shop'], era:5, branch:'mat',
+ {id:'printpress',icon:'🖨️', base:'Printing press',  alts:[{steel:1,wood:4}],        pre:['writing','bronzetools'], insights:[], var:['the press','movable type','the print-shop'], era:5, branch:'mat',
    flavor:'set movable letters and pressed a page in a heartbeat', effect:'Knowledge copied a thousandfold — no idea dies again.'},
  {id:'steam',     icon:'♨️', base:'Steam engine',     alts:[{steel:2,coal:3}],        pre:['steel','clock','optics'], insights:[], var:['the engine','the steam-mill','ironhorse'], era:6, branch:'mat',
    flavor:'boiled water to force and set iron to move by fire', effect:'Muscle unbound — the Industrial age begins.'},
@@ -251,7 +251,7 @@ const TECHS=[
 const TECH=Object.fromEntries(TECHS.map(t=>[t.id,t]));
 const MATSOURCE={wood:'forest',stone:'stone',fiber:'grass',clay:'clay',iron:'iron',sand:'sand',copper:'copper',tin:'tin',coal:'coal',gold:'gold',pigment:'pigment'};
 // which observations can occur while gathering which material
-const GATHER_OBS={wood:[['frictionHeat',.10],['logsRoll',.07],['branchBends',.08]],stone:[['sharpShards',.16],['stonesGrind',.06],['archStands',.05]],fiber:[['fibersTwist',.14]],sand:[['sandGlints',.14],['lensBends',.05]],clay:[['pigmentStains',.06]],iron:[['oreMelts',.10],['steelKeen',.05]],copper:[['copperGreen',.16],['bronzeHard',.06]],tin:[['bronzeHard',.10]],coal:[['coalBurns',.16]],gold:[['goldGleams',.16]],pigment:[['pigmentStains',.18]]};
+const GATHER_OBS={wood:[['frictionHeat',.10],['logsRoll',.07],['branchBends',.08],['soundsRing',.05]],stone:[['sharpShards',.16],['stonesGrind',.06],['archStands',.05]],fiber:[['fibersTwist',.14],['soundsRing',.04]],sand:[['sandGlints',.14],['lensBends',.05]],clay:[['pigmentStains',.06]],iron:[['oreMelts',.10],['steelKeen',.05]],copper:[['copperGreen',.16],['bronzeHard',.06]],tin:[['bronzeHard',.10]],coal:[['coalBurns',.16]],gold:[['goldGleams',.16]],pigment:[['pigmentStains',.18]]};
 const NAMES=['Eira','Ask','Embla','Torv','Liv','Sten','Ylva','Bjorn','Saga','Rune','Freja','Kare','Idun','Halvar','Signe','Vidar','Tuva','Alve','Ronja','Sixten','Maja','Loke','Vera','Otto','Selma','Falk','Nanna','Ulv','Disa','Orm'];
 const YEAR=144;
 const SEASONS=['spring','summer','autumn','winter'];
@@ -1049,7 +1049,7 @@ function talk(S,a,b){
     else if(a.hunger<30&&b.hunger>65){giver=b;taker=a;}
     if(giver){
       giver.hunger-=15;taker.hunger=clamp(taker.hunger+25,0,140);
-      S.stats.gifts=(S.stats.gifts||0)+1;
+      S.stats.gifts=(S.stats.gifts||0)+1;tryObserve(S,giver,'weightsBalance',.07);tryObserve(S,taker,'weightsBalance',.05);
       const gv=villageOf(S,giver);
       if(gv){
         gv.shareN=(gv.shareN||0)+1;
@@ -1264,7 +1264,7 @@ function aspireTick(S,a){
   if(a.age<14||a.traits.ambition<0.5)return;
   if(a.hunger>60&&a.warmth>50&&a.energy>35&&S.rand()<0.05*a.traits.ambition){
     const kinds=['wood','clay','stone','fiber'];const m=kinds[Math.floor(S.rand()*kinds.length)];
-    a.inv[m]=(a.inv[m]||0)+1; a.hoard=(a.hoard||0)+1; a.task='adding to their store';
+    a.inv[m]=(a.inv[m]||0)+1; a.hoard=(a.hoard||0)+1; a.task='adding to their store'; tryObserve(S,a,'weightsBalance',.05);
     // E1.5b (V6, review I1): the hoard becomes VISIBLE once per life — a rare milestone event
     // (no rand consumed: fires exactly when the count crosses TUNE.hoardMark) that greed's
     // raid can later cite as the surplus it preys on. The pile enters the chronicle of causes.
@@ -1623,7 +1623,7 @@ function agentTick(S,a){
         moveToward(S,a,w);a.task='going fishing';return;
       }
     }
-    doSeek(S,a,'berry',()=>{S.tiles[a.ty][a.tx0].n--;if(S.tiles[a.ty][a.tx0].n<=0)regrowLater(S,a.tx0,a.ty,'berry');a.hunger=clamp(a.hunger+45+(worldKnows(S,'mill')?20:0),0,140);a.task='eating';tryObserve(S,a,'seedsSprout',.09);{const w2=findNearest(S,a,'water');if(w2&&Math.hypot(w2.x-a.x,w2.y-a.y)<4)tryObserve(S,a,'fishGather',.12);}if(S.rand()<.1)speak(S,a,pickSay(S,a,'hungry'),'hungry');});return;
+    doSeek(S,a,'berry',()=>{S.tiles[a.ty][a.tx0].n--;if(S.tiles[a.ty][a.tx0].n<=0)regrowLater(S,a.tx0,a.ty,'berry');a.hunger=clamp(a.hunger+45+(worldKnows(S,'mill')?20:0),0,140);a.task='eating';tryObserve(S,a,'seedsSprout',.09);tryObserve(S,a,'herbsHeal',a.hunger<60?.06:.025);{const w2=findNearest(S,a,'water');if(w2&&Math.hypot(w2.x-a.x,w2.y-a.y)<4)tryObserve(S,a,'fishGather',.12);}if(S.rand()<.1)speak(S,a,pickSay(S,a,'hungry'),'hungry');});return;
   }
   if(night&&a.warmth<70){
     const f=nearestOf(S.fires.concat(S.huts),a);
@@ -2215,5 +2215,5 @@ function resimulate(seed,toTick){
   return S;
 }
 
-return {createWorld,tickWorld,computeDNA,villageScope,resimulate,writeHistory,roleOf,verbOf,worldEra,eraName,ERAS,wealthOf:wealth,TECHS,TECH,OBS,QUIRK,W,H,YEAR,SEASONS,VERSION:'2.4.1'};
+return {createWorld,tickWorld,computeDNA,villageScope,resimulate,writeHistory,roleOf,verbOf,worldEra,eraName,ERAS,wealthOf:wealth,TECHS,TECH,OBS,QUIRK,W,H,YEAR,SEASONS,VERSION:'2.5.0'};
 });

@@ -11,7 +11,7 @@ namespace Emergence.Runtime
 {
     public sealed class EmergenceJintHost
     {
-        public const string ExpectedEngineSha = "22e2ac053cd820b5656f8fa04b1392dde7c650c65d8f19df633f33b3f46d7020"; // ENGINE 2.4.1 + villageScope export-only readout (MOTOR-LANE-ORDER-VILLAGE-SCOPE 2026-08-09: per-village {name,pop,maxGen,avgAge,crafts,knows} census for the C-condition's loss half; pure READ, no S.rand, no S mutation — sim stream byte-identical, goldens NOT re-baselined [2.3.1 precedent: only the engine file's own SHA shifts]. Prior 2.4.1 sha: 91e5535db3df…)
+        public const string ExpectedEngineSha = "87a6576c119dd045e6c88ae46efa37030d90e008d31ff18cec6109c7d0a05868"; // ENGINE 2.5.0 (M1+M2 of D-226/D-228): three insights were DEFINED, REQUIRED and never observed anywhere -- weightsBalance, soundsRing, herbsHeal -- and the gate is hard (insights.every), so numbers/song/medicine/clock were impossible to invent and the whole culture branch above them with it. Hooks added at the moments the insight texts themselves name: the gift and the store (counting), wood and fiber (a hollow log, a struck string), the forage (leaves). Also printpress.pre pointed at a tech id that does not exist. Goldens RE-BASELINED (the sim stream moves by construction -- tryObserve consumes S.rand). Prior 2.4.1 sha: 22e2ac053cd8...
 
         private readonly Jint.Engine _engine;
         public string EngineSha256 { get; }
