@@ -1,84 +1,227 @@
 EMERGENCE — CODEX COVERAGE (D-121, anti-orphan)
-generated 2026-08-14 17:55:52
+generated 2026-08-14 18:29:27
 codex entries: 78  (72 unique prefabs referenced, 0 told-not-shown)
-project assets (prefab/glb/fbx): 2803
-OVERALL COVERAGE: 72/2803 = 2,6%  |  ORPHANS: 2731  |  DANGLING: 0
+project assets (prefab/glb/fbx): 2803  =  1680 placeable  +  1123 structural parts
+PLACEABLE COVERAGE: 69/1680 = 4,1%  |  ORPHANS: 1611  |  DANGLING: 0
+(parts: 3/1123 referenced — wall/interior modules, raw meshes, LODs and animation variants.
+ They are the kit a building is ASSEMBLED from, not things a village would ever place, so they are
+ not counted as un-indexed content. They become codex rows only through arrangement templates.)
 
 ## DANGLING (codex → missing asset) — MUST be 0
   none ✓
 
 ## COVERAGE PER PACK (referenced / total)
-    11/1500    0,7%  Fantastic City Pack
-    54/978     5,5%  Fantastic Village Pack
-     3/258     1,2%  Polyart
-     0/21      0,0%  Vefects
-     4/20     20,0%  Emergence
+     8/1037    0,8%  Fantastic City Pack
+    54/444    12,2%  Fantastic Village Pack
+     3/145     2,1%  Polyart
+     0/17      0,0%  Vefects
+     4/12     33,3%  Emergence
      0/12      0,0%  Quaternius
      0/8       0,0%  UpDraftArt
      0/4       0,0%  msVFX_Free Smoke Effects Pack
-     0/2       0,0%  PolyOne
+     0/1       0,0%  PolyOne
 
-## ORPHANS (asset with no codex entry) — 2731 total, first 60:
+## ORPHANS (placeable asset with no codex entry) — 1611 total, first 200:
   · Emergence/deer
   · Emergence/villager
   · Emergence/villager-child
   · Emergence/villager-child-f
-  · Emergence/villager-child-f-walk
-  · Emergence/villager-child-walk
   · Emergence/villager-elder
   · Emergence/villager-elder-f
-  · Emergence/villager-elder-f-walk
-  · Emergence/villager-elder-walk
   · Emergence/villager-f
-  · Emergence/villager-f-walk
-  · Emergence/villager-f-work
-  · Emergence/villager-walk
-  · Emergence/villager-work
   · Emergence/wolf
-  · Fantastic City Pack/BLD_03_16x8_Ext_01
-  · Fantastic City Pack/BLD_03_16x8_Ext_02
-  · Fantastic City Pack/BLD_03_16x8_Ext_03
-  · Fantastic City Pack/BLD_03_16x8_Ext_04
-  · Fantastic City Pack/BLD_03_16x8_Ext_05
-  · Fantastic City Pack/BLD_03_16x8_Ext_06
-  · Fantastic City Pack/BLD_03_16x8_Ext_07
-  · Fantastic City Pack/BLD_03_16x8_Ext_08
-  · Fantastic City Pack/BLD_03_16x8_Ext_09
-  · Fantastic City Pack/BLD_03_16x8_Ext_10
-  · Fantastic City Pack/BLD_03_16x8_Ext_11
-  · Fantastic City Pack/BLD_03_16x8_Ext_Arch_02
-  · Fantastic City Pack/BLD_03_16x8_Int_01
-  · Fantastic City Pack/BLD_03_16x8_Int_02
-  · Fantastic City Pack/BLD_03_16x8_Int_03
-  · Fantastic City Pack/BLD_03_16x8_Int_04
-  · Fantastic City Pack/BLD_03_16x8_Int_Alchemy_01
-  · Fantastic City Pack/BLD_03_16x8_Int_Bakery_01
-  · Fantastic City Pack/BLD_03_16x8_Int_Bar_01
-  · Fantastic City Pack/BLD_03_16x8_Int_Bar_02
-  · Fantastic City Pack/BLD_03_16x8_Int_Tavern_01
-  · Fantastic City Pack/BLD_03_16x8_Int_Woodworking
-  · Fantastic City Pack/BLD_03_4x4_Ext_01
-  · Fantastic City Pack/BLD_03_8x8_Ext_01
-  · Fantastic City Pack/BLD_03_8x8_Ext_Arch_01
-  · Fantastic City Pack/BLD_03_L_Ext_02
-  · Fantastic City Pack/BLD_03_L_Ext_03
-  · Fantastic City Pack/BLD_03_L_Ext_04
-  · Fantastic City Pack/BLD_03_L_Ext_05
-  · Fantastic City Pack/BLD_03_L_Ext_06
-  · Fantastic City Pack/BLD_03_L_Ext_07
-  · Fantastic City Pack/BLD_03_L_Int_01
-  · Fantastic City Pack/BLD_03_L_Int_02
-  · Fantastic City Pack/BLD_03_L_Int_Tavern_01
-  · Fantastic City Pack/BLD_03_L_Int_Tavern_02
-  · Fantastic City Pack/BLD_03_T_Ext_01
-  · Fantastic City Pack/BLD_03_T_Ext_02
-  · Fantastic City Pack/BLD_03_T_Ext_03
-  · Fantastic City Pack/BLD_03_T_Int_01
-  · Fantastic City Pack/BLD_03_T_Int_Tailor
-  · Fantastic City Pack/COMP_Base_03_16x8_door_01_01
-  · Fantastic City Pack/COMP_Base_03_16x8_door_01_02
-  · Fantastic City Pack/COMP_Base_03_16x8_door_02_01
-  · Fantastic City Pack/COMP_Base_03_16x8_door_02_02
+  · Fantastic City Pack/COMP_Column_03_01
+  · Fantastic City Pack/COMP_Column_03_02
+  · Fantastic City Pack/COMP_Door_03_01_framedeco_01_01
+  · Fantastic City Pack/COMP_Door_03_01_framedeco_01_02
+  · Fantastic City Pack/COMP_Door_03_01_framedeco_01_03
+  · Fantastic City Pack/COMP_Door_03_01_framedeco_01_04
+  · Fantastic City Pack/COMP_Door_03_01_framedeco_02_01
+  · Fantastic City Pack/COMP_Door_03_01_framedeco_02_02
+  · Fantastic City Pack/COMP_Door_03_01_framedeco_02_03
+  · Fantastic City Pack/COMP_Door_03_01_framedeco_02_04
+  · Fantastic City Pack/COMP_Door_03_01_framedeco_03_01
+  · Fantastic City Pack/COMP_Door_03_01_framedeco_03_02
+  · Fantastic City Pack/COMP_Door_03_01_framedeco_03_03
+  · Fantastic City Pack/COMP_Door_03_01_generic
+  · Fantastic City Pack/COMP_Door_03_02_framedeco_01_01
+  · Fantastic City Pack/COMP_Door_03_02_framedeco_01_02
+  · Fantastic City Pack/COMP_Door_03_02_framedeco_01_03
+  · Fantastic City Pack/COMP_Door_03_02_framedeco_01_04
+  · Fantastic City Pack/COMP_Door_03_02_framedeco_02_01
+  · Fantastic City Pack/COMP_Door_03_02_framedeco_02_02
+  · Fantastic City Pack/COMP_Door_03_02_framedeco_02_03
+  · Fantastic City Pack/COMP_Door_03_02_framedeco_02_04
+  · Fantastic City Pack/COMP_Door_03_02_framedeco_03_01
+  · Fantastic City Pack/COMP_Door_03_02_framedeco_03_02
+  · Fantastic City Pack/COMP_Door_03_02_framedeco_03_03
+  · Fantastic City Pack/COMP_Door_03_02_generic
+  · Fantastic City Pack/COMP_Door_03_03_framedeco_01_01
+  · Fantastic City Pack/COMP_Door_03_03_framedeco_01_02
+  · Fantastic City Pack/COMP_Door_03_03_framedeco_01_03
+  · Fantastic City Pack/COMP_Door_03_03_framedeco_01_04
+  · Fantastic City Pack/COMP_Door_03_03_framedeco_02_01
+  · Fantastic City Pack/COMP_Door_03_03_framedeco_02_02
+  · Fantastic City Pack/COMP_Door_03_03_framedeco_02_03
+  · Fantastic City Pack/COMP_Door_03_03_framedeco_02_04
+  · Fantastic City Pack/COMP_Door_03_03_framedeco_03_01
+  · Fantastic City Pack/COMP_Door_03_03_framedeco_03_02
+  · Fantastic City Pack/COMP_Door_03_03_framedeco_03_03
+  · Fantastic City Pack/COMP_Door_03_03_generic
+  · Fantastic City Pack/COMP_PROP_barrel_holder_city
+  · Fantastic City Pack/COMP_PROP_basket_city_01
+  · Fantastic City Pack/COMP_PROP_basket_city_02
+  · Fantastic City Pack/COMP_PROP_basket_city_03
+  · Fantastic City Pack/COMP_PROP_basket_city_04
+  · Fantastic City Pack/COMP_PROP_basket_city_05
+  · Fantastic City Pack/COMP_PROP_basket_city_06
+  · Fantastic City Pack/COMP_PROP_basket_city_07
+  · Fantastic City Pack/COMP_PROP_basket_city_08
+  · Fantastic City Pack/COMP_PROP_bulletinboard_city_01
+  · Fantastic City Pack/COMP_PROP_campfire_city_01
+  · Fantastic City Pack/COMP_PROP_campfire_city_02
+  · Fantastic City Pack/COMP_PROP_candle_city_01
+  · Fantastic City Pack/COMP_PROP_candle_city_02
+  · Fantastic City Pack/COMP_PROP_candle_city_03
+  · Fantastic City Pack/COMP_PROP_candle_city_04
+  · Fantastic City Pack/COMP_PROP_candle_city_05
+  · Fantastic City Pack/COMP_PROP_candle_city_06
+  · Fantastic City Pack/COMP_PROP_cart_city_01
+  · Fantastic City Pack/COMP_PROP_cart_city_02
+  · Fantastic City Pack/COMP_PROP_cart_city_03
+  · Fantastic City Pack/COMP_PROP_cauldron_city_02
+  · Fantastic City Pack/COMP_PROP_champagne_city
+  · Fantastic City Pack/COMP_PROP_checkers_board_city
+  · Fantastic City Pack/COMP_PROP_cookingpot_city_01
+  · Fantastic City Pack/COMP_PROP_crate_city_01
+  · Fantastic City Pack/COMP_PROP_crate_city_02
+  · Fantastic City Pack/COMP_PROP_crate_city_03
+  · Fantastic City Pack/COMP_PROP_crate_city_04
+  · Fantastic City Pack/COMP_PROP_crate_city_05
+  · Fantastic City Pack/COMP_PROP_crate_city_06
+  · Fantastic City Pack/COMP_PROP_crate_city_07
+  · Fantastic City Pack/COMP_PROP_crate_city_08
+  · Fantastic City Pack/COMP_PROP_crate_city_09
+  · Fantastic City Pack/COMP_PROP_crate_city_10
+  · Fantastic City Pack/COMP_PROP_crate_city_11
+  · Fantastic City Pack/COMP_PROP_cupcake_holder_city
+  · Fantastic City Pack/COMP_PROP_dryingrack_city_01
+  · Fantastic City Pack/COMP_PROP_dryingrack_city_02
+  · Fantastic City Pack/COMP_PROP_easel_canvas_city
+  · Fantastic City Pack/COMP_PROP_fireplace_city
+  · Fantastic City Pack/COMP_PROP_horsestable_city
+  · Fantastic City Pack/COMP_PROP_marketshelf_city_01
+  · Fantastic City Pack/COMP_PROP_marketshelf_city_02
+  · Fantastic City Pack/COMP_PROP_marketshelf_city_03
+  · Fantastic City Pack/COMP_PROP_marketstall_city_01
+  · Fantastic City Pack/COMP_PROP_marketstall_city_02
+  · Fantastic City Pack/COMP_PROP_marketstall_city_03
+  · Fantastic City Pack/COMP_PROP_plate_city_01
+  · Fantastic City Pack/COMP_PROP_plate_city_02
+  · Fantastic City Pack/COMP_PROP_plate_city_03
+  · Fantastic City Pack/COMP_PROP_provision_storage_city_01
+  · Fantastic City Pack/COMP_PROP_shelf_city_02
+  · Fantastic City Pack/COMP_PROP_shelf_city_03
+  · Fantastic City Pack/COMP_PROP_shelf_city_04
+  · Fantastic City Pack/COMP_PROP_shelf_city_05
+  · Fantastic City Pack/COMP_PROP_shelf_city_06
+  · Fantastic City Pack/COMP_PROP_shelf_city_07
+  · Fantastic City Pack/COMP_PROP_shelf_city_08
+  · Fantastic City Pack/COMP_PROP_shelf_city_09
+  · Fantastic City Pack/COMP_PROP_shelf_city_10
+  · Fantastic City Pack/COMP_PROP_statue_city_01
+  · Fantastic City Pack/COMP_PROP_statue_city_02
+  · Fantastic City Pack/COMP_PROP_statue_city_03
+  · Fantastic City Pack/COMP_PROP_table_city_01
+  · Fantastic City Pack/COMP_PROP_table_city_02
+  · Fantastic City Pack/COMP_PROP_table_city_03
+  · Fantastic City Pack/COMP_PROP_table_city_04
+  · Fantastic City Pack/COMP_PROP_table_city_05
+  · Fantastic City Pack/COMP_PROP_table_city_06
+  · Fantastic City Pack/COMP_PROP_table_city_07
+  · Fantastic City Pack/COMP_PROP_table_city_08
+  · Fantastic City Pack/COMP_PROP_table_city_09
+  · Fantastic City Pack/COMP_PROP_tailoring_station_city
+  · Fantastic City Pack/COMP_PROP_toolbox_city_01
+  · Fantastic City Pack/COMP_PROP_wall_plant_city_01
+  · Fantastic City Pack/COMP_PROP_wall_plant_city_02
+  · Fantastic City Pack/COMP_PROP_wall_plant_city_03
+  · Fantastic City Pack/COMP_PROP_wall_plant_city_04
+  · Fantastic City Pack/COMP_PROP_waypoint_city_01
+  · Fantastic City Pack/COMP_PROP_waypoint_city_02
+  · Fantastic City Pack/COMP_PROP_woodworking_station_city
+  · Fantastic City Pack/COMP_Roof_03_01_01_16x8
+  · Fantastic City Pack/COMP_Roof_03_01_01_8x8
+  · Fantastic City Pack/COMP_Roof_03_01_01_L
+  · Fantastic City Pack/COMP_Roof_03_01_01_T
+  · Fantastic City Pack/COMP_Roof_03_01_02_16x8
+  · Fantastic City Pack/COMP_Roof_03_01_02_8x8
+  · Fantastic City Pack/COMP_Roof_03_01_02_L
+  · Fantastic City Pack/COMP_Roof_03_01_02_T
+  · Fantastic City Pack/COMP_Roof_03_01_03_8x8
+  · Fantastic City Pack/COMP_Roof_03_02_01_16x8
+  · Fantastic City Pack/COMP_Roof_03_02_01_8x8
+  · Fantastic City Pack/COMP_Roof_03_02_01_L
+  · Fantastic City Pack/COMP_Roof_03_02_01_T
+  · Fantastic City Pack/COMP_Roof_03_02_02_16x8
+  · Fantastic City Pack/COMP_Roof_03_02_02_8x8
+  · Fantastic City Pack/COMP_Roof_03_02_02_L
+  · Fantastic City Pack/COMP_Roof_03_02_02_T
+  · Fantastic City Pack/COMP_Roof_03_02_03_8x8
+  · Fantastic City Pack/COMP_Roof_03_03_01_16x8
+  · Fantastic City Pack/COMP_Roof_03_03_01_8x8
+  · Fantastic City Pack/COMP_Roof_03_03_01_L
+  · Fantastic City Pack/COMP_Roof_03_03_01_T
+  · Fantastic City Pack/COMP_Roof_03_03_02_16x8
+  · Fantastic City Pack/COMP_Roof_03_03_02_8x8
+  · Fantastic City Pack/COMP_Roof_03_03_02_L
+  · Fantastic City Pack/COMP_Roof_03_03_02_T
+  · Fantastic City Pack/COMP_Roof_03_03_03_8x8
+  · Fantastic City Pack/COMP_Window_03_01_01_framedeco_01
+  · Fantastic City Pack/COMP_Window_03_01_01_framedeco_01_ext
+  · Fantastic City Pack/COMP_Window_03_01_01_framedeco_02
+  · Fantastic City Pack/COMP_Window_03_01_01_framedeco_03
+  · Fantastic City Pack/COMP_Window_03_01_02_framedeco_01
+  · Fantastic City Pack/COMP_Window_03_01_02_framedeco_02
+  · Fantastic City Pack/COMP_Window_03_01_02_framedeco_02_ext
+  · Fantastic City Pack/COMP_Window_03_01_02_framedeco_03
+  · Fantastic City Pack/COMP_Window_03_02_01_framedeco_01
+  · Fantastic City Pack/COMP_Window_03_02_01_framedeco_02
+  · Fantastic City Pack/COMP_Window_03_02_01_framedeco_02_ext
+  · Fantastic City Pack/COMP_Window_03_02_01_framedeco_03
+  · Fantastic City Pack/COMP_Window_03_02_02_framedeco_01
+  · Fantastic City Pack/COMP_Window_03_02_02_framedeco_02
+  · Fantastic City Pack/COMP_Window_03_02_02_framedeco_03
+  · Fantastic City Pack/COMP_Window_03_03_01_framedeco_01
+  · Fantastic City Pack/COMP_Window_03_03_01_framedeco_02
+  · Fantastic City Pack/COMP_Window_03_03_01_framedeco_02_ext
+  · Fantastic City Pack/COMP_Window_03_04_framedeco_01
+  · Fantastic City Pack/COMP_Window_03_04_framedeco_02
+  · Fantastic City Pack/COMP_Window_03_04_framedeco_03
+  · Fantastic City Pack/COMP_Window_03_05_framedeco_01
+  · Fantastic City Pack/COMP_Window_03_05_framedeco_02
+  · Fantastic City Pack/COMP_Window_03_05_framedeco_03
+  · Fantastic City Pack/COMP_Window_03_06_framedeco_01
+  · Fantastic City Pack/COMP_Window_03_06_framedeco_02
+  · Fantastic City Pack/InfoUI_Modular
+  · Fantastic City Pack/MOD_Balcony_03_01_01
+  · Fantastic City Pack/MOD_Balcony_03_01_01_Collision
+  · Fantastic City Pack/MOD_Balcony_03_01_02
+  · Fantastic City Pack/MOD_Balcony_03_01_02_Collision
+  · Fantastic City Pack/MOD_Balcony_03_02_01
+  · Fantastic City Pack/MOD_Balcony_03_02_01_Collision
+  · Fantastic City Pack/MOD_Balcony_03_02_02
+  · Fantastic City Pack/MOD_Balcony_03_02_02_Collision
+  · Fantastic City Pack/MOD_Balcony_03_03_01
+  · Fantastic City Pack/MOD_Balcony_03_03_01_Collision
+  · Fantastic City Pack/MOD_Balcony_03_03_02
+  · Fantastic City Pack/MOD_Balcony_03_03_02_Collision
+  · Fantastic City Pack/MOD_Base_03_16x8_arch
+  · Fantastic City Pack/MOD_Base_03_16x8_door_01
+  · Fantastic City Pack/MOD_Base_03_16x8_door_01_int
+  · Fantastic City Pack/MOD_Base_03_16x8_door_02
+  · Fantastic City Pack/MOD_Base_03_16x8_door_02_int
+  · Fantastic City Pack/MOD_Base_03_16x8_door_03
 
 Reading: dangling MUST be 0 (broken codex pointers). Orphans are the un-indexed backlog —
 the codex fill-pass shrinks this over time; a high-value orphan is a candidate for a new codex row.

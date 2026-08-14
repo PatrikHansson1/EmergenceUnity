@@ -125,7 +125,12 @@ namespace Emergence.Runtime
             // 3) spawns — desired but not yet placed
             foreach (var kv in desired)
             {
-                if (_placed.ContainsKey(kv.Key)) { d.kept++; continue; }
+                if (_placed.ContainsKey(kv.Key))
+                {
+                    d.kept++;
+                    Settle(_placed[kv.Key], kv.Value.v, kv.Value.e, kv.Value.k);   // C6 (D-236): a thing that has stood keeps standing DIFFERENTLY
+                    continue;
+                }
                 var (e, v, k, cnt, vi) = kv.Value;
                 // D-106 told-not-shown (spec §1): an entry may carry desc with NO prefab — the chronicle SPEAKS it
                 // before the world SHOWS it. Record it (tracked, so it isn't re-narrated), emit the milestone, no spawn.
@@ -154,6 +159,7 @@ namespace Emergence.Runtime
                 go.transform.rotation = Quaternion.Euler(0f, Hash(Mathf.RoundToInt(v.x), Mathf.RoundToInt(v.y), e.id.Length + k) % 360u, 0f);
                 go.transform.localScale = Vector3.one * (e.scale <= 0f ? 1f : e.scale);
                 go.name = $"codex_{e.id}_{v.name}_{k}";
+                Settle(go, v, e, k);
                 StripImpostorLods(go);
                 _placed[kv.Key] = go;
                 d.spawned++;
@@ -196,6 +202,40 @@ namespace Emergence.Runtime
         // the gate itself moved to CodexBuildOrder.Qualifies — it was two copies of one law,
         // here and in WorldDresser, and a law with two copies is a law with two futures.
         static bool CodexQualifies(WorldVillage v, CodexEntry e) => CodexBuildOrder.Qualifies(v, e);
+
+        // C6 / DEEP TIME (D-236). Over a long run the object VOCABULARY stops growing — measured: kinds
+        // climb 13 -> 38 across 180 years and then hold. If nothing else changes, the late world stops
+        // moving. But a place is not a snapshot, it is a stack of decisions: a thing that has stood for
+        // four generations does not stand the way a thing raised last spring stands. It has settled into
+        // the ground, and it leans, because the ground under it is not flat and never was.
+        //
+        // The measure is GENERATIONS the village has held, not a clock — the codex's own law is that
+        // nothing unlocks on the calendar (spec §4a), and settling is the same kind of fact. Applied
+        // every reconcile, so an object that was raised young visibly ages in place across a run. Sink
+        // and lean are hash-derived per object so two things beside each other age differently, and both
+        // are hard-capped: this is a world that has been lived in, not a world that is falling over.
+        const float SettleSinkPerGen = 0.018f;   // metres of ground taken per generation held
+        const float SettleLeanPerGen = 0.30f;    // degrees of lean per generation held
+        const int   SettleMaxGen     = 8;        // past this a place reads as old; more would read as broken
+        static void Settle(GameObject go, WorldVillage v, CodexEntry e, int k)
+        {
+            if (go == null || v == null || e == null) return;
+            int gens = Mathf.Clamp(v.maxGen, 0, SettleMaxGen);
+            if (gens <= 0) return;
+            uint h = Hash(Mathf.RoundToInt(v.x), Mathf.RoundToInt(v.y), e.id.Length * 13 + k);
+            float bias = ((h & 0xFFu) / 255f) * 0.6f + 0.4f;             // 0.4..1.0 — each thing ages at its own rate
+            float sink = gens * SettleSinkPerGen * bias;
+            float lean = gens * SettleLeanPerGen * bias;
+            float dir  = ((h >> 8) & 0xFFu) / 255f * 360f;
+            var baseY  = GroundW(go.transform.position).y;               // re-derive: never accumulate a sink onto a sink
+            var p = go.transform.position; p.y = baseY - sink; go.transform.position = p;
+            // the yaw is RE-DERIVED from the same hash the placement used, never read back off the
+            // transform: reading a tilted rotation's euler yaw gives a slightly different number every
+            // time, and applied each reconcile that drift would slowly spin the whole village.
+            float yaw = Hash(Mathf.RoundToInt(v.x), Mathf.RoundToInt(v.y), e.id.Length + k) % 360u;
+            go.transform.rotation = Quaternion.Euler(0f, yaw, 0f)
+                                  * Quaternion.AngleAxis(lean, Quaternion.Euler(0f, dir, 0f) * Vector3.forward);
+        }
 
         static Vector2 CodexPlacement(WorldVillage v, CodexEntry e, int k, int cnt)
         {

@@ -50,8 +50,15 @@ namespace Emergence.Editor
             }
 
             // all prefab + model assets in the project → base-name + pack
+            // C8 (D-235): 2,6 % was an honest number answering a dishonest question. Most of the 2803
+            // are not things anyone would ever PLACE — they are wall modules, interior shells and raw
+            // static meshes that exist so a building can be assembled, plus walk/work animation
+            // variants of one villager. Counting them as un-indexed content made the codex look
+            // negligent for owning a kit. The headline is now coverage of PLACEABLE assets; parts are
+            // counted, named and set aside, so the number measures something we can answer for.
             var guids = AssetDatabase.FindAssets("t:GameObject");
             var assetNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            int partAssets = 0, partAssetsRefd = 0;
             var perPack = new Dictionary<string, (int total, int refd)>();
             var orphans = new List<string>();
             foreach (var g in guids)
@@ -61,6 +68,7 @@ namespace Emergence.Editor
                 if (!(path.EndsWith(".prefab") || path.EndsWith(".glb") || path.EndsWith(".fbx"))) continue;
                 var name = Path.GetFileNameWithoutExtension(path);
                 assetNames.Add(name);
+                if (IsPart(name)) { partAssets++; if (referenced.Contains(name)) partAssetsRefd++; continue; }
                 // top-level pack = first folder under Assets/
                 var parts = path.Split('/');
                 var pack = parts.Length > 1 ? parts[1] : "(root)";
@@ -79,8 +87,11 @@ namespace Emergence.Editor
             sb.AppendLine("EMERGENCE — CODEX COVERAGE (D-121, anti-orphan)");
             sb.AppendLine($"generated {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
             sb.AppendLine($"codex entries: {codex.objects.Length}  ({referenced.Count} unique prefabs referenced, {toldNotShown} told-not-shown)");
-            sb.AppendLine($"project assets (prefab/glb/fbx): {total}");
-            sb.AppendLine($"OVERALL COVERAGE: {refd}/{total} = {(total > 0 ? 100f * refd / total : 0):0.0}%  |  ORPHANS: {orphans.Count}  |  DANGLING: {dangling.Count}");
+            sb.AppendLine($"project assets (prefab/glb/fbx): {total + partAssets}  =  {total} placeable  +  {partAssets} structural parts");
+            sb.AppendLine($"PLACEABLE COVERAGE: {refd}/{total} = {(total > 0 ? 100f * refd / total : 0):0.0}%  |  ORPHANS: {orphans.Count}  |  DANGLING: {dangling.Count}");
+            sb.AppendLine($"(parts: {partAssetsRefd}/{partAssets} referenced — wall/interior modules, raw meshes, LODs and animation variants.");
+            sb.AppendLine($" They are the kit a building is ASSEMBLED from, not things a village would ever place, so they are");
+            sb.AppendLine($" not counted as un-indexed content. They become codex rows only through arrangement templates.)");
             sb.AppendLine();
             sb.AppendLine($"## DANGLING (codex → missing asset) — MUST be 0");
             sb.AppendLine(dangling.Count == 0 ? "  none ✓" : string.Join("\n", dangling.Select(d => "  ✗ " + d)));
@@ -89,15 +100,32 @@ namespace Emergence.Editor
             foreach (var kv in perPack.OrderByDescending(k => k.Value.total))
                 sb.AppendLine($"  {kv.Value.refd,4}/{kv.Value.total,-5} {(kv.Value.total > 0 ? 100f * kv.Value.refd / kv.Value.total : 0),5:0.0}%  {kv.Key}");
             sb.AppendLine();
-            sb.AppendLine($"## ORPHANS (asset with no codex entry) — {orphans.Count} total, first 60:");
-            sb.AppendLine(string.Join("\n", orphans.OrderBy(x => x).Take(60).Select(o => "  · " + o)));
+            sb.AppendLine($"## ORPHANS (placeable asset with no codex entry) — {orphans.Count} total, first 200:");
+            sb.AppendLine(string.Join("\n", orphans.OrderBy(x => x).Take(200).Select(o => "  · " + o)));
             sb.AppendLine();
             sb.AppendLine("Reading: dangling MUST be 0 (broken codex pointers). Orphans are the un-indexed backlog —");
             sb.AppendLine("the codex fill-pass shrinks this over time; a high-value orphan is a candidate for a new codex row.");
 
             File.WriteAllText(Report, sb.ToString());
             File.WriteAllText(Done, $"DONE {DateTime.Now:HH:mm:ss} coverage={(total>0?100f*refd/total:0):0.0}% orphans={orphans.Count} dangling={dangling.Count}\nsee Reports/codex-coverage.txt\n");
-            Debug.Log($"[CodexCoverage] {refd}/{total} = {(total>0?100f*refd/total:0):0.0}% | orphans={orphans.Count} dangling={dangling.Count}");
+            Debug.Log($"[CodexCoverage] {refd}/{total} = {(total>0?100f*refd/total:0):0.0}% placeable | parts={partAssets} | orphans={orphans.Count} dangling={dangling.Count}");
+        }
+
+        // A "part" is something that exists so a WHOLE can be assembled, or a state of a whole we already
+        // index. Naming is the packs' own: _Ext_/_Int_ are building modules, SM_ is a raw static mesh,
+        // COMP_Base is a composition base, _LOD is a level of detail, and -walk/-work/-f-walk are
+        // animation variants of a villager the codex already knows. If this list ever has to guess, the
+        // guess belongs HERE and in the open, not spread through the report.
+        static bool IsPart(string n)
+        {
+            if (n.StartsWith("SM_", StringComparison.OrdinalIgnoreCase)) return true;
+            if (n.StartsWith("COMP_Base", StringComparison.OrdinalIgnoreCase)) return true;
+            if (n.IndexOf("_LOD", StringComparison.OrdinalIgnoreCase) >= 0) return true;
+            if (n.IndexOf("_Ext_", StringComparison.OrdinalIgnoreCase) >= 0) return true;
+            if (n.IndexOf("_Int_", StringComparison.OrdinalIgnoreCase) >= 0) return true;
+            if (n.EndsWith("-walk", StringComparison.OrdinalIgnoreCase)) return true;
+            if (n.EndsWith("-work", StringComparison.OrdinalIgnoreCase)) return true;
+            return false;
         }
     }
 }
