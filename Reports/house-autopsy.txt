@@ -1,5 +1,5 @@
 EMERGENCE — house autopsy: every renderer, EVERY material slot
-generated 2026-08-14 09:28:58
+generated 2026-08-14 10:40:56
 the blind spot this closes: earlier checks read sharedMaterial = SLOT 0 only.
 
 ### P_BLD_house_01
@@ -134,6 +134,12 @@ OFFENDERS
    NO TEXTURE: P_BLD_window_v07_01 (1) slot 1 -> M_CLR_yellow_E (Universal Render Pipeline/Lit)  baseColor=RGBA(1.000, 0.953, 0.788, 1.000)
    NO TEXTURE: P_BLD_window_v08_02 slot 2 -> M_CLR_yellow_E (Universal Render Pipeline/Lit)  baseColor=RGBA(1.000, 0.953, 0.788, 1.000)
    NO TEXTURE: P_BLD_window_v08_02 (1) slot 2 -> M_CLR_yellow_E (Universal Render Pipeline/Lit)  baseColor=RGBA(1.000, 0.953, 0.788, 1.000)
+THE HUMAN YARDSTICK (prefab at rest, no animation)
+  villager           height 2,29 m   footprint 2,10 x 1,60 m   -> scale for a 1.75 m adult: 0,76
+  villager-f         height 2,22 m   footprint 1,93 x 1,28 m   -> scale for a 1.75 m adult: 0,79
+  villager-child     height 2,39 m   footprint 1,78 x 2,23 m   -> scale for a 1.75 m adult: 0,73
+  villager-elder     height 2,23 m   footprint 2,03 x 1,56 m   -> scale for a 1.75 m adult: 0,78
+
 
 ISOLATION SHOT (Reports/house-isolated.png)
   house pixels: 34848   mean RGB = (65, 60, 54)

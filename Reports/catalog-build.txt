@@ -1,5 +1,5 @@
 EMERGENCE — CATALOG BUILD (D-137): runtime asset catalog for the player-runtime reconcilers
-generated 2026-08-14 10:08:28
+generated 2026-08-14 11:29:53
 
   optional (absent, tolerated): PF_FX_fire
   optional (absent, tolerated): SM_Flower_01_Unity

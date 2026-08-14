@@ -183,12 +183,150 @@ namespace Emergence.Editor
                                       + (L != null ? "  tile=" + L.tileSize : ""));
                     }
                     Check(textured >= 5, textured + " of " + td.terrainLayers.Length + " layers carry a REAL texture (a fallback layer is flat white tinted)");
+
+                    // WHAT IS ACTUALLY PAINTED. Three cycles of this pass were spent arguing about a
+                    // large bare-earth area in the foreground while adjusting laws that turned out not
+                    // to paint it. A layer's mean weight over the whole map settles that in one line:
+                    // if Layer_Dirt reads 0,31 then a third of the world is dirt and the argument is over.
+                    {
+                        var am = td.GetAlphamaps(0, 0, td.alphamapWidth, td.alphamapHeight);
+                        int AW = td.alphamapWidth, AH = td.alphamapHeight, AL = td.alphamapLayers;
+                        var mean = new float[AL];
+                        for (int ay2 = 0; ay2 < AH; ay2++)
+                            for (int ax2 = 0; ax2 < AW; ax2++)
+                                for (int l2 = 0; l2 < AL; l2++) mean[l2] += am[ay2, ax2, l2];
+                        var bits = new List<string>();
+                        for (int l2 = 0; l2 < AL; l2++)
+                        {
+                            mean[l2] /= (AW * AH);
+                            var nm = l2 < td.terrainLayers.Length && td.terrainLayers[l2] != null ? td.terrainLayers[l2].name : ("layer" + l2);
+                            bits.Add(nm + "=" + (mean[l2] * 100f).ToString("F0") + "%");
+                        }
+                        sb.AppendLine("     the ground is painted: " + string.Join("  ", bits)
+                                      + "   (alphamap " + AW + "x" + AH + ")");
+                    }
                     Check(td.detailPrototypes.Length > 0, "the meadow has detail prototypes (" + td.detailPrototypes.Length + " grass/flower)");
+
+                    // D-215b: the meadow was declared built and could not be seen at eye level. A
+                    // prototype COUNT proves nothing — it says the recipe exists, not that a single
+                    // blade was placed or that the terrain was told to draw one. Measure all three.
+                    {
+                        var terr0 = terrain;
+                        long blades = 0;
+                        for (int p = 0; p < td.detailPrototypes.Length; p++)
+                        {
+                            var map = td.GetDetailLayer(0, 0, td.detailWidth, td.detailHeight, p);
+                            long bl = 0;
+                            for (int yy = 0; yy < td.detailHeight; yy++)
+                                for (int xx = 0; xx < td.detailWidth; xx++) bl += map[xx, yy];
+                            blades += bl;
+                            var pr = td.detailPrototypes[p].prototype;
+                            bool hasMesh = pr != null && pr.GetComponentInChildren<MeshRenderer>(true) != null;
+                            sb.AppendLine("       detail " + p + ": " + (pr != null ? pr.name : "NULL").PadRight(28)
+                                          + " instances=" + bl
+                                          + "  mesh=" + (hasMesh ? "yes" : "NO — nothing to draw")
+                                          + "  mode=" + td.detailPrototypes[p].renderMode
+                                          + "  instanced=" + td.detailPrototypes[p].useInstancing);
+                        }
+                        sb.AppendLine("       detail map " + td.detailWidth + "x" + td.detailHeight
+                                      + ", terrain: distance=" + (terr0 != null ? terr0.detailObjectDistance : -1f)
+                                      + " density=" + (terr0 != null ? terr0.detailObjectDensity : -1f)
+                                      + " drawFoliage=" + (terr0 != null ? terr0.drawTreesAndFoliage.ToString() : "?"));
+                        // the SECOND gate: quality level. A million planted blades draw nothing if this
+                        // scale sits near zero, and nothing anywhere says so.
+                        sb.AppendLine("       quality '" + QualitySettings.names[QualitySettings.GetQualityLevel()]
+                                      + "': detailDensityScale=" + QualitySettings.terrainDetailDensityScale
+                                      + " detailDistance=" + QualitySettings.terrainDetailDistance);
+                        Check(QualitySettings.terrainDetailDensityScale > 0.4f,
+                              "the quality level lets the meadow be drawn (densityScale="
+                              + QualitySettings.terrainDetailDensityScale.ToString("F2") + ")");
+                        Check(blades > 1000, "the meadow is actually PLANTED, not merely prototyped (" + blades + " instances)");
+                    }
+
+                    // what the land is MADE of. Four steps of this pass were spent arguing about a
+                    // large bare area without anyone knowing which tile type painted it.
+                    {
+                        var S0 = world != null ? world.LastState : null;
+                        if (S0 != null && !string.IsNullOrEmpty(S0.tileTypes))
+                        {
+                            var hist = new Dictionary<char, int>();
+                            foreach (var ch in S0.tileTypes) { hist.TryGetValue(ch, out int c0); hist[ch] = c0 + 1; }
+                            var parts = hist.OrderByDescending(k => k.Value)
+                                            .Select(k => k.Key + "=" + k.Value + " (" + (100f * k.Value / S0.tileTypes.Length).ToString("F0") + "%)");
+                            sb.AppendLine("     the map is made of: " + string.Join("  ", parts));
+                        }
+                    }
+                    sb.AppendLine();
+                    // VÅG 1.5: the water body, which the tile histogram says is 4% of the world
+                    sb.AppendLine();
+                    sb.AppendLine("3c. THE WATER (VÅG 1.5)");
+                    sb.AppendLine("     " + (world != null && !string.IsNullOrEmpty(world.WaterNote) ? world.WaterNote : "(no water note)"));
+                    {
+                        var wroot = GameObject.Find("Water");
+                        int surfaces = wroot != null ? wroot.transform.childCount : 0;
+                        float wlo = float.MaxValue, whi = float.MinValue;
+                        if (wroot != null)
+                            for (int wi = 0; wi < surfaces; wi++)
+                            {
+                                float wy = wroot.transform.GetChild(wi).position.y;
+                                if (wy < wlo) wlo = wy; if (wy > whi) whi = wy;
+                            }
+                        if (surfaces > 0)
+                            sb.AppendLine("     surfaces stand at " + wlo.ToString("F1") + ".." + whi.ToString("F1")
+                                          + " m (each body ONE level — the dresser gave every tile its own)");
+                        Check(surfaces > 0, "the living world has water in it (" + surfaces + " bodies)");
+                    }
                     sb.AppendLine();
                     sb.AppendLine("3b. THE NATURAL WORLD (trees, rocks, bushes — the rest of step 1.1)");
                     sb.AppendLine("     " + (world != null ? world.NatureNote : "(no world)"));
                     Check(world != null && world.NatureCount > 100, "the living world has a natural world in it ("
                           + (world != null ? world.NatureCount : 0) + " placed)");
+
+                    // MEASURE THE NATURE'S SCALE against the human yardstick before touching a single
+                    // multiplier. "The bushes look too big" is a feeling; "a bush is 0.9x a person"
+                    // is a number you can correct and then check.
+                    // the human yardstick, measured here because this block runs before section 5
+                    float yard = 0f;
+                    foreach (var rrY in UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsInactive.Exclude))
+                        if (rrY != null && rrY.name.StartsWith("char") && rrY.bounds.size.y > yard) yard = rrY.bounds.size.y;
+                    var natRoot = GameObject.Find("Nature_Live");
+                    if (natRoot != null && yard > 0.1f)
+                    {
+                        var cat = new Dictionary<string, List<float>>();
+                        foreach (Transform child in natRoot.transform)
+                        {
+                            var rs2 = child.GetComponentsInChildren<Renderer>();
+                            if (rs2.Length == 0) continue;
+                            var bb5 = rs2[0].bounds;
+                            for (int i = 1; i < rs2.Length; i++) bb5.Encapsulate(rs2[i].bounds);
+                            string kind = child.name.Contains("TreeLarge") || child.name.Contains("Birch") ? "tree"
+                                        : child.name.Contains("Rock") || child.name.Contains("stone") ? "rock"
+                                        : child.name.Contains("Bush") ? "bush"
+                                        : child.name.Contains("treetrunk") ? "trunk"
+                                        : child.name.Contains("Grass") || child.name.Contains("Flower") ? "tuft" : "other";
+                            if (!cat.TryGetValue(kind, out var l)) { l = new List<float>(); cat[kind] = l; }
+                            l.Add(bb5.size.y);
+                        }
+                        // HONESTY ABOUT THE RULER: `yard` is an ANIMATED bounds, which spreads with the
+                        // walk cycle and overstates a standing person by roughly a third. The design
+                        // height is 1.75 m (D-215, measured at rest). Report against the design height
+                        // so a ratio here means what a reader thinks it means.
+                        const float DesignHeight = 1.75f;
+                        sb.AppendLine("     scale against a person (design height " + DesignHeight.ToString("F2")
+                                      + " m; animated bounds read " + yard.ToString("F2") + " m):");
+                        foreach (var kv in cat.OrderBy(k => k.Key))
+                        {
+                            if (kv.Value.Count == 0) continue;
+                            float mean = kv.Value.Average(), max = kv.Value.Max();
+                            sb.AppendLine("       " + kv.Key.PadRight(7) + " n=" + kv.Value.Count.ToString().PadLeft(4)
+                                          + "  mean " + mean.ToString("F1") + " m (" + (mean / DesignHeight).ToString("F2") + "x)"
+                                          + "  max " + max.ToString("F1") + " m (" + (max / DesignHeight).ToString("F2") + "x)");
+                        }
+                        // a bush should reach a person's waist-to-chest, not overtop them
+                        if (cat.TryGetValue("bush", out var bl) && bl.Count > 0)
+                            Check(bl.Average() / DesignHeight < 1.0f, "a bush stands no taller than a person ("
+                                  + (bl.Average() / DesignHeight).ToString("F2") + "x — over 1.0 it is a thicket, not a shrub)");
+                    }
                     sb.AppendLine();
                 }
 
@@ -198,10 +336,11 @@ namespace Emergence.Editor
                 // wearing the right skin? Patrik felt all three at once ("stones too big, trunks too
                 // big and sliding under the ground") — so measure them together.
                 sb.AppendLine("5. WHAT STANDS ON THE GROUND (scale / sinking / materials)");
-                var rends = UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsSortMode.None);
+                var rends = UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsInactive.Exclude);
                 float villagerH = 0f;
                 var rows = new List<string>();
                 int sunk = 0, defaultMat = 0, measured = 0, bedded = 0;
+                var sinkers = new List<string>();
                 float tallest = 0f; string tallestName = "";
                 var byShader = new Dictionary<string, int>();
 
@@ -235,18 +374,44 @@ namespace Emergence.Editor
                     float sink = 0f;
                     if (terrain != null)
                     {
+                        // D-215b - MEASURE THE RIGHT THING. Comparing the bounding box's lowest
+                        // corner against the ground under its CENTRE is not a sinking test on sloped
+                        // land: a box spanning uneven ground legitimately has a corner below the middle
+                        // of that ground. That is what reported agent_3_Embla as sinking 0,09 m while
+                        // her feet were exactly on the surface - the arms in her A-pose widen the box
+                        // to 1,6 m, and 1,6 m of 11-degree bank is 0,16 m of fall. A thing sinks when
+                        // its lowest point is under the LOWEST ground beneath its own footprint.
                         float gy = terrain.SampleHeight(b.center) + terrain.transform.position.y;
+                        for (int cx = -1; cx <= 1; cx++)
+                            for (int cz = -1; cz <= 1; cz++)
+                            {
+                                var pp = new Vector3(b.center.x + cx * b.extents.x, b.center.y, b.center.z + cz * b.extents.z);
+                                float hh = terrain.SampleHeight(pp) + terrain.transform.position.y;
+                                if (hh < gy) gy = hh;
+                            }
                         sink = gy - b.min.y;          // >0 means the object's base is BELOW the ground
                             // THE LAW IS ABOUT BUILT THINGS AND PEOPLE, NOT BOULDERS. A rock formation
                         // half-bedded in the hillside is correct — geology, not a bug; a house or a
                         // villager sunk to the knee is neither. Natural scatter is therefore exempt,
                         // and the exemption is named here rather than quietly widening the threshold.
-                        bool natural = rr.transform.root != null && rr.transform.root.name == "Nature_Live";
-                        if (sink > 0.05f && !natural) sunk++;
+                        // walk the ancestry rather than trusting root: a single re-parent anywhere in
+                        // the chain would otherwise turn a bedded boulder back into a "defect"
+                        bool natural = IsNatural(rr.transform);   // by nature, not by parentage
+                        if (sink > 0.05f && !natural)
+                        {
+                            sunk++;
+                            // NAME IT. The shared row list is capped and shared with other flags, so a
+                            // sinker could sit outside it and stay anonymous — which is exactly how the
+                            // white ground hid for a day. Sinkers get their own list.
+                            string chainS = rr.name; var pS = rr.transform.parent; int gS = 0;
+                            while (pS != null && gS++ < 4) { chainS = pS.name + " / " + chainS; pS = pS.parent; }
+                            sinkers.Add("       SINKS " + sink.ToString("F2") + " m  " + chainS
+                                        + "  mat=" + (mat != null ? mat.name : "none"));
+                        }
                         else if (sink > 0.05f) bedded++;
                     }
                     if (b.size.y > tallest) { tallest = b.size.y; tallestName = go.name + " [" + (mat != null ? mat.name : "none") + "]"; }
-                    if (rows.Count < 14 && (isDefault || (sink > 0.05f && !(rr.transform.root != null && rr.transform.root.name == "Nature_Live")) || (villagerH > 0.1f && b.size.y > villagerH * 4f)))
+                    if (rows.Count < 14 && (isDefault || (sink > 0.05f && !IsNatural(rr.transform)) || (villagerH > 0.1f && b.size.y > villagerH * 4f)))
                         rows.Add("       " + go.name.PadRight(26).Substring(0, Math.Min(26, go.name.Length)).PadRight(26)
                                  + " h=" + b.size.y.ToString("F1") + "m"
                                  + (villagerH > 0.1f ? " (" + (b.size.y / villagerH).ToString("F1") + "x villager)" : "")
@@ -292,9 +457,14 @@ namespace Emergence.Editor
                 foreach (var e3 in big.OrderByDescending(x => x.vol).Take(10)) sb.AppendLine(e3.line);
                 Check(measured > 0, "there is something standing on the ground at all (" + measured + " renderers)");
                 Check(defaultMat == 0, "NOTHING wears Unity's default material (" + defaultMat + " do — that IS the grey checker Patrik saw)");
+                foreach (var sk in sinkers.Take(6)) sb.AppendLine(sk);
                 Check(sunk == 0, "no BUILT thing or person sinks through the ground (" + sunk + " do; " + bedded + " natural props bedded into it, which is correct)");
-                if (villagerH > 0.1f)
-                    Check(tallest < villagerH * 8f, "nothing is absurdly out of scale (tallest = " + (tallest / villagerH).ToString("F1") + "x a villager)");
+                // The old ceiling (8x the ANIMATED villager bounds) was written while the yardstick was
+                // a 2.3 m giant, and it now fails on trees that are finally the right size — a real oak
+                // IS about ten times a person. Judge against the design height (D-215) and put the
+                // ceiling where "absurd" actually begins.
+                Check(tallest < 1.75f * 18f, "nothing is absurdly out of scale (tallest = "
+                      + (tallest / 1.75f).ToString("F1") + "x a person — a real tree is 8-14x)");
                 sb.AppendLine();
 
                 // ---------- the eye-level picture ----------
@@ -313,7 +483,7 @@ namespace Emergence.Editor
                 // to corner it is the same object at the same range, but IN the living scene.
                 var hut = GameObject.Find("Huts");
                 Renderer nearest = null; float bestSize = 0f;
-                foreach (var rr2 in UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsSortMode.None))
+                foreach (var rr2 in UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsInactive.Exclude))
                 {
                     if (rr2 == null || rr2.gameObject.GetComponent<Terrain>() != null) continue;
                     if (!rr2.name.StartsWith("P_BLD")) continue;
@@ -335,7 +505,7 @@ namespace Emergence.Editor
                 // and the same treatment for a VILLAGER — the ten-largest list named char1 as the
                 // suspect, so put it in front of the lens under the same conditions as the house.
                 Renderer soul = null; float soulSize = 0f;
-                foreach (var rr4 in UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsSortMode.None))
+                foreach (var rr4 in UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsInactive.Exclude))
                 {
                     if (rr4 == null || !rr4.name.StartsWith("char")) continue;
                     if (rr4.bounds.size.y > soulSize) { soulSize = rr4.bounds.size.y; soul = rr4; }
@@ -390,14 +560,34 @@ namespace Emergence.Editor
             if (m == null || m.shader == null) return null;
             foreach (var n in new[] { "_BaseMap", "_MainTex", "baseColorTexture", "_baseColorTexture", "_BaseColorTexture" })
                 if (m.HasProperty(n)) { var t = m.GetTexture(n); if (t != null) return t; }
-            int count = UnityEditor.ShaderUtil.GetPropertyCount(m.shader);
+            // Shader carries these itself now; the UnityEditor.ShaderUtil pair is deprecated in
+            // Unity 6 and its warning was one of thirteen that made the compile baseline flap.
+            int count = m.shader.GetPropertyCount();
             for (int i = 0; i < count; i++)
-                if (UnityEditor.ShaderUtil.GetPropertyType(m.shader, i) == UnityEditor.ShaderUtil.ShaderPropertyType.TexEnv)
+                if (m.shader.GetPropertyType(i) == UnityEngine.Rendering.ShaderPropertyType.Texture)
                 {
-                    var t = m.GetTexture(UnityEditor.ShaderUtil.GetPropertyName(m.shader, i));
+                    var t = m.GetTexture(m.shader.GetPropertyName(i));
                     if (t != null) return t;
                 }
             return null;
+        }
+
+        /// <summary>Is this a piece of the NATURAL world? Judged by WHAT IT IS, not by who hung it in
+        /// the hierarchy. A boulder bedded into a hillside is geology whether the nature scatter, the
+        /// codex reconciler or the dresser put it there; a house or a person sunk to the knee is a
+        /// defect no matter how tidy its parent chain looks. Naming the exemption by ancestry was the
+        /// narrower, more fragile version of the same idea — and it left one tree looking like a bug.</summary>
+        static readonly string[] NaturalWords = { "tree", "bush", "rock", "cliff", "stone", "trunk", "log", "branch", "leaves", "foliage", "grass", "flower" };
+
+        static bool IsNatural(Transform t)
+        {
+            for (var a = t; a != null; a = a.parent)
+            {
+                if (a.name == "Nature_Live") return true;
+                var n = a.name.ToLowerInvariant();
+                foreach (var w in NaturalWords) if (n.Contains(w)) return true;
+            }
+            return false;
         }
 
         static string cam2Note = "";

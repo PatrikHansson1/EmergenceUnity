@@ -96,7 +96,7 @@ namespace Emergence.Editor
                 // edit mode (the D-158 flame was play-mode-proven) — Simulate() renders each system
                 // at a lived-in moment so the warm point has a BODY in the still, not just a light.
                 int simulated = 0;
-                foreach (var ps in UnityEngine.Object.FindObjectsByType<ParticleSystem>(FindObjectsSortMode.None))
+                foreach (var ps in UnityEngine.Object.FindObjectsByType<ParticleSystem>(FindObjectsInactive.Exclude))
                 { ps.Simulate(4f, true, true); simulated++; }
                 sb.AppendLine($"[{shot.name}] particle systems simulated: {simulated}");
 

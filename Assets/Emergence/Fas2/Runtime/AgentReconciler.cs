@@ -26,7 +26,16 @@ namespace Emergence.Runtime
     {
         public const string LayerName = "Agents_Live";
         const float TileSize = 8f;   // matches WorldDresser/LiveReconciler
-        const float Scale = 1f;      // matches WorldDresser.VillagerScale
+        // VÅG 1.2 (2026-08-14, D-215): MEASURED, not assumed. The code said "GLBs authored ~1.7m" and
+        // left the scale at 1 — but measured at REST, with no animation inflating the bounds, the
+        // adult villager GLB is 2.29 m. Every villager in the world has been a 2.3 m giant, and since
+        // the whole world was judged against them, trees, bushes and rocks all read "too big" when in
+        // fact the yardstick was too long. 1.75 / 2.29 = 0.76. Fix the ruler first, then the world.
+        //   villager 2.29 m -> 0.76 | villager-f 2.22 -> 0.79 | villager-elder 2.23 -> 0.78
+        // The adult sets the number: one scale for all bands keeps their relative proportions intact
+        // (the child GLB measures TALLER at rest, which is a reaching pose inflating its bounds, not a
+        // tall child — per-band scaling from rest bounds would encode that error into the world).
+        const float Scale = 0.76f;   // -> a villager stands 1.75 m
 
         sealed class Rec { public GameObject go; public string band; public bool female; public string task; public string sayAct; public string verb; }
         readonly Dictionary<int, Rec> _agents = new();
@@ -187,6 +196,9 @@ namespace Emergence.Runtime
             var go = UnityEngine.Object.Instantiate(pf, layer);
             go.transform.position = GroundW(P(S, a.x, a.y));
             go.transform.localScale = Vector3.one * Scale;
+            // D-215: the GLB ships emissiveFactor 1,1,1 and specularColorFactor 2,2,2 — a lamp in a
+            // tunic. Corrected here, and dyed by hash so a village is not fifty identical people.
+            GlbMaterialSanity.Apply(go, GlbMaterialSanity.TintFor(a.id));
             Face(S, a, go);
             go.name = $"agent_{a.id}_{a.name}";
 

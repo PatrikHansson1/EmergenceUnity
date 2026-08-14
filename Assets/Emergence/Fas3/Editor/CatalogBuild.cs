@@ -119,7 +119,10 @@ namespace Emergence.Editor
                                    "Prefab_RockFormation_01", "Prefab_RockFormation_02", "Prefab_RockFormation_03", "Prefab_RockFormation_04",
                                    "P_ENV_stone_01",
                                    "Prefab_Bush_01", "Prefab_Bush_02", "Prefab_Bush_03",
-                                   "P_PROP_treetrunk_01", "P_PROP_treetrunk_02", "P_PROP_treetrunk_03", "P_PROP_treetrunk_04" };
+                                   "P_PROP_treetrunk_01", "P_PROP_treetrunk_02", "P_PROP_treetrunk_03", "P_PROP_treetrunk_04",
+                                   // VAG 1.5: the water. 4% of the map is lake and none of it was ever
+                                   // rendered in the living loop — the dresser's water law was editor-only.
+                                   "Prefab_WaterLake", "SM_WaterRiver" };
             int optOk = 0;
             foreach (var name in optional.Where(n => !wanted.Contains(n, StringComparer.OrdinalIgnoreCase)))
             {

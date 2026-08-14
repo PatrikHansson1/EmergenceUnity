@@ -216,10 +216,27 @@ namespace Emergence.Runtime
         /// <summary>Forget the cached foot offset — call when the body is swapped or rescaled.</summary>
         public void InvalidateFoot() { _foot = float.NaN; }
 
+        // D-215: one sample was one sample too few. A person occupies ~0,5 m of ground; on a 20-degree
+        // bank that is 0,18 m of fall across the footprint, so grounding to the CENTRE buries the uphill
+        // half. GroundCaptureProbe measured exactly that — agent_3_Embla, 0,09 m under, the only sinking
+        // built thing in the scene. Sample the footprint and stand on its highest point, which is what
+        // HutReconciler.SitOnGround already does for a house. Never sink, and never lift more than the
+        // ground actually demands.
+        const float FootSpan = 0.28f;   // metres from centre — half a stance
+
         Vector3 Grounded(Vector3 w)
         {
             var t = Terrain.activeTerrain;
-            if (t != null) w.y = t.SampleHeight(w) + t.transform.position.y + FootOffset();
+            if (t == null) return w;
+            float best = t.SampleHeight(w);
+            for (int i = 0; i < 4; i++)
+            {
+                float a = i * (Mathf.PI * 0.5f);
+                var p = new Vector3(w.x + Mathf.Cos(a) * FootSpan, w.y, w.z + Mathf.Sin(a) * FootSpan);
+                float h = t.SampleHeight(p);
+                if (h > best) best = h;
+            }
+            w.y = best + t.transform.position.y + FootOffset();
             return w;
         }
 

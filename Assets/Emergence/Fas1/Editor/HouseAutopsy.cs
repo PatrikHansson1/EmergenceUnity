@@ -107,6 +107,31 @@ namespace Emergence.Editor
             if (offenders.Length > 0) { sb.AppendLine("OFFENDERS"); sb.Append(offenders); }
             else sb.AppendLine("No offender found in the prefabs — the white must come from somewhere else.");
 
+            // ---- THE YARDSTICK ITSELF ----
+            // The nature scale report measures everything against a villager, and the villager measures
+            // 2.2-3.0 m in the scene — varying per agent, which is the signature of ANIMATED bounds, not
+            // of a model. Before a single multiplier is touched, measure the body at REST: a yardstick
+            // that changes length while you use it is worse than no yardstick.
+            sb.AppendLine("THE HUMAN YARDSTICK (prefab at rest, no animation)");
+            foreach (var vn in new[] { "villager", "villager-f", "villager-child", "villager-elder" })
+            {
+                var vp = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Emergence/Models/characters/" + vn + ".glb");
+                if (vp == null) { sb.AppendLine("  " + vn.PadRight(18) + " (not found)"); continue; }
+                var inst = (GameObject)PrefabUtility.InstantiatePrefab(vp);
+                inst.transform.position = Vector3.zero;
+                var rs5 = inst.GetComponentsInChildren<Renderer>();
+                if (rs5.Length > 0)
+                {
+                    var bv = rs5[0].bounds;
+                    for (int i = 1; i < rs5.Length; i++) bv.Encapsulate(rs5[i].bounds);
+                    sb.AppendLine("  " + vn.PadRight(18) + " height " + bv.size.y.ToString("F2") + " m   footprint "
+                                  + bv.size.x.ToString("F2") + " x " + bv.size.z.ToString("F2") + " m"
+                                  + "   -> scale for a 1.75 m adult: " + (1.75f / Mathf.Max(0.01f, bv.size.y)).ToString("F2"));
+                }
+                UnityEngine.Object.DestroyImmediate(inst);
+            }
+            sb.AppendLine();
+
             // ---- THE ISOLATION SHOT ----
             // The prefabs are clean, so the white must come from the scene or the pipeline. Render ONE
             // house alone, in a controlled editor-mode shot, and read the pixels back. If it looks right

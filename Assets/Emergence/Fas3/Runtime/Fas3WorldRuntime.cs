@@ -84,6 +84,7 @@ namespace Emergence.Runtime
         // simulates, it just looks wrong, and GroundNote says so out loud.
         public bool GroundBuilt { get; private set; }
         public string GroundNote { get; private set; } = "";
+        public string WaterNote { get; private set; } = "";
 
         /// <summary>VÅG 1.2: light the world with the studio's own rig. The law was tuned for weeks but
         /// lived behind #if UNITY_EDITOR, so the player got a bare scene's default light — no fog, no
@@ -109,6 +110,16 @@ namespace Emergence.Runtime
                 var existing = GameObject.Find("Terrain");
                 if (existing != null) { GroundNote = "terrain already in the scene — left alone"; return; }
                 var go = Fas3TerrainBuilder.Build(S, null);
+                // VÅG 1.5 (D-216): the water. 4% of the map is lake and it existed only in the editor
+                // dressing — and there as a staircase of per-tile quads. One level per body, here.
+                try
+                {
+                    var terr = go != null ? go.GetComponent<Terrain>() : Terrain.activeTerrain;
+                    Fas3WaterBuilder.Build(S, null, terr);
+                    WaterNote = Fas3WaterBuilder.LastNote;
+                    Debug.Log("[Fas3WorldRuntime] " + WaterNote);
+                }
+                catch (Exception we) { WaterNote = "water FAILED: " + we.Message; Debug.LogWarning("[Fas3WorldRuntime] " + WaterNote); }
                 // and the natural world on top of it — spread across frames so the opening never hitches
                 var nature = new GameObject("Nature_Live").transform;
                 StartCoroutine(ScatterNature(S, nature));

@@ -28,6 +28,17 @@ namespace Emergence.Runtime
         public const float TreesPerForestTile = 0.9f;
         public const float RocksPerStoneTile = 0.9f;
         public const float BushesPerBerryTile = 1.1f;
+        // D-215d: the meadow, done the way that provably renders. Terrain details were planted
+        // (1 298 669 instances, measured), validated by Unity itself, drawn at 220 m with the quality
+        // gate open — and could not be seen at three metres through three different render modes.
+        // Ordinary MeshRenderers demonstrably DO render here: 839 trees, rocks and bushes prove it in
+        // the same frame. So the near meadow is scattered as real objects. It costs ~2 000 renderers
+        // beside the 2 472 already standing, which a stylised 800x560 m world can afford, and unlike
+        // the detail system it can be MEASURED in the inventory the probe already prints.
+        // measured at 0.30/tile: one tuft per 64 square metres, which reads as a bald lawn with
+        // occasional weeds. 1.0 puts a tuft roughly every 8 m of walking - sparse enough to stay a
+        // meadow and not a jungle, dense enough that the ground has texture wherever you stand.
+        public const float TuftsPerMeadowTile = 1.0f;
         public const int PlacementsPerFrame = 120;   // keeps the opening smooth on a mid machine
 
         public static string LastNote = "";
@@ -38,6 +49,8 @@ namespace Emergence.Runtime
         static readonly string[] RockNames  = { "Prefab_RockFormation_01", "Prefab_RockFormation_02", "Prefab_RockFormation_03", "Prefab_RockFormation_04", "P_ENV_stone_01" };
         static readonly string[] BushNames  = { "Prefab_Bush_01", "Prefab_Bush_02", "Prefab_Bush_03" };
         static readonly string[] TrunkNames = { "P_PROP_treetrunk_01", "P_PROP_treetrunk_02", "P_PROP_treetrunk_03", "P_PROP_treetrunk_04" };
+        static readonly string[] TuftNames  = { "Prefab_Grass_01_Detail", "Prefab_Grass_Group_01_Detail", "Prefab_Grass_03_Detail",
+                                                "Prefab_Flower_02", "Prefab_Flower_04" };
 
         /// <summary>Scatter the natural world across frames. Returns a coroutine to drive from a MonoBehaviour.</summary>
         public static IEnumerator Scatter(WorldState S, Transform parent)
@@ -51,10 +64,11 @@ namespace Emergence.Runtime
             var rocks  = Resolve(cat, RockNames);
             var bushes = Resolve(cat, BushNames);
             var trunks = Resolve(cat, TrunkNames);
+            var tufts  = Resolve(cat, TuftNames);
             if (trees.Count == 0 && rocks.Count == 0 && bushes.Count == 0)
             { LastNote = "no nature prefabs in the catalog — run BUILD ASSET CATALOG"; yield break; }
 
-            int budget = 0, treeN = 0, rockN = 0, bushN = 0, trunkN = 0;
+            int budget = 0, treeN = 0, rockN = 0, bushN = 0, trunkN = 0, tuftN = 0;
             for (int y = 0; y < S.H; y++)
                 for (int x = 0; x < S.W; x++)
                 {
@@ -63,24 +77,37 @@ namespace Emergence.Runtime
                     {
                         bool edge = ForestEdge(S, x, y);
                         treeN += Place(S, parent, trees, x, y, edge ? TreesPerForestTile * 0.45f : TreesPerForestTile, 41, ref budget);
-                        if (edge && trunks.Count > 0 && Hash01(x, y, 51) < 0.45f)   // coppice marks at the treeline
+                        // D-215b: stumps sat ONLY on the treeline, one in five tiles, at full size —
+                        // which drew a hedge of waist-high stumps along every forest edge (visible in
+                        // Reports/ground-eye-level.png). Fewer at the edge, some inside the wood where
+                        // a tree actually fell, and 0.45 scale: a cut stump is knee-high, not chest-high.
+                        // NOTE the scale had to go HERE. The size law in Place() never reached these,
+                        // because the treeline stumps are raised by a direct call — one of those bugs
+                        // that a measurement catches and a reading does not (mean stayed 2,2 m).
+                        float trunkOdds = edge ? 0.11f : 0.05f;
+                        if (trunks.Count > 0 && Hash01(x, y, 51) < trunkOdds)
                         {
                             var pf = trunks[(int)(Hash(x, y, 52) % (uint)trunks.Count)];
                             float jx = Hash01(x, y, 53) - 0.5f, jy = Hash01(x, y, 54) - 0.5f;
-                            Raise(pf, parent, Ground(S, x + jx * 0.8f, y + jy * 0.8f),
-                                  Hash(x, y, 55) % 360u, 0.8f + Hash01(x, y, 56) * 0.4f);
+                            Raise(pf, parent, Ground(S, x + jx * 0.95f, y + jy * 0.95f),
+                                  Hash(x, y, 55) % 360u, (0.8f + Hash01(x, y, 56) * 0.4f) * 0.45f, Bed.Log, Hash(x, y, 57));
                             trunkN++; budget++;
                         }
                     }
-                    else if (t == 's' && rocks.Count > 0) rockN += Place(S, parent, rocks, x, y, RocksPerStoneTile, 43, ref budget);
-                    else if (t == 'b' && bushes.Count > 0) bushN += Place(S, parent, bushes, x, y, BushesPerBerryTile, 47, ref budget);
+                    else if (t == 's' && rocks.Count > 0) rockN += Place(S, parent, rocks, x, y, RocksPerStoneTile, 43, ref budget, Bed.Boulder, true);
+                    else if (t == 'b' && bushes.Count > 0) bushN += Place(S, parent, bushes, x, y, BushesPerBerryTile, 47, ref budget, Bed.Shrub, true);
+
+                    // grass tufts on open meadow and forest floor - the ground the player walks on
+                    if ((t == 'g' || t == 'f') && tufts.Count > 0)
+                        tuftN += Place(S, parent, tufts, x, y, TuftsPerMeadowTile, 59, ref budget, Bed.Tuft, true);
 
                     if (budget >= PlacementsPerFrame) { budget = 0; yield return null; }
                 }
 
-            Placed = treeN + rockN + bushN + trunkN;
-            LastNote = "nature: " + treeN + " trees, " + rockN + " rocks, " + bushN + " bushes, " + trunkN + " fallen trunks"
-                     + "  (sets: " + trees.Count + "/" + rocks.Count + "/" + bushes.Count + ")";
+            Placed = treeN + rockN + bushN + trunkN + tuftN;
+            LastNote = "nature: " + treeN + " trees, " + rockN + " rocks, " + bushN + " bushes, " + trunkN + " fallen trunks, "
+                     + tuftN + " grass tufts"
+                     + "  (sets: " + trees.Count + "/" + rocks.Count + "/" + bushes.Count + "/" + tufts.Count + ")";
         }
 
         static List<GameObject> Resolve(EmergenceAssetCatalog cat, string[] names)
@@ -90,16 +117,55 @@ namespace Emergence.Runtime
             return o;
         }
 
+        /// <summary>How a thing meets the ground. The rock rows in Reports/ground-eye-level.png came
+        /// from treating all four the same: one upright yaw-only instance per tile, sitting exactly on
+        /// the surface. That inherits the 8 m tile grid and reads as a fence of menhirs (D-215).</summary>
+        public enum Bed { Upright, Boulder, Shrub, Log, Tuft }
+
         static int Place(WorldState S, Transform parent, List<GameObject> set, int x, int y, float perTile, int salt, ref int budget)
+            { return Place(S, parent, set, x, y, perTile, salt, ref budget, Bed.Upright, false); }
+
+        static int Place(WorldState S, Transform parent, List<GameObject> set, int x, int y, float perTile, int salt,
+                         ref int budget, Bed bed, bool clump)
         {
+            // clumping: a stone field is not one boulder every eight metres. A slow Perlin makes some
+            // tiles crowd and others empty, which is what breaks the grid the eye was reading.
+            if (clump)
+                perTile *= 0.30f + 1.55f * Mathf.PerlinNoise(x * 0.17f + salt * 0.31f, y * 0.17f + salt * 0.13f);
+
             int count = Mathf.FloorToInt(perTile) + (Hash01(x, y, salt) < perTile - Mathf.Floor(perTile) ? 1 : 0);
             for (int i = 0; i < count; i++)
             {
                 var prefab = set[(int)(Hash(x, y, salt + 100 + i) % (uint)set.Count)];
                 float jx = Hash01(x, y, salt + 200 + i) - 0.5f, jy = Hash01(x, y, salt + 300 + i) - 0.5f;
                 float sc = 0.85f + Hash01(x, y, salt + 500 + i) * 0.4f;
+                // MEASURED CORRECTIONS (D-215). With the human yardstick finally right — a villager
+                // stands 1.75 m — the pack's own proportions can be judged instead of guessed:
+                //   tree  16.6 m = 9.5x a person   correct for real trees, left alone (bar the baseline 0.72)
+                //   bush   3.8 m = 2.2x a person   a bush that overtops a person is a thicket, not a shrub
+                //   rock   4.6 m = 2.6x a person   these are Cliff meshes; on scattered stone tiles they
+                //                                  should read as boulders a person could climb, not as menhirs
+                // Targets: a bush ~1.4 m (waist-to-chest), a boulder ~2.6 m.
                 if (prefab.name.StartsWith("Prefab_TreeLarge")) sc *= 0.72f;   // the woodland baseline, not a landmark
-                Raise(prefab, parent, Ground(S, x + jx * 0.9f, y + jy * 0.9f), Hash(x, y, salt + 400 + i) % 360u, sc);
+                else if (prefab.name.StartsWith("Prefab_Bush")) sc *= 0.37f;
+                else if (prefab.name.StartsWith("Prefab_RockFormation") || prefab.name.StartsWith("P_ENV_stone"))
+                    // SECOND PASS (D-215b). The first widening measured mean 3,6 m — two people tall —
+                    // because these are CLIFF meshes borrowed as field stones. A stone in a meadow is
+                    // ankle-to-shoulder, not a menhir. Mean ~1,5 m, spread 0,5..2,5 m: pebbles a person
+                    // steps over AND a few they could shelter behind.
+                    sc = (0.30f + Hash01(x, y, salt + 600 + i) * 1.10f) * 0.30f;
+                else if (prefab.name.StartsWith("Prefab_Grass") || prefab.name.StartsWith("Prefab_Flower"))
+                    // the pack authored these as terrain-detail props, sized for a detail prototype's
+                    // own multiplier. As standalone objects they need that multiplier applied by hand;
+                    // the wide spread is what makes a meadow read as tufts rather than as a lawn.
+                    // measured 1,5 m mean - chest-high on an adult, which is a wheat field, not a
+                    // meadow. Target ~0,55 m: over the boot, under the knee.
+                    sc = 0.35f + Hash01(x, y, salt + 600 + i) * 0.80f;
+                else if (prefab.name.StartsWith("P_PROP_treetrunk"))
+                    // measured 2,0 m — a stump taller than a child. A cut stump is knee-to-thigh.
+                    sc *= 0.45f;
+                Raise(prefab, parent, Ground(S, x + jx * 0.98f, y + jy * 0.98f),
+                      Hash(x, y, salt + 400 + i) % 360u, sc, bed, Hash(x, y, salt + 700 + i));
                 budget++;
             }
             return count;
@@ -107,12 +173,32 @@ namespace Emergence.Runtime
 
         /// <summary>Instantiate, orient, scale — and SIT IT ON THE GROUND. The pivot is not the base
         /// (D-211): on 17.9 m of relief a trunk placed by its pivot slides half-under the hillside,
-        /// which is exactly what the field report described. Only ever lifts.</summary>
+        /// which is exactly what the field report described.
+        ///
+        /// D-215 adds the other half. Sitting a boulder exactly ON the surface, perfectly upright, is
+        /// how you get standing slabs in rows. Real stone leans and is half-buried; a fallen log lies
+        /// tilted and settled. So each kind now declares a tilt and a bedding depth, and only a TREE
+        /// is held strictly on top of the ground. All of it hash-driven — no sim RNG (D-078 r4).</summary>
         static void Raise(GameObject prefab, Transform parent, Vector3 pos, uint yaw, float scale)
+            { Raise(prefab, parent, pos, yaw, scale, Bed.Upright, 0u); }
+
+        static void Raise(GameObject prefab, Transform parent, Vector3 pos, uint yaw, float scale, Bed bed, uint h)
         {
             var go = Object.Instantiate(prefab, parent);
+
+            float tilt, sink;
+            switch (bed)
+            {
+                case Bed.Boulder: tilt = 24f; sink = 0.26f + (h % 1000) / 1000f * 0.26f; break;  // leans, 26-52% buried
+                case Bed.Log:     tilt = 17f; sink = 0.14f + (h % 1000) / 1000f * 0.18f; break;  // settled in the leaf mould
+                case Bed.Shrub:   tilt =  8f; sink = 0.04f + (h % 1000) / 1000f * 0.09f; break;  // roots in, not standing on
+                case Bed.Tuft:    tilt = 11f; sink = 0.06f + (h % 1000) / 1000f * 0.10f; break;  // grows out of the soil
+                default:          tilt =  3f; sink = 0f; break;                                   // a tree stands up
+            }
+            float tx = ((h >> 10 & 1023) / 1023f - 0.5f) * 2f * tilt;
+            float tz = ((h >> 20 & 1023) / 1023f - 0.5f) * 2f * tilt;
+            go.transform.rotation = Quaternion.Euler(tx, yaw, tz);
             go.transform.position = pos;
-            go.transform.rotation = Quaternion.Euler(0f, yaw, 0f);
             go.transform.localScale = Vector3.one * scale;
             StripImpostors(go);
 
@@ -122,6 +208,7 @@ namespace Emergence.Runtime
             for (int i = 1; i < rs.Length; i++) b.Encapsulate(rs[i].bounds);
             float below = pos.y - b.min.y;
             if (below > 0.001f) go.transform.position += Vector3.up * below;
+            if (sink > 0f) go.transform.position -= Vector3.up * (b.size.y * sink);
         }
 
         /// <summary>The pack's impostor billboards have no baked textures here and read as dark blobs
