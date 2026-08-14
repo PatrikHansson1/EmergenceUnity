@@ -11,7 +11,7 @@ namespace Emergence.Runtime
 {
     public sealed class EmergenceJintHost
     {
-        public const string ExpectedEngineSha = "87a6576c119dd045e6c88ae46efa37030d90e008d31ff18cec6109c7d0a05868"; // ENGINE 2.5.0 (M1+M2 of D-226/D-228): three insights were DEFINED, REQUIRED and never observed anywhere -- weightsBalance, soundsRing, herbsHeal -- and the gate is hard (insights.every), so numbers/song/medicine/clock were impossible to invent and the whole culture branch above them with it. Hooks added at the moments the insight texts themselves name: the gift and the store (counting), wood and fiber (a hollow log, a struck string), the forage (leaves). Also printpress.pre pointed at a tech id that does not exist. Goldens RE-BASELINED (the sim stream moves by construction -- tryObserve consumes S.rand). Prior 2.4.1 sha: 22e2ac053cd8...
+        public const string ExpectedEngineSha = "b83e53803ea5b0c6723adb95068fa88ee68eb4407da43223607c229491dcbef7"; // ENGINE 2.5.1 (M4 of D-226/D-229): clay and sand are DEPOSITS, not ore bodies -- a river brings new silt, a vein does not refill. They were mined to zero and never came back, and writing (which costs clay, and which the canon calls the arc's ENDING) died with them mid-run. clay/sand now regrow like forest, at 4x the interval; iron/copper/tin/coal/gold stay finite, because their exhaustion is the geography story. Goldens RE-BASELINED. Prior 2.5.0 sha: 87a6576c119d...
 
         private readonly Jint.Engine _engine;
         public string EngineSha256 { get; }

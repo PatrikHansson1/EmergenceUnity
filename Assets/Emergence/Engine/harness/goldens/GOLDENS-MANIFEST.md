@@ -66,3 +66,19 @@ Engine SHA: `87a6576c119dd045e6c88ae46efa37030d90e008d31ff18cec6109c7d0a05868` (
 now STALE. The t720 quartet is the per-step cadence (D-131); the deep horizon must be re-baselined with
 `Reports/GOLDEN_DEPTH.txt` before the next full-depth gate.
 
+## RE-BASELINED 2026-08-14 (second) — ENGINE 2.5.1 (M4 of D-226 / D-229)
+Clay and sand are DEPOSITS, not ore bodies. They were mined to zero and never returned, and writing —
+which costs clay, and which the canon calls the arc's ENDING — died with them mid-run. They now regrow
+like forest at 4x the interval. Ore (iron/copper/tin/coal/gold) stays finite; its exhaustion is the
+geography story, not a bug. `regrowLater` consumes `S.rand`, so the stream moves by construction.
+
+| seed | t=720 canonical SHA |
+|---|---|
+| 97013 | `e97b191fd8399d16c4477401a643fa1dd207bbc1cd7f687d3309b61bca58e2bc` |
+| 4242 | `649ef324d71b1ebe84fe0ea1bd1a3524d2bcad7008ce11764d4c6223b7918dbe` |
+| 20260718 | `f6d6f94ad1b1451e0041e203fc31fdf4be091800b49d3a3f953ffe55980e6680` |
+| 4242-founders | `0e1ecd5658cc8301cb6f5891ee9db9edddde12126827e8594fc5e3afdd4fe2ac` |
+
+Engine SHA: `b83e53803ea5b0c6723adb95068fa88ee68eb4407da43223607c229491dcbef7` (was `87a6576c119d…`).
+The `t8640` debt above still stands.
+

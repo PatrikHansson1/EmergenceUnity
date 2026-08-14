@@ -1025,7 +1025,7 @@ function doSeek(S,a,tileType,onArrive){
   if(Math.hypot(t.x-a.x,t.y-a.y)<1.2){a.tx0=t.x;a.ty=t.y;onArrive();}
   else{moveToward(S,a,t);a.task='heading to '+tileType;}
 }
-function regrowLater(S,x,y,type){S.tiles[y][x].n=0;const mult=(type==='berry'&&seasonOf(S)==='winter')?2.5:1;S.regrows.push({x,y,type,at:S.tick+Math.floor(RI(S,150,350)*mult)});}
+function regrowLater(S,x,y,type){S.tiles[y][x].n=0;const mult=(type==='berry'&&seasonOf(S)==='winter')?2.5:((type==='clay'||type==='sand')?4:1);S.regrows.push({x,y,type,at:S.tick+Math.floor(RI(S,150,350)*mult)});}
 
 function talk(S,a,b){
   S.stats.talks++;
@@ -1714,7 +1714,7 @@ function agentTick(S,a){
   if(need&&S.rand()<a.traits.diligence){
     doSeek(S,a,MATSOURCE[need],()=>{
       S.tiles[a.ty][a.tx0].n--;
-      if(S.tiles[a.ty][a.tx0].n<=0&&MATSOURCE[need]!=='grass'){const typ=S.tiles[a.ty][a.tx0].t;S.tiles[a.ty][a.tx0]={t:'grass',n:0};if(typ==='forest')regrowLater(S,a.tx0,a.ty,'forest');S.bgDirty=true;}
+      if(S.tiles[a.ty][a.tx0].n<=0&&MATSOURCE[need]!=='grass'){const typ=S.tiles[a.ty][a.tx0].t;S.tiles[a.ty][a.tx0]={t:'grass',n:0};if(typ==='forest'||typ==='clay'||typ==='sand')regrowLater(S,a.tx0,a.ty,typ);S.bgDirty=true;}
       const mult=a.knows.has('metaltools')?3:a.knows.has('axe')||a.knows.has('sharp')?2:1;
       a.inv[need]=(a.inv[need]||0)+mult;
       a.task='gathering '+need;
@@ -1762,7 +1762,7 @@ function agentTick(S,a){
       const m=a.forage;
       doSeek(S,a,MATSOURCE[m],()=>{
         S.tiles[a.ty][a.tx0].n--;
-        if(S.tiles[a.ty][a.tx0].n<=0&&MATSOURCE[m]!=='grass'){const typ=S.tiles[a.ty][a.tx0].t;S.tiles[a.ty][a.tx0]={t:'grass',n:0};if(typ==='forest')regrowLater(S,a.tx0,a.ty,'forest');S.bgDirty=true;}
+        if(S.tiles[a.ty][a.tx0].n<=0&&MATSOURCE[m]!=='grass'){const typ=S.tiles[a.ty][a.tx0].t;S.tiles[a.ty][a.tx0]={t:'grass',n:0};if(typ==='forest'||typ==='clay'||typ==='sand')regrowLater(S,a.tx0,a.ty,typ);S.bgDirty=true;}
         a.inv[m]=(a.inv[m]||0)+1;a.task='collecting curiosities';a.forage=null;
         for(const[o,ch]of(GATHER_OBS[m]||[]))tryObserve(S,a,o,ch*1.5);
       });
@@ -2215,5 +2215,5 @@ function resimulate(seed,toTick){
   return S;
 }
 
-return {createWorld,tickWorld,computeDNA,villageScope,resimulate,writeHistory,roleOf,verbOf,worldEra,eraName,ERAS,wealthOf:wealth,TECHS,TECH,OBS,QUIRK,W,H,YEAR,SEASONS,VERSION:'2.5.0'};
+return {createWorld,tickWorld,computeDNA,villageScope,resimulate,writeHistory,roleOf,verbOf,worldEra,eraName,ERAS,wealthOf:wealth,TECHS,TECH,OBS,QUIRK,W,H,YEAR,SEASONS,VERSION:'2.5.1'};
 });
