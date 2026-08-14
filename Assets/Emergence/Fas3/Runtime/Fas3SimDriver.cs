@@ -95,6 +95,12 @@ namespace Emergence.Runtime
         // and birth both open with the name in bold), so the resolver falls back to those.
         // Condition B is a retellable story WITH NAMES; 'someone had come first' fails it.
         // S, no RNG is consumed, and the golden master runs a different path entirely (harness.js).
+        // BELIEF SCOPE (C2 of D-226, 2026-08-14): villages[] now also carries cosmos + beliefs[] — the
+        // ALIVE custom TARGETS held by that village's living members (cosmos/harm/fire/iron/night/wolf/
+        // wood/worldview). Until now the export shipped none of it, so every codex gate written as
+        // requiresCustom was SILENTLY DEAD in the live game: the star-banner could never rise because
+        // nothing ever told the presentation that a people had learned to read the sky. Pure READ over
+        // a.customs / S.customs and the engine's own a._vil assignment; no S.rand, no mutation.
         // VILLAGE-SCOPE (MOTOR-LANE-ORDER-VILLAGE-SCOPE 2026-08-09, TD-085): ADDITIVE again —
         // villages[] merges E.villageScope(S) {pop,maxGen,avgAge,crafts,knows[]} (same order as
         // S.villages, the engine's ONE census law) so the Almanac's village dossier and the
@@ -111,7 +117,7 @@ dead:S.agents.filter(function(a){return a.dead}).length,
 huts:S.huts.map(function(h){return {x:h.x,y:h.y,owner:''+(h.owner||''),free:!!h.free}}),
 fires:S.fires.map(function(f){return {x:f.x,y:f.y,fuel:f.fuel}}),
 fields:S.fields.map(function(f){return {x:f.x,y:f.y,stage:f.stage,owner:''+(f.owner||'')}}),
-villages:(function(){var sc=E.villageScope(S);return S.villages.map(function(v,i){var s=sc[i];return {x:v.x,y:v.y,name:''+v.name,leader:''+(v.leaderName||''),gift:''+(v.giftName||''),pop:s.pop,maxGen:s.maxGen,avgAge:s.avgAge,crafts:s.crafts,knows:s.knows}})})(),
+villages:(function(){var sc=E.villageScope(S);return S.villages.map(function(v,i){var s=sc[i];var bs={},cos='';S.agents.forEach(function(a){if(a.dead||a._vil!==v)return;a.customs.forEach(function(cid){var c=S.customs[cid];if(!c||c.status!=='alive'||!c.target)return;bs[c.target]=1;if(c.target==='cosmos'&&!cos)cos=''+c.name})});return {x:v.x,y:v.y,name:''+v.name,leader:''+(v.leaderName||''),gift:''+(v.giftName||''),pop:s.pop,maxGen:s.maxGen,avgAge:s.avgAge,crafts:s.crafts,knows:s.knows,cosmos:cos,beliefs:Object.keys(bs).sort()}})})(),
 animals:S.animals.map(function(an){return {id:an.id,type:''+an.type,x:an.x,y:an.y}}),
 pathUse:S.pathUse||[],
 worldKnows:(function(){var o=[];for(var k in S.knowledge)if(S.knowledge[k]&&S.knowledge[k].status==='alive')o.push(k);return o.sort()})(),

@@ -1,29 +1,25 @@
 EMERGENCE — CODEX COVERAGE (D-121, anti-orphan)
-generated 2026-08-14 16:35:33
-codex entries: 72  (69 unique prefabs referenced, 0 told-not-shown)
+generated 2026-08-14 17:20:43
+codex entries: 74  (71 unique prefabs referenced, 0 told-not-shown)
 project assets (prefab/glb/fbx): 2803
-OVERALL COVERAGE: 69/2803 = 2,5%  |  ORPHANS: 2734  |  DANGLING: 0
+OVERALL COVERAGE: 71/2803 = 2,5%  |  ORPHANS: 2732  |  DANGLING: 0
 
 ## DANGLING (codex → missing asset) — MUST be 0
   none ✓
 
 ## COVERAGE PER PACK (referenced / total)
     10/1500    0,7%  Fantastic City Pack
-    57/978     5,8%  Fantastic Village Pack
-     2/258     0,8%  Polyart
+    54/978     5,5%  Fantastic Village Pack
+     3/258     1,2%  Polyart
      0/21      0,0%  Vefects
-     0/20      0,0%  Emergence
+     4/20     20,0%  Emergence
      0/12      0,0%  Quaternius
      0/8       0,0%  UpDraftArt
      0/4       0,0%  msVFX_Free Smoke Effects Pack
      0/2       0,0%  PolyOne
 
-## ORPHANS (asset with no codex entry) — 2734 total, first 60:
+## ORPHANS (asset with no codex entry) — 2732 total, first 60:
   · Emergence/deer
-  · Emergence/forge
-  · Emergence/kiln
-  · Emergence/mill
-  · Emergence/well
   · Emergence/villager
   · Emergence/villager-child
   · Emergence/villager-child-f
@@ -79,6 +75,10 @@ OVERALL COVERAGE: 69/2803 = 2,5%  |  ORPHANS: 2734  |  DANGLING: 0
   · Fantastic City Pack/BLD_03_T_Ext_03
   · Fantastic City Pack/BLD_03_T_Int_01
   · Fantastic City Pack/BLD_03_T_Int_Tailor
+  · Fantastic City Pack/COMP_Base_03_16x8_door_01_01
+  · Fantastic City Pack/COMP_Base_03_16x8_door_01_02
+  · Fantastic City Pack/COMP_Base_03_16x8_door_02_01
+  · Fantastic City Pack/COMP_Base_03_16x8_door_02_02
 
 Reading: dangling MUST be 0 (broken codex pointers). Orphans are the un-indexed backlog —
 the codex fill-pass shrinks this over time; a high-value orphan is a candidate for a new codex row.
