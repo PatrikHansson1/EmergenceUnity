@@ -1454,7 +1454,8 @@ namespace Emergence.Editor
             var parent = new GameObject("CodexObjects").transform; parent.SetParent(root, true);
             int placed = 0;
             foreach (var v in S.villages)
-                foreach (var e in CodexBuildOrder.Allowed(v, codex.objects))   // C4+C5 (D-230): oldest first, capped by hands
+                // D-239: the prefab test is passed in so a whole with no resolvable look absorbs nothing.
+                foreach (var e in CodexBuildOrder.Allowed(v, codex.objects, nm => LoadCodexPrefab(nm) != null))
                 {
                     var pf = LoadCodexPrefab(e.prefab);
                     if (pf == null) continue;
@@ -1467,6 +1468,7 @@ namespace Emergence.Editor
                         go.transform.rotation = Quaternion.Euler(0f, Hash(Mathf.RoundToInt(v.x), Mathf.RoundToInt(v.y), e.id.Length + k) % 360u, 0f);
                         go.transform.localScale = Vector3.one * (e.scale <= 0f ? 1f : e.scale);
                         go.name = $"codex_{e.id}_{v.name}_{k}";
+                        SettleCodex(go, v, e, k);     // D-239: the same age law the played world uses
                         StripImpostorLods(go);
                         placed++;
                     }
@@ -1476,6 +1478,29 @@ namespace Emergence.Editor
 
         // the gate lives in CodexBuildOrder.Qualifies (D-230). The copy that stood here is gone:
         // one law, one implementation, or the two drift and the editor world stops matching the played one.
+
+        // D-239: the settle law (D-236) was written into the LIVE reconciler only — and the editor path is
+        // exactly where the studio takes its eye-height evidence. A law that cannot be seen in the pictures
+        // we judge is a law nobody will ever check. Same constants, same hash, same re-derivation from the
+        // ground; the editor builds once, so there is nothing here to accumulate onto.
+        const float SettleSinkPerGen = 0.018f, SettleLeanPerGen = 0.30f;
+        const int   SettleMaxGen     = 8;
+        static void SettleCodex(GameObject go, WorldVillage v, CodexEntry e, int k)
+        {
+            if (go == null || v == null || e == null) return;
+            var t = Terrain.activeTerrain; if (t == null) return;
+            int gens = Mathf.Clamp(v.maxGen, 0, SettleMaxGen);
+            if (gens <= 0) return;
+            uint h = Hash(Mathf.RoundToInt(v.x), Mathf.RoundToInt(v.y), e.id.Length * 13 + k);
+            float bias = ((h & 0xFFu) / 255f) * 0.6f + 0.4f;
+            float sink = gens * SettleSinkPerGen * bias;
+            float lean = gens * SettleLeanPerGen * bias;
+            float dir  = ((h >> 8) & 0xFFu) / 255f * 360f;
+            var p = go.transform.position; p.y = GroundW(p).y - sink; go.transform.position = p;
+            float yaw = Hash(Mathf.RoundToInt(v.x), Mathf.RoundToInt(v.y), e.id.Length + k) % 360u;
+            go.transform.rotation = Quaternion.Euler(0f, yaw, 0f)
+                                  * Quaternion.AngleAxis(lean, Quaternion.Euler(0f, dir, 0f) * Vector3.forward);
+        }
 
         static Vector2 CodexPlacement(WorldVillage v, CodexEntry e, int k, int cnt)
         {

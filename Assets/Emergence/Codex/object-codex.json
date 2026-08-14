@@ -1486,7 +1486,7 @@
    "category": "commerce",
    "requiresTech": "",
    "requiresCustom": "",
-   "desc": "a market square — the stall, the crates and the casks stopped being three things left near each other and became a place people go",
+   "desc": "a market square — the crates and casks stopped lying about wherever they were set down and became a place people go",
    "placement": "green",
    "tier": "milestone",
    "statMeaning": "economy: exchange becomes a place",
@@ -1494,13 +1494,12 @@
    "minPop": 12,
    "minCrafts": 3,
    "minGen": 0,
-   "count": 3,
+   "count": 4,
    "scale": 1.0,
    "ruinOnLoss": 0,
    "ruinPrefab": "",
    "ruinScale": 0.0,
    "combinesWith": [
-    "market",
     "crates",
     "casks"
    ],
@@ -1524,7 +1523,7 @@
    "category": "craft",
    "requiresTech": "",
    "requiresCustom": "",
-   "desc": "a smith’s yard — fire, anvil and quench standing as one working place, and a village that can keep a specialist alive",
+   "desc": "a smith's yard — anvil, bellows and quench no longer scattered but standing as one working place beside the forge door",
    "placement": "edge",
    "tier": "milestone",
    "statMeaning": "craft: specialisation",
@@ -1532,13 +1531,12 @@
    "minPop": 10,
    "minCrafts": 0,
    "minGen": 0,
-   "count": 2,
+   "count": 3,
    "scale": 0.7,
    "ruinOnLoss": 1,
    "ruinPrefab": "",
    "ruinScale": 0.0,
    "combinesWith": [
-    "forge",
     "anvil",
     "quench-barrel"
    ],
@@ -1619,5 +1617,5 @@
    }
   }
  ],
- "_note": " RESTORED 2026-08-14 (C1/D-226): the 29->72 rebuild won tech breadth and flattened the grammar. category is a real axis again (craft/knowledge/faith/law/commerce/wealth/culture), requiresCustom is back on star-banner (it was firing in EVERY village, unconditionally), minCrafts/minGen carry depth again, our own rendered mill/well/kiln/forge GLBs are the prefabs where they beat the pack props, and forge/commons-fire/green-bench are back. requiresCustom needs the driver to export cosmos/beliefs (C2). C3/D-232: entries may now carry `requires` {allOf|anyOf|noneOf} of {tech,custom,minPop,minCrafts,minGen} for predicates a single requiresTech cannot express, and `combinesWith` naming the parts that BECOME this whole (the parts are then suppressed). The flat fields remain and are AND-ed with `requires`, so every earlier entry is untouched. A combination whose prefab does not resolve is never placed — told, never shown broken (spec 5b.1)."
+ "_note": " RESTORED 2026-08-14 (C1/D-226): the 29->72 rebuild won tech breadth and flattened the grammar. category is a real axis again (craft/knowledge/faith/law/commerce/wealth/culture), requiresCustom is back on star-banner (it was firing in EVERY village, unconditionally), minCrafts/minGen carry depth again, our own rendered mill/well/kiln/forge GLBs are the prefabs where they beat the pack props, and forge/commons-fire/green-bench are back. requiresCustom needs the driver to export cosmos/beliefs (C2). C3/D-232: entries may now carry `requires` {allOf|anyOf|noneOf} of {tech,custom,minPop,minCrafts,minGen} for predicates a single requiresTech cannot express, and `combinesWith` naming the parts that BECOME this whole (the parts are then suppressed). The flat fields remain and are AND-ed with `requires`, so every earlier entry is untouched. A combination whose prefab does not resolve is never placed — told, never shown broken (spec 5b.1). D-239: a WHOLE must never be smaller than the parts it absorbs. The first two proof entries absorbed the forge and the market and then put down a single anvil and a single shelf — inverting the very principle they were written to demonstrate. They now absorb only the loose furniture and stand BESIDE the building that earns them."
 }

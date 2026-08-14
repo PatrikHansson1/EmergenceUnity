@@ -59,13 +59,30 @@ namespace Emergence.Runtime
 
             // 1) desired set from the current state (the `when` gate per village)
             var desired = new Dictionary<string, (CodexEntry e, WorldVillage v, int k, int cnt, int vi)>();
+            // D-239. Two sets the removal pass cannot do without:
+            //   standing — "<vi>:<id>" that still satisfies the gate. THE CAP GOVERNS WHAT MAY BE RAISED,
+            //   NEVER WHAT MAY STAND: a village that dips from 12 souls to 11 must not pull down its
+            //   newest milestone, leave rubble, and tell its own chronicle the knowledge was lost — then
+            //   put it back when the eleventh child is born. That flicker is a population wobble, not history.
+            //   absorbed — "<vi>:<id>" that became part of a greater whole. Absorption and loss are
+            //   OPPOSITE events and only one of them leaves a ruin. Until this set existed, the first
+            //   village to raise a smith's yard was told it had lost its forge, in the same tick.
+            var standing = new HashSet<string>();
+            var absorbed = new HashSet<string>();
             for (int vi = 0; vi < S.villages.Length; vi++)
             {
                 var v = S.villages[vi];
                 // C4+C5 (D-230): not every qualified object at once. A village raises what its
                 // hands can raise, oldest first — see CodexBuildOrder for why knowledge is the
                 // wrong pacer and hands are the right one.
-                foreach (var e in CodexBuildOrder.Allowed(v, codex.objects))
+                // D-239: the prefab test is passed IN, so a combined whole whose look does not
+                // resolve absorbs nothing — spec §5b.1 made real instead of quoted.
+                System.Func<string, bool> resolves = nm => !string.IsNullOrWhiteSpace(nm) && cat != null && cat.Prefab(nm) != null;
+                HashSet<string> absorbedHere;
+                var allowed = CodexBuildOrder.Allowed(v, codex.objects, resolves, out absorbedHere);
+                foreach (var id in absorbedHere) absorbed.Add(vi + ":" + id);
+                foreach (var id in CodexBuildOrder.Standing(v, codex.objects, resolves)) standing.Add(vi + ":" + id);
+                foreach (var e in allowed)
                 {
                     int cnt = Mathf.Max(1, e.count);
                     for (int k = 0; k < cnt; k++)
@@ -81,6 +98,11 @@ namespace Emergence.Runtime
             //    leaves a RUIN where it stood (D-112); ephemeral/portable objects simply vanish.
             foreach (var id in _placed.Keys.Where(id => !desired.ContainsKey(id)).ToList())
             {
+                {
+                    var pp = id.Split(':');
+                    string key = pp.Length > 1 ? pp[0] + ":" + pp[1] : id;
+                    if (standing.Contains(key)) { d.kept++; continue; }        // still true, merely over the ceiling
+                }
                 var go = _placed[id];
                 _placed.Remove(id);
                 var parts = id.Split(':');
@@ -88,6 +110,17 @@ namespace Emergence.Runtime
                 int vi = ParseVi(parts);
                 byId.TryGetValue(objId, out var entry);
 
+                bool wasAbsorbed = absorbed.Contains(vi + ":" + objId);
+                if (wasAbsorbed)
+                {
+                    // it did not fall. It became part of something larger, and the larger thing is
+                    // standing where it stood. No rubble, and no line in the chronicle about loss.
+                    if (go != null) Retire(go);
+                    d.removed++;
+                    PresentationEventBus.Publish(new PresentationEvent(
+                        _tick, S.years, WorldEras.Name(S), PresentationEventType.AssetRemoved, objId, vi, "absorbed into a whole"));
+                    continue;
+                }
                 if (entry != null && entry.ruinOnLoss == 1 && go != null && !_ruins.ContainsKey(id))
                 {
                     // swap the fallen structure for rubble at the exact footprint it occupied
@@ -198,7 +231,10 @@ namespace Emergence.Runtime
 
         static int ParseVi(string[] parts) => (parts.Length > 0 && int.TryParse(parts[0], out var i)) ? i : -1;
 
-        // ---- placement mirrors WorldDresser exactly (so overlay == full-build overlay) ----
+        // ---- placement mirrors WorldDresser (so overlay == full-build overlay) ----
+        // The GATE and the BUILD ORDER are literally one implementation now (CodexBuildOrder, D-230), and
+        // the settle law is applied by both (D-239). "Exactly" was an overclaim the moment either side
+        // grew something the other lacked; it is a claim worth re-earning at every change, not asserting.
         // the gate itself moved to CodexBuildOrder.Qualifies — it was two copies of one law,
         // here and in WorldDresser, and a law with two copies is a law with two futures.
         static bool CodexQualifies(WorldVillage v, CodexEntry e) => CodexBuildOrder.Qualifies(v, e);
@@ -222,6 +258,11 @@ namespace Emergence.Runtime
             if (go == null || v == null || e == null) return;
             int gens = Mathf.Clamp(v.maxGen, 0, SettleMaxGen);
             if (gens <= 0) return;
+            // D-239: the re-derivation is the ONLY thing that stops a sink accumulating onto a sink,
+            // and GroundW returns its input unchanged when there is no active terrain. With no terrain
+            // there is no ground truth to re-derive from, so the honest move is to settle nothing at all
+            // rather than subtract another 18 mm every reconcile, forever.
+            if (Terrain.activeTerrain == null) return;
             uint h = Hash(Mathf.RoundToInt(v.x), Mathf.RoundToInt(v.y), e.id.Length * 13 + k);
             float bias = ((h & 0xFFu) / 255f) * 0.6f + 0.4f;             // 0.4..1.0 — each thing ages at its own rate
             float sink = gens * SettleSinkPerGen * bias;

@@ -1,5 +1,5 @@
 EMERGENCE — VÅG 1.1: does the LIVING world have ground?
-generated 2026-08-14 19:14:42
+generated 2026-08-14 21:52:22
 scene = the self-composing opening ONLY. No WorldDresser, no capture rig, no editor-only path.
 
 1. WAS THE GROUND RAISED, BY THE LIVING LOOP ITSELF?
@@ -60,20 +60,20 @@ scene = the self-composing opening ONLY. No WorldDresser, no capture rig, no edi
      renderers measured: 3192
      shaders in use: Polyart/Dreamscape/Foliage/Leaves x922 | Polyart/Dreamscape/Props x879 | Polyart/Dreamscape/Foliage/Foliage x814 | Polyart/Dreamscape/Foliage/Trunk x217 | Polyart/Dreamscape Foliage Billboard x211 | Universal Render Pipeline/Lit x139
      tallest object: Tree_Large_02_LOD3 [M_TreeLarge_BB_02] = 25,1 m (11,3x a villager)
-       Tree_Large_01_LOD0         h=17,4m (7,8x villager)  SINKS 0,63m  M_TreeLarge_Leaves
-       Tree_Large_03_LOD0         h=14,5m (6,5x villager)  M_TreeLarge_Leaves
-       Tree_Large_02_LOD2         h=22,4m (10,1x villager)  SINKS 0,80m  M_TreeLarge_Leaves
-       Tree_Large_03_LOD3         h=14,0m (6,3x villager)  M_TreeLarge_BB_03
-       Birch_01_LOD0              h=16,0m (7,1x villager)  SINKS 0,47m  M_TreeBirch_Leaves
-       Birch_02_LOD2              h=14,5m (6,5x villager)  SINKS 0,52m  M_TreeBirch_Leaves
-       Tree_Large_02_LOD0         h=21,3m (9,5x villager)  SINKS 0,69m  M_TreeLarge_Leaves
-       Birch_01_LOD0              h=14,6m (6,6x villager)  SINKS 0,69m  M_TreeBirch_Leaves
-       Tree_Large_01_LOD2         h=18,9m (8,5x villager)  SINKS 0,23m  M_TreeLarge_Leaves
-       Birch_04_LOD1              h=13,7m (6,1x villager)  SINKS 0,49m  M_TreeBirch_Leaves
-       Birch_01_LOD1              h=15,9m (7,1x villager)  SINKS 0,28m  M_TreeBirch_Leaves
-       Tree_Large_01_LOD2         h=15,8m (7,1x villager)  M_TreeLarge_Leaves
-       Birch_02_LOD1              h=15,8m (7,1x villager)  SINKS 0,79m  M_TreeBirch_Leaves
-       Birch_02_LOD1              h=15,5m (7,0x villager)  SINKS 0,85m  M_TreeBirch_Leaves
+       Birch_04_LOD3              h=15,9m (7,1x villager)  SINKS 0,51m  M_TreeBirch_Bark
+       Birch_04_LOD3              h=13,1m (5,8x villager)  SINKS 1,07m  M_TreeBirch_Bark
+       Birch_06_LOD0              h=11,5m (5,2x villager)  SINKS 0,50m  M_TreeBirch_Leaves
+       Tree_Large_04_LOD0         h=18,0m (8,1x villager)  SINKS 0,87m  M_TreeLarge_Leaves
+       Birch_06_LOD0              h=14,6m (6,6x villager)  SINKS 0,86m  M_TreeBirch_Leaves
+       Tree_Large_03_LOD1         h=18,9m (8,5x villager)  SINKS 0,09m  M_TreeLarge_Leaves
+       Birch_02_LOD3              h=15,3m (6,8x villager)  SINKS 0,73m  M_Birch_02_BB
+       Tree_Large_04_LOD3         h=18,8m (8,4x villager)  SINKS 0,73m  M_TreeLarge_BB_04
+       Tree_Large_01_LOD2         h=16,1m (7,2x villager)  M_TreeLarge_Leaves
+       Birch_02_LOD1              h=17,0m (7,6x villager)  SINKS 0,97m  M_TreeBirch_Leaves
+       Birch_01_LOD2              h=15,3m (6,9x villager)  SINKS 0,65m  M_TreeBirch_Bark
+       Birch_04_LOD1              h=15,4m (6,9x villager)  SINKS 0,57m  M_TreeBirch_Leaves
+       Birch_02_LOD0              h=14,9m (6,7x villager)  SINKS 0,73m  M_TreeBirch_Leaves
+       Tree_Large_04_LOD3         h=21,2m (9,5x villager)  SINKS 0,56m  M_TreeLarge_BB_04
 
      THE TEN LARGEST OBJECTS (unconditional — nothing hides here):
        32,0x24,0x32,4 m  Nature_Live / Prefab_TreeLarge_04(Clone) / Tree_Large_04_LOD3   mat=M_TreeLarge_BB_04  tex=T_TrreeLarge_04_BB  slots=2  at (601, 25, 266)
@@ -88,8 +88,8 @@ scene = the self-composing opening ONLY. No WorldDresser, no capture rig, no edi
        29,8x23,0x30,9 m  Nature_Live / Prefab_TreeLarge_04(Clone) / Tree_Large_04_LOD3   mat=M_TreeLarge_BB_04  tex=T_TrreeLarge_04_BB  slots=2  at (584, 28, 297)
   PASS  there is something standing on the ground at all (3192 renderers)
   PASS  NOTHING wears Unity's default material (0 do — that IS the grey checker Patrik saw)
-       SINKS 0,14 m  Agents_Live / agent_10_Rune / Armature / char1  mat=Material_1 (lit, not lamp) t1
        SINKS 0,12 m  Agents_Live / agent_6_Sten / Armature / char1  mat=Material_1 (lit, not lamp) t3
+       SINKS 0,14 m  Agents_Live / agent_10_Rune / Armature / char1  mat=Material_1 (lit, not lamp) t1
   FAIL  no BUILT thing or person sinks through the ground (2 do; 2037 natural props bedded into it, which is correct)
   PASS  nothing is absurdly out of scale (tallest = 14,4x a person — a real tree is 8-14x)
 
@@ -120,8 +120,8 @@ scene = the self-composing opening ONLY. No WorldDresser, no capture rig, no edi
 
 6. WHAT THE WORLD COSTS (one frame, from the DECLARED eye-level pose —
    an anchor on the builder's machine, never a min-spec verdict)
-     renderers in scene: 3192   draw calls: 955   set-pass: 194   triangles: 651k
-     frame: 2,6 ms (391 fps)   quality 'PC'
+     renderers in scene: 3192   draw calls: 951   set-pass: 194   triangles: 643k
+     frame: 2,5 ms (394 fps)   quality 'PC'
      within the A6 draw-call budget (2500, set against a GTX 1660-class min spec)
      29 draw calls per 100 renderers
      eye at (356.0, 27.5, 223.1) (ground 25,1 m), looking at (390.0, 22.9, 257.1)

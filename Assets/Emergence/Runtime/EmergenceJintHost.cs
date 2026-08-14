@@ -11,7 +11,7 @@ namespace Emergence.Runtime
 {
     public sealed class EmergenceJintHost
     {
-        public const string ExpectedEngineSha = "2fc1647cc683ee856304931926e338d59919ed35ba04bbc529459f8d87132933"; // ENGINE 2.6.0 (M3 of D-226/D-234): the curiosity expedition could bring home only six materials and the ORES were not among them, so copperGreen was unobservable and bronze/steel/clock/steam were unreachable in every world -- the same class of fault as the three dead insights: the data existed and no code path led to it. Ores added; and the reach a people can fetch from now grows with wheel/sailing/road, plus a partner village's ground when they can reach it (the tin trade). Goldens RE-BASELINED. Prior 2.5.1 sha: b83e53803ea5...
+        public const string ExpectedEngineSha = "70c5ff639e8c959a8aa91bb29bf1dd11263620ca78e83b0f87f8334fcd300ee4"; // ENGINE 2.6.0 + two comment-only corrections (D-239 review): the forage ladder is PARALLEL to the world-gate ladder, not the same one, and the herbsHeal rate reads hunger after the meal. A comment changes the file's own SHA and nothing else -- the sim stream is byte-identical and the goldens are NOT re-baselined (2.3.1/2.4.1 precedent). Prior 2.6.0 sha: 2fc1647cc683...
 
         private readonly Jint.Engine _engine;
         public string EngineSha256 { get; }
@@ -75,7 +75,7 @@ namespace Emergence.Runtime
                 throw new FileNotFoundException(
                     "The living engine (StreamingAssets/Emergence/emergence-engine.js) is missing, and " +
                     "Assets/Emergence/Engine holds an engine file. That file is a 2.0.1 RELIC with 17 techs; " +
-                    "the game runs 2.4.1 with 53. Running it would silently produce a different world from " +
+                    "the game runs 2.6.0 with 53. Running it would silently produce a different world from " +
                     "the same seed. Restore StreamingAssets instead — see _ARCHIVE/2026-08-14-engine-relic/.");
             throw new FileNotFoundException("Engine source not found: " + sa);
         }

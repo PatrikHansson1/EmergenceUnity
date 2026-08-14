@@ -1652,7 +1652,7 @@ function agentTick(S,a){
         moveToward(S,a,w);a.task='going fishing';return;
       }
     }
-    doSeek(S,a,'berry',()=>{S.tiles[a.ty][a.tx0].n--;if(S.tiles[a.ty][a.tx0].n<=0)regrowLater(S,a.tx0,a.ty,'berry');a.hunger=clamp(a.hunger+45+(worldKnows(S,'mill')?20:0),0,140);a.task='eating';tryObserve(S,a,'seedsSprout',.09);tryObserve(S,a,'herbsHeal',a.hunger<60?.06:.025);{const w2=findNearest(S,a,'water');if(w2&&Math.hypot(w2.x-a.x,w2.y-a.y)<4)tryObserve(S,a,'fishGather',.12);}if(S.rand()<.1)speak(S,a,pickSay(S,a,'hungry'),'hungry');});return;
+    doSeek(S,a,'berry',()=>{S.tiles[a.ty][a.tx0].n--;if(S.tiles[a.ty][a.tx0].n<=0)regrowLater(S,a.tx0,a.ty,'berry');a.hunger=clamp(a.hunger+45+(worldKnows(S,'mill')?20:0),0,140);a.task='eating';tryObserve(S,a,'seedsSprout',.09);tryObserve(S,a,'herbsHeal',a.hunger<60?.06:.025);/*D-239 nit, declared rather than silently carried: hunger is read AFTER the +45 the meal just gave, so this is the .025 branch almost always. The hook is reachable either way and that was the point; re-ordering it moves the sim stream, so it waits for the next engine wave instead of buying a re-baseline for a rate tweak.*/{const w2=findNearest(S,a,'water');if(w2&&Math.hypot(w2.x-a.x,w2.y-a.y)<4)tryObserve(S,a,'fishGather',.12);}if(S.rand()<.1)speak(S,a,pickSay(S,a,'hungry'),'hungry');});return;
   }
   if(night&&a.warmth<70){
     const f=nearestOf(S.fires.concat(S.huts),a);
@@ -1791,7 +1791,7 @@ function agentTick(S,a){
         const m=pick(S,cand);
         const t=findNearest(S,a,MATSOURCE[m]);
         // how far an expedition dares go grows with what the people know about moving -- the same
-        // ladder the world-gate uses, so what you can FIND and what you can KEEP agree.
+        // ladder the world-gate uses -- CORRECTION (D-239 review): it is a PARALLEL ladder, not the same one. This reads the INDIVIDUAL's knows and runs 25/32/44/52; reachOf reads the VILLAGE's pooled knowledge and runs 16/24/36/44. Finding is a person walking; keeping is a community supplying. They agree in direction, not in number.
         let far=25;
         if(a.knows.has('wheel'))far=32; if(a.knows.has('sailing'))far=44; if(a.knows.has('road'))far=52;
         if(m==='fiber'||t&&Math.hypot(t.x-a.x,t.y-a.y)<=far)a.forage=m;

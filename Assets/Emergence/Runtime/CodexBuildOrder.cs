@@ -74,9 +74,24 @@ namespace Emergence.Runtime
         public static int MilestoneCap(WorldVillage v) => v == null ? 0 : Mathf.Clamp(1 + v.pop / 3 + v.maxGen, 1, MilestoneCapMax);
         public static int DressingCap(WorldVillage v)  => v == null ? 0 : Mathf.Clamp(v.pop / 2, 0, DressingCapMax);
 
-        /// <summary>What this village may actually SHOW: qualified, oldest-first, cut at capacity.</summary>
-        public static List<CodexEntry> Allowed(WorldVillage v, CodexEntry[] objects)
+        /// <summary>What a village may BUILD right now: qualified, oldest-first, cut at capacity, with
+        /// combined wholes standing in for their parts. `prefabExists` is how spec §5b.1 is actually
+        /// honoured — a whole whose look does not resolve must not absorb anything, or the parts vanish
+        /// to make room for something that is never shown. Pass null only where every prefab is known
+        /// to resolve.</summary>
+        public static List<CodexEntry> Allowed(WorldVillage v, CodexEntry[] objects, Func<string, bool> prefabExists = null)
         {
+            HashSet<string> absorbed;
+            return Allowed(v, objects, prefabExists, out absorbed);
+        }
+
+        /// <summary>As above, and also reports which entries were ABSORBED into a whole. The reconciler
+        /// needs that set, because "this became part of something greater" and "this knowledge died" are
+        /// opposite events and only one of them leaves a ruin. Before this was reported, a village that
+        /// first raised a smith's yard was told in its own chronicle that it had lost the forge.</summary>
+        public static List<CodexEntry> Allowed(WorldVillage v, CodexEntry[] objects, Func<string, bool> prefabExists, out HashSet<string> absorbed)
+        {
+            absorbed = new HashSet<string>();
             var outp = new List<CodexEntry>();
             if (v == null || objects == null) return outp;
 
@@ -86,46 +101,70 @@ namespace Emergence.Runtime
             // the build order: the oldest things first, then the ones a small people could
             // manage, then a stable tiebreak. A total order on codex data alone — two runs of
             // the same state produce the same village, on any machine, forever.
-            q.Sort((a, b) =>
-            {
-                int c = a.era.CompareTo(b.era);          if (c != 0) return c;
-                c = a.minPop.CompareTo(b.minPop);        if (c != 0) return c;
-                return string.CompareOrdinal(a.id, b.id);
-            });
+            q.Sort(Order);
 
-            // C3 combination (D-232): when every part a whole names is ALSO qualified here, the parts
-            // become the whole and step aside. This is the mechanism that lets the codex answer a
-            // discovery nobody authored a look for: the whole is a NEW named thing assembled from
-            // things we already own, and a whole whose prefab does not resolve is simply never
-            // added — told by the chronicle, never shown broken (OBJECT-CODEX-SPEC 5b.1).
             var qualifiedIds = new HashSet<string>();
             foreach (var e in q) qualifiedIds.Add(e.id);
-            var absorbed = new HashSet<string>();
+
+            // ---- pass 1: which wholes are REAL here? all parts present, and a look that resolves ----
+            var wholes = new List<CodexEntry>();
             foreach (var e in q)
             {
                 if (e.combinesWith == null || e.combinesWith.Length == 0) continue;
-                bool whole = true;
-                foreach (var part in e.combinesWith) if (!qualifiedIds.Contains(part)) { whole = false; break; }
-                if (!whole) continue;
-                foreach (var part in e.combinesWith) absorbed.Add(part);
+                bool ok = true;
+                foreach (var part in e.combinesWith) if (!qualifiedIds.Contains(part)) { ok = false; break; }
+                if (ok && prefabExists != null && !prefabExists(e.prefab)) ok = false;   // §5b.1: told, never shown broken
+                if (!ok) continue;
+                wholes.Add(e);
+            }
+            foreach (var w in wholes) foreach (var part in w.combinesWith) absorbed.Add(part);
+            // a whole that is itself absorbed into a larger whole absorbs nothing of its own
+            for (int guard = 0; guard < 4; guard++)
+            {
+                bool changed = false;
+                foreach (var w in wholes)
+                {
+                    if (!absorbed.Contains(w.id)) continue;
+                    foreach (var part in w.combinesWith) if (absorbed.Remove(part)) changed = true;
+                }
+                if (!changed) break;
             }
 
+            // ---- pass 2: fill the capacity, wholes and singles alike, in build order ----
             int mCap = MilestoneCap(v), dCap = DressingCap(v), m = 0, d = 0;
             foreach (var e in q)
             {
-                if (absorbed.Contains(e.id)) continue;              // this part is now somebody's whole
-                if (e.combinesWith != null && e.combinesWith.Length > 0)
-                {
-                    bool whole = true;
-                    foreach (var part in e.combinesWith) if (!qualifiedIds.Contains(part)) { whole = false; break; }
-                    if (!whole) continue;                            // the parts are not all here yet
-                }
+                if (absorbed.Contains(e.id)) continue;                       // this part is now somebody's whole
+                if (e.combinesWith != null && e.combinesWith.Length > 0 && !wholes.Contains(e)) continue;
                 bool milestone = e.tier == "milestone";
                 if (milestone) { if (m >= mCap) continue; m++; }
                 else           { if (d >= dCap) continue; d++; }
                 outp.Add(e);
             }
             return outp;
+        }
+
+        static int Order(CodexEntry a, CodexEntry b)
+        {
+            int c = a.era.CompareTo(b.era);          if (c != 0) return c;
+            c = a.minPop.CompareTo(b.minPop);        if (c != 0) return c;
+            return string.CompareOrdinal(a.id, b.id);
+        }
+
+        /// <summary>Everything this village still satisfies the gate for, absorbed parts excluded.
+        /// THE CAP GOVERNS WHAT MAY BE RAISED, NEVER WHAT MAY STAND. A village does not pull down its
+        /// mill because two people died and the ceiling moved by one — and a reconciler that let it
+        /// would produce a ruin and a "the knowledge was lost" line every time a population wobbled
+        /// across a threshold, then a "rediscovered" line on the way back.</summary>
+        public static HashSet<string> Standing(WorldVillage v, CodexEntry[] objects, Func<string, bool> prefabExists = null)
+        {
+            HashSet<string> absorbed;
+            Allowed(v, objects, prefabExists, out absorbed);
+            var standing = new HashSet<string>();
+            if (v == null || objects == null) return standing;
+            foreach (var e in objects)
+                if (Qualifies(v, e) && !absorbed.Contains(e.id)) standing.Add(e.id);
+            return standing;
         }
     }
 }
