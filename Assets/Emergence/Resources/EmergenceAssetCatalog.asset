@@ -203,10 +203,16 @@ MonoBehaviour:
     layer: {fileID: 8574412962073106934, guid: 35e9a24ba4228ca4ca2db903ad2412f9, type: 2}
   - name: Layer_gravel_01
     layer: {fileID: 8574412962073106934, guid: 540f3c883cfdd534ea86a033ef0a41d5, type: 2}
+  - name: Layer_Stone
+    layer: {fileID: 0}
+  - name: Layer_rock_01
+    layer: {fileID: 0}
   - name: Layer_Cobblestone
     layer: {fileID: 8574412962073106934, guid: d58702dc6934e004895731b92cf376d4, type: 2}
   - name: Layer_pavingstone_01
     layer: {fileID: 8574412962073106934, guid: 62de276d344182b4bbffa50320c4a030, type: 2}
+  - name: Layer_Sand
+    layer: {fileID: 8574412962073106934, guid: 6b3db07afdde30b46b9143e7ae511100, type: 2}
   mossPrefabs:
   - {fileID: 4974463672623675875, guid: 33ecd0ef342d8ee4188c82a8b5761ab5, type: 3}
   - {fileID: 5648544150296794767, guid: f1acfe97b07f9f54ca6dc5555723aba1, type: 3}

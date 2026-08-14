@@ -172,7 +172,17 @@ namespace Emergence.Editor
                     sb.AppendLine("     layers: " + string.Join(", ", names));
                     Check(td.terrainLayers.Length >= 4, "at least four ground materials (" + td.terrainLayers.Length + ")");
                     int textured = td.terrainLayers.Count(l => l != null && l.diffuseTexture != null && l.diffuseTexture != Texture2D.whiteTexture);
-                    Check(textured >= 3, textured + " layers carry a REAL texture (a fallback layer is flat white tinted)");
+                    // NAME EVERY LAYER AND ITS TEXTURE. The checkered mounds sit ON the terrain and the
+                    // inventory above skips Terrain by design — so a textureless GROUND layer could
+                    // never be found by it. This is where it would hide.
+                    for (int li = 0; li < td.terrainLayers.Length; li++)
+                    {
+                        var L = td.terrainLayers[li];
+                        sb.AppendLine("       layer " + li + ": " + (L != null ? L.name : "NULL").PadRight(22)
+                                      + " diffuse=" + (L != null && L.diffuseTexture != null ? L.diffuseTexture.name + " " + L.diffuseTexture.width + "px" : "*** NONE — THIS RENDERS AS FLAT/CHECKER ***")
+                                      + (L != null ? "  tile=" + L.tileSize : ""));
+                    }
+                    Check(textured >= 5, textured + " of " + td.terrainLayers.Length + " layers carry a REAL texture (a fallback layer is flat white tinted)");
                     Check(td.detailPrototypes.Length > 0, "the meadow has detail prototypes (" + td.detailPrototypes.Length + " grass/flower)");
                     sb.AppendLine();
                 }
@@ -237,6 +247,38 @@ namespace Emergence.Editor
                 sb.AppendLine("     tallest object: " + tallestName + " = " + tallest.ToString("F1") + " m"
                               + (villagerH > 0.1f ? " (" + (tallest / villagerH).ToString("F1") + "x a villager)" : ""));
                 foreach (var r2 in rows) sb.AppendLine(r2);
+
+                // NAME EVERYTHING. Six hypotheses missed the white objects because every check was
+                // conditional — only flagged rows were printed, and the offenders passed every flag.
+                // So: list the biggest things in the world unconditionally, with their full parent
+                // chain, so an unidentified object can never hide behind a clean bill of health again.
+                sb.AppendLine();
+                sb.AppendLine("     THE TEN LARGEST OBJECTS (unconditional — nothing hides here):");
+                var big = new List<(float vol, string line)>();
+                foreach (var rr3 in rends)
+                {
+                    if (rr3 == null || !rr3.enabled || rr3 is ParticleSystemRenderer) continue;
+                    if (rr3.gameObject.GetComponent<Terrain>() != null) continue;
+                    var bb3 = rr3.bounds;
+                    if (bb3.size.y <= 0.001f) continue;
+                    float vol = bb3.size.x * bb3.size.y * bb3.size.z;
+                    string chain = rr3.name;
+                    var p3 = rr3.transform.parent;
+                    int guard = 0;
+                    while (p3 != null && guard++ < 4) { chain = p3.name + " / " + chain; p3 = p3.parent; }
+                    var m3 = rr3.sharedMaterial;
+                    Texture t3 = null;
+                    // NOTE: glTFast's Shader Graph does not use _BaseMap/_MainTex — reading only those
+                    // reported our own villager GLBs as textureless, which the source files disprove
+                    // (they carry a baseColorTexture and TEXCOORD_0). Ask the material what it actually has.
+                    if (m3 != null) t3 = FirstTexture(m3);
+                    big.Add((vol, "       " + bb3.size.x.ToString("F1") + "x" + bb3.size.y.ToString("F1") + "x" + bb3.size.z.ToString("F1") + " m  "
+                                  + chain + "   mat=" + (m3 != null ? m3.name : "none")
+                                  + "  tex=" + (t3 != null ? t3.name : "NONE")
+                                  + "  slots=" + (rr3.sharedMaterials != null ? rr3.sharedMaterials.Length : 0)
+                                  + "  at " + bb3.center.ToString("F0")));
+                }
+                foreach (var e3 in big.OrderByDescending(x => x.vol).Take(10)) sb.AppendLine(e3.line);
                 Check(measured > 0, "there is something standing on the ground at all (" + measured + " renderers)");
                 Check(defaultMat == 0, "NOTHING wears Unity's default material (" + defaultMat + " do — that IS the grey checker Patrik saw)");
                 Check(sunk == 0, "NOTHING sinks through the ground (" + sunk + " do)");
@@ -279,6 +321,30 @@ namespace Emergence.Editor
                     RenderSettings.fog = fogWas;
                     sb.AppendLine("     " + cam2Note + " -> Reports/house-in-scene.png");
                 }
+                // and the same treatment for a VILLAGER — the ten-largest list named char1 as the
+                // suspect, so put it in front of the lens under the same conditions as the house.
+                Renderer soul = null; float soulSize = 0f;
+                foreach (var rr4 in UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsSortMode.None))
+                {
+                    if (rr4 == null || !rr4.name.StartsWith("char")) continue;
+                    if (rr4.bounds.size.y > soulSize) { soulSize = rr4.bounds.size.y; soul = rr4; }
+                }
+                if (soul != null)
+                {
+                    var b4 = soul.bounds;
+                    float d4 = Mathf.Max(3.5f, b4.size.magnitude * 1.4f);
+                    var c4 = Camera.main;
+                    c4.transform.position = b4.center + new Vector3(d4 * 0.7f, d4 * 0.25f, d4 * 0.7f);
+                    c4.transform.LookAt(b4.center);
+                    bool fw = RenderSettings.fog; RenderSettings.fog = false;
+                    CaptureRaw("villager-in-scene");
+                    RenderSettings.fog = fw;
+                    var mt = soul.sharedMaterial;
+                    sb.AppendLine("     close-up on " + soul.name + " (" + b4.size.y.ToString("F1") + " m) mat=" + (mt != null ? mt.name : "none")
+                                  + " shader=" + (mt != null && mt.shader != null ? mt.shader.name : "-")
+                                  + " tex=" + (mt != null && FirstTexture(mt) != null ? FirstTexture(mt).name : "NONE")
+                                  + " -> Reports/villager-in-scene.png");
+                }
                 sb.AppendLine("     " + camNote);
                 Check(magenta >= 0, "capture written");
                 Check(magenta == 0, "no missing-material magenta in frame (" + magenta + " px)");
@@ -306,6 +372,23 @@ namespace Emergence.Editor
 
         /// <summary>Stand a camera at a person's height on the land and look across it. Manual RT capture
         /// (D-125: ScreenCapture yields a white frame on an unattended editor).</summary>
+        /// <summary>The first real texture on a material, whatever the shader calls it. A probe that
+        /// only knows URP's names will call every glTF material textureless and send the hunt sideways.</summary>
+        static Texture FirstTexture(Material m)
+        {
+            if (m == null || m.shader == null) return null;
+            foreach (var n in new[] { "_BaseMap", "_MainTex", "baseColorTexture", "_baseColorTexture", "_BaseColorTexture" })
+                if (m.HasProperty(n)) { var t = m.GetTexture(n); if (t != null) return t; }
+            int count = UnityEditor.ShaderUtil.GetPropertyCount(m.shader);
+            for (int i = 0; i < count; i++)
+                if (UnityEditor.ShaderUtil.GetPropertyType(m.shader, i) == UnityEditor.ShaderUtil.ShaderPropertyType.TexEnv)
+                {
+                    var t = m.GetTexture(UnityEditor.ShaderUtil.GetPropertyName(m.shader, i));
+                    if (t != null) return t;
+                }
+            return null;
+        }
+
         static string cam2Note = "";
 
         /// <summary>Grab whatever the camera is currently looking at, without re-framing.</summary>

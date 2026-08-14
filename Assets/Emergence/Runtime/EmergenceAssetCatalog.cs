@@ -70,6 +70,17 @@ namespace Emergence.Runtime
         public TerrainLayer TerrainLayer(string[] candidates)
         {
             if (candidates == null) return null;
+            // A LAYER WITHOUT A TEXTURE IS NOT A LAYER (2026-08-14, D-213). Layer_Rock and
+            // Layer_Cobblestone exist as assets but carry NO diffuse texture, so the ground painted
+            // with them rendered as flat white checker — the "big white stones" in Patrik's field
+            // report, scattered exactly where the alphamap puts stone. Taking the first NAME match
+            // was the bug; take the first match that can actually be seen, and only fall back to a
+            // textureless one if nothing better exists.
+            foreach (var nm in candidates)
+                for (int i = 0; i < terrainLayers.Count; i++)
+                    if (terrainLayers[i].layer != null && terrainLayers[i].layer.diffuseTexture != null &&
+                        string.Equals(terrainLayers[i].name, nm, StringComparison.OrdinalIgnoreCase))
+                        return terrainLayers[i].layer;
             foreach (var nm in candidates)
                 for (int i = 0; i < terrainLayers.Count; i++)
                     if (terrainLayers[i].layer != null &&

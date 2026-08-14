@@ -118,8 +118,8 @@ namespace Emergence.Runtime
                 grass  = Add(cat, layers, new[] { "Layer_Grass", "Layer_grass_01" }, new Color(0.35f, 0.5f, 0.22f)),
                 field  = Add(cat, layers, new[] { "Layer_farmfield", "Layer_Dirt" }, new Color(0.45f, 0.35f, 0.2f)),
                 path   = Add(cat, layers, new[] { "Layer_Dirt" }, new Color(0.42f, 0.32f, 0.2f)),
-                gravel = Add(cat, layers, new[] { "Layer_Rock", "Layer_gravel_01" }, new Color(0.5f, 0.48f, 0.45f)),
-                cobble = Add(cat, layers, new[] { "Layer_Cobblestone", "Layer_pavingstone_01" }, new Color(0.55f, 0.53f, 0.5f)),
+                gravel = Add(cat, layers, new[] { "Layer_gravel_01", "Layer_Rock", "Layer_Stone", "Layer_rock_01" }, new Color(0.5f, 0.48f, 0.45f)),
+                cobble = Add(cat, layers, new[] { "Layer_pavingstone_01", "Layer_Cobblestone", "Layer_Dirt" }, new Color(0.55f, 0.53f, 0.5f)),
             };
             data.terrainLayers = layers.ToArray();
             return idx;

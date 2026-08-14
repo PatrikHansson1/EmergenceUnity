@@ -149,7 +149,8 @@ namespace Emergence.Editor
             // AssetDatabase. Names are exactly the dresser's own candidates, preference order intact.
             cat.terrainLayers.Clear();
             var wantedLayers = new[] { "Layer_Grass", "Layer_grass_01", "Layer_farmfield", "Layer_Dirt",
-                                       "Layer_Rock", "Layer_gravel_01", "Layer_Cobblestone", "Layer_pavingstone_01" };
+                                       "Layer_Rock", "Layer_gravel_01", "Layer_Stone", "Layer_rock_01",
+                                       "Layer_Cobblestone", "Layer_pavingstone_01", "Layer_Sand" };
             int lok = 0;
             foreach (var ln in wantedLayers)
             {
@@ -160,7 +161,7 @@ namespace Emergence.Editor
                     if (Path.GetFileNameWithoutExtension(p) == ln) { tl = AssetDatabase.LoadAssetAtPath<TerrainLayer>(p); break; }
                 }
                 cat.terrainLayers.Add(new EmergenceAssetCatalog.TerrainLayerEntry { name = ln, layer = tl });
-                if (tl != null) lok++;
+                if (tl != null) { lok++; if (tl.diffuseTexture == null) sb.AppendLine($"  WARNING: terrain layer {ln} has NO diffuse texture — it would render as flat checker"); }
             }
             sb.AppendLine($"terrain layers resolved: {lok}/{wantedLayers.Length}  [{string.Join(", ", cat.terrainLayers.Where(t => t.layer != null).Select(t => t.name))}]");
 
