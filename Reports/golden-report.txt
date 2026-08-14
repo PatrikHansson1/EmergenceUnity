@@ -901,3 +901,12 @@ seed=20260718 t=720: GREEN jintSha=f6d6f94ad1b1451e0041e203fc31fdf4be091800b49d3
 seed=4242-founders t=720: GREEN jintSha=0e1ecd5658cc8301cb6f5891ee9db9edddde12126827e8594fc5e3afdd4fe2ac goldenSha=0e1ecd5658cc8301cb6f5891ee9db9edddde12126827e8594fc5e3afdd4fe2ac bytes=309366 secs=38
 VERDICT: GREEN
 
+GOLDEN MASTER — in-editor (Unity 6000.5.4f1, 2026-08-14 18:01)
+commit: 1044f7534c90 (refs/heads/audition/free-assets-2026-07-19)
+Engine SHA assert: OK
+seed=97013 t=720: GREEN jintSha=e97b191fd8399d16c4477401a643fa1dd207bbc1cd7f687d3309b61bca58e2bc goldenSha=e97b191fd8399d16c4477401a643fa1dd207bbc1cd7f687d3309b61bca58e2bc bytes=316718 secs=37
+seed=4242 t=720: GREEN jintSha=649ef324d71b1ebe84fe0ea1bd1a3524d2bcad7008ce11764d4c6223b7918dbe goldenSha=649ef324d71b1ebe84fe0ea1bd1a3524d2bcad7008ce11764d4c6223b7918dbe bytes=313883 secs=50
+seed=20260718 t=720: GREEN jintSha=f6d6f94ad1b1451e0041e203fc31fdf4be091800b49d3a3f953ffe55980e6680 goldenSha=f6d6f94ad1b1451e0041e203fc31fdf4be091800b49d3a3f953ffe55980e6680 bytes=323849 secs=33
+seed=4242-founders t=720: GREEN jintSha=0e1ecd5658cc8301cb6f5891ee9db9edddde12126827e8594fc5e3afdd4fe2ac goldenSha=0e1ecd5658cc8301cb6f5891ee9db9edddde12126827e8594fc5e3afdd4fe2ac bytes=309366 secs=37
+VERDICT: GREEN
+

@@ -94,7 +94,11 @@ namespace Emergence.Editor
             PlaceAmbientFX(S, root.transform);     // D-115: Dreamscape's own drifting leaves + dust motes (atmosphere; visible in play mode)
             PlaceWorkMarks(S, root.transform);    // TD-031 v2.2b: quarry scars at depleted stone tiles (Materials layer)
             PlaceAgents(S, root.transform);       // the studio's own rendered villagers (EP directive)
-            PlaceTechAnchors(S, root.transform);  // forge/mill/kiln/well — fills the D-062 pack gap
+            // C7 (D-233): PlaceTechAnchors is GONE. It stood a well in EVERY village regardless of
+            // whether anyone there knew how to dig one, and picked forge/mill/kiln by position hash
+            // — a world that lied about what its people could do, which is the exact opposite of the
+            // codex's premise. The codex now owns those four, gated on their real techs, using the
+            // same GLBs (mill.glb / well.glb / kiln.glb / forge.glb). One placer, one truth.
             PlaceCodexObjects(S, root.transform); // TD-033: discovery-driven objects (mill/tablets/star-banner/market by village development)
             PlaceAnimals(S, root.transform);      // the studio's own deer/wolf GLBs (animal upgrade)
             EmergenceLightRig.Apply(S.season, "day");
@@ -1110,19 +1114,7 @@ namespace Emergence.Editor
         // TD-028: forge/mill/kiln/well as COMPOSED markers (D-062), not scatter. v1: a well at each
         // village + one hash-picked craft anchor offset from centre. (Engine tech-per-village export
         // is a later refinement; for now every village reads as a settled place with a well + a craft.)
-        static void PlaceTechAnchors(WorldState S, Transform root)
-        {
-            var parent = new GameObject("TechAnchors").transform; parent.SetParent(root, true);
-            var well = AssetDatabase.LoadAssetAtPath<GameObject>(TechDir + "well.glb");
-            string[] craft = { "forge", "mill", "kiln" };
-            foreach (var v in S.villages)
-            {
-                if (well != null) Anchor(well, S, v.x, v.y, parent);
-                var cName = craft[Hash((int)v.x, (int)v.y, 3) % (uint)craft.Length];
-                var c = AssetDatabase.LoadAssetAtPath<GameObject>(TechDir + cName + ".glb");
-                if (c != null) Anchor(c, S, v.x + 2.2f, v.y + 1.4f, parent);
-            }
-        }
+        // PlaceTechAnchors removed with C7 (D-233) — see the note at the call site.
 
         static void Anchor(GameObject pf, WorldState S, float x, float y, Transform parent)
         {
