@@ -1457,11 +1457,13 @@ namespace Emergence.Editor
                 // D-239: the prefab test is passed in so a whole with no resolvable look absorbs nothing.
                 foreach (var e in CodexBuildOrder.Allowed(v, codex.objects, nm => LoadCodexPrefab(nm) != null))
                 {
-                    var pf = LoadCodexPrefab(e.prefab);
-                    if (pf == null) continue;
+                    if (LoadCodexPrefab(e.prefab) == null) continue;
                     int cnt = Mathf.Max(1, e.count);
                     for (int k = 0; k < cnt; k++)
                     {
+                        // D-243: the same deterministic variant law as the played world
+                        var pf = LoadCodexPrefab(Emergence.Runtime.LiveReconciler.VariantOf(e, v, k)) ?? LoadCodexPrefab(e.prefab);
+                        if (pf == null) continue;
                         var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, parent);
                         var pos = CodexPlacement(v, e, k, cnt);
                         go.transform.position = GroundW(P(S, pos.x, pos.y));

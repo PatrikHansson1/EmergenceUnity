@@ -33,7 +33,7 @@ namespace Emergence.Editor
             catch (Exception e) { try { File.WriteAllText(Done, "ERROR " + e.Message + "\n"); } catch {} }
         }
 
-        [Serializable] class Entry { public string id, prefab, tier; public Part[] arrangement; }
+        [Serializable] class Entry { public string id, prefab, tier; public Part[] arrangement; public string[] variants; }
         [Serializable] class Part  { public string prefab; }
         [Serializable] class Codex { public Entry[] objects; }
 
@@ -49,6 +49,9 @@ namespace Emergence.Editor
                 // D-242: an arrangement's parts are REFERENCED assets too. Counting only the anchor
                 // would let a whole quietly point at a prefab that does not exist and still report
                 // 0 dangling — the anti-orphan guarantee has to cover every name the codex can place.
+                if (e.variants != null)
+                    foreach (var vn in e.variants)
+                        if (!string.IsNullOrWhiteSpace(vn)) referenced.Add(Path.GetFileNameWithoutExtension(vn));
                 if (e.arrangement != null)
                     foreach (var pt in e.arrangement)
                         if (pt != null && !string.IsNullOrWhiteSpace(pt.prefab))

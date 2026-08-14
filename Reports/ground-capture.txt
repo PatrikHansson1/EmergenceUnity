@@ -1,5 +1,5 @@
 EMERGENCE — VÅG 1.1: does the LIVING world have ground?
-generated 2026-08-14 22:45:12
+generated 2026-08-14 22:58:42
 scene = the self-composing opening ONLY. No WorldDresser, no capture rig, no editor-only path.
 
 1. WAS THE GROUND RAISED, BY THE LIVING LOOP ITSELF?
@@ -60,20 +60,20 @@ scene = the self-composing opening ONLY. No WorldDresser, no capture rig, no edi
      renderers measured: 3192
      shaders in use: Polyart/Dreamscape/Foliage/Leaves x922 | Polyart/Dreamscape/Props x879 | Polyart/Dreamscape/Foliage/Foliage x814 | Polyart/Dreamscape/Foliage/Trunk x217 | Polyart/Dreamscape Foliage Billboard x211 | Universal Render Pipeline/Lit x139
      tallest object: Tree_Large_02_LOD3 [M_TreeLarge_BB_02] = 25,1 m (11,3x a villager)
-       Birch_01_LOD3              h=12,9m (5,8x villager)  SINKS 0,23m  M_Birch_01_BB
-       Birch_04_LOD1              h=12,8m (5,7x villager)  SINKS 0,96m  M_TreeBirch_Leaves
-       Birch_06_LOD0              h=12,2m (5,5x villager)  SINKS 0,69m  M_TreeBirch_Leaves
-       Birch_01_LOD0              h=12,7m (5,7x villager)  SINKS 0,49m  M_TreeBirch_Leaves
-       Birch_01_LOD0              h=14,6m (6,5x villager)  SINKS 0,91m  M_TreeBirch_Leaves
-       Birch_01_LOD3              h=13,6m (6,1x villager)  SINKS 0,30m  M_Birch_01_BB
-       Tree_Large_04_LOD3         h=17,2m (7,7x villager)  SINKS 0,79m  M_TreeLarge_BB_04
-       Birch_06_LOD1              h=12,9m (5,8x villager)  SINKS 0,33m  M_TreeBirch_Leaves
-       Tree_Large_03_LOD0         h=13,4m (6,0x villager)  M_TreeLarge_Leaves
-       Tree_Large_01_LOD3         h=19,0m (8,5x villager)  SINKS 0,23m  M_TreeLarge_Bark
-       Birch_04_LOD3              h=12,4m (5,6x villager)  SINKS 0,31m  M_TreeBirch_Bark
-       Tree_Large_02_LOD1         h=16,6m (7,4x villager)  SINKS 0,60m  M_TreeLarge_Leaves
-       Tree_Large_01_LOD2         h=18,9m (8,5x villager)  SINKS 0,23m  M_TreeLarge_Leaves
-       Birch_02_LOD0              h=14,9m (6,7x villager)  SINKS 0,77m  M_TreeBirch_Leaves
+       Tree_Large_01_LOD2         h=15,8m (7,1x villager)  M_TreeLarge_Leaves
+       Tree_Large_03_LOD0         h=13,4m (6,0x villager)  SINKS 0,44m  M_TreeLarge_Leaves
+       Birch_04_LOD3              h=15,9m (7,1x villager)  SINKS 0,11m  M_TreeBirch_Bark
+       Tree_Large_01_LOD2         h=20,1m (9,0x villager)  SINKS 0,18m  M_TreeLarge_Leaves
+       Tree_Large_03_LOD2         h=14,8m (6,6x villager)  SINKS 0,89m  M_TreeLarge_Leaves
+       Birch_06_LOD2              h=14,6m (6,5x villager)  SINKS 0,54m  M_TreeBirch_Bark
+       Tree_Large_01_LOD2         h=20,7m (9,3x villager)  SINKS 0,74m  M_TreeLarge_Leaves
+       Birch_02_LOD3              h=17,2m (7,7x villager)  SINKS 0,34m  M_Birch_02_BB
+       Birch_06_LOD2              h=12,4m (5,6x villager)  SINKS 0,06m  M_TreeBirch_Bark
+       Birch_02_LOD1              h=16,8m (7,5x villager)  SINKS 1,25m  M_TreeBirch_Leaves
+       Birch_01_LOD3              h=15,2m (6,8x villager)  SINKS 0,17m  M_Birch_01_BB
+       Birch_06_LOD2              h=13,4m (6,0x villager)  SINKS 0,86m  M_TreeBirch_Bark
+       Tree_Large_02_LOD0         h=22,9m (10,3x villager)  SINKS 0,25m  M_TreeLarge_Leaves
+       Tree_Large_03_LOD3         h=15,6m (7,0x villager)  M_TreeLarge_BB_03
 
      THE TEN LARGEST OBJECTS (unconditional — nothing hides here):
        32,0x24,0x32,4 m  Nature_Live / Prefab_TreeLarge_04(Clone) / Tree_Large_04_LOD3   mat=M_TreeLarge_BB_04  tex=T_TrreeLarge_04_BB  slots=2  at (601, 25, 266)
@@ -118,10 +118,10 @@ scene = the self-composing opening ONLY. No WorldDresser, no capture rig, no edi
 
 6. WHAT THE WORLD COSTS (one frame, from the DECLARED eye-level pose —
    an anchor on the builder's machine, never a min-spec verdict)
-     renderers in scene: 3192   draw calls: 951   set-pass: 194   triangles: 643k
-     frame: 2,7 ms (377 fps)   quality 'PC'
+     renderers in scene: 3192   draw calls: 961   set-pass: 192   triangles: 650k
+     frame: 2,4 ms (413 fps)   quality 'PC'
      within the A6 draw-call budget (2500, set against a GTX 1660-class min spec)
-     29 draw calls per 100 renderers
+     30 draw calls per 100 renderers
      eye at (356.0, 27.5, 223.1) (ground 25,1 m), looking at (390.0, 22.9, 257.1)
   PASS  capture written
   PASS  no missing-material magenta in frame (0 px)

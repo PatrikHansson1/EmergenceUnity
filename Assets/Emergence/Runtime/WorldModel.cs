@@ -57,7 +57,14 @@ namespace Emergence.Runtime
         // Offsets are metres relative to the anchor, yaw is degrees added to the anchor's own facing,
         // and every part is grounded and parented to the anchor — so the whole retires, ruins and
         // settles as ONE thing. No RNG: the recipe is authored, the anchor is hash-placed (D-078 r4).
-        public CodexPart[] arrangement; }
+        public CodexPart[] arrangement;
+        // VARIANTS (D-243). The coverage tool called 1611 assets "un-indexed content", and a large part
+        // of that was an illusion of its own making: the codex named P_PROP_crate_01 and then reported
+        // crate_02, _03 and _04 as orphans. They are not un-indexed things — they are the SAME thing made
+        // by a different hand. Naming them here does two jobs at once: it indexes hundreds of owned assets
+        // without inventing hundreds of gates, and it ends the world where every crate in every village is
+        // the identical crate. The pick is hash(position, id, index) — deterministic, never sim RNG.
+        public string[] variants; }
     [Serializable] public class CodexPart { public string prefab; public float dx, dz, yaw, scale; }
     [Serializable] public class Codex { public CodexEntry[] objects; }
     // FAS 4 PROSE WIRING (2026-08-13, FAS4-PROSE-DIRECTOR-ORDER §1): the engine has carried

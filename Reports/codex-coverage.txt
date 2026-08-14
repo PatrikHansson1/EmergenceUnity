@@ -1,8 +1,8 @@
 EMERGENCE — CODEX COVERAGE (D-121, anti-orphan)
-generated 2026-08-14 22:40:02
-codex entries: 78  (72 unique prefabs referenced, 0 told-not-shown)
+generated 2026-08-14 22:53:33
+codex entries: 79  (344 unique prefabs referenced, 0 told-not-shown)
 project assets (prefab/glb/fbx): 2803  =  1680 placeable  +  1123 structural parts
-PLACEABLE COVERAGE: 69/1680 = 4,1%  |  ORPHANS: 1611  |  DANGLING: 0
+PLACEABLE COVERAGE: 341/1680 = 20,3%  |  ORPHANS: 1339  |  DANGLING: 0
 (parts: 3/1123 referenced — wall/interior modules, raw meshes, LODs and animation variants.
  They are the kit a building is ASSEMBLED from, not things a village would ever place, so they are
  not counted as un-indexed content. They become codex rows only through arrangement templates.)
@@ -11,8 +11,8 @@ PLACEABLE COVERAGE: 69/1680 = 4,1%  |  ORPHANS: 1611  |  DANGLING: 0
   none ✓
 
 ## COVERAGE PER PACK (referenced / total)
-     8/1037    0,8%  Fantastic City Pack
-    54/444    12,2%  Fantastic Village Pack
+    62/1037    6,0%  Fantastic City Pack
+   272/444    61,3%  Fantastic Village Pack
      3/145     2,1%  Polyart
      0/17      0,0%  Vefects
      4/12     33,3%  Emergence
@@ -21,7 +21,7 @@ PLACEABLE COVERAGE: 69/1680 = 4,1%  |  ORPHANS: 1611  |  DANGLING: 0
      0/4       0,0%  msVFX_Free Smoke Effects Pack
      0/1       0,0%  PolyOne
 
-## ORPHANS (placeable asset with no codex entry) — 1611 total, first 200:
+## ORPHANS (placeable asset with no codex entry) — 1339 total, first 200:
   · Emergence/deer
   · Emergence/villager
   · Emergence/villager-child

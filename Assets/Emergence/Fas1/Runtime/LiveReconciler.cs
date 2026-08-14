@@ -184,7 +184,8 @@ namespace Emergence.Runtime
                         _tick, S.years, WorldEras.Name(S), PresentationEventType.Milestone, e.id, vi,
                         "rediscovered — the ruin is raised again"));
                 }
-                var pf = cat != null ? cat.Prefab(e.prefab) : null;
+                var pf = cat != null ? cat.Prefab(VariantOf(e, v, k)) : null;
+                if (pf == null && cat != null) pf = cat.Prefab(e.prefab);   // a missing variant never costs the object
                 if (pf == null) continue;
                 var go = UnityEngine.Object.Instantiate(pf, overlay);
                 var pos = CodexPlacement(v, e, k, cnt);
@@ -302,6 +303,20 @@ namespace Emergence.Runtime
                 go.name = $"part_{e.id}_{i}";
                 StripImpostorLods(go);
             }
+        }
+
+        // D-243: which of the interchangeable models this particular instance wears. Hash of the
+        // village's own position, the entry id and the instance index — so the same world always dresses
+        // the same way, two crates beside each other differ, and no sim RNG is touched (D-078 r4).
+        public static string VariantOf(CodexEntry e, WorldVillage v, int k)
+        {
+            if (e.variants == null || e.variants.Length == 0) return e.prefab;
+            int n = e.variants.Length + (string.IsNullOrWhiteSpace(e.prefab) ? 0 : 1);
+            if (n <= 1) return e.prefab;
+            uint h = Hash(Mathf.RoundToInt(v.x), Mathf.RoundToInt(v.y), e.id.Length * 101 + k * 7 + 3);
+            int i = (int)(h % (uint)n);
+            return i == 0 && !string.IsNullOrWhiteSpace(e.prefab) ? e.prefab
+                 : e.variants[string.IsNullOrWhiteSpace(e.prefab) ? i : i - 1];
         }
 
         static Vector2 CodexPlacement(WorldVillage v, CodexEntry e, int k, int cnt)
