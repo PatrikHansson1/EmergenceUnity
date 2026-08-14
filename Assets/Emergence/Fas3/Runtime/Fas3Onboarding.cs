@@ -82,6 +82,9 @@ namespace Emergence.Runtime
             // happens, and they are not wrong to, because nothing has told them otherwise.
             if (FindAnyObjectByType<Fas4LatestLine>() == null)
                 new GameObject("Fas4LatestLine").AddComponent<Fas4LatestLine>();
+            // D-223: Windows' white arrow in a dusk world is a seam, and it is in every screenshot
+            // we will ever take. Drawn in code — no asset, no licence, cannot drift from the palette.
+            EmergenceUI.EnsureCursor();
 
             // the story's WHY (Fas 4, prose wiring 2026-08-13): the why-expander's service. Raised
             // ALWAYS and unconditionally — it costs nothing without a model (useProse defaults OFF,

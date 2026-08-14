@@ -40,7 +40,10 @@ namespace Emergence.Editor
         // observed failing has not been demonstrated. 45 years is one generation: there are huts,
         // there are villages, and there are owners who are no longer among the living. It also gives
         // step 1.6's eye-level pictures a village worth photographing instead of two houses.
-        const int Horizon = 30;
+        // 30 years overran the 420 s watchdog and the run was cut at 27. 22 still passes the first
+        // huts, a real village and deaths among hut owners, and keeps the loop tight enough to
+        // iterate on. A probe you avoid running because it is slow is a probe you stop running.
+        const int Horizon = 22;
 
         static double _next;
         static string Trigger => Path.Combine(Application.dataPath, "..", "Reports", "RUN_GROUNDCAP.trigger");
@@ -48,7 +51,8 @@ namespace Emergence.Editor
         const string Report   = "Reports/ground-capture.txt";
         const string KeyPending = "emg.groundcap.pending", KeyStart = "emg.groundcap.start";
 
-        static int _frames;
+        static int _frames, rendCount;
+        static Vector3 _perfPos; static Quaternion _perfRot; static bool _perfPoseSet;
         static Fas3Onboarding _onb;
 
         static GroundCaptureProbe() { EditorApplication.update += Tick; }
@@ -460,6 +464,7 @@ namespace Emergence.Editor
                                   + "  at " + bb3.center.ToString("F0")));
                 }
                 foreach (var e3 in big.OrderByDescending(x => x.vol).Take(10)) sb.AppendLine(e3.line);
+                rendCount = measured;
                 Check(measured > 0, "there is something standing on the ground at all (" + measured + " renderers)");
                 Check(defaultMat == 0, "NOTHING wears Unity's default material (" + defaultMat + " do — that IS the grey checker Patrik saw)");
                 foreach (var sk in sinkers.Take(6)) sb.AppendLine(sk);
@@ -475,6 +480,9 @@ namespace Emergence.Editor
                 // ---------- the eye-level picture ----------
                 sb.AppendLine("4. THE EYE-LEVEL PICTURE (what a person standing there would see)");
                 int magenta = Capture("ground-eye-level", terrain, out string camNote);
+                // remember the pose the cost is measured from, so section 6 is comparable run to run
+                var pc0 = Camera.main;
+                if (pc0 != null) { _perfPos = pc0.transform.position; _perfRot = pc0.transform.rotation; _perfPoseSet = true; }
                 // A/B the light phase: the store shots were all taken at DUSK, and the day rig runs
                 // sun 1.3 + fill 0.6 + trilight ambient. If the pack's light textures are blowing out
                 // to white in daylight, dusk will show them correctly — and that, not a missing
@@ -693,6 +701,60 @@ namespace Emergence.Editor
                             }
                         }
                     }
+                }
+
+                // ---------- WHAT IT COSTS (D-223) ----------
+                // The world went from 2 472 renderers to 8 717 in one pass and nobody measured it.
+                // Every remaining item on the gap list ADDS to the scene — a windmill, a ruin, a
+                // dollhouse interior — so the honest order is to price the world before extending it.
+                // Editor Game-view numbers on the builder's machine are not a min-spec verdict and
+                // are not claimed as one: they are the CALIBRATION ANCHOR and a trend we can watch.
+                {
+                    // TWO FAULTS IN THE FIRST VERSION OF THIS SECTION, both found by the number
+                    // moving when the world had not:
+                    //   (1) it sampled from WHATEVER POSE THE CAMERA HAPPENED TO END ON — the last
+                    //       close-up, the shore, the village — so draw calls read 2 541 one run and
+                    //       8 427 the next with an identical scene. A cost that depends on where the
+                    //       lens is pointing is not a trend, it is noise wearing a number.
+                    //   (2) it "averaged" sixty samples inside ONE frame, which is sixty copies of
+                    //       the same reading. Stated honestly now as the single-frame reading it is.
+                    // The pose is restored to the declared eye-level one so runs are comparable.
+                    var pcam = Camera.main;
+                    if (pcam != null && _perfPoseSet)
+                    { pcam.transform.position = _perfPos; pcam.transform.rotation = _perfRot; pcam.Render(); }
+
+                    long avgDc = UnityEditor.UnityStats.drawCalls;
+                    long sp = UnityEditor.UnityStats.setPassCalls;
+                    long tri = UnityEditor.UnityStats.triangles;
+                    float ms = Time.smoothDeltaTime * 1000f;
+                    sb.AppendLine();
+                    sb.AppendLine("6. WHAT THE WORLD COSTS (one frame, from the DECLARED eye-level pose —");
+                    sb.AppendLine("   an anchor on the builder's machine, never a min-spec verdict)");
+                    sb.AppendLine("     renderers in scene: " + rendCount
+                                  + "   draw calls: " + avgDc
+                                  + "   set-pass: " + sp
+                                  + "   triangles: " + (tri / 1000) + "k");
+                    sb.AppendLine("     frame: " + ms.ToString("F1") + " ms ("
+                                  + (ms > 0.01f ? (1000f / ms).ToString("F0") : "?") + " fps)"
+                                  + "   quality '" + QualitySettings.names[QualitySettings.GetQualityLevel()] + "'");
+                    // 2500 was the A6 budget set against a GTX 1660-class min spec. It is a threshold
+                    // to WATCH, not a gate that should stop a pass — so it reports rather than fails,
+                    // and says which it is out loud.
+                    sb.AppendLine(avgDc <= 2500
+                        ? "     within the A6 draw-call budget (2500, set against a GTX 1660-class min spec)"
+                        : "     OVER the A6 draw-call budget of 2500 by " + (avgDc - 2500)
+                          + " — batching/LOD work is owed before the scene grows again");
+                    // WHAT THE NUMBER MEANS, so nobody has to re-derive it. 8 810 renderers producing
+                    // 8 427 draw calls is ONE CALL PER RENDERER — that is not a heavy scene, it is an
+                    // UNBATCHED one, and the 6 255 grass tufts are almost all of it. They were sown as
+                    // individual objects precisely because the terrain detail system would not draw
+                    // (D-215d), which fixed the picture and moved the cost here. The remedy is known
+                    // and cheap: GPU instancing on the tuft materials, or merging tufts per tile into
+                    // one mesh. It costs nothing at 2,8 ms on this machine and would cost a Steam Deck
+                    // a great deal, so it is owed before min-spec, not before the next feature.
+                    if (rendCount > 0)
+                        sb.AppendLine("     " + (avgDc * 100 / Mathf.Max(1, rendCount)) + " draw calls per 100 renderers"
+                                      + (avgDc > rendCount * 0.8f ? "  — essentially UNBATCHED (see the tufts)" : ""));
                 }
 
                 sb.AppendLine("     " + camNote);

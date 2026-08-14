@@ -213,6 +213,10 @@ namespace Emergence.Runtime
             var water = TileField(S, 'w');
             Blur(stone, S.W, S.H, 2, 2);
             Blur(water, S.W, S.H, 3, 2);
+            // D-223: the paint needs the same blurred water field the height used. Recomputing it
+            // there would be a second law that could drift from this one; handing the array over
+            // keeps the shore and the basin derived from ONE field.
+            LastWater = water;
 
             var heights = new float[res, res];
             for (int ry = 0; ry < res; ry++)
@@ -240,6 +244,15 @@ namespace Emergence.Runtime
             data.SetHeights(0, 0, heights);
             LastMinH = lo * TerrainHeight; LastMaxH = hi * TerrainHeight;
         }
+
+        /// <summary>The blurred water field from the last height build. The basin was carved from it,
+        /// the shore is painted from it, and the water SURFACE is now shaped by it — one field, three
+        /// consumers, so they cannot disagree about where the lake is.</summary>
+        public static float[] LastWater { get; private set; }
+
+        /// <summary>Bilinear read of the blurred water field, for anyone shaping water.</summary>
+        public static float WaterAt(WorldState S, float sx, float sy)
+            => LastWater == null ? 0f : Sample(LastWater, S.W, S.H, sx, sy);
 
         // ---- layers, from the catalog instead of AssetDatabase ----
         public struct LayerIndex { public int grass, field, path, gravel, cobble; }
@@ -333,6 +346,26 @@ namespace Emergence.Runtime
                         float wDirt = patch > 0.74f ? Mathf.Min(0.72f, (patch - 0.74f) * 2.4f) : 0f;
                         float wRock = fleck > 0.78f ? Mathf.Clamp01((fleck - 0.78f) * 2.2f) : 0f;
                         g = Mathf.Max(0f, 1f - wDirt - wRock); pa = wDirt; gr = wRock;
+                    }
+
+                    // D-223: THE SHORE. Water met grass at a hard line — the lake read as a sheet of
+                    // paper laid on a lawn, which is what eye-at-the-water.png shows. A real shore is
+                    // the band where the water HAS BEEN: bleached, bare, and widest where the basin
+                    // is shallowest. The blurred water field already describes exactly that band, so
+                    // the beach costs one lookup and no new law: fully wet in the middle, fully green
+                    // beyond the rim, and pale shingle in between.
+                    if (LastWater != null)
+                    {
+                        float wet = Sample(LastWater, S.W, S.H, sx, sy);
+                        float shore = wet > 0.04f && wet < 0.62f
+                            ? Mathf.Sin(Mathf.Clamp01((wet - 0.04f) / 0.58f) * Mathf.PI) : 0f;
+                        if (shore > 0.001f)
+                        {
+                            float keepS = 1f - shore * 0.85f;
+                            g *= keepS; fi *= keepS; pa *= keepS; co *= keepS;
+                            gr = gr * keepS + shore * 0.62f;
+                            fi += shore * 0.23f;          // a warm sand cast under the shingle
+                        }
                     }
 
                     // slope wins over the tile: a bank is bare, whatever the map says grows there

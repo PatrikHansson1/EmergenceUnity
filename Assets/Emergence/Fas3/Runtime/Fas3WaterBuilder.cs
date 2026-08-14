@@ -93,12 +93,16 @@ namespace Emergence.Runtime
                     }
                     float level = Mathf.Max(floor + 0.25f, rim - RimDrop);
 
-                    float halfT = Fas3TerrainBuilder.TileSize * 0.5f;
-                    minX -= halfT; maxX += halfT; minZ -= halfT; maxZ += halfT;
-                    var centre = new Vector3((minX + maxX) * 0.5f, level, (minZ + maxZ) * 0.5f);
-                    float sizeX = Mathf.Max(1f, maxX - minX), sizeZ = Mathf.Max(1f, maxZ - minZ);
+                    int minTx = int.MaxValue, maxTx = int.MinValue, minTy = int.MaxValue, maxTy = int.MinValue;
+                    foreach (int i in body)
+                    {
+                        int x = i % W, y = i / W;
+                        if (x < minTx) minTx = x; if (x > maxTx) maxTx = x;
+                        if (y < minTy) minTy = y; if (y > maxTy) maxTy = y;
+                    }
 
-                    var go = MakeSurface(lakePf, root.transform, centre, sizeX, sizeZ);
+                    var go = MakeSurface(S, lakePf, root.transform, level, minTx, maxTx, minTy, maxTy);
+                    if (go == null) continue;
                     go.name = "Water_" + Bodies + "_" + body.Count + "t";
                     Bodies++; Tiles += body.Count;
                 }
@@ -110,41 +114,106 @@ namespace Emergence.Runtime
             return root;
         }
 
-        /// <summary>Dreamscape's own lake mesh where the catalog has it, a quad on their material where
-        /// it does not. Never a hard failure — a missing pack should cost the picture, not the run.</summary>
-        static GameObject MakeSurface(GameObject prefab, Transform parent, Vector3 centre, float sizeX, float sizeZ)
+        /// <summary>D-223: THE LAKE WAS A RECTANGLE.
+        ///
+        /// The first version scaled the pack's lake prefab — a QUAD — to the body's bounding box. A
+        /// lake is not a bounding box, so wherever the basin curved away from its own corners the
+        /// surface carried straight past the shore and cut a hard horizontal line across the grass.
+        /// That line is visible in eye-at-the-water.png and it is why the water read as a sheet of
+        /// paper laid on a lawn even after the shore was painted.
+        ///
+        /// So the surface is GENERATED as a mesh shaped by the same blurred water field that carved
+        /// the basin and paints the beach — one field, three consumers, and they cannot disagree
+        /// about where the lake is. This is step 1 of the production ladder rather than step 3: a
+        /// mesh written in code is deterministic, free, needs no asset, and can be shaped by state,
+        /// which an imported quad can never be. The pack's MATERIAL is kept — their water shader is
+        /// the look we bought — and only its geometry is replaced.</summary>
+        static GameObject MakeSurface(WorldState S, GameObject prefab, Transform parent, float level,
+                                      int minTx, int maxTx, int minTy, int maxTy)
+        {
+            var go = new GameObject("surface");
+            go.transform.SetParent(parent, true);
+            // the LEVEL lives on the transform and the mesh is built flat at y=0. Baking the height
+            // into the vertices instead left every surface reporting its level as 0,0 m, which made
+            // the probe's own claim about the water false — a measurement that lies is worse than no
+            // measurement, and this one lied the moment the geometry changed under it.
+            go.transform.position = new Vector3(0f, level, 0f);
+
+            float T = Fas3TerrainBuilder.TileSize;
+            int w = maxTx - minTx + 3, h = maxTy - minTy + 3;      // one cell of margin each side
+            var verts = new List<Vector3>();
+            var uvs = new List<Vector2>();
+            var tris = new List<int>();
+            var index = new int[w * h];
+            for (int i = 0; i < index.Length; i++) index[i] = -1;
+
+            // A CELL IS WATER IF THE BLURRED FIELD SAYS SO, not if the tile map does. The blur already
+            // rounded the lake's outline, so the surface inherits an organic shape for free instead
+            // of the 8 m staircase the raw tile set would give.
+            // 0.33 was too strict and it cost us three of four lakes: the blur that rounds a small
+            // pond also thins it, so a pond never reached the threshold and silently produced no
+            // surface at all. A cell is water if the blurred field says so OR if the MAP says so —
+            // the field gives the outline its organic shape, the map guarantees a body can never
+            // vanish. A rounding law must never be able to delete the thing it is rounding.
+            System.Func<int, int, bool> wet = (gx, gy) =>
+            {
+                float sx = minTx - 1 + gx + 0.5f, sy = minTy - 1 + gy + 0.5f;
+                if (Fas3TerrainBuilder.WaterAt(S, sx, sy) > 0.20f) return true;
+                int tx = Mathf.Clamp(Mathf.RoundToInt(sx), 0, S.W - 1);
+                int ty = Mathf.Clamp(Mathf.RoundToInt(sy), 0, S.H - 1);
+                return Fas3TerrainBuilder.Tile(S, tx, ty) == 'w';
+            };
+            System.Func<int, int, int> vert = (gx, gy) =>
+            {
+                int k = gy * w + gx;
+                if (index[k] >= 0) return index[k];
+                float wx = (minTx - 1 + gx) * T, wz = (minTy - 1 + gy) * T;
+                index[k] = verts.Count;
+                verts.Add(new Vector3(wx, 0f, wz));
+                uvs.Add(new Vector2(wx / (T * 8f), wz / (T * 8f)));
+                return index[k];
+            };
+
+            for (int gy = 0; gy < h - 1; gy++)
+                for (int gx = 0; gx < w - 1; gx++)
+                {
+                    if (!wet(gx, gy)) continue;
+                    int a = vert(gx, gy), b = vert(gx + 1, gy), c = vert(gx + 1, gy + 1), d = vert(gx, gy + 1);
+                    tris.Add(a); tris.Add(d); tris.Add(c);
+                    tris.Add(a); tris.Add(c); tris.Add(b);
+                }
+
+            if (tris.Count == 0) { Object.DestroyImmediate(go); return null; }
+
+            var mesh = new Mesh { name = "EmergenceWater" };
+            mesh.indexFormat = verts.Count > 65000
+                ? UnityEngine.Rendering.IndexFormat.UInt32 : UnityEngine.Rendering.IndexFormat.UInt16;
+            mesh.SetVertices(verts); mesh.SetUVs(0, uvs); mesh.SetTriangles(tris, 0);
+            mesh.RecalculateNormals(); mesh.RecalculateBounds();
+
+            go.AddComponent<MeshFilter>().sharedMesh = mesh;
+            var mr = go.AddComponent<MeshRenderer>();
+            mr.sharedMaterial = WaterMaterial(prefab);
+            mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            return go;
+        }
+
+        /// <summary>The pack's own water material where we have it — their shader is the look we
+        /// bought. A flat lit fallback otherwise: a missing pack costs the picture, never the run.</summary>
+        static Material WaterMaterial(GameObject prefab)
         {
             if (prefab != null)
             {
-                var go = Object.Instantiate(prefab, parent);
-                go.transform.position = centre;
-                go.transform.rotation = Quaternion.identity;
-                var mf = go.GetComponentInChildren<MeshFilter>();
-                var bs = mf != null && mf.sharedMesh != null ? mf.sharedMesh.bounds.size : Vector3.one;
-                float bx = Mathf.Max(0.01f, bs.x), bz = Mathf.Max(0.01f, bs.z);
-                // 1.06 of overlap: the shoreline is a blurred falloff, so the surface must reach a
-                // little past the tile edge or a rim of dry basin shows all round the water.
-                go.transform.localScale = new Vector3(sizeX * 1.06f / bx, 1f, sizeZ * 1.06f / bz);
-                return go;
+                var src = prefab.GetComponentInChildren<MeshRenderer>();
+                if (src != null && src.sharedMaterial != null) return src.sharedMaterial;
             }
-
-            var q = GameObject.CreatePrimitive(PrimitiveType.Quad);
-            q.transform.SetParent(parent, true);
-            q.transform.position = centre;
-            q.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
-            q.transform.localScale = new Vector3(sizeX * 1.06f, sizeZ * 1.06f, 1f);
-            var col = q.GetComponent<Collider>(); if (col != null) Object.DestroyImmediate(col);
-            var mr = q.GetComponent<MeshRenderer>();
             var sh = Shader.Find("Universal Render Pipeline/Lit");
-            if (sh != null)
-            {
-                var m = new Material(sh) { name = "EmergenceWaterFallback" };
-                m.SetColor("_BaseColor", new Color(0.20f, 0.40f, 0.52f, 1f));
-                m.SetFloat("_Smoothness", 0.92f);
-                m.SetFloat("_Metallic", 0f);
-                mr.sharedMaterial = m;
-            }
-            return q;
+            if (sh == null) return null;
+            var m = new Material(sh) { name = "EmergenceWaterFallback" };
+            m.SetColor("_BaseColor", new Color(0.20f, 0.40f, 0.52f, 1f));
+            m.SetFloat("_Smoothness", 0.92f);
+            m.SetFloat("_Metallic", 0f);
+            return m;
         }
 
         static Vector3 World(int x, int y)

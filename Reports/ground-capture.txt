@@ -1,5 +1,5 @@
 EMERGENCE — VÅG 1.1: does the LIVING world have ground?
-generated 2026-08-14 13:02:27   (WATCHDOG cut)
+generated 2026-08-14 15:53:45
 scene = the self-composing opening ONLY. No WorldDresser, no capture rig, no editor-only path.
 
 1. WAS THE GROUND RAISED, BY THE LIVING LOOP ITSELF?
@@ -25,7 +25,7 @@ scene = the self-composing opening ONLY. No WorldDresser, no capture rig, no edi
        layer 3: Layer_gravel_01        diffuse=T_ENV_TERRAIN_gravel_01_BC 2048px  tile=(2.00, 2.00)
        layer 4: Layer_pavingstone_01   diffuse=T_ENV_pavingstone_01_BC 2048px  tile=(2.00, 2.00)
   PASS  5 of 5 layers carry a REAL texture (a fallback layer is flat white tinted)
-     the ground is painted: Layer_Grass=95%  Layer_farmfield=0%  Layer_Dirt=2%  Layer_gravel_01=3%  Layer_pavingstone_01=0%   (alphamap 512x512)
+     the ground is painted: Layer_Grass=91%  Layer_farmfield=1%  Layer_Dirt=2%  Layer_gravel_01=6%  Layer_pavingstone_01=0%   (alphamap 512x512)
   PASS  the meadow has detail prototypes (5 grass/flower)
        detail 0: NULL                         instances=421620  mesh=NO — nothing to draw  mode=GrassBillboard  instanced=False
        detail 1: NULL                         instances=422587  mesh=NO — nothing to draw  mode=GrassBillboard  instanced=False
@@ -36,7 +36,7 @@ scene = the self-composing opening ONLY. No WorldDresser, no capture rig, no edi
        quality 'PC': detailDensityScale=1 detailDistance=220
   PASS  the quality level lets the meadow be drawn (densityScale=1,00)
   PASS  the meadow is actually PLANTED, not merely prototyped (1298669 instances)
-     the map is made of: g=5644 (81%)  f=548 (8%)  s=300 (4%)  w=261 (4%)  b=145 (2%)  c=66 (1%)  i=17 (0%)  p=10 (0%)  t=9 (0%)
+     the map is made of: g=5636 (81%)  f=549 (8%)  s=304 (4%)  w=261 (4%)  b=145 (2%)  c=67 (1%)  i=19 (0%)  p=10 (0%)  t=9 (0%)
 
 
 3c. THE WATER (VÅG 1.5)
@@ -47,57 +47,57 @@ scene = the self-composing opening ONLY. No WorldDresser, no capture rig, no edi
 3b. THE NATURAL WORLD (trees, rocks, bushes — the rest of step 1.1)
      nature: 347 trees, 293 rocks, 155 bushes, 44 fallen trunks, 6255 grass tufts  (sets: 8/4/3/5)
   PASS  the living world has a natural world in it (7094 placed)
-     scale against a person (design height 1,75 m; animated bounds read 2,06 m):
+     scale against a person (design height 1,75 m; animated bounds read 2,05 m):
        bush    n= 155  mean 1,7 m (0,95x)  max 3,2 m (1,81x)
        rock    n= 293  mean 1,6 m (0,89x)  max 3,2 m (1,82x)
        tree    n= 347  mean 17,1 m (9,80x)  max 25,2 m (14,42x)
        trunk   n=  44  mean 0,9 m (0,51x)  max 1,6 m (0,91x)
-       tuft    n=6255  mean 0,5 m (0,31x)  max 1,5 m (0,87x)
+       tuft    n=6255  mean 0,4 m (0,24x)  max 1,1 m (0,64x)
   PASS  a bush stands no taller than a person (0,95x — over 1.0 it is a thicket, not a shrub)
 
 5. WHAT STANDS ON THE GROUND (scale / sinking / materials)
-     the yardstick: tallest villager renderer = 2,06 m
-     renderers measured: 8860
-     shaders in use: Polyart/Dreamscape/Foliage/Foliage x6410 | Polyart/Dreamscape/Foliage/Leaves x922 | Polyart/Dreamscape/Props x879 | Polyart/Dreamscape/Foliage/Trunk x217 | Polyart/Dreamscape Foliage Billboard x211 | Universal Render Pipeline/Lit x210
-     tallest object: Tree_Large_02_LOD3 [M_TreeLarge_BB_02] = 25,1 m (12,2x a villager)
-       Tree_Large_04_LOD2         h=17,0m (8,2x villager)  M_TreeLarge_Bark
-       Tree_Large_01_LOD0         h=16,9m (8,2x villager)  M_TreeLarge_Leaves
-       Tree_Large_02_LOD1         h=24,4m (11,8x villager)  M_TreeLarge_Leaves
-       Tree_Large_04_LOD3         h=17,9m (8,7x villager)  M_TreeLarge_BB_04
-       Birch_04_LOD2              h=12,9m (6,3x villager)  M_TreeBirch_Leaves
-       Birch_06_LOD1              h=14,8m (7,2x villager)  M_TreeBirch_Leaves
-       Birch_02_LOD2              h=16,4m (8,0x villager)  M_TreeBirch_Leaves
-       Tree_Large_03_LOD2         h=19,0m (9,2x villager)  M_TreeLarge_Leaves
-       Birch_06_LOD0              h=11,9m (5,8x villager)  M_TreeBirch_Leaves
-       Tree_Large_01_LOD1         h=17,9m (8,7x villager)  M_TreeLarge_Leaves
-       Tree_Large_03_LOD1         h=17,0m (8,2x villager)  M_TreeLarge_Leaves
-       Tree_Large_01_LOD2         h=18,7m (9,1x villager)  M_TreeLarge_Leaves
-       Tree_Large_02_LOD2         h=19,7m (9,5x villager)  M_TreeLarge_Leaves
-       Tree_Large_01_LOD0         h=20,5m (9,9x villager)  M_TreeLarge_Leaves
+     the yardstick: tallest villager renderer = 2,05 m
+     renderers measured: 8810
+     shaders in use: Polyart/Dreamscape/Foliage/Foliage x6410 | Polyart/Dreamscape/Foliage/Leaves x922 | Polyart/Dreamscape/Props x879 | Polyart/Dreamscape/Foliage/Trunk x217 | Polyart/Dreamscape Foliage Billboard x211 | Universal Render Pipeline/Lit x161
+     tallest object: Tree_Large_02_LOD3 [M_TreeLarge_BB_02] = 25,1 m (12,3x a villager)
+       Tree_Large_02_LOD0         h=22,3m (10,9x villager)  M_TreeLarge_Leaves
+       Birch_04_LOD1              h=11,3m (5,5x villager)  SINKS 0,09m  M_TreeBirch_Leaves
+       Birch_02_LOD2              h=15,5m (7,6x villager)  SINKS 0,84m  M_TreeBirch_Leaves
+       Birch_04_LOD0              h=12,4m (6,1x villager)  SINKS 0,24m  M_TreeBirch_Leaves
+       Birch_01_LOD3              h=15,0m (7,3x villager)  SINKS 0,91m  M_Birch_01_BB
+       Tree_Large_02_LOD2         h=21,1m (10,3x villager)  SINKS 1,13m  M_TreeLarge_Leaves
+       Tree_Large_01_LOD0         h=21,0m (10,2x villager)  M_TreeLarge_Leaves
+       Birch_04_LOD1              h=12,2m (6,0x villager)  SINKS 0,20m  M_TreeBirch_Leaves
+       Tree_Large_02_LOD3         h=20,4m (10,0x villager)  SINKS 0,52m  M_TreeLarge_BB_02
+       Birch_06_LOD0              h=13,0m (6,3x villager)  SINKS 0,98m  M_TreeBirch_Leaves
+       Birch_02_LOD1              h=14,4m (7,0x villager)  SINKS 0,53m  M_TreeBirch_Leaves
+       Birch_01_LOD3              h=16,2m (7,9x villager)  SINKS 0,58m  M_Birch_01_BB
+       Tree_Large_03_LOD0         h=18,0m (8,8x villager)  M_TreeLarge_Leaves
+       Birch_04_LOD3              h=13,7m (6,7x villager)  SINKS 0,47m  M_TreeBirch_Bark
 
      THE TEN LARGEST OBJECTS (unconditional — nothing hides here):
-       32,0x24,0x32,4 m  Nature_Live / Prefab_TreeLarge_04(Clone) / Tree_Large_04_LOD3   mat=M_TreeLarge_BB_04  tex=T_TrreeLarge_04_BB  slots=2  at (601, 27, 266)
-       29,3x25,1x30,5 m  Nature_Live / Prefab_TreeLarge_02(Clone) / Tree_Large_02_LOD3   mat=M_TreeLarge_BB_02  tex=T_TrreeLarge_02_BB  slots=2  at (300, 33, 316)
-       30,9x22,9x31,2 m  Nature_Live / Prefab_TreeLarge_04(Clone) / Tree_Large_04_LOD0   mat=M_TreeLarge_Leaves  tex=T_Leaves_Clump_02  slots=2  at (601, 27, 266)
-       30,3x23,9x30,5 m  Nature_Live / Prefab_TreeLarge_02(Clone) / Tree_Large_02_LOD3   mat=M_TreeLarge_BB_02  tex=T_TrreeLarge_02_BB  slots=2  at (512, 26, 394)
-       29,2x24,1x31,3 m  Nature_Live / Prefab_TreeLarge_04(Clone) / Tree_Large_04_LOD3   mat=M_TreeLarge_BB_04  tex=T_TrreeLarge_04_BB  slots=2  at (369, 27, 363)
-       30,6x22,9x30,9 m  Nature_Live / Prefab_TreeLarge_04(Clone) / Tree_Large_04_LOD2   mat=M_TreeLarge_Bark  tex=T_TreeLarge_Bark_C  slots=2  at (601, 27, 266)
-       30,1x24,0x29,9 m  Nature_Live / Prefab_TreeLarge_02(Clone) / Tree_Large_02_LOD3   mat=M_TreeLarge_BB_02  tex=T_TrreeLarge_02_BB  slots=2  at (281, 26, 499)
-       30,4x24,2x29,3 m  Nature_Live / Prefab_TreeLarge_02(Clone) / Tree_Large_02_LOD3   mat=M_TreeLarge_BB_02  tex=T_TrreeLarge_02_BB  slots=2  at (607, 26, 244)
-       30,5x22,8x30,9 m  Nature_Live / Prefab_TreeLarge_04(Clone) / Tree_Large_04_LOD1   mat=M_TreeLarge_Leaves  tex=T_Leaves_Clump_02  slots=2  at (601, 27, 266)
-       29,8x23,0x30,9 m  Nature_Live / Prefab_TreeLarge_04(Clone) / Tree_Large_04_LOD3   mat=M_TreeLarge_BB_04  tex=T_TrreeLarge_04_BB  slots=2  at (584, 30, 297)
-  PASS  there is something standing on the ground at all (8860 renderers)
+       32,0x24,0x32,4 m  Nature_Live / Prefab_TreeLarge_04(Clone) / Tree_Large_04_LOD3   mat=M_TreeLarge_BB_04  tex=T_TrreeLarge_04_BB  slots=2  at (601, 25, 266)
+       29,3x25,1x30,5 m  Nature_Live / Prefab_TreeLarge_02(Clone) / Tree_Large_02_LOD3   mat=M_TreeLarge_BB_02  tex=T_TrreeLarge_02_BB  slots=2  at (300, 31, 316)
+       30,9x22,9x31,2 m  Nature_Live / Prefab_TreeLarge_04(Clone) / Tree_Large_04_LOD0   mat=M_TreeLarge_Leaves  tex=T_Leaves_Clump_02  slots=2  at (601, 25, 266)
+       30,3x23,9x30,5 m  Nature_Live / Prefab_TreeLarge_02(Clone) / Tree_Large_02_LOD3   mat=M_TreeLarge_BB_02  tex=T_TrreeLarge_02_BB  slots=2  at (512, 25, 394)
+       29,2x24,1x31,3 m  Nature_Live / Prefab_TreeLarge_04(Clone) / Tree_Large_04_LOD3   mat=M_TreeLarge_BB_04  tex=T_TrreeLarge_04_BB  slots=2  at (369, 26, 363)
+       30,6x22,9x30,9 m  Nature_Live / Prefab_TreeLarge_04(Clone) / Tree_Large_04_LOD2   mat=M_TreeLarge_Bark  tex=T_TreeLarge_Bark_C  slots=2  at (601, 25, 266)
+       30,1x24,0x29,9 m  Nature_Live / Prefab_TreeLarge_02(Clone) / Tree_Large_02_LOD3   mat=M_TreeLarge_BB_02  tex=T_TrreeLarge_02_BB  slots=2  at (281, 24, 499)
+       30,4x24,2x29,3 m  Nature_Live / Prefab_TreeLarge_02(Clone) / Tree_Large_02_LOD3   mat=M_TreeLarge_BB_02  tex=T_TrreeLarge_02_BB  slots=2  at (607, 24, 244)
+       30,5x22,8x30,9 m  Nature_Live / Prefab_TreeLarge_04(Clone) / Tree_Large_04_LOD1   mat=M_TreeLarge_Leaves  tex=T_Leaves_Clump_02  slots=2  at (601, 25, 266)
+       29,8x23,0x30,9 m  Nature_Live / Prefab_TreeLarge_04(Clone) / Tree_Large_04_LOD3   mat=M_TreeLarge_BB_04  tex=T_TrreeLarge_04_BB  slots=2  at (584, 28, 297)
+  PASS  there is something standing on the ground at all (8810 renderers)
   PASS  NOTHING wears Unity's default material (0 do — that IS the grey checker Patrik saw)
-  PASS  no BUILT thing or person sinks through the ground (0 do; 2210 natural props bedded into it, which is correct)
+  PASS  no BUILT thing or person sinks through the ground (0 do; 2669 natural props bedded into it, which is correct)
   PASS  nothing is absurdly out of scale (tallest = 14,4x a person — a real tree is 8-14x)
 
 4. THE EYE-LEVEL PICTURE (what a person standing there would see)
      close-up on P_BLD_chimney_v02_03 (5,0 m) from 6 m -> Reports/house-in-scene.png
-     close-up on char1 (2,1 m) mat=Material_1 (lit, not lamp) t3 shader=Shader Graphs/glTF-pbrMetallicRoughness tex=texture_0 -> Reports/villager-in-scene.png
-     eye at the water: shore (585, 19, 293) looking across 170x144 m -> Reports/eye-at-the-water.png
-     eye in the village: 2 renderers over 19x38 m, standing 24 m out (densest cluster of 7 huts) -> Reports/eye-in-the-village.png
-     7 huts lit, 0 cold (0 panes switched on the last apply) -> Reports/village-at-dusk.png
-  PASS  the window law ran over the huts (7 huts judged)
+     close-up on char1 (2,0 m) mat=Material_1 (lit, not lamp) t1 shader=Shader Graphs/glTF-pbrMetallicRoughness tex=texture_0 -> Reports/villager-in-scene.png
+     eye at the water: shore (582, 20, 290) looking across 168x144 m -> Reports/eye-at-the-water.png
+     eye in the village: 2 renderers over 19x38 m, standing 24 m out (densest cluster of 5 huts) -> Reports/eye-in-the-village.png
+     5 huts lit, 0 cold (0 panes switched on the last apply) -> Reports/village-at-dusk.png
+  PASS  the window law ran over the huts (5 huts judged)
      the building measured: hut_Embla  6,7 x 6,4 m footprint, 6,3 m tall  (height/width = 0,93; a cottage is 0,5-0,9, a tower is >1,3)  = 3,6x a person
   PASS  the houses are cottages, not towers (height/width = 0,93)
      the pack's house pool, measured at the scale we raise them (0,55):
@@ -115,10 +115,16 @@ scene = the self-composing opening ONLY. No WorldDresser, no capture rig, no edi
        house_12: 7,2 x 7,2 m, 8,1 m tall, ratio 1,13  = 4,6x a person
        house_13: 6,0 x 5,0 m, 7,0 m tall, ratio 1,18  = 4,0x a person
        house_14: 9,4 x 5,3 m, 11,4 m tall, ratio 1,21  = 6,5x a person
-     eye at (522.4, 27.7, 234.3) (ground 25,3 m), looking at (556.4, 21.8, 268.3)
+
+6. WHAT THE WORLD COSTS (one frame, from the DECLARED eye-level pose —
+   an anchor on the builder's machine, never a min-spec verdict)
+     renderers in scene: 8810   draw calls: 8427   set-pass: 258   triangles: 1422k
+     frame: 2,8 ms (354 fps)   quality 'PC'
+     OVER the A6 draw-call budget of 2500 by 5927 — batching/LOD work is owed before the scene grows again
+     eye at (532.3, 19.6, 365.7) (ground 17,2 m), looking at (566.3, 16.4, 399.7)
   PASS  capture written
   PASS  no missing-material magenta in frame (0 px)
-     year at capture: 27
+     year at capture: 22
 
 VERDICT: GREEN  (21/21)
 declared: this proves the GROUND is there and rolling. Prop scale, the pivot sinking and

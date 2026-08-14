@@ -167,6 +167,61 @@ namespace Emergence.Runtime
         }
         public static void End() { GUI.matrix = _prevMatrix; }
 
+        // ---------- THE CURSOR (D-223) ----------
+        //
+        // Windows' white arrow in a dusk world is a seam, and it is in EVERY screenshot we will ever
+        // take — including the store page. The gap sweep ranked it fourth, and it is step 1 of the
+        // production ladder: drawn in code, so it is deterministic, free, carries no licence question
+        // and cannot drift from the palette, because it IS the palette.
+        //
+        // A pointer has one job and taste does not get a vote: it must read as a pointer at a glance
+        // on any background. So the shape stays the conventional arrow — bone, with a one-pixel dark
+        // keyline so it survives over a lit meadow as well as over a slate panel — and the only thing
+        // the visual language contributes is the colour.
+        static Texture2D _cursor;
+        static bool _cursorSet;
+
+        public static void EnsureCursor()
+        {
+            if (_cursorSet) return;
+            _cursorSet = true;
+            const int N = 24;
+            _cursor = new Texture2D(N, N, TextureFormat.RGBA32, false) { hideFlags = HideFlags.HideAndDontSave };
+            _cursor.filterMode = FilterMode.Point;
+            var px = new Color32[N * N];
+            var ink = (Color32)Ink100;
+            var edge = new Color32(11, 14, 18, 235);          // Surface0, near-opaque keyline
+
+            // the classic arrow, expressed as a per-row run so there is no art asset to import:
+            // a 45-degree left edge, a vertical-ish right edge, and a tail that steps back in.
+            for (int y = 0; y < N; y++)
+            {
+                int fill;
+                if (y <= 12) fill = y;                         // the head widens with each row
+                else if (y <= 16) fill = 12 - (y - 12) * 2;    // the notch under the head
+                else fill = 0;
+                if (y > 16) continue;
+                for (int x = 0; x <= fill; x++)
+                {
+                    // the tail: rows below the notch keep only a narrow shaft
+                    if (y > 12 && x > 5 && x < fill - 1) continue;
+                    px[(N - 1 - y) * N + x] = ink;
+                }
+            }
+            // keyline: any transparent texel orthogonally touching ink becomes edge
+            var outp = (Color32[])px.Clone();
+            for (int y = 0; y < N; y++)
+                for (int x = 0; x < N; x++)
+                {
+                    if (px[y * N + x].a > 0) continue;
+                    bool near = (x > 0 && px[y * N + x - 1].a > 0) || (x < N - 1 && px[y * N + x + 1].a > 0)
+                             || (y > 0 && px[(y - 1) * N + x].a > 0) || (y < N - 1 && px[(y + 1) * N + x].a > 0);
+                    if (near) outp[y * N + x] = edge;
+                }
+            _cursor.SetPixels32(outp); _cursor.Apply();
+            Cursor.SetCursor(_cursor, new Vector2(1f, 1f), CursorMode.Auto);
+        }
+
         // ---------- the diagnostics gate ----------
         // The debug readouts are not restyled, they are REMOVED from what a player sees. A frame
         // counter in a Steam screenshot is worth real wishlists. Off by default; a probe or an
