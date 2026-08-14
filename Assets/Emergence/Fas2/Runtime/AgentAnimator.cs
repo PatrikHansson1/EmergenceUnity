@@ -201,20 +201,39 @@ namespace Emergence.Runtime
         // them) and cached; re-measured if the body is rebuilt.
         float _foot = float.NaN;
 
+        // D-217: THE OFFSET WAS A SNAPSHOT OF ONE POSE, AND A BODY HAS MANY.
+        //
+        // The first version measured the distance from pivot to the mesh's lowest point EXACTLY ONCE
+        // and cached it forever. That is correct for a statue. It is wrong for something animated:
+        // whatever clip happened to be playing on the frame we measured set the number for the rest
+        // of the run, and a walk cycle's low foot or a work pose's crouch reaches deeper than an idle.
+        // GroundCaptureProbe found it as agent_6_Sten, 0,12 m under the LOWEST ground beneath his own
+        // footprint — which after D-215's correction is a real sink, not a slope artefact.
+        //
+        // So the offset is now a running MAXIMUM over a sampling window rather than a single reading,
+        // and the window re-opens whenever the animator state changes. It converges within a second
+        // to the deepest pose the body actually reaches, costs a bounds query per agent per sampled
+        // frame (not per frame, and not forever), and can only ever grow — a body may be lifted out
+        // of the ground by this law, never pushed into it.
+        const int FootSamples = 45;
+        int _footLeft = FootSamples;
+
         float FootOffset()
         {
-            if (!float.IsNaN(_foot)) return _foot;
-            _foot = 0f;
+            if (_footLeft <= 0 && !float.IsNaN(_foot)) return _foot;
             var rs = GetComponentsInChildren<Renderer>();
-            if (rs.Length == 0) return _foot;
+            if (rs.Length == 0) { _foot = 0f; _footLeft = 0; return _foot; }
             var b = rs[0].bounds;
             for (int i = 1; i < rs.Length; i++) b.Encapsulate(rs[i].bounds);
-            _foot = Mathf.Max(0f, transform.position.y - b.min.y);   // never LIFT a model, only stop it sinking
+            float now = Mathf.Max(0f, transform.position.y - b.min.y);
+            if (float.IsNaN(_foot) || now > _foot) _foot = now;      // the deepest pose wins
+            _footLeft--;
             return _foot;
         }
 
-        /// <summary>Forget the cached foot offset — call when the body is swapped or rescaled.</summary>
-        public void InvalidateFoot() { _foot = float.NaN; }
+        /// <summary>Re-open the sampling window — the body was swapped, rescaled, or has just moved
+        /// into a pose we have never measured.</summary>
+        public void InvalidateFoot() { _footLeft = FootSamples; }
 
         // D-215: one sample was one sample too few. A person occupies ~0,5 m of ground; on a 20-degree
         // bank that is 0,18 m of fall across the footprint, so grounding to the CENTRE buries the uphill
@@ -246,6 +265,7 @@ namespace Emergence.Runtime
             string s = _transit ? "Walk" : AgentTaskRead.StateFor(verb, task, canWork);   // transit overrides the read (R2: verb selects when present)
             if (s == _state) return;
             _state = s;
+            InvalidateFoot();          // D-217: a new clip may reach deeper than every clip before it
             // phase de-sync so 111 villagers don't stride in lockstep — hash(agentId), never sim RNG
             float phase = hashPhase ? (Hash((uint)agentId * 2654435761u + 17u) & 0xffffu) / 65536f : 0f;
             _anim.CrossFade(s, 0.15f, 0, phase);

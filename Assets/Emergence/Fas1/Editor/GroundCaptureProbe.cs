@@ -34,8 +34,13 @@ namespace Emergence.Editor
     public static class GroundCaptureProbe
     {
         const long Seed = 8919;
-        const double Watchdog = 280.0;
-        const int Horizon = 8;              // far enough for huts, close enough to be quick
+        const double Watchdog = 420.0;   // D-217: 280 s cut the 30-year run off at year 19
+        // D-217: 8 years was chosen to be quick, and it was — but it is a world where nobody has
+        // died yet, so the window law had nothing to prove: 2 huts lit, 0 cold. A law that cannot be
+        // observed failing has not been demonstrated. 45 years is one generation: there are huts,
+        // there are villages, and there are owners who are no longer among the living. It also gives
+        // step 1.6's eye-level pictures a village worth photographing instead of two houses.
+        const int Horizon = 30;
 
         static double _next;
         static string Trigger => Path.Combine(Application.dataPath, "..", "Reports", "RUN_GROUNDCAP.trigger");
@@ -566,15 +571,41 @@ namespace Emergence.Editor
                     var hutRoot = GameObject.Find(Emergence.Runtime.HutReconciler.LayerName);   // "Huts_Live" - "Huts" found nothing
                     if (hutRoot != null && hutRoot.transform.childCount > 0)
                     {
-                        var acc = new Bounds(); bool any5 = false; int nh = 0;
-                        foreach (var rr6 in hutRoot.GetComponentsInChildren<Renderer>())
+                        // ONE VILLAGE, NOT ALL OF THEM. At year 8 there were two huts and the
+                        // bounds of "every hut" was a village. By year 19 the huts spanned 350 m
+                        // across several settlements, the camera backed off to 194 m to fit them,
+                        // and the "village picture" became an aerial of the whole map. Find the
+                        // densest cluster instead: the hut with the most neighbours within 45 m,
+                        // and frame it with those neighbours. Deterministic — ties go to the lowest
+                        // child index, never to iteration order.
+                        var hutBounds = new List<Bounds>();
+                        for (int i = 0; i < hutRoot.transform.childCount; i++)
                         {
-                            if (!any5) { acc = rr6.bounds; any5 = true; } else acc.Encapsulate(rr6.bounds);
-                            nh++;
+                            var rs8 = hutRoot.transform.GetChild(i).GetComponentsInChildren<Renderer>();
+                            if (rs8.Length == 0) continue;
+                            var b8 = rs8[0].bounds;
+                            for (int k = 1; k < rs8.Length; k++) b8.Encapsulate(rs8[k].bounds);
+                            hutBounds.Add(b8);
                         }
+                        var acc = new Bounds(); bool any5 = false; int nh = 0;
+                        int bestI = -1, bestN = -1;
+                        for (int i = 0; i < hutBounds.Count; i++)
+                        {
+                            int n8 = 0;
+                            for (int j = 0; j < hutBounds.Count; j++)
+                                if (Vector3.Distance(hutBounds[i].center, hutBounds[j].center) < 45f) n8++;
+                            if (n8 > bestN) { bestN = n8; bestI = i; }
+                        }
+                        if (bestI >= 0)
+                            for (int j = 0; j < hutBounds.Count; j++)
+                                if (Vector3.Distance(hutBounds[bestI].center, hutBounds[j].center) < 45f)
+                                {
+                                    if (!any5) { acc = hutBounds[j]; any5 = true; } else acc.Encapsulate(hutBounds[j]);
+                                    nh++;
+                                }
                         if (any5)
                         {
-                            float back = Mathf.Max(18f, acc.extents.magnitude * 1.1f);
+                            float back = Mathf.Clamp(acc.extents.magnitude * 1.1f, 18f, 60f);
                             var eye = new Vector3(acc.center.x - back * 0.75f, 0f, acc.center.z - back * 0.75f);
                             eye.y = (terrain != null ? terrain.SampleHeight(eye) + terrain.transform.position.y : acc.center.y) + 1.7f;
                             var c6 = Camera.main;
@@ -583,7 +614,22 @@ namespace Emergence.Editor
                             CaptureRaw("eye-in-the-village");
                             sb.AppendLine("     eye in the village: " + nh + " renderers over "
                                           + acc.size.x.ToString("F0") + "x" + acc.size.z.ToString("F0") + " m, standing "
-                                          + back.ToString("F0") + " m out -> Reports/eye-in-the-village.png");
+                                          + back.ToString("F0") + " m out (densest cluster of "
+                                          + hutBounds.Count + " huts) -> Reports/eye-in-the-village.png");
+
+                            // VÅG 7.1: the same village at DUSK, which is the only condition under
+                            // which the window law is visible. A hut whose owner is alive should glow;
+                            // a hut whose owner has died should not. The claim is the picture.
+                            Fas3LightRig.Apply("spring", "dusk");
+                            CaptureRaw("village-at-dusk");
+                            Fas3LightRig.Apply("spring", "day");
+                            sb.AppendLine("     " + Emergence.Runtime.Fas3HearthGlow.Lit + " huts lit, "
+                                          + Emergence.Runtime.Fas3HearthGlow.Unlit + " cold ("
+                                          + Emergence.Runtime.Fas3HearthGlow.Panes
+                                          + " panes switched on the last apply) -> Reports/village-at-dusk.png");
+                            Check(Emergence.Runtime.Fas3HearthGlow.Lit + Emergence.Runtime.Fas3HearthGlow.Unlit > 0,
+                                  "the window law ran over the huts ("
+                                  + (Emergence.Runtime.Fas3HearthGlow.Lit + Emergence.Runtime.Fas3HearthGlow.Unlit) + " huts judged)");
                         }
                     }
 

@@ -139,8 +139,33 @@ namespace Emergence.Runtime
                         string.Format(CultureInfo.InvariantCulture, "hut-raised x={0:F1} z={1:F1}", w.x, w.z)));
                 }
             }
+
+            // VÅG 7.1 (D-217): THE WINDOWS OBEY THE STATE. The pack's own glow material has sat on
+            // every house since the first dressing pass, lit at a constant strength — occupied and
+            // abandoned alike, which means it carried no information at all. A window that is always
+            // lit says nothing; a window that goes out says someone died. Lit when the owner is among
+            // the living souls of THIS snapshot, dark when they are not, and nothing else: no time of
+            // day (the living loop holds one phase), no schedule, no flicker. Every one of those
+            // would be decoration, and decoration on a surface the player reads as testimony is a lie
+            // by another route.
+            Fas3HearthGlow.ResetCounters();
+            var living = new HashSet<string>();
+            if (S.agents != null)
+                foreach (var a in S.agents) if (!string.IsNullOrEmpty(a.name)) living.Add(a.name);
+            foreach (var rec in _huts.Values)
+            {
+                if (rec.house == null) continue;
+                bool home = !string.IsNullOrEmpty(rec.owner) && living.Contains(rec.owner);
+                Fas3HearthGlow.SetLit(rec.house, home);
+            }
+            HearthNote = "windows: " + Fas3HearthGlow.Lit + " lit, " + Fas3HearthGlow.Unlit
+                       + " cold (" + Fas3HearthGlow.Panes + " panes switched this apply)";
+
             return d;
         }
+
+        /// <summary>What the window law did on the last Apply, so a probe can assert on it.</summary>
+        public string HearthNote { get; private set; } = "";
 
         public void Clear()
         {
