@@ -224,7 +224,19 @@ namespace Emergence.Runtime
             foreach (var smr in go.GetComponentsInChildren<SkinnedMeshRenderer>())
                 smr.updateWhenOffscreen = true;
 
-            if (!Application.isPlaying && editPose) { StillPose(go, a, band, female); LiftOntoGround(go); }
+            if (!Application.isPlaying && editPose) StillPose(go, a, band, female);
+            // D-241, AND THE MEASUREMENT SAID SO. Four fixes moved the reported sink by zero, so the
+            // probe was made to print every number that goes into it, in one frame. It answered at once:
+            //   footBelief=0,000  samplesLeft=240  transit=False   rootY == groundUnderRoot exactly
+            // The sampling window had never taken a SINGLE sample and the root sat precisely on the
+            // terrain — so nothing had ever asked what the feet were worth. These two souls were simply
+            // NEWBORN: spawned into the frame the capture was taken in, before their first Update. Every
+            // grounding law we own runs in Update, and a soul's first frame is not covered by any of them.
+            // rootToBoundsFloor said the bodies hang 0,193 and 0,273 m below their own origin, which is
+            // exactly the shape of the reported 0,12 and 0,14 m once the slope under the footprint is
+            // taken off. So: stand them up AT BIRTH, in both paths, before anyone can see them. A soul
+            // may be born knowing nothing; it may not be born ankle-deep in the ground.
+            LiftOntoGround(go);
             return go;
         }
 

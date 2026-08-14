@@ -416,6 +416,32 @@ namespace Emergence.Editor
                             while (pS != null && gS++ < 4) { chainS = pS.name + " / " + chainS; pS = pS.parent; }
                             sinkers.Add("       SINKS " + sink.ToString("F2") + " m  " + chainS
                                         + "  mat=" + (mat != null ? mat.name : "none"));
+                            // D-241: THE MEASUREMENT, NOT A FIFTH FIX. Four interventions moved this
+                            // number by exactly zero centimetres, which means it is not measuring what
+                            // anyone assumed. So print, in the SAME frame, every number that goes into
+                            // it — the transform, what the animator believes its feet are worth, the
+                            // ground under the centre, the lowest ground under the footprint, and the
+                            // bounds' own floor — plus the renderer TYPE, because a skinned mesh's box
+                            // is not a mesh. One of these will not be what anyone expects.
+                            {
+                                var animC = rr.GetComponentInParent<Emergence.Runtime.AgentAnimator>();
+                                float gCentre = terrain.SampleHeight(b.center) + terrain.transform.position.y;
+                                float gRoot   = terrain.SampleHeight(rr.transform.position) + terrain.transform.position.y;
+                                var root = animC != null ? animC.transform : rr.transform.root;
+                                sinkers.Add("          why: rootY=" + root.position.y.ToString("F3")
+                                    + " groundUnderRoot=" + gRoot.ToString("F3")
+                                    + " groundUnderCentre=" + gCentre.ToString("F3")
+                                    + " lowestUnderFootprint=" + gy.ToString("F3")
+                                    + " boundsMinY=" + b.min.y.ToString("F3")
+                                    + " boundsSizeXZ=" + b.size.x.ToString("F2") + "x" + b.size.z.ToString("F2"));
+                                sinkers.Add("          who: renderer=" + rr.GetType().Name
+                                    + (animC != null ? "  footBelief=" + animC.FootBelief.ToString("F3")
+                                                     + " samplesLeft=" + animC.FootSamplesLeft
+                                                     + " transit=" + animC.InTransit
+                                                     + " state=" + animC.task
+                                                     : "  (no AgentAnimator in parents)")
+                                    + "  rootToBoundsFloor=" + (root.position.y - b.min.y).ToString("F3"));
+                            }
                         }
                         else if (sink > 0.05f) bedded++;
                     }

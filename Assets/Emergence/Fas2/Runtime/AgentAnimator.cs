@@ -86,7 +86,6 @@ namespace Emergence.Runtime
         // Simulation-Architect item). Speed is hash(id)-varied; > MaxGlide reads as a scene cut (teleport).
         public const float MaxGlide = 60f;
         Vector3 _glideTarget; bool _transit; float _speed;
-        public bool InTransit => _transit;
         public float RemainingGlide => _transit ? Vector3.Distance(transform.position, _glideTarget) : 0f;
 
         static uint Hash(uint x) { x ^= x >> 16; x *= 0x7feb352du; x ^= x >> 15; x *= 0x846ca68bu; x ^= x >> 16; return x; }
@@ -247,6 +246,12 @@ namespace Emergence.Runtime
             _footLeft--;
             return _foot;
         }
+
+        /// <summary>D-241: what this soul BELIEVES its feet are worth, and whether it is still
+        /// measuring. Read-only, for the probe — four numbers taken in one frame beat a fifth guess.</summary>
+        public float FootBelief => float.IsNaN(_foot) ? 0f : _foot;
+        public int FootSamplesLeft => _footLeft;
+        public bool InTransit => _transit;
 
         /// <summary>Re-open the sampling window — the body was swapped, rescaled, or has just moved
         /// into a pose we have never measured.</summary>
