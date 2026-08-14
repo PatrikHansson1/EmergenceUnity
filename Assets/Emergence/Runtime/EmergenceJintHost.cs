@@ -11,7 +11,7 @@ namespace Emergence.Runtime
 {
     public sealed class EmergenceJintHost
     {
-        public const string ExpectedEngineSha = "b83e53803ea5b0c6723adb95068fa88ee68eb4407da43223607c229491dcbef7"; // ENGINE 2.5.1 (M4 of D-226/D-229): clay and sand are DEPOSITS, not ore bodies -- a river brings new silt, a vein does not refill. They were mined to zero and never came back, and writing (which costs clay, and which the canon calls the arc's ENDING) died with them mid-run. clay/sand now regrow like forest, at 4x the interval; iron/copper/tin/coal/gold stay finite, because their exhaustion is the geography story. Goldens RE-BASELINED. Prior 2.5.0 sha: 87a6576c119d...
+        public const string ExpectedEngineSha = "2fc1647cc683ee856304931926e338d59919ed35ba04bbc529459f8d87132933"; // ENGINE 2.6.0 (M3 of D-226/D-234): the curiosity expedition could bring home only six materials and the ORES were not among them, so copperGreen was unobservable and bronze/steel/clock/steam were unreachable in every world -- the same class of fault as the three dead insights: the data existed and no code path led to it. Ores added; and the reach a people can fetch from now grows with wheel/sailing/road, plus a partner village's ground when they can reach it (the tin trade). Goldens RE-BASELINED. Prior 2.5.1 sha: b83e53803ea5...
 
         private readonly Jint.Engine _engine;
         public string EngineSha256 { get; }

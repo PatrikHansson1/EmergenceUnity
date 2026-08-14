@@ -82,3 +82,18 @@ geography story, not a bug. `regrowLater` consumes `S.rand`, so the stream moves
 Engine SHA: `b83e53803ea5b0c6723adb95068fa88ee68eb4407da43223607c229491dcbef7` (was `87a6576c119d…`).
 The `t8640` debt above still stands.
 
+## RE-BASELINED 2026-08-14 (third) — ENGINE 2.6.0 (M3 of D-226 / D-234)
+The curiosity expedition could bring home only six materials and the ORES were not among them, so
+`copperGreen` was unobservable and the whole bronze->steel->clock->steam branch was unreachable in
+every world. Ores added; and the reach a people can fetch from now grows with wheel/sailing/road,
+plus a partner village's ground when they can reach it (the tin trade).
+
+| seed | t=720 canonical SHA |
+|---|---|
+| 97013 | `4c361d7eda016172aa915f525ff629409be9f5b16295761a8852cba82a5b66cf` |
+| 4242 | `10daf429db7435d5ff6ee351b7c16c0078e6535e7c2d0c3a878e76465c95131f` |
+| 20260718 | `429540dd73ad6785f0539b788b6ac73b087ce3792e3b430f0a021a8f9dbbda0e` |
+| 4242-founders | `d2307e0fb9150774a282547deca0275ddf692d0768dad87c4e0632c3b5a75646` |
+
+Engine SHA: `2fc1647cc683ee856304931926e338d59919ed35ba04bbc529459f8d87132933` (was `b83e53803ea5…`).
+

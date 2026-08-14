@@ -841,10 +841,39 @@ function carrierNeed(k){ return Math.max(1, Math.round(KM_BASE+(techDepth(k)-1)*
 const _SCARCE=new Set(['iron','sand','clay','copper','tin','coal','gold','pigment']);
 // a craft's scarce material need (from its recipe). null = needs no scarce resource (survival/culture tech).
 function techScarceRes(id){ const t=TECH[id]; if(!t||!t.alts||!t.alts.length)return null; for(const m in t.alts[0])if(_SCARCE.has(m))return m; return null; }
+// ENGINE 2.6.0 (M3 of D-226/D-234): the reach is not a fixed circle. What a people can FETCH grows
+// with what they have learned about MOVING things -- a load on your back, then a cart, then water,
+// then a road. Before this, a village not born within 16 tiles of copper could never hold bronze
+// however clever or old it became, and copper is 14 tiles of ~7000. Geography decided everything and
+// nothing could answer it. Now geography sets the STARTING difficulty and technology answers it,
+// which is the actual history of the Bronze Age.
+function reachOf(S,v){
+  let R=16;                                     // a day out and back with a load on your back
+  const held=new Set(); for(const a of (v._mem||[])){ if(a.dead)continue; for(const k of a.knows)held.add(k); }
+  if(held.has('wheel'))R=24;                    // a cart carries ore a back cannot
+  if(held.has('sailing'))R=36;                  // water is the first highway
+  if(held.has('road'))R=44;                     // and a road makes distance cheap in any weather
+  return R;
+}
+function resWithin(S,cx,cy,R){
+  const res=new Set();
+  for(let y=Math.max(0,Math.round(cy-R));y<Math.min(H,cy+R);y++)for(let x=Math.max(0,Math.round(cx-R));x<Math.min(W,cx+R);x++){
+    const t=S.tiles[y][x].t; if(_SCARCE.has(t)&&Math.hypot(x-cx,y-cy)<=R)res.add(t);
+  }
+  return res;
+}
 function villageResAccess(S,v){
-  const res=new Set(); // recomputed yearly: captures resource depletion (mined-out ore -> the craft declines)
-  for(let y=Math.max(0,Math.round(v.y-16));y<Math.min(H,v.y+16);y++)for(let x=Math.max(0,Math.round(v.x-16));x<Math.min(W,v.x+16);x++){
-    const t=S.tiles[y][x].t; if(_SCARCE.has(t)&&Math.hypot(x-v.x,y-v.y)<=16)res.add(t);
+  const R=reachOf(S,v);
+  const res=resWithin(S,v.x,v.y,R); // recomputed yearly: captures resource depletion (mined-out ore -> the craft declines)
+  // TRADE: a people who can reach another people can reach that people's ground. The tin trade is the
+  // oldest long-distance trade there is, and it is the reason bronze exists at all -- almost nowhere
+  // are copper and tin found together. A partner's OWN reach is the plain walking one: what they can
+  // pass on is what they can pick up, not what they in turn import.
+  const held=new Set(); for(const a of (v._mem||[])){ if(a.dead)continue; for(const k of a.knows)held.add(k); }
+  if(held.has('road')||held.has('sailing')){
+    for(const w of S.villages){ if(w===v)continue;
+      if(Math.hypot(w.x-v.x,w.y-v.y)<=R) for(const t of resWithin(S,w.x,w.y,16))res.add(t);
+    }
   }
   return res;
 }
@@ -1751,11 +1780,21 @@ function agentTick(S,a){
   if(a.forage&&a.hunger<45)a.forage=null; // hunger cancels the expedition; night only pauses it
   if(!child&&((a.forage&&a.hunger>45)||(a.hunger>65&&S.hour>=7&&S.hour<18))){
     if(!a.forage&&S.rand()<a.traits.curiosity*.06){
-      const cand=['stone','fiber','sand','clay','iron','wood'].filter(m=>!isTaboo(S,a,m));
+      // M3 (D-234): the curiosity expedition could bring home only six materials, and copper, tin,
+      // coal, gold and pigment were not among them. The ore was ON THE MAP, the tech existed, the
+      // insight existed in GATHER_OBS -- and no path in the engine ever led a soul to that tile, so
+      // copperGreen could not be seen and the whole bronze->steel->clock->steam branch was
+      // unreachable in every world. A curious person picks up the strange green stone. That is what
+      // curiosity IS.
+      const cand=['stone','fiber','sand','clay','iron','wood','copper','tin','coal','gold','pigment'].filter(m=>!isTaboo(S,a,m));
       if(cand.length){
         const m=pick(S,cand);
         const t=findNearest(S,a,MATSOURCE[m]);
-        if(m==='fiber'||t&&Math.hypot(t.x-a.x,t.y-a.y)<=25)a.forage=m;
+        // how far an expedition dares go grows with what the people know about moving -- the same
+        // ladder the world-gate uses, so what you can FIND and what you can KEEP agree.
+        let far=25;
+        if(a.knows.has('wheel'))far=32; if(a.knows.has('sailing'))far=44; if(a.knows.has('road'))far=52;
+        if(m==='fiber'||t&&Math.hypot(t.x-a.x,t.y-a.y)<=far)a.forage=m;
       }
     }
     if(a.forage){
@@ -2215,5 +2254,5 @@ function resimulate(seed,toTick){
   return S;
 }
 
-return {createWorld,tickWorld,computeDNA,villageScope,resimulate,writeHistory,roleOf,verbOf,worldEra,eraName,ERAS,wealthOf:wealth,TECHS,TECH,OBS,QUIRK,W,H,YEAR,SEASONS,VERSION:'2.5.1'};
+return {createWorld,tickWorld,computeDNA,villageScope,resimulate,writeHistory,roleOf,verbOf,worldEra,eraName,ERAS,wealthOf:wealth,TECHS,TECH,OBS,QUIRK,W,H,YEAR,SEASONS,VERSION:'2.6.0'};
 });
