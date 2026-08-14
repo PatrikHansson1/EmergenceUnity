@@ -77,6 +77,11 @@ namespace Emergence.Runtime
             // book on demand; disarms itself (IMGUI stays) if the UI assets are missing
             if (FindAnyObjectByType<Fas4ChronicleView>() == null)
                 new GameObject("Fas4ChronicleView").AddComponent<Fas4ChronicleView>();
+            // D-218 (Skärmbibeln §3): the Latest Line. Without it a running world is MUTE — a player
+            // watching a century-scale sim at 1x sees nothing move for minutes and concludes nothing
+            // happens, and they are not wrong to, because nothing has told them otherwise.
+            if (FindAnyObjectByType<Fas4LatestLine>() == null)
+                new GameObject("Fas4LatestLine").AddComponent<Fas4LatestLine>();
 
             // the story's WHY (Fas 4, prose wiring 2026-08-13): the why-expander's service. Raised
             // ALWAYS and unconditionally — it costs nothing without a model (useProse defaults OFF,

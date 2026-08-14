@@ -90,27 +90,48 @@ namespace Emergence.Runtime
             var c = Clock();
             // D-140: the timeline (scrub) row exists when the clock rides the checkpoint grid
             bool scrubbable = c != null && d.bufferMode && d.Year >= 1;
+            EmergenceUI.Begin();          // draw in the Screen Bible's own 1280x800 reference space
+
+            // D-218 (Skärmbibeln §3): THE HEAD OF THIS PANEL WAS A DEBUG READOUT WEARING A BOX.
+            // "År 27   tick 3888   96 ticks/s   buffert +4 år" states four things and only ONE of
+            // them is a fact a witness has: the year. Ticks, ticks-per-second and buffer depth are
+            // the machine describing itself, and the Screen Bible's whole hierarchy argument is that
+            // when the player cannot act, every number they must justify to themselves is noise.
+            // The year is the anchor. The speed is the only verb. Everything else moves behind the
+            // diagnostics gate, where a developer can still see it and a screenshot cannot.
             const int w = 332;
-            int h = scrubbable ? 84 : 58;
-            var r = new Rect(12, 12, w, h);
-            GUI.Box(r, GUIContent.none);
-            string head = c != null
-                ? $"År {c.PresentationYear}   tick {(int)c.PresentationTick}   {EffectiveTps:F0} ticks/s   buffert +{c.BufferedYearsAhead} år"
-                : $"År {d.Year}   tick {d.Tick}   {EffectiveTps:F0} ticks/s";
-            GUI.Label(new Rect(r.x + 10, r.y + 4, w - 20, 22), head + (Paused ? "   ❚❚ PAUS" : ""));
+            int headH = EmergenceUI.Sp5 + EmergenceUI.Sp2;
+            int h = EmergenceUI.Sp3 + headH + 26 + (scrubbable ? 30 : 0);
+            var r = new Rect(EmergenceUI.Sp6, EmergenceUI.Sp6, w, h);
+            EmergenceUI.DrawPanel(r);
+
+            int year = c != null ? c.PresentationYear : d.Year;
+            GUI.Label(new Rect(r.x + EmergenceUI.Sp4, r.y + EmergenceUI.Sp3, 140, 24), "ÅR " + year, EmergenceUI.Label);
+            if (Paused)
+                GUI.Label(new Rect(r.x + EmergenceUI.Sp4 + 92, r.y + EmergenceUI.Sp3 + 2, 120, 22), "PAUSAD", EmergenceUI.Meta);
+            if (EmergenceUI.Diagnostics)
+            {
+                string diag = c != null
+                    ? $"tick {(int)c.PresentationTick}   {EffectiveTps:F0} t/s   buffert +{c.BufferedYearsAhead}"
+                    : $"tick {d.Tick}   {EffectiveTps:F0} t/s";
+                GUI.Label(new Rect(r.x + EmergenceUI.Sp4, r.y + EmergenceUI.Sp3 + 22, w - 32, 18), diag, EmergenceUI.Meta);
+            }
+
+            // Four pips, and the active one is FILLED and LABELLED — two channels, so a player can
+            // never be unable to tell whether the world froze or the game hung. That ambiguity is
+            // the single largest generator of "I could not tell what was going on".
             string[] labels = { "❚❚", "1×", "4×", "▶▶" };
+            int bw = (w - EmergenceUI.Sp4 * 2 - EmergenceUI.Sp2 * 3) / 4;
             for (int i = 0; i < 4; i++)
             {
                 bool active = Paused ? i == 0 : SpeedIndex == i;
-                var br = new Rect(r.x + 10 + i * 78, r.y + 28, 70, 24);
-                GUI.backgroundColor = active ? new Color(1f, 0.85f, 0.4f) : Color.white;
-                if (GUI.Button(br, labels[i]))
+                var br = new Rect(r.x + EmergenceUI.Sp4 + i * (bw + EmergenceUI.Sp2), r.y + EmergenceUI.Sp3 + headH, bw, 22);
+                if (GUI.Button(br, labels[i], active ? EmergenceUI.ButtonOn : EmergenceUI.Button))
                 {
                     if (i == 0) SetPause(!Paused);
                     else SetSpeed(i);
                 }
             }
-            GUI.backgroundColor = Color.white;
 
             // D-140: the TIMELINE — drag anywhere in produced history; released -> JumpToYear from the
             // checkpoint grid (year-grained scrub, D-137). The slider shows presentation year against
@@ -118,10 +139,12 @@ namespace Emergence.Runtime
             if (scrubbable)
             {
                 float shown = _scrubShown >= 0f ? _scrubShown : c.PresentationYear;
-                float slid = GUI.HorizontalSlider(new Rect(r.x + 10, r.y + 62, w - 66, 16), shown, 0f, d.Year);
-                GUI.Label(new Rect(r.x + w - 52, r.y + 58, 46, 20), $"y{Mathf.RoundToInt(slid)}/{d.Year}");
+                float sy = r.y + EmergenceUI.Sp3 + headH + 28;
+                float slid = GUI.HorizontalSlider(new Rect(r.x + EmergenceUI.Sp4, sy + 4, w - 84, 16), shown, 0f, d.Year);
+                GUI.Label(new Rect(r.x + w - 62, sy, 54, 20), $"{Mathf.RoundToInt(slid)}/{d.Year}", EmergenceUI.Meta);
                 ScrubStep(slid, GUIUtility.hotControl != 0);
             }
+            EmergenceUI.End();
         }
 
         /// <summary>

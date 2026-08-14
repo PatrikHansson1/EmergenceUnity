@@ -36,13 +36,21 @@ namespace Emergence.Runtime
     public sealed class Fas5AlmanacView : MonoBehaviour
     {
         // ---- almanac palette (emergence-almanac.html :root — same constants as the chronicle view) ----
-        static readonly Color ColPanel  = new Color32(0x14, 0x1B, 0x28, 0xF0);
-        static readonly Color ColPanel2 = new Color32(0x1A, 0x22, 0x33, 0xFF);
-        static readonly Color ColBookBg = new Color32(0x0B, 0x0F, 0x17, 0xF7);
-        static readonly Color ColLine   = new Color32(0x27, 0x30, 0x47, 0xFF);
-        static readonly Color ColInk    = new Color32(0xE8, 0xEE, 0xF8, 0xFF);
-        static readonly Color ColSub    = new Color32(0x88, 0x96, 0xB2, 0xFF);
-        static readonly Color ColGold   = new Color32(0xC9, 0xA2, 0x27, 0xFF);
+        // D-218 (Skärmbibeln §2 steg 2.1): THE PALETTE MOVED TO THE TOKEN LAYER.
+        //
+        // These constants were hand-picked here and hand-picked again, differently, in the other
+        // view — 0x141B28 against 0x141A21, a COOL blue-white ink (0xE8EEF8) against the bone the
+        // Screen Bible specifies (0xF0E7D6), 0xC9A227 gold against 0xD9A441. Nobody could point at
+        // either and call it wrong; the screen looked amateur anyway. That is exactly the drift a
+        // token layer exists to end, so the names stay and the VALUES now come from one place.
+        static readonly Color ColPanel  = WithA(EmergenceUI.Surface1, EmergenceUI.PanelAlpha);
+        static readonly Color ColPanel2 = EmergenceUI.Surface2;
+        static readonly Color ColBookBg = WithA(EmergenceUI.Surface0, 0.97f);
+        static readonly Color ColLine   = EmergenceUI.Hairline;
+        static readonly Color ColInk    = EmergenceUI.Ink100;
+        static readonly Color ColSub    = EmergenceUI.Ink70;
+        static readonly Color ColGold   = EmergenceUI.Gold;
+        static Color WithA(Color c, float a) { c.a = a; return c; }
 
         /// <summary>Probe seam (villkor-2 school): non-empty replaces the PanelSettings resource name
         /// so the missing-assets DISARM branch can be proven. Empty in production.</summary>
@@ -767,10 +775,13 @@ namespace Emergence.Runtime
             b.style.color = ColSub;
             SetBorderColor(b, ColLine);
             b.style.borderTopWidth = 1; b.style.borderBottomWidth = 1; b.style.borderLeftWidth = 1; b.style.borderRightWidth = 1;
-            b.style.borderTopLeftRadius = 7; b.style.borderTopRightRadius = 7;
-            b.style.borderBottomLeftRadius = 7; b.style.borderBottomRightRadius = 7;
-            b.style.paddingLeft = 10; b.style.paddingRight = 10; b.style.paddingTop = 4; b.style.paddingBottom = 4;
-            b.style.fontSize = 12;
+            // radius 4 for a card, never 7 — one family, and a page has square corners while only
+            // its mount is rounded. 12 px was below the Screen Bible's absolute floor of 14.
+            b.style.borderTopLeftRadius = EmergenceUI.RCard; b.style.borderTopRightRadius = EmergenceUI.RCard;
+            b.style.borderBottomLeftRadius = EmergenceUI.RCard; b.style.borderBottomRightRadius = EmergenceUI.RCard;
+            b.style.paddingLeft = EmergenceUI.Sp3; b.style.paddingRight = EmergenceUI.Sp3;
+            b.style.paddingTop = EmergenceUI.Sp1 + 2; b.style.paddingBottom = EmergenceUI.Sp1 + 2;
+            b.style.fontSize = EmergenceUI.FsMicro;
             return b;
         }
     }

@@ -182,8 +182,14 @@ namespace Emergence.Runtime
 
         void OnGUI()
         {
-            if (!showUI) return;
-            GUI.Label(new Rect(12, Screen.height - 24, 700, 20), "score: " + (CurrentCue.Length == 0 ? "—" : CurrentCue) + "   (" + CueChanges + " changes)");
+            // D-218: which cue is playing is a fact about the MACHINE, not about the world. It
+            // belongs to a developer, not to a screenshot. Behind the diagnostics gate.
+            if (!showUI || !EmergenceUI.Diagnostics) return;
+            EmergenceUI.Begin();
+            GUI.Label(new Rect(EmergenceUI.Sp6, EmergenceUI.H - 28, 700, 20),
+                      "score: " + (CurrentCue.Length == 0 ? "—" : CurrentCue) + "   (" + CueChanges + " changes)",
+                      EmergenceUI.Meta);
+            EmergenceUI.End();
         }
     }
 }

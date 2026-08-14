@@ -37,15 +37,23 @@ namespace Emergence.Runtime
         public const string PanelSettingsResource = "Fas4PanelSettings";
 
         // ---- almanac palette (emergence-almanac.html :root) ----
-        static readonly Color ColPanel  = new Color32(0x14, 0x1B, 0x28, 0xF0);
-        static readonly Color ColPanel2 = new Color32(0x1A, 0x22, 0x33, 0xFF);
-        static readonly Color ColBookBg = new Color32(0x0B, 0x0F, 0x17, 0xF7);
-        static readonly Color ColLine   = new Color32(0x27, 0x30, 0x47, 0xFF);
-        static readonly Color ColRowLine= new Color32(0x1E, 0x27, 0x40, 0xFF);
-        static readonly Color ColInk    = new Color32(0xE8, 0xEE, 0xF8, 0xFF);
-        static readonly Color ColSub    = new Color32(0x88, 0x96, 0xB2, 0xFF);
-        static readonly Color ColGold   = new Color32(0xC9, 0xA2, 0x27, 0xFF);
-        static readonly Color ColRowTxt = new Color32(0xCD, 0xD7, 0xEA, 0xFF);
+        // D-218 (Skärmbibeln §2 steg 2.1): THE PALETTE MOVED TO THE TOKEN LAYER.
+        //
+        // These constants were hand-picked here and hand-picked again, differently, in the other
+        // view — 0x141B28 against 0x141A21, a COOL blue-white ink (0xE8EEF8) against the bone the
+        // Screen Bible specifies (0xF0E7D6), 0xC9A227 gold against 0xD9A441. Nobody could point at
+        // either and call it wrong; the screen looked amateur anyway. That is exactly the drift a
+        // token layer exists to end, so the names stay and the VALUES now come from one place.
+        static readonly Color ColPanel  = WithA(EmergenceUI.Surface1, EmergenceUI.PanelAlpha);
+        static readonly Color ColPanel2 = EmergenceUI.Surface2;
+        static readonly Color ColBookBg = WithA(EmergenceUI.Surface0, 0.97f);
+        static readonly Color ColLine   = EmergenceUI.Hairline;
+        static readonly Color ColInk    = EmergenceUI.Ink100;
+        static readonly Color ColSub    = EmergenceUI.Ink70;
+        static readonly Color ColGold   = EmergenceUI.Gold;
+        static readonly Color ColRowLine= EmergenceUI.Hairline;
+        static readonly Color ColRowTxt = EmergenceUI.Ink100;
+        static Color WithA(Color c, float a) { c.a = a; return c; }
 
         /// <summary>Probe seam (Fas4 gate review 2026-07-22, villkor 2): a non-empty value replaces the
         /// PanelSettings resource name so the missing-assets DISARM branch can be proven without

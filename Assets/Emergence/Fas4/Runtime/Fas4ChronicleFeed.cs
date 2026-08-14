@@ -326,7 +326,14 @@ namespace Emergence.Runtime
         // ---- IMGUI v0 view (evidence-friendly, same school as Fas3TimeControls; native view comes later) ----
         void OnGUI()
         {
+            // D-218: this overlay predates Fas4ChronicleView and now DUPLICATES it — two chronicles
+            // on one screen, in two different visual languages, which is precisely the disease the
+            // Screen Bible was written to cure. It stays as the FALLBACK for when the UI Toolkit view
+            // could not build (a missing PanelSettings must cost the styling, never the record), and
+            // is otherwise silent. Also available on demand behind the diagnostics gate.
             if (!showUI) return;
+            var view = FindAnyObjectByType<Fas4ChronicleView>();
+            if (view != null && !EmergenceUI.Diagnostics) return;
             var c = Clock();
             const int w = 360;
             int x = Screen.width - w - 12;

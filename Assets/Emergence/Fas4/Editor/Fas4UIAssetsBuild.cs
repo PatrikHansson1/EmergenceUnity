@@ -34,22 +34,28 @@ namespace Emergence.Editor
             if (theme == null) { Debug.LogError("[Fas4UIAssetsBuild] theme import failed: " + ThemePath); return; }
 
             var ps = AssetDatabase.LoadAssetAtPath<PanelSettings>(PsPath);
+            bool made = false;
             if (ps == null)
             {
                 ps = ScriptableObject.CreateInstance<PanelSettings>();
-                ps.themeStyleSheet = theme;
-                ps.scaleMode = PanelScaleMode.ConstantPixelSize;
-                ps.sortingOrder = 50;
                 AssetDatabase.CreateAsset(ps, PsPath);
-                AssetDatabase.SaveAssets();
-                Debug.Log("[Fas4UIAssetsBuild] created " + PsPath);
+                made = true;
             }
-            else if (ps.themeStyleSheet == null)
-            {
-                ps.themeStyleSheet = theme;
-                EditorUtility.SetDirty(ps);
-                AssetDatabase.SaveAssets();
-            }
+            // D-218: ConstantPixelSize meant the chronicle and the almanac drew at raw pixels, so on
+            // a 2560x1440 capture they were HALF the intended size beside an IMGUI half that now
+            // scales — two surfaces, two scales, one screen. Match the Screen Bible's own reference
+            // (1280x800, matched on HEIGHT so extra width becomes gutter rather than text) and the
+            // two halves finally agree. Applied on every build, not only on creation: the asset
+            // already existed with the wrong mode and would never have been corrected.
+            ps.themeStyleSheet = theme;
+            ps.scaleMode = PanelScaleMode.ScaleWithScreenSize;
+            ps.referenceResolution = new Vector2Int(1280, 800);
+            ps.screenMatchMode = PanelScreenMatchMode.MatchWidthOrHeight;
+            ps.match = 1f;
+            ps.sortingOrder = 50;
+            EditorUtility.SetDirty(ps);
+            AssetDatabase.SaveAssets();
+            Debug.Log("[Fas4UIAssetsBuild] " + (made ? "created " : "updated ") + PsPath + " (1280x800, match height)");
         }
     }
 }

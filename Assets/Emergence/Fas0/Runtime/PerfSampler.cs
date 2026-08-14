@@ -37,9 +37,14 @@ namespace Emergence.Runtime
 
         void OnGUI()
         {
-            if (!Debug.isDebugBuild && !Application.isEditor) return;
+            // D-218: a frame counter in a Steam screenshot is worth real wishlists. The old guard
+            // was "debug build or editor", which means it was on in every editor capture we have
+            // ever taken — including the ones we would have sent to a store page.
+            if (!EmergenceUI.Diagnostics) return;
             var s = $"FPS {Fps:0} ({FrameMs:0.0} ms) budget {TargetFps}  {(WithinFrameBudget ? "OK" : "OVER")}";
-            GUI.Label(new Rect(8, 8, 360, 20), s);
+            EmergenceUI.Begin();
+            GUI.Label(new Rect(EmergenceUI.Sp6, EmergenceUI.H - 48, 360, 20), s, EmergenceUI.Meta);
+            EmergenceUI.End();
         }
     }
 }
