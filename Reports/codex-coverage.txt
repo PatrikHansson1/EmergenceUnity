@@ -1,14 +1,14 @@
 EMERGENCE — CODEX COVERAGE (D-121, anti-orphan)
-generated 2026-08-14 17:20:43
-codex entries: 74  (71 unique prefabs referenced, 0 told-not-shown)
+generated 2026-08-14 17:55:52
+codex entries: 78  (72 unique prefabs referenced, 0 told-not-shown)
 project assets (prefab/glb/fbx): 2803
-OVERALL COVERAGE: 71/2803 = 2,5%  |  ORPHANS: 2732  |  DANGLING: 0
+OVERALL COVERAGE: 72/2803 = 2,6%  |  ORPHANS: 2731  |  DANGLING: 0
 
 ## DANGLING (codex → missing asset) — MUST be 0
   none ✓
 
 ## COVERAGE PER PACK (referenced / total)
-    10/1500    0,7%  Fantastic City Pack
+    11/1500    0,7%  Fantastic City Pack
     54/978     5,5%  Fantastic Village Pack
      3/258     1,2%  Polyart
      0/21      0,0%  Vefects
@@ -18,7 +18,7 @@ OVERALL COVERAGE: 71/2803 = 2,5%  |  ORPHANS: 2732  |  DANGLING: 0
      0/4       0,0%  msVFX_Free Smoke Effects Pack
      0/2       0,0%  PolyOne
 
-## ORPHANS (asset with no codex entry) — 2732 total, first 60:
+## ORPHANS (asset with no codex entry) — 2731 total, first 60:
   · Emergence/deer
   · Emergence/villager
   · Emergence/villager-child

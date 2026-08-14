@@ -36,7 +36,20 @@ namespace Emergence.Runtime
     // ruinPrefab overrides the studio default ruin stand-in; ruinScale sizes it (0 = default). Ephemeral/portable
     // objects (banners, carts, pots) keep ruinOnLoss=0 and simply vanish.
     // D-106 fill-pass: tier = milestone|dressing|part (legibility law); statMeaning feeds the STATS/Almanac pillar (Fas 5).
-    [Serializable] public class CodexEntry { public string id, prefab, category, requiresTech, requiresCustom, desc, placement, tier, statMeaning; public int era, minPop, minCrafts, minGen, count; public float scale; public int ruinOnLoss; public string ruinPrefab; public float ruinScale; }
+    // C3 (D-232, EP: "objekten i codexen skall också kunna mixas då vi ju faktiskt inte vet vad som
+    // kommer upptäckas under civilisationens gång"). A single requiresTech could only ever say ONE
+    // thing, so a combination — bronze needs copper AND tin; a market needs trade OR a road — was
+    // unsayable. `requires` says it: allOf / anyOf / noneOf over the same facts the flat fields use.
+    // The flat fields REMAIN and are still evaluated (AND-ed with `requires`), so every existing entry
+    // keeps working untouched — the shorthand for the overwhelmingly common single-tech case.
+    [Serializable] public class CodexCond { public string tech, custom; public int minPop, minCrafts, minGen; }
+    [Serializable] public class CodexRequire { public CodexCond[] allOf; public CodexCond[] anyOf; public CodexCond[] noneOf; }
+    [Serializable] public class CodexEntry { public string id, prefab, category, requiresTech, requiresCustom, desc, placement, tier, statMeaning; public int era, minPop, minCrafts, minGen, count; public float scale; public int ruinOnLoss; public string ruinPrefab; public float ruinScale;
+        public CodexRequire requires;          // C3: the predicate, when one tech cannot say it
+        // C3 combination: when every named part is itself allowed here, those parts BECOME this whole —
+        // the parts are then suppressed, because a market-square is not a market next to some crates.
+        // Per OBJECT-CODEX-SPEC 5b.1: a combination with no resolvable prefab is TOLD, never shown broken.
+        public string[] combinesWith; }
     [Serializable] public class Codex { public CodexEntry[] objects; }
     // FAS 4 PROSE WIRING (2026-08-13, FAS4-PROSE-DIRECTOR-ORDER §1): the engine has carried
     // causes[] on every event since R2 ink. 1 (D-172), but nothing crossed into the body — the live
