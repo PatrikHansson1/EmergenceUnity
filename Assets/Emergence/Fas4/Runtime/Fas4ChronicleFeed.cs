@@ -340,10 +340,10 @@ namespace Emergence.Runtime
             int h = Mathf.Min(Screen.height - 24, 460);
             var r = new Rect(x, 12, w, h);
             GUI.Box(r, GUIContent.none);
-            string head = "KRÖNIKAN" + (c != null ? "   år " + c.PresentationYear : "") + "   (" + _entries.Count + " poster)";
+            string head = "THE CHRONICLE" + (c != null ? "   yr " + c.PresentationYear : "") + "   (" + _entries.Count + " entries)";
             GUI.Label(new Rect(r.x + 10, r.y + 4, w - 20, 20), head);
 
-            string[] labels = { "allt", "märkbart", "vändpunkter" };
+            string[] labels = { "all", "notable", "turning points" };
             for (int i = 0; i < 3; i++)
             {
                 bool active = minSalience == i + 1;

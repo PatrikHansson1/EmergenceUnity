@@ -142,7 +142,7 @@ namespace Emergence.Runtime
 
                 // ---- txt: the saga, chronological ----
                 var t = new StringBuilder();
-                t.AppendLine("KRÖNIKAN — skriven av ingen, allt hände");
+                t.AppendLine("THE CHRONICLE — written by no one, all of it happened");
                 t.AppendLine($"seed {seed} · {spanTruth} · {E.Count} witnessed entries · exported {DateTime.Now:yyyy-MM-dd HH:mm} · player vehicle (D-148)");
                 t.AppendLine(new string('-', 72));
                 foreach (var e in E)
@@ -151,7 +151,7 @@ namespace Emergence.Runtime
 
                 // ---- html: standalone, almanac palette (mirrors the editor artifact, D-146) ----
                 var h = new StringBuilder();
-                h.Append("<!doctype html><meta charset=\"utf-8\"><title>Krönikan — seed ").Append(seed).Append("</title><style>")
+                h.Append("<!doctype html><meta charset=\"utf-8\"><title>The Chronicle — seed ").Append(seed).Append("</title><style>")
                  .Append("body{margin:0;background:#0b0f17;color:#e8eef8;font:14px/1.5 -apple-system,Segoe UI,Roboto,sans-serif}")
                  .Append(".wrap{max-width:760px;margin:0 auto;padding:26px 16px}")
                  .Append("h1{margin:0;font-size:23px}h1 span{color:#c9a227}.sub{color:#8896b2;font-size:13px;margin-bottom:14px}")
@@ -159,13 +159,13 @@ namespace Emergence.Runtime
                  .Append(".e{padding:7px 0;border-top:1px solid #1e2740;font-size:13px;color:#cdd7ea;display:flex}")
                  .Append(".e:first-child{border-top:0}.y{color:#c9a227;font-weight:600;width:64px;flex-shrink:0}")
                  .Append(".star{color:#e8eef8;font-weight:600}</style><div class=\"wrap\">")
-                 .Append("<h1>Krönikan <span>— seed ").Append(seed).Append("</span></h1>")
-                 .Append("<div class=\"sub\">skriven av ingen — allt hände · ").Append(spanTruth)
-                 .Append(" · ").Append(E.Count).Append(" poster · vittnad live i spelarens egen kropp (player build)</div><div class=\"card\">");
+                 .Append("<h1>The Chronicle <span>— seed ").Append(seed).Append("</span></h1>")
+                 .Append("<div class=\"sub\">written by no one — all of it happened · ").Append(spanTruth)
+                 .Append(" · ").Append(E.Count).Append(" entries · witnessed live in the player's own build</div><div class=\"card\">");
                 foreach (var e in E)
                 {
                     string mark = e.salience >= 3 ? "★ " : e.salience == 2 ? "• " : "· ";
-                    h.Append("<div class=\"e\"><div class=\"y\">år ").Append(e.year).Append("</div><div")
+                    h.Append("<div class=\"e\"><div class=\"y\">yr ").Append(e.year).Append("</div><div")
                      .Append(e.salience >= 3 ? " class=\"star\"" : "").Append(">").Append(mark)
                      .Append(System.Net.WebUtility.HtmlEncode(e.text)).Append("</div></div>");
                 }

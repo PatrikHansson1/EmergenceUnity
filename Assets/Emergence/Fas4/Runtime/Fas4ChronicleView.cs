@@ -295,17 +295,17 @@ namespace Emergence.Runtime
             root.Add(_feedPanel);
 
             var head = new VisualElement(); RowFlex(head);
-            _feedHead = new Label("KRÖNIKAN");
+            _feedHead = new Label("THE CHRONICLE");
             _feedHead.style.color = ColInk; _feedHead.style.unityFontStyleAndWeight = FontStyle.Bold;
             _feedHead.style.fontSize = 13; _feedHead.style.letterSpacing = 1;
             head.Add(_feedHead);
             var spacer = new VisualElement(); spacer.style.flexGrow = 1; head.Add(spacer);
-            var bookBtn = MakeButton("BOK", () => OpenBook());
+            var bookBtn = MakeButton("BOOK", () => OpenBook());
             head.Add(bookBtn);
             _feedPanel.Add(head);
 
             var filters = new VisualElement(); RowFlex(filters); filters.style.marginTop = 6;
-            string[] labels = { "allt", "märkbart", "vändpunkter" };
+            string[] labels = { "all", "notable", "turning points" };
             for (int i = 0; i < 3; i++)
             {
                 int sal = i + 1;
@@ -336,14 +336,15 @@ namespace Emergence.Runtime
             _bookRoot.Add(card);
 
             var bh = new VisualElement(); RowFlex(bh);
-            var title = new Label("Krönikan");
+            var title = new Label("The Chronicle");
             title.style.color = ColInk; title.style.fontSize = 23; title.style.unityFontStyleAndWeight = FontStyle.Bold;
             bh.Add(title);
             var bsp = new VisualElement(); bsp.style.flexGrow = 1; bh.Add(bsp);
-            bh.Add(MakeButton("✕  stäng", () => CloseBook()));
+            bh.Add(MakeButton("✕  close", () => CloseBook()));
             card.Add(bh);
 
-            var sub = new Label("skriven av ingen — allt hände");
+            // the game's central promise, and it must read in the language the game ships in
+            var sub = new Label("written by no one — all of it happened");
             sub.style.color = ColSub; sub.style.fontSize = 13; sub.style.marginBottom = 8;
             card.Add(sub);
 
@@ -367,7 +368,7 @@ namespace Emergence.Runtime
             var rowsHost = _feedPanel.Q<VisualElement>("feed-rows");
             rowsHost.Clear();
             _feedRowSaliences.Clear();
-            _feedHead.text = "KRÖNIKAN   år " + PresYear() + "   (" + f.Entries.Count + " poster)";
+            _feedHead.text = "THE CHRONICLE   yr " + PresYear() + "   (" + f.Entries.Count + " entries)";
 
             // newest at the bottom — the running feed reads downward (v0 semantics kept)
             var tail = new List<Fas4ChronicleFeed.Entry>();
@@ -404,7 +405,7 @@ namespace Emergence.Runtime
                 row.style.paddingTop = 7; row.style.paddingBottom = 7;
 
                 var line = new VisualElement(); RowFlex(line);
-                var y = new Label("år " + e.year);
+                var y = new Label("yr " + e.year);
                 y.style.color = ColGold; y.style.unityFontStyleAndWeight = FontStyle.Bold;
                 y.style.fontSize = 13; y.style.width = 64; y.style.flexShrink = 0;
                 line.Add(y);
@@ -434,7 +435,7 @@ namespace Emergence.Runtime
 
         void RebuildFilterButtons(Fas4ChronicleFeed f)
         {
-            string[] labels = { "allt", "märkbart", "vändpunkter" };
+            string[] labels = { "all", "notable", "turning points" };
             for (int i = 0; i < _filterButtons.Count; i++)
             {
                 int sal = (i % 3) + 1;

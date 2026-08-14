@@ -39,7 +39,9 @@ namespace Emergence.Runtime
         int _year = -1, _count = -1;
         float _arrived = -99f;
 
-        static readonly string[] TierName = { "MINNS", "BERÄTTAT", "SKRIVET", "VÄGT" };
+        // D-222: THE GAME SHIPS IN ENGLISH. These are the chronicle's four registers, in the art
+        // director's own words - the ladder the book climbs as the world learns to keep records.
+        static readonly string[] TierName = { "REMEMBERED", "TOLD", "WRITTEN", "WEIGHED" };
 
         Fas4ChronicleFeed Feed()
         {
@@ -116,7 +118,7 @@ namespace Emergence.Runtime
             float sepX = x0 + measure - 62f;
             EmergenceUI.RuleV(sepX, textY + 4f, 16f, EmergenceUI.Hairline, false);
             EmergenceUI.LozengeAt(sepX + 0.5f, textY + 3f, 3, EmergenceUI.Hairline);
-            GUI.Label(new Rect(sepX + 10f, textY, 54, 26), _year >= 0 ? "år " + _year : "", EmergenceUI.Meta);
+            GUI.Label(new Rect(sepX + 10f, textY, 54, 26), _year >= 0 ? "yr " + _year : "", EmergenceUI.Meta);
 
             // THE LINE-FILLER: the leftover between the prose and the separator, at a richness that
             // tracks the register. Suppressed under 48 px — a cramped filler reads as a glitch.

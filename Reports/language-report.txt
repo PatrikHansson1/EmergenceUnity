@@ -1,0 +1,13 @@
+EMERGENCE — LANGUAGE PROBE: does the game speak English?
+generated 2026-08-14 15:12:33
+scope: STRING LITERALS in runtime code. Comments, Editor/ and reports are
+  deliberately exempt — the studio reasons in Swedish and that is the archive.
+
+scanned 43 runtime files, 1120 string literals
+
+  PASS  no Swedish found in any player-facing string
+
+VERDICT: GREEN
+declared: a word list is not a language. This catches the drift we actually make —
+  a Swedish label typed by someone thinking in Swedish — and it will not catch a
+  sentence that happens to avoid every word in the list. Widen the list when one slips.

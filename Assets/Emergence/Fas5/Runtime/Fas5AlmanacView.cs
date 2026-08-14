@@ -62,7 +62,10 @@ namespace Emergence.Runtime
 
         // ---- tabs (reference order, emergence-almanac.html nav) ----
         public const int TabOverview = 0, TabSociety = 1, TabTech = 2, TabVillages = 3, TabSouls = 4, TabDynasty = 5, TabChronicle = 6;
-        public static readonly string[] TabNames = { "Översikt", "Samhälle", "Teknik & minne", "Byar", "Själar", "Dynastier & tid", "Krönika" };
+        // D-222: the game ships in ENGLISH. "Craft & memory" rather than "technology" — the word ban
+        // (D-183) keeps machine vocabulary out of a world of rope and fire, and craft is what the
+        // engine actually models. "Lineage" rather than "dynasty" for the same reason.
+        public static readonly string[] TabNames = { "Overview", "Society", "Craft & memory", "Villages", "Souls", "Lineage & time", "Chronicle" };
         public static bool TabIsStub(int t) => t == TabTech || t == TabDynasty;   // E1.5: Society graduated to its first honest view
         public int ActiveTab { get; private set; }
 
@@ -181,7 +184,7 @@ namespace Emergence.Runtime
         /// <summary>Honest time label for the state-rendering tabs (review I4): when a fixture is
         /// applied the header must carry the FIXTURE's year with a visible marker — never the
         /// presentation clock's year next to fixture data.</summary>
-        string StateWhen() => _fixture != null ? "FIXTUR y" + _fixture.years + " (riktig motor-export)" : "år " + TileYear;
+        string StateWhen() => _fixture != null ? "FIXTURE y" + _fixture.years + " (a real engine export)" : "yr " + TileYear;
 
         // ---------------- public surface (probe + future game UI) ----------------
 
@@ -271,26 +274,26 @@ namespace Emergence.Runtime
             switch (ActiveTab)
             {
                 case TabOverview:
-                    _sub.text = "år " + TileYear + " · " + TileEra + " · statistik med kausalitet — korrelationerna väntar på motorns metrics (R2)";
+                    _sub.text = "yr " + TileYear + " · " + TileEra + " · figures with their causes — the correlations await the engine's metrics (R2)";
                     string[] vals = { TilePop.ToString(), TileBirths.ToString(), TileDeaths.ToString(), TileHuts.ToString(), TileEra };
                     for (int i = 0; i < _tileValues.Count && i < vals.Length; i++) _tileValues[i].text = vals[i];
                     RebuildEraStrip();
                     _curveHost.MarkDirtyRepaint();
                     break;
                 case TabVillages:
-                    _sub.text = StateWhen() + " · byarna som världen själv har grundat — klicka för dossier";
+                    _sub.text = StateWhen() + " · the villages the world founded on its own — click for a dossier";
                     RebuildVillages(S);
                     break;
                 case TabSouls:
-                    _sub.text = StateWhen() + " · de " + SoulRowCap + " mest förmögna själarna (rikedom ur motorns export, E1.5) — roller · egenskaper väntar på motorns metrics (R2)";
+                    _sub.text = StateWhen() + " · the " + SoulRowCap + " wealthiest souls (wealth from the engine's own export, E1.5) — roles · traits await the engine's metrics (R2)";
                     RebuildSouls(S);
                     break;
                 case TabSociety:
-                    _sub.text = StateWhen() + " · rikedom · ledare · bevittnat våld — Gini · handel · tro väntar på motorns metrics (R2)";
+                    _sub.text = StateWhen() + " · wealth · leaders · witnessed violence — Gini · trade · belief await the engine's metrics (R2)";
                     RebuildSociety(S, r);
                     break;
                 default:
-                    _sub.text = "år " + TileYear + " · " + TileEra;
+                    _sub.text = "yr " + TileYear + " · " + TileEra;
                     break;
             }
         }
@@ -308,7 +311,7 @@ namespace Emergence.Runtime
             _openBtnPanel = new VisualElement();
             _openBtnPanel.style.position = Position.Absolute;
             _openBtnPanel.style.right = 12; _openBtnPanel.style.bottom = 12;
-            var open = MakeButton("ALMANACKEN", OpenAlmanac);
+            var open = MakeButton("THE ALMANAC", OpenAlmanac);
             _openBtnPanel.Add(open);
             root.Add(_openBtnPanel);
 
@@ -332,11 +335,11 @@ namespace Emergence.Runtime
             _root.Add(card);
 
             var bh = new VisualElement(); RowFlex(bh);
-            var title = new Label("Almanacken");
+            var title = new Label("The Almanac");
             title.style.color = ColInk; title.style.fontSize = 23; title.style.unityFontStyleAndWeight = FontStyle.Bold;
             bh.Add(title);
             var bsp = new VisualElement(); bsp.style.flexGrow = 1; bh.Add(bsp);
-            bh.Add(MakeButton("✕  stäng", CloseAlmanac));
+            bh.Add(MakeButton("✕  close", CloseAlmanac));
             card.Add(bh);
 
             _sub = new Label("");
@@ -362,7 +365,7 @@ namespace Emergence.Runtime
             card.Add(ov);
 
             _tilesRow = new VisualElement(); RowFlex(_tilesRow); _tilesRow.style.marginBottom = 12;
-            string[] heads = { "BEFOLKNING", "FÖDDA", "DÖDA", "HYDDOR", "ERA" };
+            string[] heads = { "SOULS", "BORN", "DIED", "HUTS", "ERA" };
             for (int i = 0; i < heads.Length; i++)
             {
                 var tile = new VisualElement();
@@ -381,7 +384,7 @@ namespace Emergence.Runtime
             }
             ov.Add(_tilesRow);
 
-            var curveHead = new Label("BEFOLKNING ÖVER TID");
+            var curveHead = new Label("SOULS OVER TIME");
             curveHead.style.color = ColSub; curveHead.style.fontSize = 10; curveHead.style.letterSpacing = 1;
             curveHead.style.marginBottom = 4;
             ov.Add(curveHead);
@@ -402,8 +405,8 @@ namespace Emergence.Runtime
             _tabBodies[TabSociety] = MakeScrollBody(card, out _societyHost);
 
             // Honest stubs — they NAME what they await (never fake data)
-            _tabBodies[TabTech] = MakeStub(card, "Teknik & minne väntar på motorns metrics-export (R2): tech lost/rediscovered · Minnesmotorns kurvor.");
-            _tabBodies[TabDynasty] = MakeStub(card, "Dynastier & tid väntar på motorns metrics-export (R2): generationsträd · tidslinjens skalor.");
+            _tabBodies[TabTech] = MakeStub(card, "Craft & memory awaits the engine's metrics export (R2): craft lost and rediscovered · the memory curves.");
+            _tabBodies[TabDynasty] = MakeStub(card, "Lineage & time awaits the engine's metrics export (R2): generation trees · the timeline's scales.");
             // Chronicle body never shows — SelectTab hands off to the Fas 4 book.
             _tabBodies[TabChronicle] = MakeStub(card, "");
 
@@ -454,7 +457,7 @@ namespace Emergence.Runtime
 
             if (VillageRowCount == 0)
             {
-                var empty = new Label("inga byar ännu — själarna bor ännu spridda; världen grundar sina byar själv");
+                var empty = new Label("no villages yet — the souls still live scattered; the world founds its own");
                 empty.style.color = ColSub; empty.style.fontSize = 13; empty.style.whiteSpace = WhiteSpace.Normal;
                 _villagesHost.Add(empty);
                 return;
@@ -475,7 +478,7 @@ namespace Emergence.Runtime
             {
                 var v = _sortedVillages[i];
                 bool law = v.beliefs != null && System.Array.IndexOf(v.beliefs, "harm") >= 0;
-                string meta = v.pop + " själar · " + v.crafts + " hantverk · gen " + v.maxGen + (string.IsNullOrEmpty(v.cosmos) ? "" : " · 🌌 " + v.cosmos);
+                string meta = v.pop + " souls · " + v.crafts + " crafts · gen " + v.maxGen + (string.IsNullOrEmpty(v.cosmos) ? "" : " · 🌌 " + v.cosmos);
                 _villagesHost.Add(MakeClickRow((v.name ?? "?") + (law ? " ⚖️" : ""), meta, i, OpenVillageDossier));
             }
         }
@@ -495,18 +498,18 @@ namespace Emergence.Runtime
             d.Add(head);
 
             bool law = v.beliefs != null && System.Array.IndexOf(v.beliefs, "harm") >= 0;
-            AddKv(d, "Befolkning", v.pop + " själar");
+            AddKv(d, "Souls", v.pop + " living");
             AddKv(d, "Generationer", v.maxGen.ToString());
-            AddKv(d, "Medelålder", v.avgAge + " år");
-            AddKv(d, "Hantverk", v.crafts.ToString());
+            AddKv(d, "Mean age", v.avgAge + " yr");
+            AddKv(d, "Crafts", v.crafts.ToString());
             // E1.5: the engine's recognized leader + named gift-way — shown only when the sim has them
             // (a leaderless village is design, not missing data — 4242 went 120 years without one)
-            if (!string.IsNullOrEmpty(v.leader)) AddKv(d, "Ledare", "🕯️ " + v.leader);
-            if (!string.IsNullOrEmpty(v.gift)) AddKv(d, "Gåvo-sed", "🍞 " + v.gift);
+            if (!string.IsNullOrEmpty(v.leader)) AddKv(d, "Leader", "🕯️ " + v.leader);
+            if (!string.IsNullOrEmpty(v.gift)) AddKv(d, "Giftway", "🍞 " + v.gift);
             if (!string.IsNullOrEmpty(v.cosmos)) AddKv(d, "Himmelstro", "🌌 " + v.cosmos);
             if (law) AddKv(d, "Lag", "⚖️ Peace of Kin");
 
-            var kh = new Label("KAN (HANTVERK & KUNSKAP)");
+            var kh = new Label("KNOWS (CRAFT & KNOWLEDGE)");
             kh.style.color = ColSub; kh.style.fontSize = 10; kh.style.letterSpacing = 1; kh.style.marginTop = 8; kh.style.marginBottom = 4;
             d.Add(kh);
             var chips = new VisualElement(); RowFlex(chips); chips.style.flexWrap = Wrap.Wrap;
@@ -534,7 +537,7 @@ namespace Emergence.Runtime
 
             if (SoulRowCount == 0)
             {
-                var empty = new Label("inga levande själar i det presenterade året");
+                var empty = new Label("no living souls in the year on show");
                 empty.style.color = ColSub; empty.style.fontSize = 13;
                 _soulsHost.Add(empty);
                 return;
@@ -552,9 +555,9 @@ namespace Emergence.Runtime
             for (int i = 0; i < _sortedSouls.Length; i++)
             {
                 var s = _sortedSouls[i];
-                string meta = (s.task ?? "—") + " · " + Mathf.RoundToInt(s.age) + " år · gen " + s.gen
-                            + " · rikedom " + Mathf.RoundToInt(s.wealth);   // E1.5
-                _soulsHost.Add(MakeClickRow(s.name ?? ("själ " + s.id), meta, i, OpenSoulDossier));
+                string meta = (s.task ?? "—") + " · " + Mathf.RoundToInt(s.age) + " yr · gen " + s.gen
+                            + " · wealth " + Mathf.RoundToInt(s.wealth);   // E1.5
+                _soulsHost.Add(MakeClickRow(s.name ?? ("soul " + s.id), meta, i, OpenSoulDossier));
             }
         }
 
@@ -572,11 +575,11 @@ namespace Emergence.Runtime
             head.Add(MakeButton("✕", CloseSoulDossier));
             d.Add(head);
 
-            AddKv(d, "Ålder", Mathf.RoundToInt(s.age) + " år");
+            AddKv(d, "Age", Mathf.RoundToInt(s.age) + " yr");
             AddKv(d, "Generation", s.gen.ToString());
             AddKv(d, "Syssla", s.task ?? "—");
-            AddKv(d, "Rikedom", Mathf.RoundToInt(s.wealth).ToString());   // E1.5: E.wealthOf ur exporten
-            var note = new Label("egenskaper · band · dråp väntar på motorns metrics-export (R2)");
+            AddKv(d, "Wealth", Mathf.RoundToInt(s.wealth).ToString());   // E1.5: E.wealthOf ur exporten
+            var note = new Label("traits · bonds · killings await the engine's metrics export (R2)");
             note.style.color = ColSub; note.style.fontSize = 11; note.style.marginTop = 8; note.style.whiteSpace = WhiteSpace.Normal;
             d.Add(note);
             return d;
@@ -598,23 +601,23 @@ namespace Emergence.Runtime
             SocietyTopName = n > 0 ? (sorted[0].name ?? "") : "";
             SocietyTopWealth = n > 0 ? Mathf.RoundToInt(sorted[0].wealth) : 0;
 
-            AddSectionHead(_societyHost, "RIKEDOM — DE " + n + " FRÄMSTA (ur motorns export, E1.5)");
+            AddSectionHead(_societyHost, "WEALTH — THE FOREMOST " + n + " (from the engine's own export, E1.5)");
             if (n == 0)
             {
-                var empty = new Label("inga levande själar i det presenterade året");
+                var empty = new Label("no living souls in the year on show");
                 empty.style.color = ColSub; empty.style.fontSize = 13;
                 _societyHost.Add(empty);
             }
             for (int i = 0; i < n; i++)
-                AddKv(_societyHost, (i + 1) + ". " + (sorted[i].name ?? ("själ " + sorted[i].id)),
-                      "rikedom " + Mathf.RoundToInt(sorted[i].wealth) + " · " + Mathf.RoundToInt(sorted[i].age) + " år");
+                AddKv(_societyHost, (i + 1) + ". " + (sorted[i].name ?? ("soul " + sorted[i].id)),
+                      "wealth " + Mathf.RoundToInt(sorted[i].wealth) + " · " + Mathf.RoundToInt(sorted[i].age) + " yr");
 
             // leader per village — the engine's recognized leaders (leaderless = design, said honestly)
-            AddSectionHead(_societyHost, "LEDARE PER BY");
+            AddSectionHead(_societyHost, "LEADER BY VILLAGE");
             SocietyVillageRows = villages.Length; SocietyLedVillages = 0;
             if (villages.Length == 0)
             {
-                var noVil = new Label("inga byar ännu — ingen att erkänna en ledare");
+                var noVil = new Label("no villages yet — no one to acknowledge a leader");
                 noVil.style.color = ColSub; noVil.style.fontSize = 13;
                 _societyHost.Add(noVil);
             }
@@ -622,7 +625,7 @@ namespace Emergence.Runtime
             {
                 bool led = v != null && !string.IsNullOrEmpty(v.leader);
                 if (led) SocietyLedVillages++;
-                AddKv(_societyHost, v != null ? (v.name ?? "?") : "?", led ? "🕯️ " + v.leader : "ingen erkänd ledare");
+                AddKv(_societyHost, v != null ? (v.name ?? "?") : "?", led ? "🕯️ " + v.leader : "no acknowledged leader");
             }
 
             // witnessed violence — the body's OWN ledger (bus-witnessed sayAct events, trim-honest),
@@ -630,12 +633,12 @@ namespace Emergence.Runtime
             SocietySteal = r != null ? r.TotalSteal : 0;
             SocietyRaid = r != null ? r.TotalRaid : 0;
             SocietyFeud = r != null ? r.TotalFeud : 0;
-            AddSectionHead(_societyHost, "VÅLD — BEVITTNAT AV KROPPEN");
-            AddKv(_societyHost, "Stölder", SocietySteal.ToString());
-            AddKv(_societyHost, "Räder", SocietyRaid.ToString());
+            AddSectionHead(_societyHost, "VIOLENCE — AS WITNESSED");
+            AddKv(_societyHost, "Thefts", SocietySteal.ToString());
+            AddKv(_societyHost, "Raids", SocietyRaid.ToString());
             AddKv(_societyHost, "Fejder", SocietyFeud.ToString());
 
-            var wait = new Label("Gini · konflikt-korrelationer · handel · tro väntar på motorns metrics-export (R2).");
+            var wait = new Label("Gini · conflict correlations · trade · belief await the engine's metrics export (R2).");
             wait.style.color = ColSub; wait.style.fontSize = 11; wait.style.marginTop = 8; wait.style.whiteSpace = WhiteSpace.Normal;
             _societyHost.Add(wait);
         }

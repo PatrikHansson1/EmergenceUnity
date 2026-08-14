@@ -126,7 +126,7 @@ namespace Emergence.Runtime
 
             int year = c != null ? c.PresentationYear : d.Year;
             float tx = r.x + EmergenceUI.Sp5;
-            GUI.Label(new Rect(tx, r.y + EmergenceUI.Sp3, 60, 16), "ÅR", EmergenceUI.Meta);
+            GUI.Label(new Rect(tx, r.y + EmergenceUI.Sp3, 60, 16), "YEAR", EmergenceUI.Meta);
             GUI.Label(new Rect(tx, r.y + EmergenceUI.Sp3 + 12, 120, 38), year.ToString(), EmergenceUI.Display);
             float numW = EmergenceUI.Display.CalcSize(new GUIContent(year.ToString())).x;
             // the rubricator's underline, spanning exactly the numeral. The panel's only gold.
@@ -148,7 +148,7 @@ namespace Emergence.Runtime
             EmergenceUI.Tally(tallyX, tallyBase, Mathf.Clamp(SpeedIndex - 1, 0, 2), Paused,
                               EmergenceUI.Ink100, EmergenceUI.Hairline, EmergenceUI.GoldLeaf);
             if (Paused)
-                GUI.Label(new Rect(r.x + EmergenceUI.Sp5, tallyBase + 6f, 90, 14), "PAUSAD", EmergenceUI.Dim);
+                GUI.Label(new Rect(r.x + EmergenceUI.Sp5, tallyBase + 6f, 90, 14), "PAUSED", EmergenceUI.Dim);
 
             if (GUI.Button(new Rect(pauseX - 4f, tallyBase - 16f, 16f, 22f), GUIContent.none, GUIStyle.none))
                 SetPause(!Paused);
@@ -165,7 +165,7 @@ namespace Emergence.Runtime
                 float shown = _scrubShown >= 0f ? _scrubShown : c.PresentationYear;
                 float sy = r.y + 66f;
                 float slid = EmergenceUI.Slider(new Rect(r.x + EmergenceUI.Sp5, sy - 4f, w - 80f, 12f), shown, 0f, d.Year);
-                GUI.Label(new Rect(r.x + EmergenceUI.Sp5, sy + 17f, 130, 14), $"{Mathf.RoundToInt(slid)} av {d.Year}", EmergenceUI.Meta);
+                GUI.Label(new Rect(r.x + EmergenceUI.Sp5, sy + 17f, 130, 14), $"{Mathf.RoundToInt(slid)} of {d.Year}", EmergenceUI.Meta);
                 ScrubStep(slid, GUIUtility.hotControl != 0);
             }
             EmergenceUI.End();
