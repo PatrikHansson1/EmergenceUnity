@@ -137,14 +137,23 @@ namespace Emergence.Runtime
             var rng = new System.Random(53000);      // fixed seed — same bed every run IN THIS RUNTIME (G-review r1 I3:
                                                      // System.Random sequence is implementation-defined across runtimes;
                                                      // replace-path: hash-PRNG or bought layers A4. Never touches sim.)
-            float v = 0f;
+            // D-237: same fault as the other two beds — one pole is not a filter, it is a tilt, and
+            // white noise tilted once is still hiss. Three noise beds each doing this, stacked under
+            // real music, is what Patrik heard. The slow wobble stays: that is the breathing.
+            float v = 0f, l1 = 0f, l2 = 0f, peak = 1e-6f;
             for (int i = 0; i < n; i++)
             {
                 v += (float)(rng.NextDouble() - 0.5) * 0.04f;
-                v *= 0.985f;
+                v *= 0.999f;
+                l1 += (v - l1) * 0.026f;
+                l2 += (l1 - l2) * 0.026f;
                 float wobble = 0.75f + 0.25f * Mathf.Sin(2f * Mathf.PI * 0.3f * i / sr);
-                data[i] = v * 1.6f * wobble;
+                data[i] = l2 * wobble;
+                float m = data[i] < 0f ? -data[i] : data[i];
+                if (m > peak) peak = m;
             }
+            float norm = 0.7f / peak;
+            for (int i = 0; i < n; i++) data[i] *= norm;
             int stride = (int)(sr * 1.1f);           // sparse knocks — wood on wood, far away
             for (int k = stride / 3; k < n; k += stride)
             {

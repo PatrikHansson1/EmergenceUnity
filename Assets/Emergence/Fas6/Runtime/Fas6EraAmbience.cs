@@ -21,7 +21,9 @@ namespace Emergence.Runtime
     public sealed class Fas6EraAmbience : MonoBehaviour
     {
         public const int EraCount = 7;            // WorldEras interim canon (dawn..steam, D-147)
-        public float bedVolume = 0.14f;           // sits UNDER the v0 wind — a color, not a voice
+        // D-237: was 0.14 when synthesized beds were the whole soundscape. With real ambient music
+        // underneath, three stacked noise beds read as hiss, not as air.
+        public float bedVolume = 0.05f;           // sits UNDER the music — a color, not a voice
         public float crossfadeSecs = 2.5f;
 
         public int CurrentEra { get; private set; } = -1;   // -1 until the first applied state
@@ -88,15 +90,26 @@ namespace Emergence.Runtime
             var rng = new System.Random(52000 + era * 37);     // fixed seed — same bed every run IN THIS RUNTIME (G-review r1 I3:
                                                                // System.Random sequence is implementation-defined across runtimes;
                                                                // replace-path: hash-PRNG or bought layers A4. Never touches sim.)
-            float leak = 0.980f + era * 0.002f;                 // dawn = darkest, steam = most open
-            float gain = 1.8f + era * 0.12f;
-            float v = 0f;
+            // D-237: one leaky integrator is a ONE-POLE lowpass, and one pole leaves the whole top
+            // end standing — audible as hiss, not as air. Two more poles put the fall at ~18 dB/oct.
+            // The era still sets the colour (dawn darkest, steam most open); it now sets the corner of
+            // a filter that actually removes something. Normalised at the end so a filter change can
+            // never move the level.
+            float leak = 0.999f;
+            float cut  = 0.020f + era * 0.006f;                 // dawn = darkest, steam = most open
+            float v = 0f, l1 = 0f, l2 = 0f, peak = 1e-6f;
             for (int i = 0; i < n; i++)
             {
                 v += (float)(rng.NextDouble() - 0.5) * 0.05f;
                 v *= leak;
-                data[i] = v * gain;
+                l1 += (v - l1) * cut;
+                l2 += (l1 - l2) * cut;
+                data[i] = l2;
+                float m = data[i] < 0f ? -data[i] : data[i];
+                if (m > peak) peak = m;
             }
+            float norm = 0.7f / peak;
+            for (int i = 0; i < n; i++) data[i] *= norm;
             // sparse era voice: one soft partial strike per ~1.5 s, pitch climbing with era
             int stride = (int)(sr * 1.5f);
             float f0 = 110f * (1f + era * 0.5f);

@@ -178,6 +178,16 @@ namespace Emergence.Runtime
                         transform.rotation = Quaternion.Slerp(transform.rotation,
                             Quaternion.LookRotation(att.normalized), 4f * Time.deltaTime);
                 }
+                // D-237: THE FOOT OFFSET WAS ONLY EVER APPLIED WHILE WALKING. Grounded() — which is
+                // where FootOffset() actually reaches the transform — ran only in the transit branch,
+                // so a soul who stopped moving and then changed pose (idle -> work is the common one)
+                // had its sampling window re-opened by Apply() and the answer never delivered. It sank
+                // and stayed sunk, standing still, which is exactly the shape RUN_GROUNDCAP kept
+                // reporting: two souls, 0,12 and 0,14 m under, never the same two twice. Re-ground
+                // while the window is open — that is a handful of frames after a pose change, not
+                // every frame forever, and Grounded() recomputes y from the terrain so it can never
+                // accumulate onto itself.
+                if (Application.isPlaying && _footLeft > 0) transform.position = Grounded(transform.position);
                 return;
             }
             if (_anim == null) { transform.position = Grounded(_glideTarget); _transit = false; return; }
@@ -215,7 +225,14 @@ namespace Emergence.Runtime
         // to the deepest pose the body actually reaches, costs a bounds query per agent per sampled
         // frame (not per frame, and not forever), and can only ever grow — a body may be lifted out
         // of the ground by this law, never pushed into it.
-        const int FootSamples = 45;
+        // D-237: 45 frames is 0,75 s at 60 fps, and a walk or work cycle is LONGER THAN THAT. So the
+        // "running maximum over a sampling window" could close before the clip ever reached its
+        // deepest frame — the window was shorter than the thing it was measuring. That is why the
+        // same two souls kept coming back at 0,12 and 0,14 m: not a grounding law that was wrong, a
+        // measurement that stopped too early. The window now spans several seconds, which covers any
+        // clip we own twice over, and costs a bounds query per agent only in the seconds after a pose
+        // change — never in steady state.
+        const int FootSamples = 240;
         int _footLeft = FootSamples;
 
         float FootOffset()

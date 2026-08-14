@@ -17,7 +17,10 @@ namespace Emergence.Runtime
 {
     public sealed class Fas3AudioDirector : MonoBehaviour
     {
-        public float ambienceVolume = 0.22f;
+        // D-237: was 0.22 back when this synthesized wind was the ONLY sound in the game. The studio
+        // now owns real ambient music (Fas6MusicDirector), and a bed that was the whole soundscape
+        // becomes a hiss ON TOP of one. It sits under the music now.
+        public float ambienceVolume = 0.09f;
         public float stingerVolume = 0.45f;
         public float minStingerGap = 1.5f;   // presentation politeness — never machine-gun the chime
 
@@ -75,13 +78,26 @@ namespace Emergence.Runtime
             var data = new float[n];
             var rng = new System.Random(78901);   // fixed seed — same wind every run IN THIS RUNTIME (G-review r1 I3:
                                                   // System.Random is implementation-defined across runtimes; replace-path A4)
-            float v = 0f;
+            // D-237: THIS WAS NEVER BROWN. A single leaky integrator at 0.985 is a one-pole lowpass
+            // with its corner near 105 Hz — and one pole is only 6 dB per octave, so the whole top end
+            // survives at a level you hear as HISS. Patrik heard it plainly the moment real music went
+            // in underneath: "ett brus ligger ovanpå". Brown noise falls at 12 dB per octave and reads
+            // as distant water or wind in a chimney, never as tape hiss. Two more poles, and the leak
+            // moved to 0.999 so the integrator is actually an integrator. Normalised at the end rather
+            // than multiplied by a magic 2.2, so changing the filter cannot change the level.
+            float v = 0f, l1 = 0f, l2 = 0f, peak = 1e-6f;
             for (int i = 0; i < n; i++)
             {
                 v += (float)(rng.NextDouble() - 0.5) * 0.06f;
-                v *= 0.985f;                       // leak — keeps it brown, not a random walk to the rails
-                data[i] = v * 2.2f;
+                v *= 0.999f;                       // leak — stops the walk drifting to the rails, nothing more
+                l1 += (v - l1) * 0.03f;            // ~210 Hz
+                l2 += (l1 - l2) * 0.03f;           // ~210 Hz again: 18 dB/oct with the leak, no top end left
+                data[i] = l2;
+                float m = data[i] < 0f ? -data[i] : data[i];
+                if (m > peak) peak = m;
             }
+            float norm = 0.7f / peak;
+            for (int i = 0; i < n; i++) data[i] *= norm;
             int fade = sr / 20;                    // 50 ms seam fade — click-free loop at v0 volume
             for (int i = 0; i < fade; i++)
             {

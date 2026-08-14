@@ -1021,9 +1021,31 @@ namespace Emergence.Editor
                 if (nh != null && nb > 0.01f) { var t = Ground(S, nh.x, nh.y, 0f); t.y = go.transform.position.y; go.transform.LookAt(t); }
                 else go.transform.rotation = Quaternion.Euler(0f, Hash((int)a.x, (int)a.y, a.id + 7) % 360u, 0f);
                 go.name = $"agent_{a.id}_{a.name}";
+                // GROUND THE POSE, NOT THE PIVOT (small fix, 2026-08-14). The villager is placed at
+                // terrain height and only THEN sampled into a hash-varied frame of its clip — and a
+                // pose moves the feet. A working crouch or a walk cycle's low foot puts the sole below
+                // the origin, so the person stood ankle-deep in the ground. Which souls it hits changes
+                // with every world, because the frame is hash-picked, which is exactly why it read as
+                // intermittent rather than as a bug. Measured AFTER the pose is applied, and only ever
+                // lifts: a soul may stand on the ground, never sink into it.
+                LiftOntoGround(go);
                 placed++;
             }
             Debug.Log($"[Dresser] placed {placed}/{S.agents.Length} villagers" + (placed == 0 ? " (0 — glTFast not imported yet?)" : ""));
+        }
+
+        // lift a posed GLB so its LOWEST rendered vertex rests on the terrain. Never lowers.
+        static void LiftOntoGround(GameObject go)
+        {
+            var rends = go.GetComponentsInChildren<Renderer>();
+            if (rends == null || rends.Length == 0) return;
+            var b = rends[0].bounds;
+            for (int i = 1; i < rends.Length; i++) b.Encapsulate(rends[i].bounds);
+            var t = Terrain.activeTerrain;
+            if (t == null) return;
+            float ground = t.SampleHeight(go.transform.position) + t.transform.position.y;
+            float under = ground - b.min.y;
+            if (under > 0.005f) go.transform.position += Vector3.up * under;
         }
 
         // TD-029: the studio's own deer/wolf GLBs at the sim's animal positions (retires the

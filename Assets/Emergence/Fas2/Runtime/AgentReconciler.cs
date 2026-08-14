@@ -125,7 +125,7 @@ namespace Emergence.Runtime
                             if (aaLive != null)
                             {
                                 if (Application.isPlaying) aaLive.SetTask(a.task, a.verb ?? "");   // live crossfade (verb selects the state)
-                                else { aaLive.task = a.task; aaLive.verb = a.verb ?? ""; if (editPose) StillPose(rec.go, a, band, female); }
+                                else { aaLive.task = a.task; aaLive.verb = a.verb ?? ""; if (editPose) { StillPose(rec.go, a, band, female); LiftOntoGround(rec.go); } }
                                 EnsureCarryProp(rec.go, a.task);                 // "bär" (D-131): basket in hand on carry/haul tasks
                             }
                             d.retasked++;
@@ -212,7 +212,19 @@ namespace Emergence.Runtime
             aa.sayAct = a.sayAct ?? "";                                      // A2-interim (D-131)
             EnsureCarryProp(go, a.task);                                     // "bär" (D-131)
 
-            if (!Application.isPlaying && editPose) StillPose(go, a, band, female);
+            // D-237, THE ONE THAT EXPLAINS WHY NOTHING MOVED. Both the foot offset AND the probe that
+            // reports the sink read `Renderer.bounds` — and for a SKINNED mesh that box does not follow
+            // the pose. Unity derives it from the authored localBounds, so it is whatever the exporter
+            // baked, usually the rest pose with padding. Two souls therefore reported 0,12 and 0,14 m
+            // under the ground, to the centimetre, across four different grounding fixes: the number
+            // could not move, because it was never measuring a body. It was measuring a box.
+            // updateWhenOffscreen makes the bounds track the actual skinned pose. It costs a bounds
+            // recompute per skinned renderer per frame — which is the price of a measurement that is
+            // true, and the probe's own frame-time reading is where we find out if it is too dear.
+            foreach (var smr in go.GetComponentsInChildren<SkinnedMeshRenderer>())
+                smr.updateWhenOffscreen = true;
+
+            if (!Application.isPlaying && editPose) { StillPose(go, a, band, female); LiftOntoGround(go); }
             return go;
         }
 
@@ -247,6 +259,28 @@ namespace Emergence.Runtime
         }
 
         // edit-mode still: sample the task-right clip at a hash phase (parity with the still layer's read).
+        // GROUND THE POSE, NOT THE PIVOT (small fix, 2026-08-14). A soul is placed at terrain height and
+        // only THEN sampled into a hash-varied frame of its clip -- and a pose moves the feet. A working
+        // crouch, or a walk cycle caught on its low foot, puts the sole below the origin, so the person
+        // stood ankle-deep in the ground (0,12-0,14 m, caught by RUN_GROUNDCAP twice). Which souls it
+        // hits changes with every world because the frame is hash-picked, which is exactly why it read
+        // as intermittent rather than as a bug. Measured AFTER the pose, and it only ever LIFTS: a soul
+        // may stand on the ground, never sink into it. Still-pose path only -- in play mode the Animator
+        // owns the transform and a per-frame lift would fight it.
+        static void LiftOntoGround(GameObject go)
+        {
+            if (go == null) return;
+            var rends = go.GetComponentsInChildren<Renderer>();
+            if (rends == null || rends.Length == 0) return;
+            var bb = rends[0].bounds;
+            for (int i = 1; i < rends.Length; i++) bb.Encapsulate(rends[i].bounds);
+            var t = Terrain.activeTerrain;
+            if (t == null) return;
+            float ground = t.SampleHeight(go.transform.position) + t.transform.position.y;
+            float under = ground - bb.min.y;
+            if (under > 0.005f) go.transform.position += Vector3.up * under;
+        }
+
         // Editor-only remnant (clip extraction from GLB sub-assets needs AssetDatabase) — probes only, never player.
         static void StillPose(GameObject go, WorldAgent a, string band, bool female)
         {
