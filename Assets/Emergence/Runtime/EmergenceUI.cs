@@ -179,11 +179,55 @@ namespace Emergence.Runtime
             set { _diag = value ? 1 : 0; PlayerPrefs.SetInt(DiagKey, _diag); }
         }
 
+        // ---------- THE TWO FACES (D-221) ----------
+        //
+        // The luckesvep found that this project contained NO FONTS AT ALL. The Screen Bible
+        // prescribes a screen-serif for the Chronicle and a neutral sans for measurement, and
+        // neither existed — every surface in the game rendered in Unity's built-in face. That is the
+        // single largest identity gap in the build, and it was free to close.
+        //
+        // The argument is not "serif is classy". The Chronicle and the Almanac make DIFFERENT TRUTH
+        // CLAIMS and the type has to say which one you are reading before you read a word. The
+        // Chronicle's promise is "everything below happened" — testimony, in prose — and serif is the
+        // typographic signal for A THING SOMEONE WROTE DOWN. It should not look generated; it should
+        // look transcribed. The Almanac claims the opposite: this is MEASUREMENT. A sans with
+        // tabular figures says "nobody's voice, just the number". Setting the Almanac in serif would
+        // make data feel authored, which is a lie; setting the Chronicle in sans would make testimony
+        // feel like telemetry, which is a worse one.
+        //
+        // Literata (serif) and Inter (sans). Both SIL OFL 1.1 — and the licence text was READ and
+        // committed beside the fonts, not assumed. Literata was commissioned for e-reading: large
+        // x-height, low stroke contrast, sturdy at 21 px, which is what a 7 inch Deck panel needs.
+        // EB Garamond was considered and rejected: beautiful, and its hairlines fall apart at this
+        // size on that screen. Refuse a third face — a monospace for the Almanac's columns is the
+        // obvious temptation and it would be a third visual language on a screen being cured of
+        // exactly that disease.
+        public const string SerifResource = "Fonts/Literata-Variable";
+        public const string SansResource  = "Fonts/Inter-Variable";
+
+        static Font _serif, _sans;
+        static bool _fontsTried;
+
+        static void EnsureFonts()
+        {
+            if (_fontsTried) return;
+            _fontsTried = true;
+            _serif = Resources.Load<Font>(SerifResource);
+            _sans  = Resources.Load<Font>(SansResource);
+        }
+
+        /// <summary>The Chronicle's face. Null falls back to Unity's built-in — a missing font must
+        /// cost the voice, never the record.</summary>
+        public static Font Serif { get { EnsureFonts(); return _serif; } }
+        public static Font Sans  { get { EnsureFonts(); return _sans; } }
+        public static string FontNote => (Serif != null ? "serif=Literata" : "serif=MISSING")
+                                       + " " + (Sans != null ? "sans=Inter" : "sans=MISSING");
+
         // ---------- IMGUI bridge ----------
         // IMGUI cannot read tokens, so it is handed them. One place, so the day the IMGUI half
         // migrates to UI Toolkit these styles are deleted and nothing else changes.
         static Texture2D _panelTex, _cardTex, _goldTex, _hairTex;
-        static GUIStyle _panel, _label, _labelDim, _meta, _btn, _btnOn, _display;
+        static GUIStyle _panel, _label, _labelDim, _meta, _btn, _btnOn, _display, _serifLabel;
 
         static Texture2D Solid(Color c)
         {
@@ -202,9 +246,13 @@ namespace Emergence.Runtime
 
             _panel = new GUIStyle { normal = { background = _panelTex }, border = new RectOffset(1, 1, 1, 1) };
             _label = new GUIStyle(GUIStyle.none) { fontSize = FsBody, normal = { textColor = Ink100 }, alignment = TextAnchor.MiddleLeft, clipping = TextClipping.Clip };
+            if (Sans != null) _label.font = Sans;
             _labelDim = new GUIStyle(_label) { normal = { textColor = Ink70 } };
             _meta = new GUIStyle(_label) { fontSize = FsMeta, normal = { textColor = Ink55 } };
             _display = new GUIStyle(_label) { fontSize = 34, fontStyle = FontStyle.Bold, normal = { textColor = Ink100 } };
+            // the Latest Line carries chronicle prose, so it carries the chronicle's face
+            _serifLabel = new GUIStyle(_label) { fontSize = FsChronicle };
+            if (Serif != null) _serifLabel.font = Serif;
             _btn = new GUIStyle
             {
                 fontSize = FsBody, alignment = TextAnchor.MiddleCenter,
@@ -227,6 +275,8 @@ namespace Emergence.Runtime
         public static GUIStyle Dim     { get { EnsureStyles(); return _labelDim; } }
         public static GUIStyle Meta    { get { EnsureStyles(); return _meta; } }
         public static GUIStyle Display { get { EnsureStyles(); return _display; } }
+        /// <summary>Chronicle voice: prose that someone wrote down.</summary>
+        public static GUIStyle Prose   { get { EnsureStyles(); return _serifLabel; } }
         public static GUIStyle Button  { get { EnsureStyles(); return _btn; } }
         public static GUIStyle ButtonOn{ get { EnsureStyles(); return _btnOn; } }
 

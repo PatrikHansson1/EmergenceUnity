@@ -274,6 +274,14 @@ namespace Emergence.Runtime
         void BuildStatic()
         {
             var root = _doc.rootVisualElement;
+            // D-221: the two faces. UI Toolkit inherits font down the tree, so setting it on the
+            // root dresses every row, header and cell in one line. The Chronicle is TESTIMONY and
+            // takes the serif; measurement surfaces override back to the sans where they need
+            // tabular figures. A missing font falls back to Unity's built-in — it must cost the
+            // voice, never the record.
+            if (EmergenceUI.Serif != null)
+                root.style.unityFontDefinition = UnityEngine.UIElements.FontDefinition.FromFont(EmergenceUI.Serif);
+
             root.style.position = Position.Absolute;
             root.style.left = 0; root.style.right = 0; root.style.top = 0; root.style.bottom = 0;
             root.pickingMode = PickingMode.Ignore;

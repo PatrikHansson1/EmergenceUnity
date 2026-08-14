@@ -160,7 +160,9 @@ namespace Emergence.Runtime
                     // the wide spread is what makes a meadow read as tufts rather than as a lawn.
                     // measured 1,5 m mean - chest-high on an adult, which is a wheat field, not a
                     // meadow. Target ~0,55 m: over the boot, under the knee.
-                    sc = 0.35f + Hash01(x, y, salt + 600 + i) * 0.80f;
+                    // D-221: the top of this range read as pale sticks at distance — a tuft that
+                    // tall is a reed bed, not meadow. Capped where it stops being grass.
+                    sc = 0.32f + Hash01(x, y, salt + 600 + i) * 0.52f;
                 else if (prefab.name.StartsWith("P_PROP_treetrunk"))
                     // measured 2,0 m — a stump taller than a child. A cut stump is knee-to-thigh.
                     sc *= 0.45f;
@@ -193,7 +195,11 @@ namespace Emergence.Runtime
                 case Bed.Log:     tilt = 17f; sink = 0.14f + (h % 1000) / 1000f * 0.18f; break;  // settled in the leaf mould
                 case Bed.Shrub:   tilt =  8f; sink = 0.04f + (h % 1000) / 1000f * 0.09f; break;  // roots in, not standing on
                 case Bed.Tuft:    tilt = 11f; sink = 0.06f + (h % 1000) / 1000f * 0.10f; break;  // grows out of the soil
-                default:          tilt =  3f; sink = 0f; break;                                   // a tree stands up
+                // D-221: a tree DOES stand up, but it does not stand ON the ground — its root
+                // flare grows out of the soil. At sink 0 the flares splayed across the grass like a
+                // hand laid on a table, which is what eye-at-the-water.png shows. 4-9% of a 17 m
+                // tree is 0,7-1,5 m of root tucked under, which is what a root does.
+                default:          tilt =  3f; sink = 0.04f + (h % 1000) / 1000f * 0.05f; break;
             }
             float tx = ((h >> 10 & 1023) / 1023f - 0.5f) * 2f * tilt;
             float tz = ((h >> 20 & 1023) / 1023f - 0.5f) * 2f * tilt;

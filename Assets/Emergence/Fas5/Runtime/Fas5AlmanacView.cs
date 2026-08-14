@@ -317,6 +317,10 @@ namespace Emergence.Runtime
             _root.style.position = Position.Absolute;
             _root.style.left = 0; _root.style.right = 0; _root.style.top = 0; _root.style.bottom = 0;
             _root.style.backgroundColor = ColBookBg;
+            // D-221: the Almanac claims MEASUREMENT, not testimony — so it takes the sans. Setting
+            // serif here would make data feel authored, which is a lie about what this surface is.
+            if (EmergenceUI.Sans != null)
+                _root.style.unityFontDefinition = UnityEngine.UIElements.FontDefinition.FromFont(EmergenceUI.Sans);
             _root.style.alignItems = Align.Center;
             _root.style.justifyContent = Justify.Center;
             _root.style.display = DisplayStyle.None;

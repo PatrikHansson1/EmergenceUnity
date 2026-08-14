@@ -109,8 +109,8 @@ namespace Emergence.Runtime
             // the prose
             float textY = baseY - 2f;
             var content = new GUIContent(_text);
-            float textW = EmergenceUI.Label.CalcSize(content).x;
-            GUI.Label(new Rect(x0, textY, measure - 88f, 26), content, EmergenceUI.Label);
+            float textW = EmergenceUI.Prose.CalcSize(content).x;
+            GUI.Label(new Rect(x0, textY, measure - 88f, 26), content, EmergenceUI.Prose);
 
             // the year, behind its own capped separator
             float sepX = x0 + measure - 62f;
