@@ -31,7 +31,35 @@ namespace Emergence.Runtime
         public const string YardLayerName = "Yards_Live";
         public const string AgeLayerName = "HutAge_Live";
         const float TileSize = 8f;                       // matches WorldDresser
-        const float HouseScale = 0.55f;                  // matches WorldDresser.HouseScale
+        const float HouseScale = 0.55f;                  // matches WorldDresser.HouseScale — now only a fallback
+
+        // D-216: WE WERE RAISING TOWN HALLS AS PEASANT HUTS.
+        //
+        // The pack ships fourteen whole buildings and this reconciler picked among thirteen of them
+        // with hash % 13, as if they were one kind of thing. They are not. Measured by the probe, at
+        // the scale we actually raise them (footprint / ridge height / multiples of a 1,75 m person):
+        //
+        //   house_02   6,8 x 5,2 m   19,8 m   11,3x     house_07  10,4 x 7,8 m   8,0 m   4,6x
+        //   house_04   9,6 x 9,4 m   20,9 m   12,0x     house_08   9,0 x 6,3 m   7,8 m   4,4x
+        //   house_05  11,0 x 6,4 m   21,0 m   12,0x     house_11   8,7 x 8,3 m   8,2 m   4,7x
+        //   house_01   4,8 x 4,5 m   10,2 m    5,8x     house_09   4,8 x 4,5 m   5,7 m   3,3x
+        //
+        // Four of the thirteen are TWENTY-METRE buildings — a hall, a manor, a bell tower — and they
+        // came up as a farmer's first shelter roughly three times in ten. That is the narrow spire
+        // standing beside a cottage in Reports/eye-in-the-village.png. It was never a scale bug: it
+        // was the wrong building drawn from a bag of right ones.
+        //
+        // The towers are not deleted. They are the wrong DWELLING and they will be the right
+        // something else — a hall, a mill, a temple — when the era law that earns them is built.
+        public static readonly int[] DwellingVariants = { 3, 6, 7, 8, 9, 11, 12, 13, 14 };
+
+        // And the survivors still vary from 3,3x to 4,7x a person, which is the difference between a
+        // cottage and a barn standing side by side for no reason the world can explain. Normalising
+        // to a ridge height removes the pack's authoring inconsistency without touching its shapes:
+        // scale each house so its ROOF sits here, and let the footprint follow. A hash gives the
+        // village its variety back honestly — a person's house, not a template.
+        public const float TargetRidge = 5.8f;           // metres — 3,3x a 1,75 m adult
+        public const float RidgeSpread = 0.16f;          // +-16%: a big family's house is bigger
         const float HouseFrontYawOffset = 0f;            // matches WorldDresser
         const int YardPropsMax = 2;                      // matches WorldDresser
 
@@ -132,15 +160,16 @@ namespace Emergence.Runtime
             var cat = EmergenceAssetCatalog.Load();
             if (cat == null) { Debug.LogWarning("[HutReconciler] no asset catalog — run BUILD ASSET CATALOG"); return rec; }
             int hx = Mathf.RoundToInt(h.x), hy = Mathf.RoundToInt(h.y);
-            int variant = 1 + (int)(Hash(hx, hy, 21) % 13);                  // same salt/range as PlaceHuts
-            var prefab = cat.Prefab($"P_BLD_house_{variant:00}") ?? cat.Prefab("P_BLD_house_01");
+            // same salt as PlaceHuts; the RANGE is now the measured dwelling pool, not all thirteen
+            int variant = DwellingVariants[(int)(Hash(hx, hy, 21) % (uint)DwellingVariants.Length)];
+            var prefab = cat.Prefab($"P_BLD_house_{variant:00}") ?? cat.Prefab("P_BLD_house_09");
             if (prefab == null) { Debug.LogWarning("[HutReconciler] no house prefab found"); return rec; }
 
             var go = UnityEngine.Object.Instantiate(prefab, Layer(LayerName));
             go.transform.position = GroundW(P(S, h.x, h.y));
             float yaw = HouseYaw(S, h, greens, hx, hy);
             go.transform.rotation = Quaternion.Euler(0, yaw, 0);
-            go.transform.localScale = Vector3.one * HouseScale;
+            go.transform.localScale = Vector3.one * RidgeScale(go, hx, hy);
             SitOnGround(go);          // VÅG 1.2: the pivot is not the sill (see below)
             go.name = $"hut_{h.owner}";
             rec.house = go;
@@ -150,6 +179,21 @@ namespace Emergence.Runtime
             float ageFrac = maxGen > 1 ? 1f - og / (float)maxGen : 0.5f;
             PlaceHutAge(S, h, hx, hy, ageFrac, rec, cat);
             return rec;
+        }
+
+        /// <summary>Scale a house so its ridge lands at TargetRidge, whatever the pack authored it at.
+        /// Measured from the instance's own renderers at scale 1, so a prefab we have never seen is
+        /// handled by the same law. Falls back to the flat HouseScale if it has nothing to measure.</summary>
+        static float RidgeScale(GameObject go, int hx, int hy)
+        {
+            go.transform.localScale = Vector3.one;
+            var rs = go.GetComponentsInChildren<Renderer>();
+            if (rs.Length == 0) return HouseScale;
+            var b = rs[0].bounds;
+            for (int i = 1; i < rs.Length; i++) b.Encapsulate(rs[i].bounds);
+            if (b.size.y < 0.01f) return HouseScale;
+            float want = TargetRidge * (1f + (Hash01(hx, hy, 23) - 0.5f) * 2f * RidgeSpread);
+            return want / b.size.y;
         }
 
         // mirror of WorldDresser.PlaceYard (same salts 71..74)

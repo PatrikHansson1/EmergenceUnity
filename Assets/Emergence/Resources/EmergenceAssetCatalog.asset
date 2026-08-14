@@ -79,6 +79,10 @@ MonoBehaviour:
     prefab: {fileID: 987989193244980787, guid: ca8d30c67ce48494bbfe4e7234fa81f3, type: 3}
   - name: P_PROP_treetrunk_04
     prefab: {fileID: 8749945001493306586, guid: accd3985c8454a54199ab2589ec45c56, type: 3}
+  - name: Prefab_WaterLake
+    prefab: {fileID: 3593693710694803282, guid: 9e07e81fe6664ed44a479288857d4fc0, type: 3}
+  - name: SM_WaterRiver
+    prefab: {fileID: 6049760999353382768, guid: ba1754ab13eeb98428a85de2adf1c526, type: 3}
   - name: P_PROP_flag_01
     prefab: {fileID: 1525057500783216557, guid: 319a3e76f3abd7a43b206990bf62733f, type: 3}
   - name: mill.glb
@@ -159,6 +163,8 @@ MonoBehaviour:
     prefab: {fileID: 7197837000303595854, guid: 7a439fd9b3adf9142b5a4384bd84442f, type: 3}
   - name: P_BLD_house_13
     prefab: {fileID: 8681033655019677861, guid: c0cacda008ac5324598ff77198b809b2, type: 3}
+  - name: P_BLD_house_14
+    prefab: {fileID: 4566541305947615035, guid: 50ecca85cbe99874495e85667b0ef7b2, type: 3}
   - name: P_PROP_cart_02
     prefab: {fileID: 8106673767351880195, guid: 8d75aa598155a334bbba4be2b0c1cc7d, type: 3}
   - name: P_PROP_barrel_01

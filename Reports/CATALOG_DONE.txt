@@ -1,2 +1,2 @@
-DONE 11:29:54 verdict=GREEN ok=93 missing=0
+DONE 12:16:04 verdict=GREEN ok=96 missing=0
 see Reports/catalog-build.txt

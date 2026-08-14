@@ -526,6 +526,129 @@ namespace Emergence.Editor
                                   + " tex=" + (mt != null && FirstTexture(mt) != null ? FirstTexture(mt).name : "NONE")
                                   + " -> Reports/villager-in-scene.png");
                 }
+
+                // ---- STEP 1.6: EYE-LEVEL, WHERE A PERSON WOULD ACTUALLY STAND ----
+                // The close-ups above are diagnostic framing - a lens put deliberately on a suspect.
+                // They are not what the game looks like. Acceptance for the environment pass is a
+                // person's eye at 1,7 m looking at the two places the world is SUPPOSED to be worth
+                // looking at: the water, and the village. Nothing is claimed here; the pictures are
+                // the claim, and a human has to look at them (D-008).
+                {
+                    var wroot2 = GameObject.Find("Water");
+                    if (wroot2 != null && wroot2.transform.childCount > 0)
+                    {
+                        Transform wbig = null; float bigA = 0f;
+                        for (int i = 0; i < wroot2.transform.childCount; i++)
+                        {
+                            var ch = wroot2.transform.GetChild(i);
+                            var rr5 = ch.GetComponentInChildren<Renderer>();
+                            if (rr5 == null) continue;
+                            float a5 = rr5.bounds.size.x * rr5.bounds.size.z;
+                            if (a5 > bigA) { bigA = a5; wbig = ch; }
+                        }
+                        if (wbig != null)
+                        {
+                            var wb = wbig.GetComponentInChildren<Renderer>().bounds;
+                            // stand on the shore, back from the edge, and look across the long axis
+                            float reach = Mathf.Max(wb.extents.x, wb.extents.z) + 26f;
+                            var eye = new Vector3(wb.center.x - reach, 0f, wb.center.z - reach * 0.35f);
+                            eye.y = (terrain != null ? terrain.SampleHeight(eye) + terrain.transform.position.y : wb.center.y) + 1.7f;
+                            var c5 = Camera.main;
+                            c5.transform.position = eye;
+                            c5.transform.LookAt(new Vector3(wb.center.x, wb.center.y + 1.0f, wb.center.z));
+                            CaptureRaw("eye-at-the-water");
+                            sb.AppendLine("     eye at the water: shore " + eye.ToString("F0") + " looking across "
+                                          + wb.size.x.ToString("F0") + "x" + wb.size.z.ToString("F0") + " m -> Reports/eye-at-the-water.png");
+                        }
+                    }
+
+                    // and the village: stand among the huts, not above them
+                    var hutRoot = GameObject.Find(Emergence.Runtime.HutReconciler.LayerName);   // "Huts_Live" - "Huts" found nothing
+                    if (hutRoot != null && hutRoot.transform.childCount > 0)
+                    {
+                        var acc = new Bounds(); bool any5 = false; int nh = 0;
+                        foreach (var rr6 in hutRoot.GetComponentsInChildren<Renderer>())
+                        {
+                            if (!any5) { acc = rr6.bounds; any5 = true; } else acc.Encapsulate(rr6.bounds);
+                            nh++;
+                        }
+                        if (any5)
+                        {
+                            float back = Mathf.Max(18f, acc.extents.magnitude * 1.1f);
+                            var eye = new Vector3(acc.center.x - back * 0.75f, 0f, acc.center.z - back * 0.75f);
+                            eye.y = (terrain != null ? terrain.SampleHeight(eye) + terrain.transform.position.y : acc.center.y) + 1.7f;
+                            var c6 = Camera.main;
+                            c6.transform.position = eye;
+                            c6.transform.LookAt(new Vector3(acc.center.x, acc.center.y * 0.55f + eye.y * 0.45f, acc.center.z));
+                            CaptureRaw("eye-in-the-village");
+                            sb.AppendLine("     eye in the village: " + nh + " renderers over "
+                                          + acc.size.x.ToString("F0") + "x" + acc.size.z.ToString("F0") + " m, standing "
+                                          + back.ToString("F0") + " m out -> Reports/eye-in-the-village.png");
+                        }
+                    }
+
+                    // ---- and MEASURE the building, which no pass has done. A cottage is wider than
+                    // it is tall; a tower is not. house-in-scene.png reads as a tower and the report
+                    // has only ever printed its height, which cannot tell the two apart.
+                    // measure the WHOLE HOUSE, not one renderer inside it. The first version of this
+                    // took the tallest P_BLD* renderer, which is a wall MODULE - so it reported the
+                    // body's proportions and not the building's, and a roof can change the answer.
+                    Transform whole = null; float wholeH = 0f; Bounds wholeB = new Bounds();
+                    if (hutRoot != null)
+                        for (int i = 0; i < hutRoot.transform.childCount; i++)
+                        {
+                            var ch = hutRoot.transform.GetChild(i);
+                            var rs7 = ch.GetComponentsInChildren<Renderer>();
+                            if (rs7.Length == 0) continue;
+                            var bb7 = rs7[0].bounds;
+                            for (int k = 1; k < rs7.Length; k++) bb7.Encapsulate(rs7[k].bounds);
+                            if (bb7.size.y > wholeH) { wholeH = bb7.size.y; whole = ch; wholeB = bb7; }
+                        }
+                    if (whole != null)
+                    {
+                        var hb = wholeB;
+                        var tallB = whole;
+                        float wide = Mathf.Max(hb.size.x, hb.size.z), narrow = Mathf.Min(hb.size.x, hb.size.z);
+                        float ratio = hb.size.y / Mathf.Max(0.01f, wide);
+                        sb.AppendLine("     the building measured: " + tallB.name + "  " + wide.ToString("F1") + " x "
+                                      + narrow.ToString("F1") + " m footprint, " + hb.size.y.ToString("F1") + " m tall"
+                                      + "  (height/width = " + ratio.ToString("F2") + "; a cottage is 0,5-0,9, a tower is >1,3)"
+                                      + "  = " + (hb.size.y / 1.75f).ToString("F1") + "x a person");
+                        Check(ratio < 1.30f, "the houses are cottages, not towers (height/width = " + ratio.ToString("F2") + ")");
+
+                        // MEASURE THE WHOLE POOL, not the one that happened to be raised. The village
+                        // picture shows a narrow A-frame spire beside a broad cottage, which means the
+                        // pack's thirteen house variants are not one kind of building - so the fix is
+                        // SELECTION, not a global multiplier that would shrink the good ones too.
+                        var cat9 = EmergenceAssetCatalog.Load();
+                        if (cat9 != null)
+                        {
+                            sb.AppendLine("     the pack's house pool, measured at the scale we raise them (" + 0.55f + "):");
+                            for (int v = 1; v <= 14; v++)
+                            {
+                                var pf9 = cat9.Prefab("P_BLD_house_" + v.ToString("00"));
+                                if (pf9 == null) { sb.AppendLine("       house_" + v.ToString("00") + ": absent"); continue; }
+                                var inst = UnityEngine.Object.Instantiate(pf9);
+                                inst.transform.position = new Vector3(0f, -5000f, 0f);
+                                inst.transform.localScale = Vector3.one * 0.55f;
+                                var rs9 = inst.GetComponentsInChildren<Renderer>();
+                                if (rs9.Length > 0)
+                                {
+                                    var b9 = rs9[0].bounds;
+                                    for (int k = 1; k < rs9.Length; k++) b9.Encapsulate(rs9[k].bounds);
+                                    float w9 = Mathf.Max(b9.size.x, b9.size.z), n9 = Mathf.Min(b9.size.x, b9.size.z);
+                                    float r9 = b9.size.y / Mathf.Max(0.01f, w9);
+                                    sb.AppendLine("       house_" + v.ToString("00") + ": " + w9.ToString("F1") + " x " + n9.ToString("F1")
+                                                  + " m, " + b9.size.y.ToString("F1") + " m tall, ratio " + r9.ToString("F2")
+                                                  + "  = " + (b9.size.y / 1.75f).ToString("F1") + "x a person"
+                                                  + (r9 > 1.30f ? "   <-- TOWER" : ""));
+                                }
+                                UnityEngine.Object.DestroyImmediate(inst);
+                            }
+                        }
+                    }
+                }
+
                 sb.AppendLine("     " + camNote);
                 Check(magenta >= 0, "capture written");
                 Check(magenta == 0, "no missing-material magenta in frame (" + magenta + " px)");

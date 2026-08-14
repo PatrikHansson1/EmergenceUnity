@@ -93,7 +93,8 @@ namespace Emergence.Editor
             wanted.Add("P_PROP_wall_stone_small_02");     // DefaultRuinPrefab (D-112)
 
             // 2) huts: house variants 01..13 + yard props + fresh-build props
-            for (int v = 1; v <= 13; v++) wanted.Add($"P_BLD_house_{v:00}");
+            // 14, not 13: the pack ships fourteen and the old bound left house_14 unpaid for.
+            for (int v = 1; v <= 14; v++) wanted.Add($"P_BLD_house_{v:00}");
             wanted.AddRange(YardPropNames);
             wanted.AddRange(FreshBuildNames);
 
