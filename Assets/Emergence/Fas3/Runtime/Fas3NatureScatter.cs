@@ -125,6 +125,7 @@ namespace Emergence.Runtime
             tuftRoot.SetParent(parent, false);
             // where the eye stands. A flag per tile beats a distance test per tuft, and it is a pure
             // read of exported hut positions - no RNG, so two runs of one world grow the same meadow.
+            var treeInstances = new List<TreeInstance>();
             bool[] near = null;
             if (S.huts != null && S.huts.Length > 0)
             {
@@ -173,9 +174,9 @@ namespace Emergence.Runtime
                     // grass tufts on open meadow and forest floor - the ground the player walks on.
                     // Kept under their OWN parent so the batching pass can find them without guessing.
                     if ((t == 'g' || t == 'f') && tufts.Count > 0)
-                        tuftN += Place(S, tuftRoot, tufts, x, y,
-                                       near != null && near[y * S.W + x] ? TuftsNearSettlement : TuftsPerMeadowTile,
-                                       59, ref budget, Bed.Tuft, true);
+                        tuftN += SowTufts(S, tufts, x, y,
+                                          near != null && near[y * S.W + x] ? TuftsNearSettlement : TuftsPerMeadowTile,
+                                          59, ref budget, treeInstances);
 
                     if (budget >= PlacementsPerFrame) { budget = 0; yield return null; }
                 }
@@ -199,12 +200,11 @@ namespace Emergence.Runtime
             // read as texture, and the next move is NOT a fourth density guess -- it is the height of
             // one tuft in metres, which nobody had ever printed. Sampled before the merge, because a
             // merged block has no individual bounds left to ask.
-            TuftHeightNote = MeasureTufts(tuftRoot);
-            int tuftDrawn = CombineTufts(tuftRoot);
+            int tuftDrawn = SowMeadow(S, tufts, treeInstances);
 
             Placed = treeN + rockN + bushN + trunkN + tuftN;
             LastNote = "nature: " + treeN + " trees, " + rockN + " rocks, " + bushN + " bushes, " + trunkN + " fallen trunks, "
-                     + tuftN + " grass tufts merged into " + tuftDrawn + " meshes"
+                     + tuftN + " grass tufts sown as terrain trees (" + tuftDrawn + " prototypes)"
                      + "  (sets: " + trees.Count + "/" + rocks.Count + "/" + bushes.Count + "/" + tufts.Count + ")";
             LastNote += "  | " + TuftHeightNote;
         }
@@ -213,6 +213,118 @@ namespace Emergence.Runtime
         /// which is coarse enough to collapse the count and fine enough that frustum culling still
         /// throws most of the meadow away. Returns the number of renderers left standing.</summary>
         const float TuftBlock = 48f;
+
+
+        // ---- THE MEADOW, THE WAY THE PACK'S OWN DOCUMENTATION SAYS TO BUILD IT (D-248) ----
+        //
+        // From "Documentation - FANTASTIC Village Pack", chapter "Environment setup - Terrain Tool",
+        // in the vendor's own words:
+        //
+        //     "It's important to note that bushes/leaves and grass will not work on the terrain as
+        //      'Detail Objects' or 'Grass Texture'. The prefabs should be added as 'Tree Objects',
+        //      because the built-in grass shader would otherwise override our custom shaders.
+        //      This is not a limitation of the package, but rather a limitation of Unity."
+        //
+        // That paragraph is the answer to four failed attempts. D-215d tried the detail system three
+        // ways (instanced mesh, non-instanced mesh, billboard) and got a validated million blades that
+        // drew nothing usable; D-246 gave up on it and scattered a hundred thousand MeshRenderers
+        // instead, which cost double the frame time for a meadow that still read thin. The detail
+        // path was never going to work with this pack, because Unity's detail renderer SUBSTITUTES
+        // its own grass shader for the material on the prefab -- and the whole reason these plants
+        // look like anything is the pack's TidalFlask wind shader, with its ground fade and its wind
+        // tint. The terrain TREE system keeps the prefab's own material, and the pack ships every one
+        // of these plants with a LODGroup already on it, which is the shape the tree renderer wants.
+        //
+        // So: same placement law as before, to the hash -- the meadow does not move a blade -- but
+        // the blades are sown as tree instances rather than instantiated and merged. Unity culls and
+        // LODs them for us, the wind shader survives, and the frame stops paying for a hundred
+        // thousand renderers. Deterministic: every position, pick and size is hash(tile, index).
+        static int SowTufts(WorldState S, List<GameObject> set, int x, int y, float perTile, int salt,
+                            ref int budget, List<TreeInstance> outp)
+        {
+            if (set.Count == 0) return 0;
+            // identical clumping to Place(): some tiles crowd, others stay open
+            perTile *= 0.30f + 1.55f * Mathf.PerlinNoise(x * 0.17f + salt * 0.31f, y * 0.17f + salt * 0.13f);
+            int count = Mathf.FloorToInt(perTile) + (Hash01(x, y, salt) < perTile - Mathf.Floor(perTile) ? 1 : 0);
+            var terrain = Terrain.activeTerrain;
+            if (terrain == null) return 0;
+            var td = terrain.terrainData;
+            var origin = terrain.transform.position;
+
+            for (int i = 0; i < count; i++)
+            {
+                int proto = (int)(Hash(x, y, salt + 100 + i) % (uint)set.Count);
+                float jx = Hash01(x, y, salt + 200 + i) - 0.5f, jy = Hash01(x, y, salt + 300 + i) - 0.5f;
+                var w = Ground(S, x + jx * 0.98f, y + jy * 0.98f);
+
+                // the same size law the scattered version used, kept so the picture is comparable:
+                // the pack's own plants sit in one band, the Dreamscape detail props in the other.
+                var name = set[proto].name;
+                float sc = name.StartsWith("P_ENV")
+                    ? 0.38f + Hash01(x, y, salt + 600 + i) * 0.34f
+                    : 0.45f + Hash01(x, y, salt + 600 + i) * 0.50f;
+
+                float nx = (w.x - origin.x) / td.size.x;
+                float nz = (w.z - origin.z) / td.size.z;
+                if (nx < 0f || nz < 0f || nx > 1f || nz > 1f) continue;   // off the terrain is not a place
+
+                outp.Add(new TreeInstance
+                {
+                    position       = new Vector3(nx, 0f, nz),   // snapped to the heightmap on apply
+                    prototypeIndex = proto,
+                    widthScale     = sc,
+                    heightScale    = sc,
+                    rotation       = (Hash(x, y, salt + 400 + i) % 360u) * Mathf.Deg2Rad,
+                    color          = Color.white,
+                    lightmapColor  = Color.white
+                });
+                budget++;
+            }
+            return count;
+        }
+
+        /// <summary>Hand the whole meadow to the terrain in one call and tell it how far to draw.
+        /// Returns the prototype count so the report can say what the world is made of.</summary>
+        static int SowMeadow(WorldState S, List<GameObject> set, List<TreeInstance> instances)
+        {
+            var terrain = Terrain.activeTerrain;
+            if (terrain == null || set.Count == 0) { TuftHeightNote = "tufts: no terrain to sow into"; return 0; }
+            var td = terrain.terrainData;
+
+            var protos = new TreePrototype[set.Count];
+            for (int i = 0; i < set.Count; i++) protos[i] = new TreePrototype { prefab = set[i], bendFactor = 0f };
+            td.treePrototypes = protos;
+            td.SetTreeInstances(instances.ToArray(), true);   // true = snap each one to the heightmap
+
+            // Grass is not a landmark: draw it near, drop it far. Billboards are left off because
+            // these prefabs carry no billboard asset -- a grass blade at 200 m is one pixel and is
+            // better culled than faked.
+            terrain.treeDistance = 260f;
+            terrain.treeBillboardDistance = 0f;
+            terrain.treeCrossFadeLength = 25f;
+            terrain.treeMaximumFullLODCount = 0;
+            terrain.Flush();
+
+            // the blade, in metres, against the 1,75 m yardstick — measured from the prototypes and
+            // the size law rather than from instantiated objects, because there are none any more.
+            float lo = float.MaxValue, hi = 0f, sum = 0f; int n = 0;
+            foreach (var pf in set)
+            {
+                if (pf == null) continue;
+                var rs = pf.GetComponentsInChildren<Renderer>(true);
+                if (rs.Length == 0) continue;
+                var b = rs[0].bounds;
+                for (int k = 1; k < rs.Length; k++) b.Encapsulate(rs[k].bounds);
+                float mid = b.size.y * (pf.name.StartsWith("P_ENV") ? 0.55f : 0.70f);
+                if (mid <= 0f) continue;
+                lo = Mathf.Min(lo, mid); hi = Mathf.Max(hi, mid); sum += mid; n++;
+            }
+            TuftHeightNote = n == 0
+                ? "tufts: no bounds"
+                : "tuft height " + (sum / n).ToString("F2") + " m mean (" + lo.ToString("F2") + ".." + hi.ToString("F2")
+                  + "), " + (sum / n / 1.75f * 100f).ToString("F0") + "% of a person; sown as terrain trees per the pack's own manual";
+            return set.Count;
+        }
 
         /// <summary>The tuft, in metres, against the 1,75 m yardstick. A meadow the eye can read
         /// wants roughly knee height; anything under ~0,25 m is a texture no matter how many there are.</summary>
