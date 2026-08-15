@@ -187,8 +187,17 @@ namespace Emergence.Runtime
                 var pf = cat != null ? cat.Prefab(VariantOf(e, v, k)) : null;
                 if (pf == null && cat != null) pf = cat.Prefab(e.prefab);   // a missing variant never costs the object
                 if (pf == null) continue;
+                // D-247: some things belong at a PLACE, not on a ring. Every codex object until now
+                // was set on a radius and an angle around the village centre, which is why eleven of
+                // the twelve bridge models this studio owns had never been used: there was nowhere
+                // for a bridge to correctly be. `crossing` asks the road network where a way meets
+                // water. If this world has no crossing yet, the object is NOT placed somewhere else
+                // as a consolation -- a bridge on dry grass is a lie, and spec 5b.1 already says the
+                // codex tells what it cannot show.
+                if (!TryCodexPosition(v, e, k, cnt, out var pos)) continue;
+                // ask WHERE before making the thing: an object that cannot be placed should never
+                // have been instantiated, and the old order made one and then set it on a ring.
                 var go = UnityEngine.Object.Instantiate(pf, overlay);
-                var pos = CodexPlacement(v, e, k, cnt);
                 go.transform.position = GroundW(P(S, pos.x, pos.y));
                 go.transform.rotation = Quaternion.Euler(0f, Hash(Mathf.RoundToInt(v.x), Mathf.RoundToInt(v.y), e.id.Length + k) % 360u, 0f);
                 go.transform.localScale = Vector3.one * (e.scale <= 0f ? 1f : e.scale);
@@ -317,6 +326,38 @@ namespace Emergence.Runtime
             int i = (int)(h % (uint)n);
             return i == 0 && !string.IsNullOrWhiteSpace(e.prefab) ? e.prefab
                  : e.variants[string.IsNullOrWhiteSpace(e.prefab) ? i : i - 1];
+        }
+
+        /// <summary>Where this instance stands, and whether it may stand at all. False means the
+        /// world does not contain the place this object needs.</summary>
+        static bool TryCodexPosition(WorldVillage v, CodexEntry e, int k, int cnt, out Vector2 pos)
+        {
+            if (e.placement == "crossing")
+            {
+                pos = Vector2.zero;
+                var xs = Fas3RoadPainter.Crossings;
+                if (xs == null || xs.Count == 0) return false;
+                // the k-th nearest crossing to this village, so two bridges never share a bank
+                float bd = float.MaxValue; int bi = -1;
+                var taken = new bool[xs.Count];
+                for (int pick = 0; pick <= k && pick < xs.Count; pick++)
+                {
+                    bd = float.MaxValue; bi = -1;
+                    for (int i = 0; i < xs.Count; i++)
+                    {
+                        if (taken[i]) continue;
+                        float d = Vector2.Distance(new Vector2(v.x, v.y), xs[i]);
+                        if (d < bd) { bd = d; bi = i; }
+                    }
+                    if (bi < 0) return false;
+                    taken[bi] = true;
+                }
+                if (bi < 0 || bd > 30f) return false;   // not this village's crossing
+                pos = xs[bi];
+                return true;
+            }
+            pos = CodexPlacement(v, e, k, cnt);
+            return true;
         }
 
         static Vector2 CodexPlacement(WorldVillage v, CodexEntry e, int k, int cnt)

@@ -2844,6 +2844,58 @@
     "P_PROP_horsestation",
     "P_PROP_horsestation_city"
    ]
+  },
+  {
+   "id": "bridge-wood",
+   "prefab": "P_PROP_bridge_wood_01",
+   "category": "craft",
+   "requiresTech": "axe",
+   "requiresCustom": "",
+   "desc": "a way over the water that does not need a boat — the first time this people refused to go around",
+   "placement": "crossing",
+   "tier": "milestone",
+   "statMeaning": "the crossing made",
+   "era": 2,
+   "minPop": 8,
+   "minCrafts": 2,
+   "minGen": 0,
+   "count": 1,
+   "scale": 0.0,
+   "ruinOnLoss": 1,
+   "ruinPrefab": "",
+   "ruinScale": 0.0,
+   "variants": [
+    "P_PROP_bridge_wood_02",
+    "P_PROP_bridge_wood_03",
+    "P_PROP_bridge_wood_04"
+   ]
+  },
+  {
+   "id": "bridge-stone",
+   "prefab": "P_PROP_bridge_stone_01",
+   "category": "craft",
+   "requiresTech": "masonry",
+   "requiresCustom": "",
+   "desc": "the crossing built to outlive the people who needed it",
+   "placement": "crossing",
+   "tier": "milestone",
+   "statMeaning": "the crossing made permanent",
+   "era": 4,
+   "minPop": 14,
+   "minCrafts": 0,
+   "minGen": 1,
+   "count": 1,
+   "scale": 0.0,
+   "ruinOnLoss": 1,
+   "ruinPrefab": "",
+   "ruinScale": 0.0,
+   "requires": {
+    "allOf": [
+     {
+      "tech": "architecture"
+     }
+    ]
+   }
   }
  ],
  "_note": " RESTORED 2026-08-14 (C1/D-226): the 29->72 rebuild won tech breadth and flattened the grammar. category is a real axis again (craft/knowledge/faith/law/commerce/wealth/culture), requiresCustom is back on star-banner (it was firing in EVERY village, unconditionally), minCrafts/minGen carry depth again, our own rendered mill/well/kiln/forge GLBs are the prefabs where they beat the pack props, and forge/commons-fire/green-bench are back. requiresCustom needs the driver to export cosmos/beliefs (C2). C3/D-232: entries may now carry `requires` {allOf|anyOf|noneOf} of {tech,custom,minPop,minCrafts,minGen} for predicates a single requiresTech cannot express, and `combinesWith` naming the parts that BECOME this whole (the parts are then suppressed). The flat fields remain and are AND-ed with `requires`, so every earlier entry is untouched. A combination whose prefab does not resolve is never placed — told, never shown broken (spec 5b.1). D-239: a WHOLE must never be smaller than the parts it absorbs. The first two proof entries absorbed the forge and the market and then put down a single anvil and a single shelf — inverting the very principle they were written to demonstrate. They now absorb only the loose furniture and stand BESIDE the building that earns them. D-242: `arrangement` implements OBJECT-CODEX-SPEC §2b(1) — an authored recipe of parts at fixed offsets in the whole's OWN frame, parented to the anchor so the composition rotates, retires, ruins and settles as one thing. A part whose prefab does not resolve is skipped; half a market square is broken, and broken is never shown. D-243: `variants` — interchangeable models for ONE codex meaning, picked by hash. The coverage number counted crate_02/_03/_04 as un-indexed content while crate_01 was indexed; they were never separate things, and every crate in every village used to be the identical crate."

@@ -614,6 +614,12 @@ namespace Emergence.Editor
                         }
                     }
 
+                    // D-247: the roads, in numbers, before anybody squints at them. A derived network
+                    // is worth exactly what it puts on the ground, so print links, texels and crossings.
+                    sb.AppendLine("     " + Emergence.Runtime.Fas3RoadPainter.LastNote);
+                    Check(Emergence.Runtime.Fas3RoadPainter.Segments > 0,
+                          "the ground carries the ways between places (" + Emergence.Runtime.Fas3RoadPainter.Segments + " links)");
+
                     // and the village: stand among the huts, not above them
                     var hutRoot = GameObject.Find(Emergence.Runtime.HutReconciler.LayerName);   // "Huts_Live" - "Huts" found nothing
                     // D-245: WHICH HOUSES, NOT HOW MANY. "Every house looks the same" is a claim

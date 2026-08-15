@@ -1359,6 +1359,14 @@ MonoBehaviour:
     prefab: {fileID: 4464627407572763632, guid: 1210fede7bdb03749b179c5b42708b5f, type: 3}
   - name: P_PROP_horsestation_city
     prefab: {fileID: 8461686677262153377, guid: 3c888fd2134526a4e9f35f3c5d8ab6ad, type: 3}
+  - name: P_PROP_bridge_wood_01
+    prefab: {fileID: 8726831095658847638, guid: 97340bd3e4f7c124c9acc833a566fb51, type: 3}
+  - name: P_PROP_bridge_wood_02
+    prefab: {fileID: 3737850635914328350, guid: 2346aa4778c90a64d98713c1623cad7a, type: 3}
+  - name: P_PROP_bridge_wood_03
+    prefab: {fileID: 2631683335624422444, guid: c0bab4a8a82f1bc40bd7342a6b35dc06, type: 3}
+  - name: P_PROP_bridge_wood_04
+    prefab: {fileID: 5726484642165293179, guid: 206c89fbc6ac9f244a724ffd3bced20a, type: 3}
   - name: P_BLD_house_01
     prefab: {fileID: 4566541305947615035, guid: 95faf56cb7779194d8e7f31984ca12ee, type: 3}
   - name: P_BLD_house_02

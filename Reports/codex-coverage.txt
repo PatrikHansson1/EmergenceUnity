@@ -1,14 +1,14 @@
 EMERGENCE — CODEX COVERAGE (D-121, anti-orphan; D-244, one question per domain)
-generated 2026-08-15 00:45:45
-codex entries: 99  (634 unique prefabs referenced, 0 told-not-shown)
+generated 2026-08-15 09:57:07
+codex entries: 101  (638 unique prefabs referenced, 0 told-not-shown)
 project assets (prefab/glb/fbx): 2803
-CODEX COVERAGE: 634/822 = 77,1%  |  ORPHANS: 188  |  DANGLING: 0
+CODEX COVERAGE: 638/819 = 77,9%  |  ORPHANS: 181  |  DANGLING: 0
 
 ## WHO CLAIMS WHAT (every asset is claimed by exactly one, or it is an orphan)
-    634  codex      — indexed: a village places it when its discovery is true
-    188  ORPHAN     — nobody. THIS is the backlog, and it is the only one.
+    638  codex      — indexed: a village places it when its discovery is true
+    181  ORPHAN     — nobody. THIS is the backlog, and it is the only one.
    1794  kit        — the building kit — assembled into a whole, never placed alone (arrangement templates)
-     50  placed     — a runtime placer, by name — EmergenceAssetCatalog is that placer's own list
+     53  placed     — a runtime placer, by name — EmergenceAssetCatalog is that placer's own list
      75  fx         — the effect systems (FireReconciler, expression) — a particle is not a thing a village sets down
      48  nature     — Fas3NatureScatter / FoliageInstancer — the world's own growth, not a village's making
      14  agent      — AgentReconciler / the animal intake — bodies, not objects
@@ -17,14 +17,14 @@ CODEX COVERAGE: 634/822 = 77,1%  |  ORPHANS: 188  |  DANGLING: 0
   none ✓
 
 ## CODEX-DOMAIN COVERAGE PER PACK (referenced / total)
-   325/437    74,4%  Fantastic City Pack
-   297/337    88,1%  Fantastic Village Pack
+   325/436    74,5%  Fantastic City Pack
+   301/335    89,9%  Fantastic Village Pack
      8/36     22,2%  Polyart
      0/8       0,0%  UpDraftArt
      4/4     100,0%  Emergence
 
-## THE BACKLOG, GROUPED — 188 orphans = 0 variants of 0 meanings the codex HAS
-##                          + 188 assets carrying 114 meanings it does NOT
+## THE BACKLOG, GROUPED — 181 orphans = 0 variants of 0 meanings the codex HAS
+##                          + 181 assets carrying 110 meanings it does NOT
 
 ### A — VARIANT of an indexed meaning (name it in that row's variants[]; no new gate)
 
@@ -36,7 +36,6 @@ CODEX COVERAGE: 634/822 = 77,1%  |  ORPHANS: 188  |  DANGLING: 0
      5  infoboard                e.g. P_PROP_infoboard_city_01, P_PROP_infoboard_city_02, P_PROP_infoboard_city_03
      5  marketshelf              e.g. COMP_PROP_marketshelf_city_01, COMP_PROP_marketshelf_city_02, COMP_PROP_marketshelf_city_03
      5  pot                      e.g. Prefab_Pot_01, P_PROP_pot_city_01, P_PROP_pot_city_02
-     4  bridge_wood              e.g. P_PROP_bridge_wood_01, P_PROP_bridge_wood_02, P_PROP_bridge_wood_03
      4  wall_plant               e.g. COMP_PROP_wall_plant_city_01, COMP_PROP_wall_plant_city_02, COMP_PROP_wall_plant_city_03
      4  wall_wood_post           e.g. P_PROP_wall_wood_post_01, P_PROP_wall_wood_post_02, P_PROP_wall_wood_post_03
      3  mailbox                  e.g. P_PROP_mailbox, P_PROP_mailbox_city_01, P_PROP_mailbox_city_02
@@ -93,7 +92,6 @@ CODEX COVERAGE: 634/822 = 77,1%  |  ORPHANS: 188  |  DANGLING: 0
      1  food_plate_city_02 (1)   e.g. P_PROP_food_plate_city_02 (1)
      1  food_plate_city_03 (1)   e.g. P_PROP_food_plate_city_03 (1)
      1  fork                     e.g. P_PROP_fork_city
-     1  grass                    e.g. P_ENV_grass_city_01
      1  hangingboard             e.g. P_PROP_hangingboard
      1  hook                     e.g. P_PROP_hook_city
      1  infoui_modular           e.g. InfoUI_Modular
@@ -109,8 +107,6 @@ CODEX COVERAGE: 634/822 = 77,1%  |  ORPHANS: 188  |  DANGLING: 0
      1  path tool                e.g. Path Tool
      1  pencil                   e.g. P_PROP_pencil_city
      1  plant                    e.g. P_PROP_plant_city_01
-     1  plant_grass_village      e.g. P_ENV_PLANT_grass_village
-     1  plant_leaf_village       e.g. P_ENV_PLANT_leaf_village
      1  plant_pot_holder         e.g. P_PROP_plant_pot_holder_city
      1  plate_wood               e.g. P_PROP_plate_wood
      1  post                     e.g. P_PROP_post_city_01

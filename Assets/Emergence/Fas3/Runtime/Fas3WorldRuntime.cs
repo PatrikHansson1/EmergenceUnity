@@ -56,6 +56,12 @@ namespace Emergence.Runtime
             PrevState = LastState; LastState = S;
             EnsureGround(S);                          // VÅG 1.1: the world needs ground before anything stands on it
             EnsureLight();                            // VÅG 1.2: and light, or the pack's own look never shows
+            // D-247: the ground learns where people go. Terrain is built ONCE, before any village
+            // exists, so the corridors cannot be part of that build -- they are worn in here, as the
+            // settlements appear, and only when the set of connections actually changes. Dressing
+            // tier: a failure must never cost agents or huts, the same clause as codex and fires.
+            try { Fas3RoadPainter.Apply(S); RoadNote = Fas3RoadPainter.LastNote; }
+            catch (Exception e) { RoadNote = "roads: " + e.Message; Debug.LogWarning("[Fas3WorldRuntime] roads: " + e.Message); }
             _agents.Reconcile(S, false);
             _huts.Reconcile(S);
             try { _codex.Reconcile(S); LastCodexNote = "ok"; }
@@ -135,6 +141,7 @@ namespace Emergence.Runtime
 
         /// <summary>VÅG 1.1 (rest): trees, rocks and bushes — the same law the dresser uses, moved to
         /// Runtime. Reported so a probe can assert on it rather than squint at a screenshot.</summary>
+        public string RoadNote { get; private set; } = "";
         public string NatureNote { get; private set; } = "";
         public int NatureCount { get; private set; }
 

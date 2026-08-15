@@ -1,11 +1,11 @@
 EMERGENCE — VÅG 1.1: does the LIVING world have ground?
-generated 2026-08-15 01:58:04
+generated 2026-08-15 10:02:05
 scene = the self-composing opening ONLY. No WorldDresser, no capture rig, no editor-only path.
 
 1. WAS THE GROUND RAISED, BY THE LIVING LOOP ITSELF?
   PASS  the living world runtime exists
   PASS  ground build attempted from an applied snapshot
-     note: terrain: 100x70 tiles -> 800x560 m, relief 11,5..40,1 m (28,6 m of it), layers=5, details=5
+     note: terrain: 100x70 tiles -> 800x560 m, relief 11,5..40,1 m (28,6 m of it), layers=6, details=5
      meadow: Prefab_Grass_01_Detail ok/GrassBillboard | Prefab_Grass_Group_01_Detail ok/GrassBillboard | Prefab_Grass_03_Detail ok/GrassBillboard | SM_Flower_01_Unity ok/VertexLit | Prefab_Flower_02 ok/VertexLit
   PASS  a Terrain EXISTS in the living scene (Terrain)
 
@@ -17,15 +17,16 @@ scene = the self-composing opening ONLY. No WorldDresser, no capture rig, no edi
   PASS  no cliff faces — max slope 11,6 deg (a wall would be 80+)
 
 3. IS IT REAL GROUND, OR A FLAT COLOUR?
-     layers: Layer_Grass, Layer_farmfield, Layer_Dirt, Layer_gravel_01, Layer_pavingstone_01
-  PASS  at least four ground materials (5)
+     layers: Layer_Grass, Layer_farmfield, Layer_Dirt, Layer_gravel_01, Layer_pavingstone_01, Layer_grass_01
+  PASS  at least four ground materials (6)
        layer 0: Layer_Grass            diffuse=T_Grass_Ground_C2 1024px  tile=(2.00, 2.00)
        layer 1: Layer_farmfield        diffuse=T_ENV_farmfield_BC 2048px  tile=(3.00, 3.00)
        layer 2: Layer_Dirt             diffuse=T_DirtGround_C 2048px  tile=(2.00, 2.00)
        layer 3: Layer_gravel_01        diffuse=T_ENV_TERRAIN_gravel_01_BC 2048px  tile=(2.00, 2.00)
        layer 4: Layer_pavingstone_01   diffuse=T_ENV_pavingstone_01_BC 2048px  tile=(2.00, 2.00)
-  PASS  5 of 5 layers carry a REAL texture (a fallback layer is flat white tinted)
-     the ground is painted: Layer_Grass=91%  Layer_farmfield=1%  Layer_Dirt=2%  Layer_gravel_01=6%  Layer_pavingstone_01=0%   (alphamap 512x512)
+       layer 5: Layer_grass_01         diffuse=T_ENV_TERRAIN_grass_01_BC 2048px  tile=(2.00, 2.00)
+  PASS  6 of 6 layers carry a REAL texture (a fallback layer is flat white tinted)
+     the ground is painted: Layer_Grass=60%  Layer_farmfield=1%  Layer_Dirt=2%  Layer_gravel_01=6%  Layer_pavingstone_01=0%  Layer_grass_01=30%   (alphamap 512x512)
   PASS  the meadow has detail prototypes (5 grass/flower)
        detail 0: tex:T_Grass_Blades_Final 1024px                instances=421620  mode=GrassBillboard  h=1,0..1,9m  VALID
        detail 1: tex:T_Grass_Blades_Final 1024px                instances=422587  mode=GrassBillboard  h=1,0..1,9m  VALID
@@ -60,20 +61,20 @@ scene = the self-composing opening ONLY. No WorldDresser, no capture rig, no edi
      renderers measured: 3952
      shaders in use: Polyart/Dreamscape/Foliage/Leaves x922 | Polyart/Dreamscape/Props x879 | Polyart/Dreamscape/Foliage/Foliage x856 | TidalFlask/Foliage Wind URP Simple Lit FVP U6-1 x234 | TidalFlask/Foliage Wind URP Simple FVP U6-1 x233 | TidalFlask/Foliage Wind URP Advanced LODfade City U6-1 x233
      tallest object: Tree_Large_02_LOD3 [M_TreeLarge_BB_02] = 25,1 m (11,3x a villager)
-       Birch_06_LOD2              h=15,2m (6,8x villager)  SINKS 0,86m  M_TreeBirch_Bark
-       Birch_02_LOD0              h=17,7m (8,0x villager)  SINKS 0,88m  M_TreeBirch_Leaves
-       Tree_Large_02_LOD3         h=18,5m (8,3x villager)  M_TreeLarge_BB_02
-       Birch_02_LOD2              h=16,0m (7,2x villager)  SINKS 0,64m  M_TreeBirch_Leaves
-       Tree_Large_01_LOD1         h=18,4m (8,3x villager)  M_TreeLarge_Leaves
-       Tree_Large_01_LOD0         h=20,7m (9,3x villager)  SINKS 0,73m  M_TreeLarge_Leaves
-       Tree_Large_04_LOD3         h=19,3m (8,6x villager)  M_TreeLarge_BB_04
-       Tree_Large_01_LOD0         h=17,4m (7,8x villager)  SINKS 0,63m  M_TreeLarge_Leaves
-       Birch_04_LOD3              h=11,7m (5,3x villager)  SINKS 0,05m  M_TreeBirch_Bark
-       Tree_Large_02_LOD2         h=21,4m (9,6x villager)  M_TreeLarge_Leaves
-       Birch_01_LOD1              h=15,3m (6,9x villager)  SINKS 0,29m  M_TreeBirch_Leaves
-       Birch_06_LOD1              h=10,5m (4,7x villager)  SINKS 0,71m  M_TreeBirch_Leaves
-       Tree_Large_04_LOD0         h=19,3m (8,7x villager)  SINKS 0,96m  M_TreeLarge_Leaves
-       Birch_02_LOD1              h=14,5m (6,5x villager)  SINKS 0,52m  M_TreeBirch_Leaves
+       Tree_Large_01_LOD0         h=19,3m (8,6x villager)  SINKS 0,73m  M_TreeLarge_Leaves
+       Birch_01_LOD3              h=13,6m (6,1x villager)  SINKS 0,66m  M_Birch_01_BB
+       Tree_Large_01_LOD0         h=16,9m (7,6x villager)  SINKS 0,67m  M_TreeLarge_Leaves
+       Birch_06_LOD1              h=11,2m (5,0x villager)  SINKS 0,28m  M_TreeBirch_Leaves
+       Birch_01_LOD2              h=13,2m (5,9x villager)  SINKS 0,68m  M_TreeBirch_Bark
+       Tree_Large_03_LOD1         h=15,2m (6,8x villager)  SINKS 0,10m  M_TreeLarge_Leaves
+       Birch_04_LOD1              h=12,3m (5,5x villager)  M_TreeBirch_Leaves
+       Tree_Large_01_LOD3         h=17,1m (7,7x villager)  M_TreeLarge_Bark
+       Birch_06_LOD2              h=10,9m (4,9x villager)  SINKS 0,70m  M_TreeBirch_Bark
+       Tree_Large_02_LOD0         h=18,1m (8,1x villager)  SINKS 0,15m  M_TreeLarge_Leaves
+       Tree_Large_01_LOD1         h=16,9m (7,6x villager)  SINKS 0,12m  M_TreeLarge_Leaves
+       Birch_01_LOD1              h=12,1m (5,4x villager)  SINKS 0,44m  M_TreeBirch_Leaves
+       Tree_Large_02_LOD0         h=20,7m (9,3x villager)  M_TreeLarge_Leaves
+       Tree_Large_02_LOD1         h=17,8m (8,0x villager)  M_TreeLarge_Leaves
 
      THE TEN LARGEST OBJECTS (unconditional — nothing hides here):
        32,0x24,0x32,4 m  Nature_Live / Prefab_TreeLarge_04(Clone) / Tree_Large_04_LOD3   mat=M_TreeLarge_BB_04  tex=T_TrreeLarge_04_BB  slots=2  at (601, 25, 266)
@@ -95,6 +96,8 @@ scene = the self-composing opening ONLY. No WorldDresser, no capture rig, no edi
      close-up on P_BLD_body_v01_01 (5,8 m) from 8 m -> Reports/house-in-scene.png
      close-up on char1 (2,2 m) mat=Material_1 (lit, not lamp) t3 shader=Shader Graphs/glTF-pbrMetallicRoughness tex=texture_0 -> Reports/villager-in-scene.png
      eye at the water: shore (582, 20, 290) looking across 168x144 m -> Reports/eye-at-the-water.png
+     roads: 4 links worn into the ground (508 texels, 0 water crossings, region 148x240 of 512)
+  PASS  the ground carries the ways between places (4 links)
      houses raised: 4 over 2 distinct models (pool = 8)
        SM_BLD_body_v04_01 x2, SM_BLD_body_v07_01 x2
   PASS  the village is built of more than two models (2 distinct over 4 huts)
@@ -122,8 +125,8 @@ scene = the self-composing opening ONLY. No WorldDresser, no capture rig, no edi
 
 6. WHAT THE WORLD COSTS (one frame, from the DECLARED eye-level pose —
    an anchor on the builder's machine, never a min-spec verdict)
-     renderers in scene: 3952   draw calls: 1114   set-pass: 226   triangles: 1887k
-     frame: 4,9 ms (204 fps)   quality 'PC'
+     renderers in scene: 3952   draw calls: 1112   set-pass: 230   triangles: 1888k
+     frame: 2,7 ms (374 fps)   quality 'PC'
      within the A6 draw-call budget (2500, set against a GTX 1660-class min spec)
      28 draw calls per 100 renderers
      eye at (356.0, 27.5, 223.1) (ground 25,1 m), looking at (390.0, 22.9, 257.1)
@@ -131,7 +134,7 @@ scene = the self-composing opening ONLY. No WorldDresser, no capture rig, no edi
   PASS  no missing-material magenta in frame (0 px)
      year at capture: 22
 
-VERDICT: GREEN  (23/23)
+VERDICT: GREEN  (24/24)
 declared: this proves the GROUND is there and rolling. Prop scale, the pivot sinking and
   the water body are steps 1.2-1.5 and are NOT claimed here. The picture is the real test —
   a human (or the builder) must LOOK at it, per D-008.

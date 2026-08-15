@@ -255,7 +255,11 @@ namespace Emergence.Runtime
             => LastWater == null ? 0f : Sample(LastWater, S.W, S.H, sx, sy);
 
         // ---- layers, from the catalog instead of AssetDatabase ----
-        public struct LayerIndex { public int grass, field, path, gravel, cobble; }
+        public struct LayerIndex { public int grass, grass2, field, path, gravel, cobble; }
+
+        /// <summary>The layer indices the last build produced. The road painter needs them and the
+        /// terrain is built exactly once per session, so handing them over beats guessing at 0..4.</summary>
+        public static LayerIndex LastLayerIndex;
 
         static LayerIndex BuildLayers(TerrainData data)
         {
@@ -269,7 +273,26 @@ namespace Emergence.Runtime
                 gravel = Add(cat, layers, new[] { "Layer_gravel_01", "Layer_Rock", "Layer_Stone", "Layer_rock_01" }, new Color(0.5f, 0.48f, 0.45f)),
                 cobble = Add(cat, layers, new[] { "Layer_pavingstone_01", "Layer_Cobblestone", "Layer_Dirt" }, new Color(0.55f, 0.53f, 0.5f)),
             };
+            // D-247 — THE MEADOW WAS ONE TEXTURE OVER NINETY-ONE PER CENT OF THE WORLD.
+            // Layer_grass_01 has been in the project the whole time, and it was written down as a
+            // FALLBACK behind Layer_Grass -- so it could only ever be used on the day the primary
+            // went missing, which is to say never. That is the same shape as the silent variants
+            // (D-244) and the never-placed pack grass (D-246): owned, resolvable, unreachable.
+            // Two grass textures blended over a slow noise give the ground broad tonal country --
+            // grazed here, lusher there -- for ZERO renderers and zero draw calls, which is the
+            // only kind of gain left after 100 000 tufts already doubled the frame.
+            // Strictly optional: if the second grass does not resolve, grass2 IS grass and the
+            // blend below collapses to what it painted yesterday. No flat-colour fallback here --
+            // an invented layer would tile a solid green over a fifth of the map.
+            idx.grass2 = idx.grass;
+            var second = cat != null ? cat.TerrainLayer(new[] { "Layer_grass_01" }) : null;
+            if (second != null && second.diffuseTexture != null && layers.IndexOf(second) < 0)
+            {
+                layers.Add(second);
+                idx.grass2 = layers.Count - 1;
+            }
             data.terrainLayers = layers.ToArray();
+            LastLayerIndex = idx;
             return idx;
         }
 
@@ -380,7 +403,14 @@ namespace Emergence.Runtime
 
                     float sum = g + fi + pa + gr + co;
                     if (sum <= 0.0001f) { g = 1f; sum = 1f; }
-                    am[ay, ax, L.grass]  += g  / sum;
+                    // Split the grass between the two turfs over a ~130 m noise. Both are present
+                    // everywhere at some weight, so the seam between them is a gradient and never a
+                    // border; the eye reads it as land that has been grazed unevenly, which is what
+                    // land looks like. When grass2 == grass the two writes simply sum back to g.
+                    float turf = L.grass2 == L.grass ? 0f
+                             : Mathf.SmoothStep(0f, 1f, Mathf.Clamp01((Mathf.PerlinNoise(sx * 0.062f + 47f, sy * 0.062f + 91f) - 0.30f) * 2.5f)) * 0.72f;
+                    am[ay, ax, L.grass]  += g * (1f - turf) / sum;
+                    am[ay, ax, L.grass2] += g * turf / sum;
                     am[ay, ax, L.field]  += fi / sum;
                     am[ay, ax, L.path]   += pa / sum;
                     am[ay, ax, L.gravel] += gr / sum;
