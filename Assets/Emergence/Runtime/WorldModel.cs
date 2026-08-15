@@ -42,7 +42,18 @@ namespace Emergence.Runtime
     // unsayable. `requires` says it: allOf / anyOf / noneOf over the same facts the flat fields use.
     // The flat fields REMAIN and are still evaluated (AND-ed with `requires`), so every existing entry
     // keeps working untouched — the shorthand for the overwhelmingly common single-tech case.
-    [Serializable] public class CodexCond { public string tech, custom; public int minPop, minCrafts, minGen; }
+    // D-253 — THE CODEX INDEXED KNOWLEDGE AND NOT HISTORY.
+    // Measured: 98 of 108 rows answer to a technology, 1 to a belief, 9 to deep time, and ZERO to
+    // anything that HAPPENED — while the engine writes thirty-nine event kinds into the chronicle
+    // (raid, feud, death, mourn, leader, tribute, rebel, conversion, steal, violence, legend, giftway…).
+    // A village is raided, the book says so, and the village looks exactly as it did.
+    // It was never an ASSET gap — we own the gallows, the coffin, the banners, the memorial stones.
+    // It was a GATE gap: the predicate language could only speak about what a people KNOW.
+    // These two facts have been in the export since E1.5 (D-178) and nothing has ever read them:
+    //   hasLeader — this village has recognised someone (villages[].leader)
+    //   hasGift   — this village is bound by a giving custom (villages[].gift)
+    // Pure read of exported state, no engine change, D-078 r4 untouched.
+    [Serializable] public class CodexCond { public string tech, custom; public int minPop, minCrafts, minGen; public int hasLeader, hasGift; }
     [Serializable] public class CodexRequire { public CodexCond[] allOf; public CodexCond[] anyOf; public CodexCond[] noneOf; }
     [Serializable] public class CodexEntry { public string id, prefab, category, requiresTech, requiresCustom, desc, placement, tier, statMeaning; public int era, minPop, minCrafts, minGen, count; public float scale; public int ruinOnLoss; public string ruinPrefab; public float ruinScale;
         public CodexRequire requires;          // C3: the predicate, when one tech cannot say it

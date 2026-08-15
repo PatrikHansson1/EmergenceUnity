@@ -68,6 +68,18 @@ namespace Emergence.Runtime
                 if (c.custom == "cosmos") { if (string.IsNullOrEmpty(v.cosmos)) return false; }
                 else if (v.beliefs == null || Array.IndexOf(v.beliefs, c.custom) < 0) return false;
             }
+            // D-253: what HAPPENED here, not only what is known here. 1 = must hold, -1 = must not,
+            // 0 = the condition does not care — so every entry authored before today is unchanged.
+            if (c.hasLeader != 0)
+            {
+                bool led = !string.IsNullOrEmpty(v.leader);
+                if (c.hasLeader > 0 != led) return false;
+            }
+            if (c.hasGift != 0)
+            {
+                bool gave = !string.IsNullOrEmpty(v.gift);
+                if (c.hasGift > 0 != gave) return false;
+            }
             return v.pop >= c.minPop && v.crafts >= c.minCrafts && v.maxGen >= c.minGen;
         }
 
