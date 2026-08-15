@@ -231,6 +231,12 @@ namespace Emergence.Editor
         // build. They become codex rows only through arrangement templates.
         static bool IsKit(string n, string path)
         {
+            // FIRST, and the order is the point: the level-3 test has to run BEFORE the name rules.
+            // A complete building is called BLD_03_16x8_Ext_01 or BLD_03_L_Int_Blacksmith -- so the
+            // _Ext_/_Int_ rules, written for wall modules, swallowed all forty-three of them and the
+            // count did not move a single asset when the path test was added below them. The number
+            // refusing to move named the fault again; the fix is one line in the right place.
+            if (path.IndexOf("03_BLD_COMPLETE", StringComparison.OrdinalIgnoreCase) >= 0) return false;
             if (n.StartsWith("SM_", StringComparison.OrdinalIgnoreCase)) return true;
             if (n.StartsWith("COMP_Base", StringComparison.OrdinalIgnoreCase)) return true;
             if (n.IndexOf("_LOD", StringComparison.OrdinalIgnoreCase) >= 0) return true;
@@ -239,6 +245,16 @@ namespace Emergence.Editor
             if (n.EndsWith("-walk", StringComparison.OrdinalIgnoreCase)) return true;
             if (n.EndsWith("-work", StringComparison.OrdinalIgnoreCase)) return true;
             var p = path.ToLowerInvariant();
+            // D-251 — THE VENDOR'S OWN THREE LEVELS, instead of our one word for all of them. From
+            // "Documentation - FANTASTIC City Pack", chapter "Prefabs and Nested Prefabs":
+            //     "level 1: Parts - individual modular elements, baseline prefabs + collision
+            //      level 2: Comps - compositions of individual parts
+            //      level 3: Complete Buildings - combinations of Comps and Parts to a full building"
+            // Levels 1 and 2 are the kit. LEVEL 3 IS NOT: a complete building is the most placeable
+            // thing in the entire pack, and sweeping the whole of Modular/ into "kit" hid FORTY-THREE
+            // finished buildings -- 26 exteriors, 7 interiors and 10 themed by trade -- from the very
+            // backlog that exists to make un-indexed content impossible to forget. The codex already
+            // names three of them (temple, manor, university), which is the proof they belong here.
             return p.Contains("/modular/") || p.Contains("buildings_modules") || p.Contains("/collision/");
         }
 

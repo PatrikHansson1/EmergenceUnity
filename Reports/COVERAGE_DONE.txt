@@ -1,2 +1,2 @@
-DONE 09:57:07 coverage=77,9% orphans=181 (variant=0 new=181) dangling=0
+DONE 11:57:15 coverage=74,5% orphans=222 (variant=76 new=146) dangling=0
 see Reports/codex-coverage.txt

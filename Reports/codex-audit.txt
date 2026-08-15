@@ -1,0 +1,339 @@
+EMERGENCE — CODEX REALITY CHECK (D-252): what each row's asset MEASURES, not what it is called
+generated 2026-08-15 11:57:11   (108 rows, yardstick = a 1,75 m villager)
+
+  row                  tier       placed size      x person  parts  drawn by
+  ------------------------------------------------------------------------------------------------
+  alehouse             milestone   17,4x19,1  m    10,0x    226   Foliage Wind URP Advanced LODfade City U6-1,Lit,Unlit
+       meshes: alchemy, barrel, blossoms, book, bookshelf, bottle
+       note: row says 'alehouse', geometry says 'alchemy' — read once, then leave it alone if it is right
+  anvil                dressing     3,9x5,7   m     2,2x     39   Lit,Unlit,Water URP U6-1
+       meshes: anvil, axe, basket, blacksmith, bucket, chisel
+  apothecary           milestone    1,6x1,9   m     0,9x     24   Foliage Wind URP Advanced LODfade City U6-1,Lit
+       meshes: alchemy, blossoms, book, bottle, candle, herbs
+       note: row says 'apothecary', geometry says 'alchemy' — read once, then leave it alone if it is right
+  apothecary-house     milestone   20,9x23,5  m    11,9x    585   Foliage Wind URP Advanced LODfade City U6-1,Lit,Unlit
+       meshes: alchemy, barrel, basket, bell, blossoms, book
+       note: row says 'apothecary', geometry says 'alchemy' — read once, then leave it alone if it is right
+  aqueduct             milestone    3,2x9,3   m     1,8x      1   Lit
+       meshes: bridge
+       note: row says 'aqueduct', geometry says 'bridge' — read once, then leave it alone if it is right
+  archive              milestone    1,0x1,8   m     0,5x      8   Lit
+       meshes: book, bottle, candle, coinpouch, jug, rope
+       note: row says 'archive', geometry says 'bottle' — read once, then leave it alone if it is right
+  bakehouse            milestone   21,0x20,1  m    12,0x    869   Foliage Wind URP Advanced LODfade City U6-1,Lit
+       meshes: alchemy, barrel, basket, blossoms, book, bookshelf
+       note: row says 'bakehouse', geometry says 'alchemy' — read once, then leave it alone if it is right
+  blade                milestone    0,1x0,7   m     0,0x      1   Lit
+       meshes: knife
+       note: row says 'blade', geometry says 'knife' — read once, then leave it alone if it is right
+  blown-glass          dressing     0,3x0,2   m     0,2x      1   Lit
+       meshes: bottle
+       note: row says 'blown', geometry says 'bottle' — read once, then leave it alone if it is right
+  board-game           dressing     0,0x0,7   m     0,0x      1   Lit
+       meshes: checkers
+       note: row says 'board', geometry says 'checkers' — read once, then leave it alone if it is right
+  boat                 milestone    2,2x4,1   m     1,3x      6   Lit
+       meshes: rowboat
+  books                dressing     0,1x0,4   m     0,0x      1   Lit
+       meshes: book
+  brazier              dressing     0,7x1,2   m     0,4x      2   Lit,Unlit
+       meshes: brazier
+  brickwork            milestone    1,1x3,0   m     0,6x      1   Lit
+       meshes: wall
+  bridge-stone         milestone    3,2x9,3   m     1,8x      1   Lit
+       meshes: bridge
+  bridge-wood          milestone    1,4x4,4   m     0,8x      1   Lit
+       meshes: bridge
+  bronze-tools         dressing     0,1x0,7   m     0,0x      1   Lit
+       meshes: knife
+       note: row says 'bronze', geometry says 'knife' — read once, then leave it alone if it is right
+  bronze-work          milestone    0,5x0,6   m     0,3x      3   Lit
+       meshes: alchemy, cauldron
+       note: a milestone at 0,45 m is a prop on the ground — worth a pedestal, a rack or an arrangement
+       note: row says 'bronze', geometry says 'alchemy' — read once, then leave it alone if it is right
+  calendar-stone       milestone    2,5x2,2   m     1,4x      1   Props
+       meshes: runerock
+       note: row says 'calendar', geometry says 'runerock' — read once, then leave it alone if it is right
+  candles              dressing     0,4x0,4   m     0,2x      1   Lit
+       meshes: candle
+       note: row says 'candles', geometry says 'candle' — read once, then leave it alone if it is right
+  cart                 milestone    1,7x4,4   m     1,0x      3   Lit
+       meshes: cart
+  casks                dressing     0,8x0,8   m     0,5x      1   Lit
+       meshes: barrel
+       note: row says 'casks', geometry says 'barrel' — read once, then leave it alone if it is right
+  catch                dressing     0,1x0,4   m     0,1x      1   Lit
+       meshes: food
+  clock                milestone    0,9x0,6   m     0,5x      1   Lit
+       meshes: lantern
+       note: row says 'clock', geometry says 'lantern' — read once, then leave it alone if it is right
+  cloth-sacks          dressing     0,5x0,7   m     0,3x      1   Lit
+       meshes: sack
+  coal-heap            dressing     0,5x0,7   m     0,3x      1   Lit
+       meshes: sack
+  coffin               dressing     0,8x2,7   m     0,5x      2   Lit
+       meshes: coffin
+  coin-scales          milestone    0,0x0,1   m     0,0x      1   Lit
+       meshes: coin
+  commons-fire         dressing     0,5x1,6   m     0,3x      3   Props
+       meshes: firewood, plane, smallrock
+       note: row says 'commons', geometry says 'firewood' — read once, then leave it alone if it is right
+  cooking-pot          milestone    0,8x1,6   m     0,5x      1   Lit
+       meshes: cookingpot
+  copper-stock         dressing     0,1x0,3   m     0,1x      1   Lit
+       meshes: bowl
+  cordage              milestone    1,3x2,9   m     0,7x      1   Lit
+       meshes: clothesline
+       note: row says 'cordage', geometry says 'clothesline' — read once, then leave it alone if it is right
+  crates               dressing     0,5x0,9   m     0,3x      1   Lit
+       meshes: crate
+       note: row says 'crates', geometry says 'crate' — read once, then leave it alone if it is right
+  cut-timber           dressing     0,4x1,9   m     0,2x      1   Lit
+       meshes: planks
+       note: row says 'timber', geometry says 'planks' — read once, then leave it alone if it is right
+  docks                milestone    2,8x4,0   m     1,6x      1   Props
+       meshes: docks
+  drying-rack          dressing     2,0x2,7   m     1,2x      1   Lit
+       meshes: dryingrack
+  enclosure            dressing     2,0x2,9   m     1,1x      1   Lit
+       meshes: fence
+       note: row says 'enclosure', geometry says 'fence' — read once, then leave it alone if it is right
+  felled-log           milestone    1,6x4,8   m     0,9x      1   Lit
+       meshes: treetrunk
+       note: row says 'felled', geometry says 'treetrunk' — read once, then leave it alone if it is right
+  fireplace            milestone    3,8x2,3   m     2,1x      1   Lit
+       meshes: fireplace
+  forge                milestone    3,7x2,5   m     2,1x      1   Lit
+       meshes: forge
+  foundation           dressing     1,1x3,9   m     0,6x      1   Lit
+       meshes: foundation
+  gallows              milestone    5,4x3,9   m     3,1x      1   Lit
+       meshes: gallows
+  glass-vessels        dressing     0,3x0,1   m     0,2x      1   Lit
+       meshes: bottle
+       note: row says 'vessels', geometry says 'bottle' — read once, then leave it alone if it is right
+  granary-store        dressing     0,8x0,8   m     0,5x      1   Lit
+       meshes: barrel
+       note: row says 'granary', geometry says 'barrel' — read once, then leave it alone if it is right
+  green-bench          dressing     0,4x1,8   m     0,3x      1   Lit
+       meshes: bench
+       note: row says 'green', geometry says 'bench' — read once, then leave it alone if it is right
+  hand-tools           dressing     0,1x0,9   m     0,1x      1   Lit
+       meshes: hammer
+       note: row says 'tools', geometry says 'hammer' — read once, then leave it alone if it is right
+  haystack             milestone    0,6x0,9   m     0,3x      1   Lit
+       meshes: hay
+  hearth               milestone    0,2x1,4   m     0,1x      1   Lit
+       meshes: firepit
+       note: row says 'hearth', geometry says 'firepit' — read once, then leave it alone if it is right
+  herb-store           dressing     0,2x0,5   m     0,1x      1   Foliage Wind URP Advanced LODfade City U6-1
+       meshes: herbs
+       note: row says 'store', geometry says 'herbs' — read once, then leave it alone if it is right
+  instruments          milestone    1,0x3,2   m     0,6x      1   Lit
+       meshes: market
+       note: row says 'instruments', geometry says 'market' — read once, then leave it alone if it is right
+  iron-tools           milestone    0,2x1,7   m     0,1x      1   Lit
+       meshes: pitchfork
+       note: row says 'tools', geometry says 'pitchfork' — read once, then leave it alone if it is right
+  joinery              milestone   22,0x17,7  m    12,6x    285   Foliage Wind URP Advanced LODfade City U6-1,Lit
+       meshes: alchemy, awl, axe, basket, book, bottle
+       note: row says 'joinery', geometry says 'alchemy' — read once, then leave it alone if it is right
+  kiln                 milestone    1,5x1,9   m     0,9x      1   glTF-pbrMetallicRoughness
+       meshes: mesh
+  lamps                dressing     3,7x2,0   m     2,1x      1   Lit
+       meshes: streetlamp
+       note: row says 'lamps', geometry says 'streetlamp' — read once, then leave it alone if it is right
+  law-stone            milestone    2,5x2,2   m     1,4x      1   Props
+       meshes: runerock
+       note: row says 'stone', geometry says 'runerock' — read once, then leave it alone if it is right
+  lenses               dressing     0,3x0,2   m     0,2x      1   Lit
+       meshes: bottle
+       note: row says 'lenses', geometry says 'bottle' — read once, then leave it alone if it is right
+  manor                milestone   21,4x20,1  m    12,2x    148   Lit
+       meshes: mod
+  market               milestone    3,5x4,2   m     2,0x      1   Lit
+       meshes: market
+  market-square        milestone    3,5x4,2   m     2,0x      1   Lit
+       meshes: market
+  mason-stones         dressing     1,2x3,0   m     0,7x      1   Lit
+       meshes: wall
+  metal-bars           milestone    0,1x0,3   m     0,1x      1   Lit
+       meshes: ingot
+       note: row says 'metal', geometry says 'ingot' — read once, then leave it alone if it is right
+  mill                 milestone    7,4x6,2   m     4,2x      2   Lit
+       meshes: waterwheel
+       note: row says 'mill', geometry says 'waterwheel' — read once, then leave it alone if it is right
+  notices              dressing     0,5x0,4   m     0,3x      1   Lit
+       meshes: poster
+       note: row says 'notices', geometry says 'poster' — read once, then leave it alone if it is right
+  old-growth           dressing     3,7x1,6   m     2,1x      1   Foliage Wind URP Advanced LODfade City U6-1
+       meshes: ivy
+  ore-store            milestone    0,1x0,3   m     0,1x      1   Lit
+       meshes: bowl
+  outhouse             dressing     2,7x1,9   m     1,6x      2   Lit
+       meshes: outhouse
+  painted-mark         dressing     3,4x1,8   m     1,9x      1   Lit
+       meshes: sign
+  paved-way            milestone    0,6x5,8   m     0,4x      1   Lit
+       meshes: walkway
+       note: row says 'paved', geometry says 'walkway' — read once, then leave it alone if it is right
+  pottery              dressing     0,4x1,1   m     0,2x      1   Lit
+       meshes: plant
+       note: row says 'pottery', geometry says 'plant' — read once, then leave it alone if it is right
+  printed-notices      milestone    2,3x2,2   m     1,3x      1   Lit
+       meshes: bulletinboard
+       note: row says 'printed', geometry says 'bulletinboard' — read once, then leave it alone if it is right
+  produce              dressing     0,2x0,2   m     0,1x      1   Lit
+       meshes: food
+  quench-barrel        dressing     0,4x0,6   m     0,2x      1   Lit
+       meshes: bucket
+       note: row says 'quench', geometry says 'bucket' — read once, then leave it alone if it is right
+  scholar-scroll       milestone    0,1x0,4   m     0,1x      1   Lit
+       meshes: scroll
+       note: row says 'scholar', geometry says 'scroll' — read once, then leave it alone if it is right
+  school-bench         milestone    1,1x1,9   m     0,6x      1   Lit
+       meshes: bench
+       note: row says 'school', geometry says 'bench' — read once, then leave it alone if it is right
+  smithy-house         milestone   21,0x17,6  m    12,0x    170   Lit,Unlit,Water URP U6-1
+       meshes: anvil, axe, barrel, basket, blacksmith, bucket
+       note: row says 'smithy', geometry says 'anvil' — read once, then leave it alone if it is right
+  smithy-yard          milestone    2,7x4,0   m     1,5x     39   Lit,Unlit,Water URP U6-1
+       meshes: anvil, axe, basket, blacksmith, bucket, chisel
+       note: row says 'smithy', geometry says 'anvil' — read once, then leave it alone if it is right
+  song-post            dressing     5,9x3,8   m     3,4x      1   Flag Wind URP U6-1,Lit
+       meshes: flag
+  spare-wheel          dressing     1,4x1,4   m     0,8x      1   Lit
+       meshes: cart
+  spear-rack           milestone    2,2x2,3   m     1,3x      1   Lit
+       meshes: spikes
+       note: row says 'spear', geometry says 'spikes' — read once, then leave it alone if it is right
+  stable               milestone    5,3x8,5   m     3,0x     22   Lit
+       meshes: barrel, basket, crate, food, hay, horsestable
+  star-banner          milestone    5,9x3,8   m     3,4x      1   Flag Wind URP U6-1,Lit
+       meshes: flag
+  statue               dressing     5,0x2,2   m     2,8x      1   Lit
+       meshes: statue
+  steam-works          milestone    0,5x1,4   m     0,3x      2   Lit,Water URP U6-1
+       meshes: blacksmith
+       note: a milestone at 0,54 m is a prop on the ground — worth a pedestal, a rack or an arrangement
+       note: row says 'steam', geometry says 'blacksmith' — read once, then leave it alone if it is right
+  steel-tools          milestone    0,1x0,7   m     0,0x      1   Lit
+       meshes: knife
+       note: row says 'steel', geometry says 'knife' — read once, then leave it alone if it is right
+  story-circle         milestone    0,4x1,8   m     0,3x      1   Lit
+       meshes: bench
+       note: a milestone at 0,44 m is a prop on the ground — worth a pedestal, a rack or an arrangement
+       note: row says 'circle', geometry says 'bench' — read once, then leave it alone if it is right
+  strong-chest         dressing     0,3x0,8   m     0,2x      2   Lit
+       meshes: chest
+       note: row says 'strong', geometry says 'chest' — read once, then leave it alone if it is right
+  tailor-bench         milestone    2,2x6,0   m     1,3x     27   Lit
+       meshes: book, carpet, chair, cloth, crate, dressform
+       note: row says 'tailor', geometry says 'carpet' — read once, then leave it alone if it is right
+  tailor-house         milestone   17,5x17,6  m    10,0x    442   Foliage Wind URP Advanced LODfade City U6-1,Lit,Unlit
+       meshes: alchemy, basket, blossoms, book, bookshelf, bottle
+       note: row says 'tailor', geometry says 'alchemy' — read once, then leave it alone if it is right
+  tally-stone          milestone    0,1x0,8   m     0,1x      1   Lit
+       meshes: stone
+       note: row says 'tally', geometry says 'stone' — read once, then leave it alone if it is right
+  tanning-rack         dressing     2,2x2,0   m     1,3x      1   Lit
+       meshes: tanningrack
+  temple               milestone   15,0x17,5  m     8,6x     49   Lit
+       meshes: mod
+  thinking-seat        milestone    0,3x0,6   m     0,2x      1   Lit
+       meshes: stool
+       note: a milestone at 0,33 m is a prop on the ground — worth a pedestal, a rack or an arrangement
+       note: row says 'thinking', geometry says 'stool' — read once, then leave it alone if it is right
+  tin-stock            dressing     0,1x0,3   m     0,1x      1   Lit
+       meshes: bowl
+  town-house           milestone   18,8x19,1  m    10,8x    112   Lit
+       meshes: mod
+  trough               dressing     0,9x2,6   m     0,5x      1   Lit
+       meshes: trough
+  university           milestone   17,7x19,6  m    10,1x     76   Lit
+       meshes: mod
+  village-bell         milestone    0,7x0,3   m     0,4x      2   Lit
+       meshes: bell
+  watchtower           milestone   11,3x5,0   m     6,5x      1   Lit
+       meshes: watchtower
+  way-post             milestone    5,0x3,9   m     2,9x      1   Lit
+       meshes: waypoint
+       note: row says 'post', geometry says 'waypoint' — read once, then leave it alone if it is right
+  weathervane          dressing     3,9x2,2   m     2,3x      1   Lit
+       meshes: weathervane
+  weaving-line         milestone    1,0x2,9   m     0,6x      1   Lit
+       meshes: clothesline
+       note: row says 'weaving', geometry says 'clothesline' — read once, then leave it alone if it is right
+  well                 milestone    4,2x4,8   m     2,4x      2   Lit
+       meshes: well
+  windmill             milestone   20,7x17,1  m    11,8x     13   Lit
+       meshes: beam, body, chimney, door, plant, windmill
+  woodpile             dressing     0,3x0,7   m     0,2x      1   Lit
+       meshes: firepit
+       note: row says 'woodpile', geometry says 'firepit' — read once, then leave it alone if it is right
+  woodworking-bench    milestone    1,6x4,3   m     0,9x     15   Lit
+       meshes: awl, axe, book, bucket, cart, chisel
+  worked-stone         dressing     0,3x1,8   m     0,2x      1   Lit
+       meshes: stone
+       note: row says 'worked', geometry says 'stone' — read once, then leave it alone if it is right
+  writing-post         milestone    4,1x2,3   m     2,4x      1   Lit
+       meshes: signpost
+       note: row says 'writing', geometry says 'signpost' — read once, then leave it alone if it is right
+  written-song         dressing     0,1x0,5   m     0,0x      1   Lit
+       meshes: paper
+       note: row says 'written', geometry says 'paper' — read once, then leave it alone if it is right
+
+## CONTRADICTIONS — where the asset does not do what the row claims
+  ✗ archive: variant 'COMP_PROP_shelf_city_06' is 2,9 m against the row's 1,0 m (3,0x) — same word, different thing?
+  ✗ archive: variant 'COMP_PROP_shelf_city_07' is 2,9 m against the row's 1,0 m (3,0x) — same word, different thing?
+  ✗ archive: variant 'COMP_PROP_shelf_city_09' is 2,7 m against the row's 1,0 m (2,8x) — same word, different thing?
+  ✗ archive: variant 'COMP_PROP_shelf_city_10' is 2,7 m against the row's 1,0 m (2,8x) — same word, different thing?
+  ✗ archive: variant 'P_PROP_shelf_city_01' is 0,4 m against the row's 1,0 m (2,5x) — same word, different thing?
+  ✗ archive: variant 'P_PROP_shelf_city_02' is 2,9 m against the row's 1,0 m (3,0x) — same word, different thing?
+  ✗ archive: variant 'P_PROP_shelf_city_03' is 2,7 m against the row's 1,0 m (2,8x) — same word, different thing?
+  ✗ blade: tier 'milestone' but the asset places at 0,05 m — invisible at eye level
+  ✗ books: variant 'P_PROP_book_city_02' is 0,4 m against the row's 0,1 m (6,5x) — same word, different thing?
+  ✗ books: variant 'P_PROP_book_city_03' is 0,4 m against the row's 0,1 m (7,1x) — same word, different thing?
+  ✗ books: variant 'P_PROP_book_city_04' is 0,3 m against the row's 0,1 m (5,3x) — same word, different thing?
+  ✗ brazier: variant 'P_PROP_brazier_05' is 2,2 m against the row's 0,7 m (2,9x) — same word, different thing?
+  ✗ bronze-tools: variant 'P_PROP_knife_city_03' is 0,0 m against the row's 0,1 m (4,9x) — same word, different thing?
+  ✗ cloth-sacks: variant 'P_PROP_sack_city_02' is 0,2 m against the row's 0,5 m (2,7x) — same word, different thing?
+  ✗ coin-scales: tier 'milestone' but the asset places at 0,01 m — invisible at eye level
+  ✗ commons-fire: variant 'COMP_PROP_campfire_city_02' is 1,2 m against the row's 0,5 m (2,6x) — same word, different thing?
+  ✗ cooking-pot: variant 'P_PROP_cookingpot_city_01' is 0,2 m against the row's 0,8 m (3,4x) — same word, different thing?
+  ✗ cooking-pot: variant 'COMP_PROP_cookingpot_city_01' is 0,3 m against the row's 0,8 m (2,7x) — same word, different thing?
+  ✗ crates: variant 'Prefab_Crate_01' is 1,7 m against the row's 0,5 m (3,7x) — same word, different thing?
+  ✗ cut-timber: variant 'P_PROP_planks_03' is 0,1 m against the row's 0,4 m (3,1x) — same word, different thing?
+  ✗ green-bench: variant 'P_PROP_bench_city_01' is 1,3 m against the row's 0,4 m (2,9x) — same word, different thing?
+  ✗ hearth: tier 'milestone' but the asset places at 0,23 m — invisible at eye level
+  ✗ iron-tools: tier 'milestone' but the asset places at 0,17 m — invisible at eye level
+  ✗ metal-bars: tier 'milestone' but the asset places at 0,11 m — invisible at eye level
+  ✗ ore-store: tier 'milestone' but the asset places at 0,10 m — invisible at eye level
+  ✗ painted-mark: variant 'P_PROP_sign_city_06' is 0,6 m against the row's 3,4 m (5,5x) — same word, different thing?
+  ✗ painted-mark: variant 'P_PROP_sign_city_07' is 0,6 m against the row's 3,4 m (5,5x) — same word, different thing?
+  ✗ painted-mark: variant 'P_PROP_sign_city_08' is 0,6 m against the row's 3,4 m (5,5x) — same word, different thing?
+  ✗ painted-mark: variant 'P_PROP_sign_city_09' is 0,6 m against the row's 3,4 m (5,5x) — same word, different thing?
+  ✗ painted-mark: variant 'P_PROP_sign_city_10' is 0,6 m against the row's 3,4 m (5,5x) — same word, different thing?
+  ✗ painted-mark: variant 'P_PROP_sign_city_11' is 0,6 m against the row's 3,4 m (5,6x) — same word, different thing?
+  ✗ painted-mark: variant 'P_PROP_sign_city_12' is 0,6 m against the row's 3,4 m (5,6x) — same word, different thing?
+  ✗ painted-mark: variant 'P_PROP_sign_city_13' is 0,6 m against the row's 3,4 m (5,6x) — same word, different thing?
+  ✗ painted-mark: variant 'P_PROP_sign_city_14' is 0,7 m against the row's 3,4 m (4,6x) — same word, different thing?
+  ✗ pottery: variant 'P_PROP_PLANT_pot_v3_01' is 1,3 m against the row's 0,4 m (3,2x) — same word, different thing?
+  ✗ pottery: variant 'P_PROP_PLANT_pot_v3_02' is 1,3 m against the row's 0,4 m (3,2x) — same word, different thing?
+  ✗ pottery: variant 'P_PROP_PLANT_pot_v3_03' is 1,3 m against the row's 0,4 m (3,2x) — same word, different thing?
+  ✗ pottery: variant 'P_PROP_PLANT_pot_v3_04' is 1,3 m against the row's 0,4 m (3,2x) — same word, different thing?
+  ✗ pottery: variant 'P_PROP_plant_pot_city_05' is 2,5 m against the row's 0,4 m (6,1x) — same word, different thing?
+  ✗ pottery: variant 'P_PROP_plant_pot_city_06' is 2,0 m against the row's 0,4 m (5,0x) — same word, different thing?
+  ✗ pottery: variant 'P_PROP_plant_pot_city_07' is 1,3 m against the row's 0,4 m (3,2x) — same word, different thing?
+  ✗ pottery: variant 'P_PROP_plant_pot_city_09' is 1,3 m against the row's 0,4 m (3,3x) — same word, different thing?
+  ✗ pottery: variant 'P_PROP_plant_pot_city_10' is 1,1 m against the row's 0,4 m (2,8x) — same word, different thing?
+  ✗ scholar-scroll: tier 'milestone' but the asset places at 0,15 m — invisible at eye level
+  ✗ song-post: tier 'dressing' but the asset stands 3,4x a person (5,9 x 3,8 m) — that is a building
+  ✗ steel-tools: tier 'milestone' but the asset places at 0,05 m — invisible at eye level
+  ✗ tally-stone: tier 'milestone' but the asset places at 0,15 m — invisible at eye level
+  ✗ way-post: variant 'P_PROP_waypoint_city_02' is 0,7 m against the row's 5,0 m (7,4x) — same word, different thing?
+  ✗ way-post: variant 'P_PROP_waypoint_city_03' is 0,1 m against the row's 5,0 m (33,7x) — same word, different thing?
+  ✗ way-post: variant 'COMP_PROP_waypoint_city_02' is 0,7 m against the row's 5,0 m (7,4x) — same word, different thing?
+
+Reading: the size and the tier are ASSERTED and can go red. The mesh-family note is a
+prompt for a human, not a rule — a name is evidence, and evidence is read, not trusted.

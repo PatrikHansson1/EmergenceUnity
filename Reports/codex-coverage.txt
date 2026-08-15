@@ -1,64 +1,83 @@
 EMERGENCE — CODEX COVERAGE (D-121, anti-orphan; D-244, one question per domain)
-generated 2026-08-15 09:57:07
-codex entries: 101  (638 unique prefabs referenced, 0 told-not-shown)
+generated 2026-08-15 11:57:15
+codex entries: 108  (648 unique prefabs referenced, 0 told-not-shown)
 project assets (prefab/glb/fbx): 2803
-CODEX COVERAGE: 638/819 = 77,9%  |  ORPHANS: 181  |  DANGLING: 0
+CODEX COVERAGE: 648/870 = 74,5%  |  ORPHANS: 222  |  DANGLING: 0
 
 ## WHO CLAIMS WHAT (every asset is claimed by exactly one, or it is an orphan)
-    638  codex      — indexed: a village places it when its discovery is true
-    181  ORPHAN     — nobody. THIS is the backlog, and it is the only one.
-   1794  kit        — the building kit — assembled into a whole, never placed alone (arrangement templates)
+    648  codex      — indexed: a village places it when its discovery is true
+    222  ORPHAN     — nobody. THIS is the backlog, and it is the only one.
+   1753  kit        — the building kit — assembled into a whole, never placed alone (arrangement templates)
      53  placed     — a runtime placer, by name — EmergenceAssetCatalog is that placer's own list
-     75  fx         — the effect systems (FireReconciler, expression) — a particle is not a thing a village sets down
-     48  nature     — Fas3NatureScatter / FoliageInstancer — the world's own growth, not a village's making
+     71  fx         — the effect systems (FireReconciler, expression) — a particle is not a thing a village sets down
+     42  nature     — Fas3NatureScatter / FoliageInstancer — the world's own growth, not a village's making
      14  agent      — AgentReconciler / the animal intake — bodies, not objects
 
 ## DANGLING (codex → missing asset) — MUST be 0
   none ✓
 
 ## CODEX-DOMAIN COVERAGE PER PACK (referenced / total)
-   325/436    74,5%  Fantastic City Pack
-   301/335    89,9%  Fantastic Village Pack
-     8/36     22,2%  Polyart
+   339/475    71,4%  Fantastic City Pack
+   285/337    84,6%  Fantastic Village Pack
+    23/46     50,0%  Polyart
      0/8       0,0%  UpDraftArt
-     4/4     100,0%  Emergence
+     1/4      25,0%  Emergence
 
-## THE BACKLOG, GROUPED — 181 orphans = 0 variants of 0 meanings the codex HAS
-##                          + 181 assets carrying 110 meanings it does NOT
+## THE BACKLOG, GROUPED — 222 orphans = 76 variants of 32 meanings the codex HAS
+##                          + 146 assets carrying 114 meanings it does NOT
 
 ### A — VARIANT of an indexed meaning (name it in that row's variants[]; no new gate)
+     9  basket                   → codex [granary-store]   e.g. COMP_PROP_basket_city_03, COMP_PROP_basket_city_04, COMP_PROP_basket_city_05
+     7  table                    → codex [green-bench]   e.g. COMP_PROP_table_city_03, COMP_PROP_table_city_04, COMP_PROP_table_city_05
+     6  food_sausage             → codex [produce]   e.g. P_PROP_food_sausage_city_01, P_PROP_food_sausage_city_02, P_PROP_food_sausage_city_03
+     6  lantern                  → codex [clock, lamps]   e.g. P_PROP_lantern_01, P_PROP_lantern_02, P_PROP_lantern_03
+     5  sign                     → codex [painted-mark]   e.g. P_PROP_sign_01, P_PROP_sign_02, P_PROP_sign_04
+     4  food_meat                → codex [produce]   e.g. P_PROP_food_meat_05, P_PROP_food_meat_09, P_PROP_food_meat_10
+     4  chair                    → codex [green-bench]   e.g. P_PROP_chair_02, P_PROP_chair_city_02, P_PROP_chair_city_03
+     3  bowl_wood                → codex [copper-stock, ore-store, tin-stock]   e.g. P_PROP_bowl_wood_01, P_PROP_bowl_wood_02, P_PROP_bowl_wood_04
+     3  paper                    → codex [notices, written-song]   e.g. P_PROP_paper_01, P_PROP_paper_03, P_PROP_paper_04
+     2  mailbox                  → codex [notices]   e.g. P_PROP_mailbox, P_PROP_mailbox_city_01
+     2  cup                      → codex [pottery]   e.g. P_PROP_cup, P_PROP_cup_city_01
+     2  food_lemon               → codex [produce]   e.g. P_PROP_food_lemon_city_01, P_PROP_food_lemon_city_02
+     2  food_watermelon          → codex [produce]   e.g. P_PROP_food_watermelon_01, P_PROP_food_watermelon_04
+     2  wall_wood_post           → codex [enclosure]   e.g. P_PROP_wall_wood_post_01, P_PROP_wall_wood_post_02
+     2  stick                    → codex [woodpile]   e.g. Prefab_Stick_01, Prefab_Stick_02
+     1  forge                    → codex [forge]   e.g. forge
+     1  well                     → codex [well]   e.g. well
+     1  logpile                  → codex [cut-timber]   e.g. P_PROP_logpile_city_02
+     1  plank                    → codex [cut-timber]   e.g. P_PROP_plank_city_01
+     1  cards                    → codex [board-game]   e.g. P_PROP_cards_city_03
+     1  glass                    → codex [glass-vessels]   e.g. P_PROP_glass_city_04
+     1  food_garlic              → codex [produce]   e.g. P_PROP_food_garlic_city_02
+     1  food_plane_almonds       → codex [produce]   e.g. P_PROP_food_plane_almonds_city_01
+     1  food_plane_coffee        → codex [produce]   e.g. P_PROP_food_plane_coffee_city_01
+     1  food_plate               → codex [produce]   e.g. P_PROP_food_plate_city_04
+     1  marketstall              → codex [market]   e.g. P_PROP_marketstall_city_02
+     1  pan                      → codex [pottery]   e.g. P_PROP_pan_city
+     1  food_chili               → codex [produce]   e.g. P_PROP_food_chili_01
+     1  food_cucumber            → codex [produce]   e.g. P_PROP_food_cucumber_03
+     1  food_egg                 → codex [produce]   e.g. P_PROP_food_egg_05
+     1  food_pumpkin             → codex [produce]   e.g. P_PROP_food_pumpkin_01
+     1  market_shelf             → codex [instruments, market]   e.g. P_PROP_market_shelf_02
 
 ### B — NEW MEANING (needs an authored row: a discovery that unlocks it, and a sentence)
-    11  plant_pot                e.g. P_PROP_plant_pot_city_02, P_PROP_plant_pot_city_03, P_PROP_plant_pot_city_04
-     6  chair                    e.g. P_PROP_chair_02, P_PROP_chair_03, P_PROP_chair_city_02
-     6  tablecloth               e.g. P_PROP_tablecloth_city_01, P_PROP_tablecloth_city_02, P_PROP_tablecloth_city_03
-     5  fence                    e.g. Prefab_Fence_01, Prefab_Fence_02, Prefab_Fence_03
-     5  infoboard                e.g. P_PROP_infoboard_city_01, P_PROP_infoboard_city_02, P_PROP_infoboard_city_03
-     5  marketshelf              e.g. COMP_PROP_marketshelf_city_01, COMP_PROP_marketshelf_city_02, COMP_PROP_marketshelf_city_03
-     5  pot                      e.g. Prefab_Pot_01, P_PROP_pot_city_01, P_PROP_pot_city_02
-     4  wall_plant               e.g. COMP_PROP_wall_plant_city_01, COMP_PROP_wall_plant_city_02, COMP_PROP_wall_plant_city_03
-     4  wall_wood_post           e.g. P_PROP_wall_wood_post_01, P_PROP_wall_wood_post_02, P_PROP_wall_wood_post_03
-     3  mailbox                  e.g. P_PROP_mailbox, P_PROP_mailbox_city_01, P_PROP_mailbox_city_02
-     3  stairs_wood              e.g. P_PROP_stairs_wood_01, P_PROP_stairs_wood_02, P_PROP_stairs_wood_03
-     3  stick                    e.g. Prefab_Stick_01, Prefab_Stick_02, Prefab_Stick_03
+     8  plate                    e.g. COMP_PROP_plate_city_01, COMP_PROP_plate_city_02, COMP_PROP_plate_city_03
+     4  planter                  e.g. P_PROP_planter_city_01, P_PROP_planter_city_02, P_PROP_planter_city_03
+     3  painting                 e.g. P_PROP_painting_city_01, P_PROP_painting_city_02, P_PROP_painting_city_04
+     3  spoon                    e.g. P_PROP_spoon_01, P_PROP_spoon_02, P_PROP_spoon_city
      2  alchemy_holder           e.g. P_PROP_alchemy_holder_city_01, P_PROP_alchemy_holder_city_02
      2  alchemy_powder           e.g. P_PROP_alchemy_powder_city_01, P_PROP_alchemy_powder_city_02
      2  anvil                    e.g. Anvil, P_PROP_anvil_city
-     2  barrel_holder            e.g. COMP_PROP_barrel_holder_city, P_PROP_barrel_holder_city
-     2  bush                     e.g. P_ENV_bush_city_01, P_ENV_bush_city_02
-     2  campfire_poles           e.g. P_PROP_campfire_poles, P_PROP_campfire_poles_city
-     2  carpet                   e.g. P_PROP_carpet_city_01, P_PROP_carpet_city_02
-     2  cart_roof                e.g. P_PROP_cart_roof_city_01, P_PROP_cart_roof_city_02
+     2  blossoms                 e.g. P_PROP_blossoms_city_01, P_PROP_blossoms_city_02
      2  cloth                    e.g. P_PROP_cloth_city_01, P_PROP_cloth_city_02
-     2  coinpouch                e.g. P_PROP_coinpouch_city_01, P_PROP_coinpouch_city_02
-     2  cupcake_holder           e.g. COMP_PROP_cupcake_holder_city, P_PROP_cupcake_holder_city
+     2  food_plane_ice           e.g. P_PROP_food_plane_ice_city_01, P_PROP_food_plane_ice_city_02
+     2  horsestation             e.g. P_PROP_horsestation, P_PROP_horsestation_city
+     2  ladder                   e.g. P_PROP_ladder, P_PROP_ladder_city_01
      2  napking                  e.g. P_PROP_napking_city_01, P_PROP_napking_city_02
      2  plate_metal              e.g. P_PROP_plate_metal_01, P_PROP_plate_metal_02
-     2  railing_v01              e.g. P_PROP_railing_v01_01, P_PROP_railing_v01_02
-     2  railing_v02              e.g. P_PROP_railing_v02_01, P_PROP_railing_v02_02
-     2  railing_v03              e.g. P_PROP_railing_v03_01, P_PROP_railing_v03_02
      2  sleepingbag              e.g. Prefab_SleepingBag_01, Prefab_SleepingBag_02
-     2  statue_base              e.g. P_PROP_statue_base_city_01, P_PROP_statue_base_city_02
+     2  streetsign               e.g. P_PROP_streetsign_city_01, P_PROP_streetsign_city_02
+     2  toolbox                  e.g. COMP_PROP_toolbox_city_01, P_PROP_toolbox_city
      2  tree                     e.g. P_ENV_tree_city_01, P_ENV_tree_city_03
      2  wall_holder              e.g. P_PROP_wall_holder_city_01, P_PROP_wall_holder_city_02
      2  wall_wood_corner         e.g. P_PROP_wall_wood_corner_01, P_PROP_wall_wood_corner_02
@@ -68,63 +87,81 @@ CODEX COVERAGE: 638/819 = 77,9%  |  ORPHANS: 181  |  DANGLING: 0
      1  birdbath                 e.g. P_PROP_birdbath_city
      1  border_pond              e.g. P_PROP_border_pond_city_01
      1  bowl_metal               e.g. P_PROP_bowl_metal
-     1  broom                    e.g. P_PROP_broom_city
      1  brush                    e.g. P_PROP_brush_city
      1  bucket_champagne         e.g. P_PROP_bucket_champagne_city
-     1  campfire                 e.g. P_PROP_campfire_city
+     1  canvas                   e.g. P_PROP_canvas_city
      1  cart_city_03             e.g. P_PROP_cart_city_03 1
      1  cauldron_plane           e.g. P_PROP_cauldron_plane_city
+     1  chains                   e.g. P_PROP_chains_city_01
      1  chair_city_01 (4)        e.g. P_PROP_chair_city_01 (4)
      1  champagne                e.g. COMP_PROP_champagne_city
      1  coal pile                e.g. Coal Pile
+     1  cookingpot_lid           e.g. P_PROP_cookingpot_lid_city_01
      1  crate_cover              e.g. P_PROP_crate_cover_city
-     1  curtain                  e.g. P_PROP_curtain_city_01
+     1  cuttingboard             e.g. P_PROP_cuttingboard_city
      1  decal                    e.g. Decal
      1  directional light        e.g. Directional Light
      1  door_entrance            e.g. Door_Entrance
      1  door_exit                e.g. Door_Exit
      1  doormat                  e.g. P_PROP_doormat_city
      1  easel_canvas             e.g. COMP_PROP_easel_canvas_city
-     1  fence_door_gate          e.g. P_PROP_fence_door_gate
      1  firstpersoncontroller    e.g. FirstPersonController
      1  flat tongs               e.g. Flat Tongs
+     1  food_asparagus           e.g. P_PROP_food_asparagus_city
+     1  food_eclair              e.g. P_PROP_food_eclair_city
+     1  food_oyster              e.g. P_PROP_food_oyster_city
+     1  food_plane_risotto       e.g. P_PROP_food_plane_risotto_city
      1  food_plate_city_01 (1)   e.g. P_PROP_food_plate_city_01 (1)
      1  food_plate_city_02 (1)   e.g. P_PROP_food_plate_city_02 (1)
      1  food_plate_city_03 (1)   e.g. P_PROP_food_plate_city_03 (1)
+     1  food_salmon              e.g. P_PROP_food_salmon_city
+     1  food_sauce               e.g. P_PROP_food_sauce_city
+     1  food_shrimp              e.g. P_PROP_food_shrimp_city
+     1  food_tart                e.g. P_PROP_food_tart_city_01
      1  fork                     e.g. P_PROP_fork_city
      1  hangingboard             e.g. P_PROP_hangingboard
      1  hook                     e.g. P_PROP_hook_city
      1  infoui_modular           e.g. InfoUI_Modular
      1  lantern_flag             e.g. P_PROP_lantern_flag_city
      1  lantern_orb              e.g. P_PROP_lantern_orb_city
+     1  leather                  e.g. P_PROP_leather_city
+     1  letter                   e.g. P_PROP_letter_city
      1  light_lantern            e.g. Light_lantern
      1  maincamera               e.g. MainCamera
      1  market_shelf_02          e.g. P_PROP_market_shelf_02_deco
      1  market_shelf_03          e.g. P_PROP_market_shelf_03_deco
+     1  mill                     e.g. mill
+     1  mortar_pestle            e.g. P_PROP_mortar_pestle_city
      1  mountain                 e.g. P_ENV_mountain_city_01
+     1  newspaper                e.g. P_PROP_newspaper_city
      1  ocean tool               e.g. Ocean Tool
-     1  package                  e.g. P_PROP_package_city
+     1  paint_palette            e.g. P_PROP_paint_palette_city
      1  path tool                e.g. Path Tool
      1  pencil                   e.g. P_PROP_pencil_city
      1  plant                    e.g. P_PROP_plant_city_01
      1  plant_pot_holder         e.g. P_PROP_plant_pot_holder_city
      1  plate_wood               e.g. P_PROP_plate_wood
+     1  pliers                   e.g. P_PROP_pliers_city
      1  post                     e.g. P_PROP_post_city_01
      1  pot_cover                e.g. Prefab_Pot_Cover
      1  pot_hook                 e.g. Prefab_Pot_Hook
      1  potion                   e.g. Prefab_Potion
      1  provision_storage        e.g. COMP_PROP_provision_storage_city_01
+     1  reading_stand            e.g. P_PROP_reading_stand_city
      1  rimlight                 e.g. Rimlight
      1  rivergenerator           e.g. RiverGenerator
      1  rope                     e.g. P_PROP_rope_city_01
+     1  scissors                 e.g. P_PROP_scissors_city
      1  small hammer             e.g. Small Hammer
      1  soap                     e.g. P_PROP_soap_city
      1  spinningwheel_base       e.g. P_PROP_spinningwheel_base_city
+     1  stepladder               e.g. P_PROP_stepladder
      1  stripes                  e.g. P_PROP_stripes_city
      1  table_city_01 (2)        e.g. P_PROP_table_city_01 (2)
      1  tablemat                 e.g. P_PROP_tablemat_city
      1  tent                     e.g. Prefab_Tent
      1  testtube                 e.g. P_PROP_testtube_city_01
+     1  thread_spool             e.g. P_PROP_thread_spool_city
      1  trashbin                 e.g. P_PROP_trashbin_city
      1  tree_village             e.g. P_ENV_TREE_village
      1  treefallen               e.g. Prefab_TreeFallen
@@ -137,7 +174,6 @@ CODEX COVERAGE: 638/819 = 77,9%  |  ORPHANS: 181  |  DANGLING: 0
      1  ud_saf_small_hammer      e.g. UD_SAF_Small_Hammer
      1  wall_wood                e.g. P_PROP_wall_wood
      1  wateringcan              e.g. P_PROP_wateringcan_city
-     1  woodblock                e.g. P_PROP_woodblock_city
      1  woodsign                 e.g. Prefab_WoodSign_01
 
 Reading: dangling MUST be 0 (broken codex pointers). Pile A is an afternoon of names;

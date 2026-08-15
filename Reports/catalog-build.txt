@@ -1,5 +1,5 @@
 EMERGENCE — CATALOG BUILD (D-137): runtime asset catalog for the player-runtime reconcilers
-generated 2026-08-15 10:35:03
+generated 2026-08-15 11:56:30
 
   optional (absent, tolerated): PF_FX_fire
   optional (absent, tolerated): SM_Flower_01_Unity
@@ -11,6 +11,6 @@ moss (Prefab_Bush query, order preserved): [Prefab_Bush_01, Prefab_Bush_02, Pref
 terrain layers resolved: 15/17  [Layer_Grass, Layer_grass_01, Layer_grass_city, Layer_farmfield, Layer_Dirt, Layer_Rock, Layer_gravel_01, Layer_gravel_02, Layer_gravel_city, Layer_Cobblestone, Layer_walkway_city_01, Layer_walkway_city_02, Layer_pavingstone_01, Layer_pavingstone_02, Layer_Sand]
 skyboxes resolved: 5/5  [Sky_Dusk, M_ENV_SKYBOX_day, Sky_Noon, M_ENV_SKYBOX_night, Sky_Night]
 
-prefab names resolved: 695, missing: 0, controllers: 6/6, moss: 3/3
+prefab names resolved: 703, missing: 0, controllers: 6/6, moss: 3/3
 saved: Assets/Emergence/Resources/EmergenceAssetCatalog.asset
 verdict: GREEN
