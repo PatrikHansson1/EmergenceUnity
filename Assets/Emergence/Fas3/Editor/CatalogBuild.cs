@@ -182,9 +182,17 @@ namespace Emergence.Editor
             // VÅG 1.1 (D-209): terrain layers, resolved here so the RUNTIME terrain builder needs no
             // AssetDatabase. Names are exactly the dresser's own candidates, preference order intact.
             cat.terrainLayers.Clear();
-            var wantedLayers = new[] { "Layer_Grass", "Layer_grass_01", "Layer_farmfield", "Layer_Dirt",
-                                       "Layer_Rock", "Layer_gravel_01", "Layer_Stone", "Layer_rock_01",
-                                       "Layer_Cobblestone", "Layer_pavingstone_01", "Layer_Sand" };
+            // D-249 (EP: "i paketen ligger även vägar, kullersten etc"): the project holds FIFTEEN
+            // terrain layers and the catalog only ever asked for eleven. The two it never asked for
+            // by name are the ones that matter most here -- Layer_walkway_city_01/02 are the City
+            // pack's own ROAD surfaces, and a road painted with them is the pack's road rather than
+            // our approximation of one. Same law as everywhere else tonight: a name the catalog does
+            // not carry is a name the runtime cannot reach.
+            var wantedLayers = new[] { "Layer_Grass", "Layer_grass_01", "Layer_grass_city", "Layer_farmfield", "Layer_Dirt",
+                                       "Layer_Rock", "Layer_gravel_01", "Layer_gravel_02", "Layer_gravel_city",
+                                       "Layer_Stone", "Layer_rock_01", "Layer_Cobblestone",
+                                       "Layer_walkway_city_01", "Layer_walkway_city_02",
+                                       "Layer_pavingstone_01", "Layer_pavingstone_02", "Layer_Sand" };
             int lok = 0;
             foreach (var ln in wantedLayers)
             {

@@ -69,6 +69,27 @@ namespace Emergence.Runtime
             if (sh != null) terrain.materialTemplate = new Material(sh) { name = "EmergenceTerrainLit" };
             if (terrain.materialTemplate != null && data.terrainLayers.Length > 4)
                 terrain.materialTemplate.EnableKeyword("_TERRAIN_8_LAYERS");
+            // D-249 — THE GROUND HAD NEVER SAMPLED A SINGLE NORMAL MAP.
+            // Every one of the fifteen terrain layers these packs ship carries a normal map, and the
+            // six we use carry one each. URP's terrain shader only reads them when _NORMALMAP is on,
+            // and that keyword is set by the terrain material INSPECTOR -- which never runs for a
+            // material we create in code at runtime. So the world has been lit as if cobble, gravel,
+            // ploughed field and turf were all perfectly flat paper, with the relief the artists
+            // authored sitting unused in the project. The probe now asserts it rather than trusting it.
+            // (_MASKMAP likewise: it carries the smoothness and occlusion these layers were authored
+            // with, and is enabled only when a mask is actually present so nothing samples a null.)
+            if (terrain.materialTemplate != null)
+            {
+                bool anyNormal = false, anyMask = false;
+                foreach (var tl in data.terrainLayers)
+                {
+                    if (tl == null) continue;
+                    if (tl.normalMapTexture != null) anyNormal = true;
+                    if (tl.maskMapTexture != null) anyMask = true;
+                }
+                if (anyNormal) terrain.materialTemplate.EnableKeyword("_NORMALMAP");
+                if (anyMask) terrain.materialTemplate.EnableKeyword("_MASKMAP");
+            }
             terrain.drawInstanced = true;
 
             // D-215b: the detail meshes were built but never seen at eye level. Unity's defaults are
@@ -271,7 +292,12 @@ namespace Emergence.Runtime
                 field  = Add(cat, layers, new[] { "Layer_farmfield", "Layer_Dirt" }, new Color(0.45f, 0.35f, 0.2f)),
                 path   = Add(cat, layers, new[] { "Layer_Dirt" }, new Color(0.42f, 0.32f, 0.2f)),
                 gravel = Add(cat, layers, new[] { "Layer_gravel_01", "Layer_Rock", "Layer_Stone", "Layer_rock_01" }, new Color(0.5f, 0.48f, 0.45f)),
-                cobble = Add(cat, layers, new[] { "Layer_pavingstone_01", "Layer_Cobblestone", "Layer_Dirt" }, new Color(0.55f, 0.53f, 0.5f)),
+                // D-249: the pack ships a WALKWAY surface, which is what a laid road actually is.
+                // Layer_Cobblestone stays in the chain but sits behind it -- the catalog has warned
+                // twice that it carries no diffuse at all, and a layer without a texture is not a layer.
+                cobble = Add(cat, layers, new[] { "Layer_walkway_city_01", "Layer_walkway_city_02",
+                                                  "Layer_pavingstone_01", "Layer_pavingstone_02",
+                                                  "Layer_Cobblestone", "Layer_Dirt" }, new Color(0.55f, 0.53f, 0.5f)),
             };
             // D-247 — THE MEADOW WAS ONE TEXTURE OVER NINETY-ONE PER CENT OF THE WORLD.
             // Layer_grass_01 has been in the project the whole time, and it was written down as a

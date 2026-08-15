@@ -211,6 +211,24 @@ namespace Emergence.Editor
                             var nm = l2 < td.terrainLayers.Length && td.terrainLayers[l2] != null ? td.terrainLayers[l2].name : ("layer" + l2);
                             bits.Add(nm + "=" + (mean[l2] * 100f).ToString("F0") + "%");
                         }
+                        // D-249: WHETHER THE RELIEF IS EVEN SWITCHED ON. Every one of the fifteen
+                        // terrain layers in this project ships a normal map, but URP only samples them
+                        // when the terrain material carries _NORMALMAP -- a keyword the editor sets for
+                        // hand-made terrains and that a RUNTIME-created material has no one to set. So
+                        // print the material, its keywords and which layers actually carry a normal,
+                        // instead of assuming the ground is lit the way the textures were authored for.
+                        var terrMat = terrain;
+                        if (terrMat != null && terrMat.materialTemplate != null)
+                        {
+                            var mt = terrMat.materialTemplate;
+                            sb.AppendLine("     terrain material: " + mt.shader.name + "  keywords=["
+                                          + string.Join(", ", mt.shaderKeywords) + "]");
+                            int withN = 0;
+                            foreach (var tl in td.terrainLayers) if (tl != null && tl.normalMapTexture != null) withN++;
+                            sb.AppendLine("     layers carrying a normal map: " + withN + "/" + td.terrainLayers.Length);
+                            Check(withN == 0 || System.Array.IndexOf(mt.shaderKeywords, "_NORMALMAP") >= 0,
+                                  "the ground samples the normal maps it was given (" + withN + " layers carry one)");
+                        }
                         sb.AppendLine("     the ground is painted: " + string.Join("  ", bits)
                                       + "   (alphamap " + AW + "x" + AH + ")");
                     }

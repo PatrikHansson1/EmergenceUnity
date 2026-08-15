@@ -1439,6 +1439,8 @@ MonoBehaviour:
     layer: {fileID: 8574412962073106934, guid: a52c1ccfba5ea9648acb65bb5108524e, type: 2}
   - name: Layer_grass_01
     layer: {fileID: 8574412962073106934, guid: 1a80a17506b849a419d27e4950b2d726, type: 2}
+  - name: Layer_grass_city
+    layer: {fileID: 8574412962073106934, guid: 05deeacffa023e346932b3cc511904f6, type: 2}
   - name: Layer_farmfield
     layer: {fileID: 8574412962073106934, guid: 725db9b58efd7f14b9684c644792815e, type: 2}
   - name: Layer_Dirt
@@ -1447,14 +1449,24 @@ MonoBehaviour:
     layer: {fileID: 8574412962073106934, guid: 35e9a24ba4228ca4ca2db903ad2412f9, type: 2}
   - name: Layer_gravel_01
     layer: {fileID: 8574412962073106934, guid: 540f3c883cfdd534ea86a033ef0a41d5, type: 2}
+  - name: Layer_gravel_02
+    layer: {fileID: 8574412962073106934, guid: 8869878d2c38bbb489cc8473f28bd69d, type: 2}
+  - name: Layer_gravel_city
+    layer: {fileID: 8574412962073106934, guid: 5efb11a08b1fb674a8c9b005de41f254, type: 2}
   - name: Layer_Stone
     layer: {fileID: 0}
   - name: Layer_rock_01
     layer: {fileID: 0}
   - name: Layer_Cobblestone
     layer: {fileID: 8574412962073106934, guid: d58702dc6934e004895731b92cf376d4, type: 2}
+  - name: Layer_walkway_city_01
+    layer: {fileID: 8574412962073106934, guid: ebbef9c1645098142bb4ada94c259a0c, type: 2}
+  - name: Layer_walkway_city_02
+    layer: {fileID: 8574412962073106934, guid: 69fe8d86d4a694c46a8fbdb6242c2c6e, type: 2}
   - name: Layer_pavingstone_01
     layer: {fileID: 8574412962073106934, guid: 62de276d344182b4bbffa50320c4a030, type: 2}
+  - name: Layer_pavingstone_02
+    layer: {fileID: 8574412962073106934, guid: 90e7062588a1e1e43bdf7f98c5e01f12, type: 2}
   - name: Layer_Sand
     layer: {fileID: 8574412962073106934, guid: 6b3db07afdde30b46b9143e7ae511100, type: 2}
   mossPrefabs:
