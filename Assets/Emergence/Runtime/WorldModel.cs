@@ -28,7 +28,7 @@ namespace Emergence.Runtime
     // one is recognized — 4242 taught us big villages can go leaderless for 120 years by design) and
     // gift (the named gift-way, e.g. "The Hearth-Gift", '' until the custom is named). Old exports
     // lack both → null/'' → dossiers simply omit the rows. Additive only — parser untouched.
-    [Serializable] public class WorldVillage { public float x, y; public string name; public int pop, maxGen, avgAge, crafts; public string cosmos; public string[] knows; public string[] beliefs; public string leader; public string gift; }
+    [Serializable] public class WorldVillage { public float x, y; public string name; public int pop, maxGen, avgAge, crafts; public string cosmos; public string[] knows; public string[] beliefs; public string leader; public string gift; public int lost, everHeld; }
     [Serializable] public class WorldAnimal { public int id; public string type; public float x, y; }
     // TD-033: the object codex — discovery-driven placement. JsonUtility-friendly flat schema.
     // D-112 (Fas 1 inc 2): ruinOnLoss=1 → when this built structure's gate stops holding (Memory Engine
@@ -53,7 +53,7 @@ namespace Emergence.Runtime
     //   hasLeader — this village has recognised someone (villages[].leader)
     //   hasGift   — this village is bound by a giving custom (villages[].gift)
     // Pure read of exported state, no engine change, D-078 r4 untouched.
-    [Serializable] public class CodexCond { public string tech, custom; public int minPop, minCrafts, minGen; public int hasLeader, hasGift; }
+    [Serializable] public class CodexCond { public string tech, custom; public int minPop, minCrafts, minGen; public int hasLeader, hasGift, minLost; }
     [Serializable] public class CodexRequire { public CodexCond[] allOf; public CodexCond[] anyOf; public CodexCond[] noneOf; }
     [Serializable] public class CodexEntry { public string id, prefab, category, requiresTech, requiresCustom, desc, placement, tier, statMeaning; public int era, minPop, minCrafts, minGen, count; public float scale; public int ruinOnLoss; public string ruinPrefab; public float ruinScale;
         public CodexRequire requires;          // C3: the predicate, when one tech cannot say it

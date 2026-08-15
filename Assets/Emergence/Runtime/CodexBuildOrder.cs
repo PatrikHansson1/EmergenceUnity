@@ -80,6 +80,9 @@ namespace Emergence.Runtime
                 bool gave = !string.IsNullOrEmpty(v.gift);
                 if (c.hasGift > 0 != gave) return false;
             }
+            // D-254: what this people has FORGOTTEN. The single most Emergence-shaped fact there is,
+            // and the only one the presentation could never see. minLost = 0 means the row does not care.
+            if (c.minLost > 0 && v.lost < c.minLost) return false;
             return v.pop >= c.minPop && v.crafts >= c.minCrafts && v.maxGen >= c.minGen;
         }
 

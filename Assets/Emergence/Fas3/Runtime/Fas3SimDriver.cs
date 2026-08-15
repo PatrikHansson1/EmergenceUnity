@@ -75,6 +75,12 @@ namespace Emergence.Runtime
         // byte-identical to before (era keeps the same inline law; E.worldEra is the same law motor-side).
         // E1.5 (MOTOR-LANE-ORDER-E15-DRAMATIK, engine 2.4.0): ADDITIVE again — agents[].wealth
         // (E.wealthOf, the Almanac's wealth sort), villages[].leader (recognized-leader name or '')
+        // D-254: and villages[].lost / .everHeld — how many things this people has FORGOTTEN and
+        // how many it has ever held. The engine has carried v.lostNow and v.everHeld since the
+        // Memory Engine, and neither has ever crossed into the body: at year 120 of seed 4242 all
+        // three villages are holding losses (tin, bronze, coinage, copper, smithing, metaltools)
+        // and the world shows nothing at all. Forgetting is this game's subject; it was the one
+        // fact the presentation could not see. Pure read, additive, the engine untouched.
         // and villages[].gift (the named gift-way or ''). Nothing removed or renamed.
         // FAS 4 PROSE WIRING (2026-08-13, FAS4-PROSE-DIRECTOR-ORDER §1): ADDITIVE again —
         // events[] = a BOUNDED (<=64, newest-last) tail of the engine's own causes-bearing events,
@@ -117,7 +123,7 @@ dead:S.agents.filter(function(a){return a.dead}).length,
 huts:S.huts.map(function(h){return {x:h.x,y:h.y,owner:''+(h.owner||''),free:!!h.free}}),
 fires:S.fires.map(function(f){return {x:f.x,y:f.y,fuel:f.fuel}}),
 fields:S.fields.map(function(f){return {x:f.x,y:f.y,stage:f.stage,owner:''+(f.owner||'')}}),
-villages:(function(){var sc=E.villageScope(S);return S.villages.map(function(v,i){var s=sc[i];var bs={},cos='';S.agents.forEach(function(a){if(a.dead||a._vil!==v)return;a.customs.forEach(function(cid){var c=S.customs[cid];if(!c||c.status!=='alive'||!c.target)return;bs[c.target]=1;if(c.target==='cosmos'&&!cos)cos=''+c.name})});return {x:v.x,y:v.y,name:''+v.name,leader:''+(v.leaderName||''),gift:''+(v.giftName||''),pop:s.pop,maxGen:s.maxGen,avgAge:s.avgAge,crafts:s.crafts,knows:s.knows,cosmos:cos,beliefs:Object.keys(bs).sort()}})})(),
+villages:(function(){var sc=E.villageScope(S);return S.villages.map(function(v,i){var s=sc[i];var bs={},cos='';S.agents.forEach(function(a){if(a.dead||a._vil!==v)return;a.customs.forEach(function(cid){var c=S.customs[cid];if(!c||c.status!=='alive'||!c.target)return;bs[c.target]=1;if(c.target==='cosmos'&&!cos)cos=''+c.name})});return {x:v.x,y:v.y,name:''+v.name,leader:''+(v.leaderName||''),gift:''+(v.giftName||''),lost:(v.lostNow?v.lostNow.size:0),everHeld:(v.everHeld?v.everHeld.size:0),pop:s.pop,maxGen:s.maxGen,avgAge:s.avgAge,crafts:s.crafts,knows:s.knows,cosmos:cos,beliefs:Object.keys(bs).sort()}})})(),
 animals:S.animals.map(function(an){return {id:an.id,type:''+an.type,x:an.x,y:an.y}}),
 pathUse:S.pathUse||[],
 worldKnows:(function(){var o=[];for(var k in S.knowledge)if(S.knowledge[k]&&S.knowledge[k].status==='alive')o.push(k);return o.sort()})(),

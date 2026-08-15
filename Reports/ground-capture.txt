@@ -1,5 +1,5 @@
 EMERGENCE — VÅG 1.1: does the LIVING world have ground?
-generated 2026-08-15 12:27:32
+generated 2026-08-15 12:47:24
 scene = the self-composing opening ONLY. No WorldDresser, no capture rig, no editor-only path.
 
 1. WAS THE GROUND RAISED, BY THE LIVING LOOP ITSELF?
@@ -51,7 +51,7 @@ scene = the self-composing opening ONLY. No WorldDresser, no capture rig, no edi
 3b. THE NATURAL WORLD (trees, rocks, bushes — the rest of step 1.1)
      nature: 347 trees, 293 rocks, 155 bushes, 44 fallen trunks, 100433 grass tufts sown as terrain trees (13 prototypes)  (sets: 8/4/3/13)  | tuft height 0,35 m mean (0,23..0,47), 20% of a person; sown as terrain trees per the pack's own manual
   PASS  the living world has a natural world in it (101272 placed)
-     scale against a person (design height 1,75 m; animated bounds read 2,28 m):
+     scale against a person (design height 1,75 m; animated bounds read 2,23 m):
        bush    n= 155  mean 1,7 m (0,95x)  max 3,2 m (1,81x)
        rock    n= 293  mean 1,6 m (0,89x)  max 3,2 m (1,82x)
        tree    n= 347  mean 17,1 m (9,80x)  max 25,2 m (14,42x)
@@ -59,26 +59,26 @@ scene = the self-composing opening ONLY. No WorldDresser, no capture rig, no edi
   PASS  a bush stands no taller than a person (0,95x — over 1.0 it is a thicket, not a shrub)
 
 5. WHAT STANDS ON THE GROUND (scale / sinking / materials)
-     the yardstick: tallest villager renderer = 2,28 m
+     the yardstick: tallest villager renderer = 2,23 m
      renderers measured: 2553
-     shaders in use: Polyart/Dreamscape/Foliage/Leaves x922 | Polyart/Dreamscape/Props x879 | Polyart/Dreamscape/Foliage/Trunk x217 | Polyart/Dreamscape Foliage Billboard x211 | Polyart/Dreamscape/Foliage/Foliage x157 | Universal Render Pipeline/Lit x157
+     shaders in use: Polyart/Dreamscape/Foliage/Leaves x922 | Polyart/Dreamscape/Props x879 | Polyart/Dreamscape/Foliage/Trunk x217 | Polyart/Dreamscape Foliage Billboard x211 | Universal Render Pipeline/Lit x157 | Polyart/Dreamscape/Foliage/Foliage x157
      meadow shaders (terrain tree prototypes, which the census above cannot see): Polyart/Dreamscape/Foliage/Foliage x6 | TidalFlask/Foliage Wind URP Advanced LODfade City U6-1 x3 | TidalFlask/Foliage Wind URP Simple FVP U6-1 x6 | TidalFlask/Foliage Wind URP Simple Lit FVP U6-1 x2
   PASS  the meadow is drawn by a pack foliage shader, not a substitute (4 shaders over 13 prototypes)
-     tallest object: Tree_Large_02_LOD3 [M_TreeLarge_BB_02] = 25,1 m (11,0x a villager)
-       Birch_04_LOD0              h=13,9m (6,1x villager)  SINKS 1,02m  M_TreeBirch_Leaves
-       Tree_Large_03_LOD0         h=13,1m (5,8x villager)  SINKS 0,30m  M_TreeLarge_Leaves
-       Birch_04_LOD1              h=12,0m (5,3x villager)  SINKS 0,88m  M_TreeBirch_Leaves
-       Tree_Large_01_LOD1         h=17,9m (7,9x villager)  M_TreeLarge_Leaves
-       Tree_Large_01_LOD3         h=19,5m (8,6x villager)  SINKS 0,34m  M_TreeLarge_Bark
-       Tree_Large_04_LOD0         h=19,3m (8,5x villager)  SINKS 0,96m  M_TreeLarge_Leaves
-       Tree_Large_04_LOD1         h=16,9m (7,4x villager)  SINKS 0,08m  M_TreeLarge_Leaves
-       Birch_02_LOD2              h=15,4m (6,8x villager)  SINKS 0,53m  M_TreeBirch_Leaves
-       Birch_04_LOD0              h=12,1m (5,3x villager)  M_TreeBirch_Leaves
-       Tree_Large_04_LOD0         h=18,4m (8,1x villager)  M_TreeLarge_Leaves
-       Tree_Large_01_LOD0         h=19,6m (8,6x villager)  SINKS 0,92m  M_TreeLarge_Leaves
-       Birch_06_LOD2              h=14,6m (6,4x villager)  SINKS 0,12m  M_TreeBirch_Bark
-       Birch_04_LOD3              h=16,4m (7,2x villager)  SINKS 0,75m  M_TreeBirch_Bark
-       Birch_06_LOD1              h=13,0m (5,7x villager)  SINKS 0,83m  M_TreeBirch_Leaves
+     tallest object: Tree_Large_02_LOD3 [M_TreeLarge_BB_02] = 25,1 m (11,3x a villager)
+       Tree_Large_04_LOD0         h=22,0m (9,9x villager)  M_TreeLarge_Leaves
+       Birch_06_LOD1              h=12,2m (5,5x villager)  SINKS 0,69m  M_TreeBirch_Leaves
+       Birch_01_LOD1              h=14,9m (6,7x villager)  SINKS 0,89m  M_TreeBirch_Leaves
+       Tree_Large_03_LOD1         h=13,5m (6,1x villager)  SINKS 0,41m  M_TreeLarge_Leaves
+       Tree_Large_01_LOD2         h=17,6m (7,9x villager)  M_TreeLarge_Leaves
+       Tree_Large_04_LOD0         h=20,3m (9,1x villager)  SINKS 0,76m  M_TreeLarge_Leaves
+       Birch_02_LOD1              h=14,3m (6,4x villager)  SINKS 0,45m  M_TreeBirch_Leaves
+       Tree_Large_02_LOD2         h=24,1m (10,8x villager)  SINKS 0,41m  M_TreeLarge_Leaves
+       Tree_Large_02_LOD1         h=22,6m (10,1x villager)  SINKS 1,60m  M_TreeLarge_Leaves
+       Tree_Large_01_LOD3         h=19,1m (8,6x villager)  M_TreeLarge_Bark
+       Tree_Large_02_LOD1         h=19,6m (8,8x villager)  M_TreeLarge_Leaves
+       Tree_Large_01_LOD2         h=15,0m (6,7x villager)  SINKS 0,69m  M_TreeLarge_Leaves
+       Tree_Large_03_LOD1         h=18,8m (8,4x villager)  SINKS 0,53m  M_TreeLarge_Leaves
+       Birch_06_LOD1              h=14,0m (6,3x villager)  SINKS 0,55m  M_TreeBirch_Leaves
 
      THE TEN LARGEST OBJECTS (unconditional — nothing hides here):
        32,0x24,0x32,4 m  Nature_Live / Prefab_TreeLarge_04(Clone) / Tree_Large_04_LOD3   mat=M_TreeLarge_BB_04  tex=T_TrreeLarge_04_BB  slots=2  at (601, 25, 266)
@@ -98,7 +98,7 @@ scene = the self-composing opening ONLY. No WorldDresser, no capture rig, no edi
 
 4. THE EYE-LEVEL PICTURE (what a person standing there would see)
      close-up on P_BLD_body_v01_01 (5,8 m) from 8 m -> Reports/house-in-scene.png
-     close-up on char1 (2,3 m) mat=Material_1 (lit, not lamp) t3 shader=Shader Graphs/glTF-pbrMetallicRoughness tex=texture_0 -> Reports/villager-in-scene.png
+     close-up on char1 (2,2 m) mat=Material_1 (lit, not lamp) t3 shader=Shader Graphs/glTF-pbrMetallicRoughness tex=texture_0 -> Reports/villager-in-scene.png
      eye at the water: shore (582, 20, 290) looking across 168x144 m -> Reports/eye-at-the-water.png
      roads: 4 links worn into the ground (508 texels, 0 water crossings, region 148x240 of 512)
   PASS  the ground carries the ways between places (4 links)
@@ -130,7 +130,7 @@ scene = the self-composing opening ONLY. No WorldDresser, no capture rig, no edi
 6. WHAT THE WORLD COSTS (one frame, from the DECLARED eye-level pose —
    an anchor on the builder's machine, never a min-spec verdict)
      renderers in scene: 2553   draw calls: 1083   set-pass: 312   triangles: 598k
-     frame: 2,8 ms (358 fps)   quality 'PC'
+     frame: 2,7 ms (364 fps)   quality 'PC'
      within the A6 draw-call budget (2500, set against a GTX 1660-class min spec)
      42 draw calls per 100 renderers
      eye at (356.0, 27.5, 223.1) (ground 25,1 m), looking at (390.0, 22.9, 257.1)
