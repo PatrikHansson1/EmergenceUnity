@@ -486,6 +486,31 @@ namespace Emergence.Editor
                 }
                 sb.AppendLine("     renderers measured: " + measured);
                 sb.AppendLine("     shaders in use: " + string.Join(" | ", byShader.OrderByDescending(k => k.Value).Take(6).Select(k => k.Key + " x" + k.Value)));
+                // D-250: this census counts RENDERERS, and a terrain tree is not one. When the meadow
+                // moved to tree instances (D-248, on the pack's own written instruction) the TidalFlask
+                // wind shader vanished from this line while still drawing every blade in the world --
+                // a report going quiet about the very thing it exists to watch. Ask the terrain too.
+                var td2 = Terrain.activeTerrain != null ? Terrain.activeTerrain.terrainData : null;
+                if (td2 != null && td2.treePrototypes != null && td2.treePrototypes.Length > 0)
+                {
+                    var tsh = new SortedDictionary<string, int>();
+                    foreach (var tp in td2.treePrototypes)
+                    {
+                        if (tp == null || tp.prefab == null) continue;
+                        foreach (var r in tp.prefab.GetComponentsInChildren<Renderer>(true))
+                            foreach (var m in r.sharedMaterials)
+                                if (m != null && m.shader != null)
+                                    tsh[m.shader.name] = tsh.TryGetValue(m.shader.name, out var c0) ? c0 + 1 : 1;
+                    }
+                    sb.AppendLine("     meadow shaders (terrain tree prototypes, which the census above cannot see): "
+                                  + string.Join(" | ", tsh.Select(k => k.Key + " x" + k.Value)));
+                    bool packShader = false;
+                    foreach (var k in tsh.Keys)
+                        if (k.IndexOf("TidalFlask", StringComparison.OrdinalIgnoreCase) >= 0
+                         || k.IndexOf("Polyart", StringComparison.OrdinalIgnoreCase) >= 0) packShader = true;
+                    Check(packShader, "the meadow is drawn by a pack foliage shader, not a substitute ("
+                          + tsh.Count + " shaders over " + td2.treePrototypes.Length + " prototypes)");
+                }
                 sb.AppendLine("     tallest object: " + tallestName + " = " + tallest.ToString("F1") + " m"
                               + (villagerH > 0.1f ? " (" + (tallest / villagerH).ToString("F1") + "x a villager)" : ""));
                 foreach (var r2 in rows) sb.AppendLine(r2);

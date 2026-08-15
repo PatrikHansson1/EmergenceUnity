@@ -260,9 +260,16 @@ namespace Emergence.Runtime
                 // the same size law the scattered version used, kept so the picture is comparable:
                 // the pack's own plants sit in one band, the Dreamscape detail props in the other.
                 var name = set[proto].name;
-                float sc = name.StartsWith("P_ENV")
-                    ? 0.38f + Hash01(x, y, salt + 600 + i) * 0.34f
-                    : 0.45f + Hash01(x, y, salt + 600 + i) * 0.50f;
+                // D-250, from the dusk picture: the broad-leafed rosette is the one plant in the set
+                // whose SILHOUETTE does not belong. At the same size band as a grass clump it carries
+                // three times the visual mass, so a thirteenth of the meadow read as most of it --
+                // hostas in a Nordic field. It stays, because a meadow with only grass in it is a lawn,
+                // but at the size a broad leaf actually is down among the blades.
+                float sc = name.Contains("leaf")
+                    ? 0.18f + Hash01(x, y, salt + 600 + i) * 0.20f
+                    : name.StartsWith("P_ENV")
+                      ? 0.38f + Hash01(x, y, salt + 600 + i) * 0.34f
+                      : 0.45f + Hash01(x, y, salt + 600 + i) * 0.50f;
 
                 float nx = (w.x - origin.x) / td.size.x;
                 float nz = (w.z - origin.z) / td.size.z;
