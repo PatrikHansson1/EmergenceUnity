@@ -1,5 +1,5 @@
 EMERGENCE — VÅG 1.1: does the LIVING world have ground?
-generated 2026-08-15 00:57:05
+generated 2026-08-15 01:58:04
 scene = the self-composing opening ONLY. No WorldDresser, no capture rig, no editor-only path.
 
 1. WAS THE GROUND RAISED, BY THE LIVING LOOP ITSELF?
@@ -45,35 +45,35 @@ scene = the self-composing opening ONLY. No WorldDresser, no capture rig, no edi
   PASS  the living world has water in it (4 bodies)
 
 3b. THE NATURAL WORLD (trees, rocks, bushes — the rest of step 1.1)
-     nature: 347 trees, 293 rocks, 155 bushes, 44 fallen trunks, 6255 grass tufts merged into 662 meshes  (sets: 8/4/3/5)
-  PASS  the living world has a natural world in it (7094 placed)
-     scale against a person (design height 1,75 m; animated bounds read 2,24 m):
+     nature: 347 trees, 293 rocks, 155 bushes, 44 fallen trunks, 100433 grass tufts merged into 1399 meshes  (sets: 8/4/3/13)  | tuft height 0,45 m mean (0,15..1,28), 26% of a person
+  PASS  the living world has a natural world in it (101272 placed)
+     scale against a person (design height 1,75 m; animated bounds read 2,23 m):
        bush    n= 155  mean 1,7 m (0,95x)  max 3,2 m (1,81x)
-       other   n=   1  mean 37,2 m (21,28x)  max 37,2 m (21,28x)
+       other   n=   1  mean 29,1 m (16,65x)  max 29,1 m (16,65x)
        rock    n= 293  mean 1,6 m (0,89x)  max 3,2 m (1,82x)
        tree    n= 347  mean 17,1 m (9,80x)  max 25,2 m (14,42x)
        trunk   n=  44  mean 0,9 m (0,51x)  max 1,6 m (0,91x)
   PASS  a bush stands no taller than a person (0,95x — over 1.0 it is a thicket, not a shrub)
 
 5. WHAT STANDS ON THE GROUND (scale / sinking / materials)
-     the yardstick: tallest villager renderer = 2,24 m
-     renderers measured: 3210
-     shaders in use: Polyart/Dreamscape/Foliage/Leaves x922 | Polyart/Dreamscape/Props x879 | Polyart/Dreamscape/Foliage/Foliage x814 | Polyart/Dreamscape/Foliage/Trunk x217 | Polyart/Dreamscape Foliage Billboard x211 | Universal Render Pipeline/Lit x157
-     tallest object: Tree_Large_02_LOD3 [M_TreeLarge_BB_02] = 25,1 m (11,2x a villager)
-       Birch_01_LOD3              h=15,3m (6,8x villager)  SINKS 0,89m  M_Birch_01_BB
-       Birch_06_LOD1              h=14,0m (6,2x villager)  SINKS 0,16m  M_TreeBirch_Leaves
-       Tree_Large_02_LOD3         h=21,9m (9,8x villager)  SINKS 0,99m  M_TreeLarge_BB_02
-       Birch_02_LOD2              h=16,1m (7,2x villager)  M_TreeBirch_Leaves
-       Birch_04_LOD0              h=15,3m (6,8x villager)  SINKS 0,66m  M_TreeBirch_Leaves
-       Birch_06_LOD2              h=14,6m (6,5x villager)  SINKS 0,54m  M_TreeBirch_Bark
-       Birch_04_LOD2              h=13,8m (6,2x villager)  SINKS 0,32m  M_TreeBirch_Leaves
-       Tree_Large_02_LOD2         h=22,0m (9,8x villager)  SINKS 1,12m  M_TreeLarge_Leaves
-       Tree_Large_01_LOD0         h=21,3m (9,5x villager)  M_TreeLarge_Leaves
-       Birch_04_LOD2              h=12,8m (5,7x villager)  SINKS 0,87m  M_TreeBirch_Leaves
-       Tree_Large_03_LOD0         h=14,9m (6,6x villager)  M_TreeLarge_Leaves
-       Birch_02_LOD1              h=16,1m (7,2x villager)  SINKS 0,92m  M_TreeBirch_Leaves
-       Birch_04_LOD2              h=12,7m (5,7x villager)  SINKS 0,41m  M_TreeBirch_Leaves
-       Tree_Large_03_LOD2         h=13,7m (6,1x villager)  SINKS 0,60m  M_TreeLarge_Leaves
+     the yardstick: tallest villager renderer = 2,23 m
+     renderers measured: 3952
+     shaders in use: Polyart/Dreamscape/Foliage/Leaves x922 | Polyart/Dreamscape/Props x879 | Polyart/Dreamscape/Foliage/Foliage x856 | TidalFlask/Foliage Wind URP Simple Lit FVP U6-1 x234 | TidalFlask/Foliage Wind URP Simple FVP U6-1 x233 | TidalFlask/Foliage Wind URP Advanced LODfade City U6-1 x233
+     tallest object: Tree_Large_02_LOD3 [M_TreeLarge_BB_02] = 25,1 m (11,3x a villager)
+       Birch_06_LOD2              h=15,2m (6,8x villager)  SINKS 0,86m  M_TreeBirch_Bark
+       Birch_02_LOD0              h=17,7m (8,0x villager)  SINKS 0,88m  M_TreeBirch_Leaves
+       Tree_Large_02_LOD3         h=18,5m (8,3x villager)  M_TreeLarge_BB_02
+       Birch_02_LOD2              h=16,0m (7,2x villager)  SINKS 0,64m  M_TreeBirch_Leaves
+       Tree_Large_01_LOD1         h=18,4m (8,3x villager)  M_TreeLarge_Leaves
+       Tree_Large_01_LOD0         h=20,7m (9,3x villager)  SINKS 0,73m  M_TreeLarge_Leaves
+       Tree_Large_04_LOD3         h=19,3m (8,6x villager)  M_TreeLarge_BB_04
+       Tree_Large_01_LOD0         h=17,4m (7,8x villager)  SINKS 0,63m  M_TreeLarge_Leaves
+       Birch_04_LOD3              h=11,7m (5,3x villager)  SINKS 0,05m  M_TreeBirch_Bark
+       Tree_Large_02_LOD2         h=21,4m (9,6x villager)  M_TreeLarge_Leaves
+       Birch_01_LOD1              h=15,3m (6,9x villager)  SINKS 0,29m  M_TreeBirch_Leaves
+       Birch_06_LOD1              h=10,5m (4,7x villager)  SINKS 0,71m  M_TreeBirch_Leaves
+       Tree_Large_04_LOD0         h=19,3m (8,7x villager)  SINKS 0,96m  M_TreeLarge_Leaves
+       Birch_02_LOD1              h=14,5m (6,5x villager)  SINKS 0,52m  M_TreeBirch_Leaves
 
      THE TEN LARGEST OBJECTS (unconditional — nothing hides here):
        32,0x24,0x32,4 m  Nature_Live / Prefab_TreeLarge_04(Clone) / Tree_Large_04_LOD3   mat=M_TreeLarge_BB_04  tex=T_TrreeLarge_04_BB  slots=2  at (601, 25, 266)
@@ -86,9 +86,9 @@ scene = the self-composing opening ONLY. No WorldDresser, no capture rig, no edi
        30,4x24,2x29,3 m  Nature_Live / Prefab_TreeLarge_02(Clone) / Tree_Large_02_LOD3   mat=M_TreeLarge_BB_02  tex=T_TrreeLarge_02_BB  slots=2  at (607, 24, 244)
        30,5x22,8x30,9 m  Nature_Live / Prefab_TreeLarge_04(Clone) / Tree_Large_04_LOD1   mat=M_TreeLarge_Leaves  tex=T_Leaves_Clump_02  slots=2  at (601, 25, 266)
        29,8x23,0x30,9 m  Nature_Live / Prefab_TreeLarge_04(Clone) / Tree_Large_04_LOD3   mat=M_TreeLarge_BB_04  tex=T_TrreeLarge_04_BB  slots=2  at (584, 28, 297)
-  PASS  there is something standing on the ground at all (3210 renderers)
+  PASS  there is something standing on the ground at all (3952 renderers)
   PASS  NOTHING wears Unity's default material (0 do — that IS the grey checker Patrik saw)
-  PASS  no BUILT thing or person sinks through the ground (0 do; 2037 natural props bedded into it, which is correct)
+  PASS  no BUILT thing or person sinks through the ground (0 do; 2189 natural props bedded into it, which is correct)
   PASS  nothing is absurdly out of scale (tallest = 14,4x a person — a real tree is 8-14x)
 
 4. THE EYE-LEVEL PICTURE (what a person standing there would see)
@@ -122,10 +122,10 @@ scene = the self-composing opening ONLY. No WorldDresser, no capture rig, no edi
 
 6. WHAT THE WORLD COSTS (one frame, from the DECLARED eye-level pose —
    an anchor on the builder's machine, never a min-spec verdict)
-     renderers in scene: 3210   draw calls: 820   set-pass: 194   triangles: 644k
-     frame: 2,6 ms (383 fps)   quality 'PC'
+     renderers in scene: 3952   draw calls: 1114   set-pass: 226   triangles: 1887k
+     frame: 4,9 ms (204 fps)   quality 'PC'
      within the A6 draw-call budget (2500, set against a GTX 1660-class min spec)
-     25 draw calls per 100 renderers
+     28 draw calls per 100 renderers
      eye at (356.0, 27.5, 223.1) (ground 25,1 m), looking at (390.0, 22.9, 257.1)
   PASS  capture written
   PASS  no missing-material magenta in frame (0 px)

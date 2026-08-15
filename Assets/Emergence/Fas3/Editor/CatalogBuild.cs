@@ -134,6 +134,13 @@ namespace Emergence.Editor
                                    "Prefab_RockFormation_01", "Prefab_RockFormation_02", "Prefab_RockFormation_03", "Prefab_RockFormation_04",
                                    "P_ENV_stone_01",
                                    "Prefab_Bush_01", "Prefab_Bush_02", "Prefab_Bush_03",
+                                   // D-246 (EP order: the expensive packs first): the Village and City
+                                   // packs ship their own ground plants and not one had ever been asked
+                                   // for by name, so the meadow was built entirely of Dreamscape detail
+                                   // props. A name the catalog does not carry is a name the runtime
+                                   // cannot reach -- the same law the variants were losing to.
+                                   "P_ENV_PLANT_grass_village", "P_ENV_grass_city_01", "P_ENV_PLANT_leaf_village",
+                                   "P_ENV_flower_city_01", "P_ENV_flower_city_02", "P_ENV_flower_city_03",
                                    "P_PROP_treetrunk_01", "P_PROP_treetrunk_02", "P_PROP_treetrunk_03", "P_PROP_treetrunk_04",
                                    // VAG 1.5: the water. 4% of the map is lake and none of it was ever
                                    // rendered in the living loop — the dresser's water law was editor-only.

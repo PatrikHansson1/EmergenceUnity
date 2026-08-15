@@ -38,10 +38,40 @@ namespace Emergence.Runtime
         // measured at 0.30/tile: one tuft per 64 square metres, which reads as a bald lawn with
         // occasional weeds. 1.0 puts a tuft roughly every 8 m of walking - sparse enough to stay a
         // meadow and not a jungle, dense enough that the ground has texture wherever you stand.
-        public const float TuftsPerMeadowTile = 1.0f;
-        public const int PlacementsPerFrame = 120;   // keeps the opening smooth on a mid machine
+        // D-246 — THE MEADOW WAS TWO HUNDRED TIMES TOO THIN, AND THE COMMENT ABOVE SAYS WHY IT WAS
+        // NOT NOTICED: "one tuft per 8 m of walking" is true PER TILE and meaningless per SQUARE.
+        // A tile is 8x8 m = 64 m2, so 1.0/tile is one tuft per sixty-four square metres. At eye
+        // level that is bare ground with a weed in it, which is exactly what the EP saw and what
+        // ground-eye-level.png shows. Grass reads as grass at roughly one tuft per 2..5 m2.
+        //
+        // Density is not uniform, because the eye is not uniform: the camera lives in the village.
+        // Near the huts the meadow is thick; out in the far field it stays cheap, where the tufts
+        // are pixels anyway. The tufts merge per 48 m block AFTER placement (D-224), so the cost of
+        // this is triangles and not draw calls — and the probe prices both against the A6 budget.
+        // Second pass, and this time against a MEASURED blade rather than a guess: the probe now
+        // prints "tuft height 0,42 m mean, 24% of a person". The blade is knee height and correct.
+        // So height was never the term -- 3.0/tile is one tuft per 21 m2, and a knee-high tuft every
+        // twenty-one square metres is a dot on a field. Grass reads as grass at roughly one per 2 m2.
+        // FOURTH PASS, and the number refused to move: raising the near-settlement density from 30 to
+        // 60 changed the tuft count by ZERO -- 37 655 both times, which is exactly 6,0 x the meadow
+        // tiles. So the near mask was never true anywhere. It is built from S.huts, and NATURE IS
+        // SOWN BEFORE ANYONE HAS BUILT A HUT: at world start there are no huts, so the mask is empty
+        // and every tuft took the far-field value. The mask stays (a loaded save has huts, and it will
+        // matter the day the meadow is re-sown), but it cannot be what carries the picture.
+        // What carries it is COVERAGE, computed rather than felt: a tuft at scale ~0,7 of a ~1,5 m
+        // authored plant covers roughly 0,8 m2, a tile is 64 m2, so 16/tile is about 20% ground
+        // coverage -- thin meadow rather than lawn, and the honest limit of what 100 000 merged
+        // objects can buy. Past this the answer is a ground texture that carries the near field, not
+        // more objects; that is written down in STATE rather than guessed at here.
+        public const float TuftsPerMeadowTile = 16.0f;
+        public const float TuftsNearSettlement = 60.0f;   // where the eye stands, for coverage rather than count
+        public const int   NearSettlementTiles = 12;     // 96 m around any hut
+        // Raised with the density: at 120 a fifty-thousand-tuft meadow would take four hundred frames
+        // to appear. Tufts are cheap to instantiate and are merged away immediately afterwards.
+        public const int PlacementsPerFrame = 600;   // keeps the opening smooth on a mid machine
 
         public static string LastNote = "";
+        public static string TuftHeightNote = "";
         public static int Placed { get; private set; }
 
         static readonly string[] TreeNames  = { "Prefab_TreeLarge_01", "Prefab_TreeLarge_02", "Prefab_TreeLarge_03", "Prefab_TreeLarge_04",
@@ -49,8 +79,30 @@ namespace Emergence.Runtime
         static readonly string[] RockNames  = { "Prefab_RockFormation_01", "Prefab_RockFormation_02", "Prefab_RockFormation_03", "Prefab_RockFormation_04", "P_ENV_stone_01" };
         static readonly string[] BushNames  = { "Prefab_Bush_01", "Prefab_Bush_02", "Prefab_Bush_03" };
         static readonly string[] TrunkNames = { "P_PROP_treetrunk_01", "P_PROP_treetrunk_02", "P_PROP_treetrunk_03", "P_PROP_treetrunk_04" };
-        static readonly string[] TuftNames  = { "Prefab_Grass_01_Detail", "Prefab_Grass_Group_01_Detail", "Prefab_Grass_03_Detail",
-                                                "Prefab_Flower_02", "Prefab_Flower_04" };
+        // D-246 — THE EXPENSIVE PACKS FIRST (EP order). The meadow was built entirely out of
+        // Dreamscape TERRAIN-DETAIL props, which are authored for a detail prototype's own hidden
+        // size multiplier and therefore need one applied by hand (see the scale law below). The two
+        // packs this studio actually paid for ship their own standalone ground plants -- village
+        // grass, city grass, bushes and flowers -- and not one of them had ever been placed. They are
+        // authored as ordinary props at ordinary size, so they need no correction at all.
+        // Bought geometry leads; the Dreamscape details stay as filler for spread.
+        // SECOND PASS, FROM THE PICTURE. Putting the bought plants in was right; putting ALL of them
+        // in was not. P_ENV_flower_city_* are the CITY pack's window-box flowers -- saturated purple
+        // and yellow, authored to sit in a planter on a street. Scattered across open meadow at three
+        // of eleven names they became a lavender field, and the world read as a garden centre rather
+        // than as land nobody has planted. They keep their place -- in the planters, where the codex
+        // already owns them. The MEADOW is grass, with the muted Dreamscape flowers as the rare one.
+        // FIFTH PASS, from the picture again. The set is drawn from UNIFORMLY, so a name in it is a
+        // tenth of the meadow -- and P_ENV_PLANT_leaf_village is a broad-leafed decorative rosette
+        // three times the visual mass of a grass clump. One name in ten became the thing the eye
+        // saw everywhere: the ground read as a bed of hostas. A set is a WEIGHTING, not a list; the
+        // grasses are repeated because the meadow is grass, and the leaf and the flowers are the
+        // rare thing you notice precisely because they are rare.
+        static readonly string[] TuftNames  = { "P_ENV_PLANT_grass_village", "P_ENV_PLANT_grass_village", "P_ENV_PLANT_grass_village",
+                                                "P_ENV_grass_city_01", "P_ENV_grass_city_01", "P_ENV_grass_city_01",
+                                                "Prefab_Grass_01_Detail", "Prefab_Grass_03_Detail",
+                                                "Prefab_Grass_Group_01_Detail", "Prefab_Grass_Group_01_Detail",
+                                                "P_ENV_PLANT_leaf_village", "Prefab_Flower_02", "Prefab_Flower_04" };
 
         /// <summary>Scatter the natural world across frames. Returns a coroutine to drive from a MonoBehaviour.</summary>
         public static IEnumerator Scatter(WorldState S, Transform parent)
@@ -71,6 +123,25 @@ namespace Emergence.Runtime
             int budget = 0, treeN = 0, rockN = 0, bushN = 0, trunkN = 0, tuftN = 0;
             var tuftRoot = new GameObject("Tufts").transform;
             tuftRoot.SetParent(parent, false);
+            // where the eye stands. A flag per tile beats a distance test per tuft, and it is a pure
+            // read of exported hut positions - no RNG, so two runs of one world grow the same meadow.
+            bool[] near = null;
+            if (S.huts != null && S.huts.Length > 0)
+            {
+                near = new bool[S.W * S.H];
+                foreach (var h in S.huts)
+                {
+                    int cx = Mathf.RoundToInt(h.x), cy = Mathf.RoundToInt(h.y);
+                    for (int dy = -NearSettlementTiles; dy <= NearSettlementTiles; dy++)
+                        for (int dx = -NearSettlementTiles; dx <= NearSettlementTiles; dx++)
+                        {
+                            int nx = cx + dx, ny = cy + dy;
+                            if (nx < 0 || ny < 0 || nx >= S.W || ny >= S.H) continue;
+                            if (dx * dx + dy * dy > NearSettlementTiles * NearSettlementTiles) continue;
+                            near[ny * S.W + nx] = true;
+                        }
+                }
+            }
             for (int y = 0; y < S.H; y++)
                 for (int x = 0; x < S.W; x++)
                 {
@@ -102,7 +173,9 @@ namespace Emergence.Runtime
                     // grass tufts on open meadow and forest floor - the ground the player walks on.
                     // Kept under their OWN parent so the batching pass can find them without guessing.
                     if ((t == 'g' || t == 'f') && tufts.Count > 0)
-                        tuftN += Place(S, tuftRoot, tufts, x, y, TuftsPerMeadowTile, 59, ref budget, Bed.Tuft, true);
+                        tuftN += Place(S, tuftRoot, tufts, x, y,
+                                       near != null && near[y * S.W + x] ? TuftsNearSettlement : TuftsPerMeadowTile,
+                                       59, ref budget, Bed.Tuft, true);
 
                     if (budget >= PlacementsPerFrame) { budget = 0; yield return null; }
                 }
@@ -122,18 +195,46 @@ namespace Emergence.Runtime
             // single blade's position — the placement law above is untouched, and the picture is
             // byte-identical. Merging is done AFTER placement rather than instead of it, so the
             // grounding, bedding and tilt laws stay exactly one implementation.
+            // D-246: MEASURE THE BLADE BEFORE IT IS MERGED. Density was tripled and the ground still
+            // read as texture, and the next move is NOT a fourth density guess -- it is the height of
+            // one tuft in metres, which nobody had ever printed. Sampled before the merge, because a
+            // merged block has no individual bounds left to ask.
+            TuftHeightNote = MeasureTufts(tuftRoot);
             int tuftDrawn = CombineTufts(tuftRoot);
 
             Placed = treeN + rockN + bushN + trunkN + tuftN;
             LastNote = "nature: " + treeN + " trees, " + rockN + " rocks, " + bushN + " bushes, " + trunkN + " fallen trunks, "
                      + tuftN + " grass tufts merged into " + tuftDrawn + " meshes"
                      + "  (sets: " + trees.Count + "/" + rocks.Count + "/" + bushes.Count + "/" + tufts.Count + ")";
+            LastNote += "  | " + TuftHeightNote;
         }
 
         /// <summary>Merge the scattered tufts into one mesh per (block, material). Blocks are 48 m,
         /// which is coarse enough to collapse the count and fine enough that frustum culling still
         /// throws most of the meadow away. Returns the number of renderers left standing.</summary>
         const float TuftBlock = 48f;
+
+        /// <summary>The tuft, in metres, against the 1,75 m yardstick. A meadow the eye can read
+        /// wants roughly knee height; anything under ~0,25 m is a texture no matter how many there are.</summary>
+        static string MeasureTufts(Transform root)
+        {
+            if (root == null || root.childCount == 0) return "tufts: none";
+            float min = float.MaxValue, max = 0f, sum = 0f; int n = 0;
+            for (int i = 0; i < root.childCount; i++)
+            {
+                var rs = root.GetChild(i).GetComponentsInChildren<Renderer>();
+                if (rs.Length == 0) continue;
+                var b = rs[0].bounds;
+                for (int k = 1; k < rs.Length; k++) b.Encapsulate(rs[k].bounds);
+                float h = b.size.y;
+                if (h <= 0f) continue;
+                min = Mathf.Min(min, h); max = Mathf.Max(max, h); sum += h; n++;
+            }
+            if (n == 0) return "tufts: no bounds";
+            float mean = sum / n;
+            return "tuft height " + mean.ToString("F2") + " m mean (" + min.ToString("F2") + ".." + max.ToString("F2")
+                 + "), " + (mean / 1.75f * 100f).ToString("F0") + "% of a person";
+        }
 
         static int CombineTufts(Transform root)
         {
@@ -236,7 +337,20 @@ namespace Emergence.Runtime
                     // meadow. Target ~0,55 m: over the boot, under the knee.
                     // D-221: the top of this range read as pale sticks at distance — a tuft that
                     // tall is a reed bed, not meadow. Capped where it stops being grass.
-                    sc = 0.32f + Hash01(x, y, salt + 600 + i) * 0.52f;
+                    // THIRD PASS, and the term that had never been computed: COVERAGE. Thirty tufts
+                    // of 0,38 m in a 64 m2 tile cover about 7% of it, and 7% is a lawn with weeds no
+                    // matter how the count reads. Grass reads as grass at 40-70% ground coverage.
+                    // Coverage goes up far cheaper through SIZE than through count -- doubling the
+                    // width of one clump quadruples what it hides -- so the band widens and the set
+                    // leans on the pack's GROUP mesh. Still under the knee at the top (0,95 x ~1,5 m
+                    // authored = 1,4 m only for the rare tallest), which is where D-221 drew the line.
+                    sc = 0.45f + Hash01(x, y, salt + 600 + i) * 0.50f;
+                else if (prefab.name.StartsWith("P_ENV_PLANT") || prefab.name.StartsWith("P_ENV_grass"))
+                    // The bought ground plants get the same yardstick as everything else, because they
+                    // never had one: the probe measured the meadow at 0,63 m mean and 1,90 m max after
+                    // they came in, and a 1,9 m plant in open grass is the menhir mistake with leaves.
+                    // Target the same band as the tufts they stand among: over the boot, under the knee.
+                    sc = 0.38f + Hash01(x, y, salt + 600 + i) * 0.34f;
                 else if (prefab.name.StartsWith("P_PROP_treetrunk"))
                     // measured 2,0 m — a stump taller than a child. A cut stump is knee-to-thigh.
                     sc *= 0.45f;

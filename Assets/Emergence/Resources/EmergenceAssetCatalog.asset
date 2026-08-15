@@ -71,6 +71,12 @@ MonoBehaviour:
     prefab: {fileID: 5648544150296794767, guid: f1acfe97b07f9f54ca6dc5555723aba1, type: 3}
   - name: Prefab_Bush_03
     prefab: {fileID: 1051078274315369266, guid: ed60867ab2e84f944925106afee949be, type: 3}
+  - name: P_ENV_PLANT_grass_village
+    prefab: {fileID: 1106708480259925815, guid: 164734044aef0a946be0b27e20c63321, type: 3}
+  - name: P_ENV_grass_city_01
+    prefab: {fileID: 7658746467628561917, guid: 4f1b5052b5ffdef41ab6ada823e19884, type: 3}
+  - name: P_ENV_PLANT_leaf_village
+    prefab: {fileID: 2574681585619496249, guid: 7d30c4b5ff9ac564e99367e461a6c5b9, type: 3}
   - name: P_PROP_treetrunk_02
     prefab: {fileID: 1166314740754180048, guid: 331cd993ddfaf9447920ed1b003bfc2f, type: 3}
   - name: P_PROP_treetrunk_03
