@@ -1,0 +1,2 @@
+DONE 22:00:01 verdict=PORTNINGSBESLUT worstMult=344,3 lastSecsPerYear=313,112 pop=126
+se Reports/jint-pace.txt
