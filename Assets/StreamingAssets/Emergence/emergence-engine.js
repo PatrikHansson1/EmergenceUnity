@@ -250,6 +250,11 @@ const TECHS=[
 ];
 const TECH=Object.fromEntries(TECHS.map(t=>[t.id,t]));
 const MATSOURCE={wood:'forest',stone:'stone',fiber:'grass',clay:'clay',iron:'iron',sand:'sand',copper:'copper',tin:'tin',coal:'coal',gold:'gold',pigment:'pigment'};
+// F1.0c (D-360): material som INTE plockas ur marken utan ARBETAS FRAM. Motorns
+// tekniker har inget utdatafält, så brons och stål fanns som TEKNIK men aldrig som
+// TING — och de fyra tekniker som kräver dem (bronzetools, clock, printpress, steam)
+// var onåbara i varje värld. Receptet är teknikens eget; det uppfinns inte här.
+const SMELT={bronze:{copper:2,tin:1},steel:{iron:2,coal:2}};
 // which observations can occur while gathering which material
 const GATHER_OBS={wood:[['frictionHeat',.10],['logsRoll',.07],['branchBends',.08],['soundsRing',.05]],stone:[['sharpShards',.16],['stonesGrind',.06],['archStands',.05]],fiber:[['fibersTwist',.14],['soundsRing',.04]],sand:[['sandGlints',.14],['lensBends',.05]],clay:[['pigmentStains',.06]],iron:[['oreMelts',.10],['steelKeen',.05]],copper:[['copperGreen',.16],['bronzeHard',.06]],tin:[['bronzeHard',.10]],coal:[['coalBurns',.16]],gold:[['goldGleams',.16]],pigment:[['pigmentStains',.18]]};
 const NAMES=['Eira','Ask','Embla','Torv','Liv','Sten','Ylva','Bjorn','Saga','Rune','Freja','Kare','Idun','Halvar','Signe','Vidar','Tuva','Alve','Ronja','Sixten','Maja','Loke','Vera','Otto','Selma','Falk','Nanna','Ulv','Disa','Orm'];
@@ -1739,6 +1744,24 @@ function agentTick(S,a){
   }
 
   let need=neededMaterial(S,a)||((a.inv.wood||0)<(a.knows.has('hut')&&!a.home?9:4)?'wood':null);
+  // F1.0c (D-360): ATT ARBETA METALL ÄR EN ARBETSHANDLING, INTE EN UPPTÄCKT.
+  // Den som kan hantverket och har ingredienserna förbrukar dem och får tinget.
+  // Saknas en ingrediens blir DEN det man går och hämtar — i stället för att, som
+  // förr, vandra mot en marktyp som inte finns ("searching for undefined").
+  // Inget S.rand dras här; strömmen skiljer sig först genom att själen arbetar
+  // i stället för att vandra.
+  if(need&&SMELT[need]){
+    if(a.knows.has(need)){
+      const _r=SMELT[need];
+      if(Object.keys(_r).every(mm=>(a.inv[mm]||0)>=_r[mm])){
+        for(const mm in _r)a.inv[mm]-=_r[mm];
+        a.inv[need]=(a.inv[need]||0)+1;
+        a.task='working '+need;
+        return;
+      }
+      for(const mm in _r){if((a.inv[mm]||0)<_r[mm]){need=mm;break;}}
+    } else need=null;
+  }
   if(need){const tc=isTaboo(S,a,need);if(tc){if(wouldBreakTaboo(S,a,tc))a._breakC=tc;else need=null;}}
   if(need&&S.rand()<a.traits.diligence){
     doSeek(S,a,MATSOURCE[need],()=>{

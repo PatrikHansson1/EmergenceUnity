@@ -1,3 +1,24 @@
+# GOLDENS — ENGINE 2.6.0 + F1.0c (t8640-kanon om-baselinerad 2026-08-16, D-360/D-407)
+
+**F1.0c (D-360): brons och stål fanns som TEKNIK men aldrig som TING** — teknikobjektet
+har inget utdatafält och MATSOURCE saknade dem, så bronzetools/clock/printpress/steam var
+onåbara i varje värld (själar vandrade "searching for undefined", 42 663 själ-tick på ett frö).
+F1.0c lägger SMELT (bronze=copper*2+tin, steel=iron*2+coal*2) som en arbetshandling.
+Inga rand-drag i ingreppet; strömmen skiljer sig först vid första metallarbetet.
+
+**Om-baseliningen, exakt:**
+- t720-kvartetten: **GRÖN MOT OFÖRÄNDRAD KANON** — vid år 5 kan ingen brons/stål, så
+  patchen är byte-identisk före sin egen mekanism. Kanon INTE bytt.
+- t8640: 97013 **GRÖN mot oförändrad kanon** (den lilla tvillingbyvärlden når aldrig
+  metallarbetet på 60 år); **4242 / 20260718 / 4242-founders om-baselinerade**
+  (RÖD 15:13 → ny kanon → GRÖN 16:12, jint-hashar byte-identiska mellan passen).
+  Nya kanonfiler är 2–3× större än de gamla — F1.0c:s verkan synlig i rådata:
+  världarna når längre och skriver mer historia.
+- Engine-SHA: c14afaa806110ec82f3c4763e5d01a1130b1f33a5471565674734061a02eebcd
+  (båda ENGINE-SHA.txt + ExpectedEngineSha uppdaterade i samma commit).
+
+Föregående manifest (2.4.1-baslinjen) nedan, orört:
+
 # GOLDENS — ENGINE 2.4.1 baseline (E1.5b hardening: review conditions V1/V2/V6/V8 closed; 2026-08-09)
 
 2.4.1 = 2.4.0 + the E1.5b wave (TD-082, D-176, closing E15-WAVE-REVIEW-2026-07-25 §4):

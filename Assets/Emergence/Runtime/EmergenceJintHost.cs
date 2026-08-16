@@ -11,7 +11,7 @@ namespace Emergence.Runtime
 {
     public sealed class EmergenceJintHost
     {
-        public const string ExpectedEngineSha = "70c5ff639e8c959a8aa91bb29bf1dd11263620ca78e83b0f87f8334fcd300ee4"; // ENGINE 2.6.0 + two comment-only corrections (D-239 review): the forage ladder is PARALLEL to the world-gate ladder, not the same one, and the herbsHeal rate reads hunger after the meal. A comment changes the file's own SHA and nothing else -- the sim stream is byte-identical and the goldens are NOT re-baselined (2.3.1/2.4.1 precedent). Prior 2.6.0 sha: 2fc1647cc683...
+        public const string ExpectedEngineSha = "c14afaa806110ec82f3c4763e5d01a1130b1f33a5471565674734061a02eebcd"; // ENGINE 2.6.0 + F1.0c (D-360): bronze and steel existed as TECHS but never as THINGS -- no output field on techs, no MATSOURCE entry -- so bronzetools/clock/printpress/steam were unreachable in every world (souls wandered "searching for undefined"). F1.0c adds SMELT (bronze=copper*2+tin, steel=iron*2+coal*2) as a work action. Sim stream changes from the first metalwork on; goldens re-baselined this commit (RED -> reviewed diff -> new canon -> GREEN). Prior sha: 70c5ff639e8c...
 
         private readonly Jint.Engine _engine;
         public string EngineSha256 { get; }
