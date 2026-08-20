@@ -250,6 +250,26 @@ const TECHS=[
 ];
 const TECH=Object.fromEntries(TECHS.map(t=>[t.id,t]));
 const MATSOURCE={wood:'forest',stone:'stone',fiber:'grass',clay:'clay',iron:'iron',sand:'sand',copper:'copper',tin:'tin',coal:'coal',gold:'gold',pigment:'pigment'};
+// F1.2a (D-383): EGENSKAPSRYMDEN. Varje material bär en vektor; dimensionerna är
+// utbyggbara, inte en fast lista. INGENTING LÄSER DEN ÄNNU — steget ska lämna
+// guldmastern grön. `fuel` finns med för att motorn själv namnger den i sin
+// insiktstabell (coalBurns, frictionHeat): thresh är den värme ett material TÅL,
+// fuel är den värme det AVGER. Utan den skillnaden kan sten ersätta kol (D-372).
+const MATDIM={
+  stone:  {fuel:0,hard:6,plastic:0,cohesive:1,thresh:6,dense:6,rough:4,conduct:0,clear:0,elastic:0},
+  wood:   {fuel:4,hard:3,plastic:1,cohesive:3,thresh:2,dense:2,rough:2,conduct:0,clear:0,elastic:4},
+  clay:   {fuel:0,hard:1,plastic:6,cohesive:3,thresh:3,dense:4,rough:1,conduct:0,clear:0,elastic:0},
+  fiber:  {fuel:2,hard:0,plastic:2,cohesive:6,thresh:2,dense:1,rough:1,conduct:0,clear:0,elastic:3},
+  sand:   {fuel:0,hard:2,plastic:1,cohesive:0,thresh:5,dense:3,rough:5,conduct:0,clear:2,elastic:0},
+  iron:   {fuel:0,hard:8,plastic:2,cohesive:4,thresh:6,dense:7,rough:3,conduct:4,clear:0,elastic:2},
+  copper: {fuel:0,hard:4,plastic:3,cohesive:4,thresh:4,dense:6,rough:1,conduct:6,clear:0,elastic:2},
+  tin:    {fuel:0,hard:2,plastic:4,cohesive:3,thresh:2,dense:5,rough:1,conduct:4,clear:0,elastic:1},
+  coal:   {fuel:8,hard:2,plastic:0,cohesive:1,thresh:7,dense:2,rough:3,conduct:1,clear:0,elastic:0},
+  gold:   {fuel:0,hard:2,plastic:5,cohesive:4,thresh:5,dense:8,rough:0,conduct:7,clear:0,elastic:2},
+  pigment:{fuel:0,hard:0,plastic:3,cohesive:2,thresh:1,dense:1,rough:1,conduct:0,clear:0,elastic:0},
+  bronze: {fuel:0,hard:6,plastic:2,cohesive:5,thresh:4,dense:6,rough:2,conduct:5,clear:0,elastic:2},
+  steel:  {fuel:0,hard:9,plastic:1,cohesive:5,thresh:7,dense:7,rough:3,conduct:4,clear:0,elastic:3},
+};
 // F1.0c (D-360): material som INTE plockas ur marken utan ARBETAS FRAM. Motorns
 // tekniker har inget utdatafält, så brons och stål fanns som TEKNIK men aldrig som
 // TING — och de fyra tekniker som kräver dem (bronzetools, clock, printpress, steam)
