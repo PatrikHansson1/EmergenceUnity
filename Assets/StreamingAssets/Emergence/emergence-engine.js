@@ -957,10 +957,65 @@ function tryObserve(S,a,obsId,chance){
     if(S.rand()<.3)speak(S,a,pickSay(S,a,'observe'),'observe');
   }
 }
+// F1.2b (D-373): KRAVET HÄRLEDS UR TABELLEN, INTE UR EN SKRIVEN LISTA.
+// Ett materials KRAVDIMENSIONER är de där det sticker ut mot materialtabellens egen
+// spridning; ett annat material duger om det ligger NÄRA i just dem. Band, inte golv:
+// ett golv säger "minst lika hett" och kan därför föreslå stål i stället för kol.
+const _DIMS=Object.keys(MATDIM.stone), _MATKEYS=Object.keys(MATDIM), _STAT={}, _KEY={}, _DOM={};
+for(const d of _DIMS){
+  const v=_MATKEYS.map(k=>MATDIM[k][d]||0);
+  const mu=v.reduce((a,b)=>a+b,0)/v.length;
+  const sd=Math.sqrt(v.reduce((a,b)=>a+(b-mu)*(b-mu),0)/v.length)||1;
+  _STAT[d]={mu,sd};
+}
+function keyDims(m){
+  if(_KEY[m])return _KEY[m];
+  const V=MATDIM[m]; if(!V)return _KEY[m]=[];
+  const z=_DIMS.map(d=>[d,((V[d]||0)-_STAT[d].mu)/_STAT[d].sd]).sort((a,b)=>b[1]-a[1]);
+  let out=z.filter(p=>p[1]>=0.8).map(p=>p[0]);
+  if(out.length<2)out=z.slice(0,2).map(p=>p[0]);   // alltid minst två — ett materials identitet är aldrig en enda siffra
+  return _KEY[m]=out;
+}
+// G-REVIEW I1: likheten prövas i UNIONEN av bägge materialens särskiljande dimensioner.
+// Gamla regeln (bara originalets) släppte in guld som lera och koppar som tenn — ett
+// material med EN nyckeldimension ignorerade hela ersättarens identitet. Matrisen är
+// utskriven och dömd med öga i MATRIS-DOMD-MED-OGA-2026-08-16.md.
+function suits(c,m){
+  const k=c+'>'+m; if(_DOM[k]!==undefined)return _DOM[k];
+  const A=MATDIM[c],B=MATDIM[m];
+  let r=!!(A&&B);
+  if(r){
+    const dims=keyDims(m).concat(keyDims(c).filter(d=>keyDims(m).indexOf(d)<0));
+    for(const d of dims){
+      const tol=Math.max(1,0.6*_STAT[d].sd);
+      if(Math.abs((A[d]||0)-(B[d]||0))>tol){ r=false; break; }
+    }
+  }
+  return _DOM[k]=r;
+}
 function pickAlt(S,a,t){
-  // property thinking: any material set that satisfies the recipe works
+  // exakt recept först — dagens beteende bevaras där det går
   for(const alt of t.alts){
     if(Object.entries(alt).every(([m,q])=>(a.inv[m]||0)>=q))return alt;
+  }
+  // property thinking, på riktigt: vilken materialuppsättning som helst som
+  // uppfyller receptets KRAV duger. Materialen prövas i tabellordning, aldrig
+  // slumpat — inget rand-drag konsumeras här.
+  for(const alt of t.alts){
+    const out={}; let ok=true;
+    for(const e of Object.entries(alt)){
+      const m=e[0], q=e[1];
+      let found=null;
+      if((a.inv[m]||0)>=(out[m]||0)+q) found=m;
+      else for(const c of _MATKEYS){
+        // G-REVIEW I2: tabu prövas mot det som FAKTISKT konsumeras, inte mot originalnamnet
+        if(c===m||isTaboo(S,a,c)||!suits(c,m))continue;
+        if((a.inv[c]||0)>=(out[c]||0)+q){ found=c; break; }
+      }
+      if(!found){ ok=false; break; }
+      out[found]=(out[found]||0)+q;
+    }
+    if(ok)return out;
   }
   return null;
 }

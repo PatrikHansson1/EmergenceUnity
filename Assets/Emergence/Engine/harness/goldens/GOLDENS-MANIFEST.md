@@ -1,3 +1,18 @@
+# GOLDENS — ENGINE 2.6.0 + F1.0c + F1.2a + F1.2b (20260718-t8640 om-baselinerad 2026-08-20, D-420)
+
+**F1.2b (D-383/D-404): recepten läser egenskaper** — `pickAlt` ersatt: exakt recept först,
+därefter substitution under unionsregeln (bägge materialens särskiljande dimensioner, z≥0,8
+min 2, band 0,6σ), tabu prövat mot det faktiskt konsumerade materialet (G-review I2).
+**Kirurgin, mätt:** endast `seed-20260718-t8640` om-baselinerad — världen divergerar vid sitt
+FÖRSTA bronzetools-event år 32 (374→353 event, 708 264→597 313 byte). De andra tre t8640-kanonerna
+och hela t720-kvartetten är BYTE-IDENTISKA: exakta receptet vinner när det kan uppfyllas, och
+substitution utan geologisk brist är sällsynt (samma fynd som D-403/D-414). Ordningen hölls:
+RÖD med avsikt → granskad diff → ny kanon → GRÖN, bekräftelsens jint-hash byte-identisk med
+röda passets (`557335bd…`). Motor-SHA: `76d62fee…`. F1.2a (D-383, MATDIM-tabellen) lämnade
+alla kanoner orörda — gröna båda horisonterna, commit `20c4d8a`.
+
+---
+
 # GOLDENS — ENGINE 2.6.0 + F1.0c (t8640-kanon om-baselinerad 2026-08-16, D-360/D-407)
 
 **F1.0c (D-360): brons och stål fanns som TEKNIK men aldrig som TING** — teknikobjektet

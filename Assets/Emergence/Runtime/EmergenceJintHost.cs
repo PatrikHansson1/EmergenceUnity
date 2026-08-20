@@ -11,7 +11,7 @@ namespace Emergence.Runtime
 {
     public sealed class EmergenceJintHost
     {
-        public const string ExpectedEngineSha = "02cbae1eb1ff89ee2fb2653bf21e42df703d76601297cc3fc9185a89faf764a7"; // + F1.2a (D-383): the MATDIM property table -- 13 materials x 10 dimensions -- added after MATSOURCE. NOTHING reads it yet; identity proven over 8 seeds x 120y (all byte-identical), so the goldens are NOT re-baselined (comment/data-only precedent, 2.3.1/2.4.1). A red golden after this step means the step is WRONG, never new canon. Prior sha: c14afaa80611...
+        public const string ExpectedEngineSha = "76d62feea79e1d448713836876e542a5a50b8af39ae70eca825853db142f222e"; // + F1.2b (D-383/D-404): pickAlt replaced -- exact recipe first, then property-derived substitution under the UNION rule (both materials' key dims, z>=0.8 min 2, band 0.6*sd), taboo checked against the actually consumed material (G-review I2). No handwritten requirement rows, no rand draws. Goldens ARE re-baselined for this step: RED -> reviewed diff -> new canon -> GREEN, both horizons. Prior sha: 02cbae1eb1ff...
 
         private readonly Jint.Engine _engine;
         public string EngineSha256 { get; }
