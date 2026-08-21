@@ -11,7 +11,7 @@ namespace Emergence.Runtime
 {
     public sealed class EmergenceJintHost
     {
-        public const string ExpectedEngineSha = "8a473f0dff7d62fe0749a3199826a588c5b0e45f9554ca56dae4d88b7424bd1c"; // + F1.2d (D-377/D-384): sharp geology -- per (seed, material) via FNV-1a each world gets 0x / 0.4x / 1.6x of every ore (30/40/30), clay floored at 6. Worldgen changes, so goldens diverge FROM THE FIRST TICK by design: RED -> reviewed diff -> new canon -> GREEN, both horizons. F1.2 family COMPLETE. Disk-chain acceptance: pairwise 5.3 (target >= 5), 0 dead / 8 seeds. Prior sha (F1.2c): bd3f1874dda3...
+        public const string ExpectedEngineSha = "2a77bfcf23717502c83db356f1b0c9532d18ab6e2e7ad08e77e18d024ee9bbab"; // + F1.4 (D-451): thirst -- init 80, drain (season x pottery x dry-year), ~1/7 dry years via FNV, opportunistic+seeking drink, dehydration WEAKENS (energy -1.5) not kills. Slutprov 32 seeds: W1 0.33, 1 dead/32 (31337 lives), 0 thirst-deaths. Worldgen+agentinit change -> goldens RED from first tick by design. Prior sha (F1.2d): 8a473f0dff7d...
 
         private readonly Jint.Engine _engine;
         public string EngineSha256 { get; }

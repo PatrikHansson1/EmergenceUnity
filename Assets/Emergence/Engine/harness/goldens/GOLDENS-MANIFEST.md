@@ -1,3 +1,20 @@
+# GOLDENS — ENGINE 2.6.0 + F1.0c + F1.2a-d + F1.4 ★ TÖRSTEN BASELINEAD ★ (alla 8 kanoner om-baselinerade 2026-08-21, D-462)
+
+**F1.4 (D-451): TÖRSTEN OCH PLATSEN.** Törst-behov (init 80) · avtappning säsong × krukbärande
+× torrår · torråret vart ~7:e år per FNV(frö@år), deterministiskt · opportunistiskt drickande
+nära vatten · uppsökande vattenvandring vid törst<20 (svälten går alltid först) · **uttorkning
+FÖRSVAGAR (energi −1,5/tick vid 0), dödar aldrig direkt** — dödskanalen var probens tillägg,
+aldrig D-393:s krav. Inga brunnsmekaniker (W3 hedersamt fälld — gratisvatten dämpar olikhet).
+**Slutprov 32 frön:** W1 0,33 (baslinje 0,66 — byarna dras mot vattnet) · 1 utdöd/32 (31337
+LEVER nu) · 0 törstdödar. **Baselineringen 2026-08-21:** kanonerna genererades i MOLNET med
+harnessen (byte-exakthet FÖRBEVISAD: gamla kanonernas SHA reproducerade exakt på båda
+horisonter), installerades, och Unity/Jint körde GRÖNT direkt — t720 alla 4 (93–122 s/frö),
+t8640 alla 4 (2 125–3 275 s/frö, ~3 h 10 min; F1.4-världarna är ~65 % större i händelsevolym).
+Varje jintSha == molnprediktion. Engine SHA: 2a77bfcf23717502… (föregående: 8a473f0dff7d62fe…,
+backup-ref backup/pre-f14-2026-08-21 → bda59f84ebf4…; gamla kanoner i goldens/.pre-f14/).
+
+---
+
 # GOLDENS — ENGINE 2.6.0 + F1.0c + F1.2a-d ★ F1.2-FAMILJEN KOMPLETT ★ (alla 8 kanoner om-baselinerade 2026-08-21, D-427)
 
 **F1.2d (D-377/D-384): SKARP GEOLOGI — MARKEN SKILJER SIG ÅT.** Per (frö, material) via

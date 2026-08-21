@@ -706,7 +706,7 @@ function makeAgent(S,x,y,parents,founder){
   const a={
     id:S.nextId++, name:NAMES[S.usedNames++%NAMES.length]+(S.usedNames>NAMES.length?' II':''),
     x,y, age:parents?0:RI(S,17,24), gen:parents?Math.max(parents[0].gen,parents[1].gen)+1:1,
-    lifespan:RI(S,55,85), hunger:80,energy:90,warmth:90,social:70,
+    lifespan:RI(S,55,85), hunger:80,thirst:80,energy:90,warmth:90,social:70,
     inv:{},knows:new Set(),obs:new Set(),customs:new Set(),rel:{},task:'thinking',expT:0,expTech:null,expAlt:null,
     say:'',sayT:0,sayAct:null,inspired:0,childCd:0,talkCd:0,phase:R(S,0,6.28),
     hue:parents?(parents[0].hue+parents[1].hue)/2+RI(S,-20,20):RI(S,0,360),
@@ -1664,7 +1664,7 @@ function warTick(S){
 function agentTick(S,a){
   const night=S.hour<5||S.hour>21;
   const winter=S.season==='winter';
-  a.hunger-=0.35;a.energy-=night?0.5:0.25;a.social-=0.3;
+  a.hunger-=0.35;a.thirst-=(S.season==='summer'?0.4:0.3)*(a.knows.has('pottery')?0.55:1)*(S._dry?1.3:1);a.energy-=night?0.5:0.25;a.social-=0.3;
   if(a.talkCd>0)a.talkCd--;
   const coldDrain=winter?2.2*S.winterSeverity+0.6:S.season==='summer'?1.6:2.2;
   if(night){
@@ -1672,13 +1672,14 @@ function agentTick(S,a){
     else if(nearby(S,a,1.4).length>0)a.warmth+=Math.max(0.2,0.9-(winter?0.4*(S.winterSeverity-1):0));
     else a.warmth-=coldDrain;
   } else a.warmth+=winter?0.6:1.5;
-  a.hunger=clamp(a.hunger,0,100+(a.knows.has('pottery')?40:0));
+  a.hunger=clamp(a.hunger,0,100+(a.knows.has('pottery')?40:0));a.thirst=clamp(a.thirst,0,100);
   a.energy=clamp(a.energy,0,100);a.warmth=clamp(a.warmth,0,100);a.social=clamp(a.social,0,100);
   if(a.inspired>0)a.inspired--;
   if(a.childCd>0)a.childCd--;
   if(a.sayT>0)a.sayT--;
   a.age=S.tick/YEAR-(a.born||0);
 
+  if(a.thirst<=0){a.thirst=0;a.energy=Math.max(0,a.energy-1.5);}
   if(a.hunger<=0||a.warmth<=0||a.age>a.lifespan){
     const causeKey=a.hunger<=0?'starvation':a.warmth<=0?'cold':'age';
     const cause=a.hunger<=0?'starved to death':a.warmth<=0?(winter?'froze to death in the winter cold':'froze to death'):'died of old age at '+Math.floor(a.age);
@@ -1689,6 +1690,7 @@ function agentTick(S,a){
     return;
   }
   const child=a.age<14;
+  {const wN=findNearest(S,a,'water');if(wN&&Math.hypot(wN.x-a.x,wN.y-a.y)<1.6&&a.thirst<70){a.thirst=(S._dry?70:100);}}  if(a.thirst<20&&a.hunger>30){const yr=Math.floor(S.tick/YEAR);if(S._wellY!==yr){S._wellY=yr;{let h=2166136261>>>0;const s=String(S.seed)+'@'+yr;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)>>>0;}S._dry=(h%7===0);}}{const w=findNearest(S,a,'water');if(w){if(Math.hypot(w.x-a.x,w.y-a.y)<1.6){a.thirst=(S._dry?70:100);a.task='drinking';}else{moveToward(S,a,w);a.task='walking to water';return;}}}}
 
   // TENSION PROTO: the SAME friction resolves as trade OR force. Try the peaceful path first
   // (cooperation-inclined souls trade), then force (conflictTick); aspiration hoards a surplus.
