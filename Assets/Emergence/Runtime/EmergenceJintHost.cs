@@ -11,7 +11,7 @@ namespace Emergence.Runtime
 {
     public sealed class EmergenceJintHost
     {
-        public const string ExpectedEngineSha = "bd3f1874dda3c8c25dc027475213b5ef3133e20b53c838b1bece35b5d6bfc6cc"; // + F1.2c (D-374/D-390/D-409): composition -- two materials become a new one in the workshop, gated by hasLeisure (D-086 culture law), fire + heat >= max(thresh)+2, depth <= 1, taboo on both parts, 60-tick cooldown. Mix: LIMITING dims averaged, others max. Goldens re-baselined where divergent: RED -> reviewed diff -> new canon -> GREEN. Prior sha (F1.2b): 76d62feea79e...
+        public const string ExpectedEngineSha = "8a473f0dff7d62fe0749a3199826a588c5b0e45f9554ca56dae4d88b7424bd1c"; // + F1.2d (D-377/D-384): sharp geology -- per (seed, material) via FNV-1a each world gets 0x / 0.4x / 1.6x of every ore (30/40/30), clay floored at 6. Worldgen changes, so goldens diverge FROM THE FIRST TICK by design: RED -> reviewed diff -> new canon -> GREEN, both horizons. F1.2 family COMPLETE. Disk-chain acceptance: pairwise 5.3 (target >= 5), 0 dead / 8 seeds. Prior sha (F1.2c): bd3f1874dda3...
 
         private readonly Jint.Engine _engine;
         public string EngineSha256 { get; }

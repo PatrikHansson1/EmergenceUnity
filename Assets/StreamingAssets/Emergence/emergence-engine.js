@@ -673,10 +673,19 @@ function makeWorld(S){
       if(ok){S.tiles[y][x]={t:type,n:RI(S,3,7)};placed++;}
     }
   };
-  scatter('water','clay',35);scatter('stone','iron',20);
+  // F1.2d (D-377/D-384): MARKEN SKILJER SIG ÅT. 30 % av världarna bär inget av ett
+  // givet material, 40 % har det på djupet, 30 % i dagen. Härlett ur (frö, material)
+  // med FNV-1a — deterministiskt per värld, aldrig draget ur RNG-strömmen. Lera och
+  // sand är också geologi (tegel, glas, krukor); lera har golv 6 så krukmakeriet
+  // aldrig blir omöjligt, bara fattigt. Mätt mot 32 frön: utdöendet står på 3 %,
+  // parvis skillnad 6,9 — en värld utan malm blir ANNORLUNDA, inte dödsdömd.
+  const _geo=(m)=>{ let h=2166136261>>>0; const _s=String(S.seed||0)+'/'+m;
+    for(let i=0;i<_s.length;i++){ h^=_s.charCodeAt(i); h=Math.imul(h,16777619)>>>0; }
+    const r=h%100; return r<30?0:(r<70?0.4:1.6); };
+  scatter('water','clay',Math.max(6,Math.round(35*_geo('clay'))));scatter('stone','iron',Math.round(20*_geo('iron')));
   // deeper geology (ENGINE 2.1, D-086): ores are LOCAL and scarcer the deeper the era — this is the
   // world-motor that gates bronze/steel/coin, so worlds differentiate by what the land beneath offers.
-  scatter('stone','copper',14);scatter('stone','tin',9);scatter('stone','coal',12);scatter('stone','gold',5);scatter('clay','pigment',10);
+  scatter('stone','copper',Math.round(14*_geo('copper')));scatter('stone','tin',Math.round(9*_geo('tin')));scatter('stone','coal',Math.round(12*_geo('coal')));scatter('stone','gold',Math.round(5*_geo('gold')));scatter('clay','pigment',Math.round(10*_geo('pigment')));
   // loose boulders and patches — the world invites curiosity everywhere
   let placed=0,guard=0;
   const loose=[['stone',25],['sand',12],['clay',10]];

@@ -1,3 +1,19 @@
+# GOLDENS — ENGINE 2.6.0 + F1.0c + F1.2a-d ★ F1.2-FAMILJEN KOMPLETT ★ (alla 8 kanoner om-baselinerade 2026-08-21, D-427)
+
+**F1.2d (D-377/D-384): SKARP GEOLOGI — MARKEN SKILJER SIG ÅT.** Per (frö, material) via
+FNV-1a får varje värld 0× / 0,4× / 1,6× av varje malm (30/40/30), lera med golv 6.
+Världsgen ändras, så **alla 8 kanoner divergerar FRÅN FÖRSTA TICKET med avsikt** — redan
+dag ett berättar en annan själ den första sagan. **Ödesomfördelningen i rådata:** lilla
+97013 fick rik mark och skriver 2,4× mer historia (428 679 → 1 031 270 byte); förra veckans
+rikaste 4242 blev fattigare (1 259 548 → 762 806). Disk-kedjans acceptans: **parvis 5,3 mot
+måltalet ≥ 5, 0 döda av 8.** Ordningen hölls i bägge baseliningarna: RÖD → granskad diff →
+ny kanon → GRÖN, bekräftelsernas jint-hashar byte-identiska. Motor-SHA: `8a473f0d…`.
+**Familjens facit:** a (`20c4d8a`, inga kanoner) · b (`9894b8c`, EN kanon) · c (`cf5b8c5`,
+alla 8) · d (denna commit, alla 8, från första ticket). Fyra steg, åtta baseliningar,
+noll oplanerade röda.
+
+---
+
 # GOLDENS — ENGINE 2.6.0 + F1.0c + F1.2a-c (ALLA 8 kanoner om-baselinerade 2026-08-21, D-421)
 
 **F1.2c (D-374/D-390/D-409): sammansättningen** — två material blir ett nytt i verkstaden,
