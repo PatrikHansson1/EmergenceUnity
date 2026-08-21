@@ -1,3 +1,19 @@
+# GOLDENS — ENGINE 2.6.0 + F1.0c + F1.2a-c (ALLA 8 kanoner om-baselinerade 2026-08-21, D-421)
+
+**F1.2c (D-374/D-390/D-409): sammansättningen** — två material blir ett nytt i verkstaden,
+grindat av `hasLeisure` (D-086:s kulturlag), eld + värme ≥ max(thresh)+2, djup ≤ 1, tabu på
+bägge delarna och 60-ticks karens (`_compCd`). Mixregeln: LIMITING-dimensioner medlas,
+övriga tar max. **ALLA 8 kanonfiler om-baselinerade** — t720-kvartetten divergerar redan
+från de första åren (det nya själsfältet `_compCd` serialiseras från första beröringen),
+t8640-kvartetten bär den fulla verkan: **rika 4242 skriver 27 % mer historia
+(994 684 → 1 259 548 byte), lilla 97013 nästan ingen (+116 byte)** — sammansättningen
+arbetar där överskottet finns, precis som leisure-grinden föreskriver. Ordningen hölls i
+BÅDA baseliningarna: RÖD med avsikt → granskad diff → ny kanon → GRÖN, bekräftelsernas
+jint-hashar byte-identiska med röda passens. Motor-SHA: `bd3f1874…`. Föregående steg:
+F1.2b (`9894b8c`, endast 20260718-t8640) · F1.2a (`20c4d8a`, inga kanoner rörda).
+
+---
+
 # GOLDENS — ENGINE 2.6.0 + F1.0c + F1.2a + F1.2b (20260718-t8640 om-baselinerad 2026-08-20, D-420)
 
 **F1.2b (D-383/D-404): recepten läser egenskaper** — `pickAlt` ersatt: exakt recept först,

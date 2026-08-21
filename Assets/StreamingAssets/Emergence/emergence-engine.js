@@ -1819,6 +1819,43 @@ function agentTick(S,a){
   }
 
   let need=neededMaterial(S,a)||((a.inv.wood||0)<(a.knows.has('hut')&&!a.home?9:4)?'wood':null);
+  // F1.2c (D-374/D-390/D-409): SAMMANSÄTTNINGEN — den som behöver ett material den
+  // inte har prövar att sätta samman det ur det den HAR. Kräver leisure (kulturlagen),
+  // eld och tillräcklig värme. Djup <= 1. Inget S.rand dras.
+  if(need&&!SMELT[need]&&(a.inv[need]||0)<1&&hasLeisure(S,a)){
+    if(a._compCd===undefined)a._compCd=0;
+    if(S.tick>=a._compCd){
+      let _heat=0;
+      if(a.knows.has('fire')){
+        let _bf=0; for(const k in a.inv){ if((a.inv[k]||0)>0&&MATDIM[k]&&(MATDIM[k].fuel||0)>_bf)_bf=MATDIM[k].fuel; }
+        if(_bf){ _heat=_bf; if(a.knows.has('kiln'))_heat+=3; }
+      }
+      if(_heat>0){
+        const _held=Object.keys(a.inv).filter(k=>(a.inv[k]||0)>=1&&MATDIM[k]&&!k.includes('-')).sort();
+        let _made=null;
+        for(let i=0;i<_held.length&&!_made;i++)for(let j=i+1;j<_held.length&&!_made;j++){
+          const x=_held[i],y=_held[j];
+          if(isTaboo(S,a,x)||isTaboo(S,a,y))continue;
+          const _need=Math.max(MATDIM[x].thresh||0,MATDIM[y].thresh||0)+2;
+          if(_heat<_need)continue;
+          const n=x<y?x+'-'+y:y+'-'+x;
+          if(!MATDIM[n]){
+            const o={};
+            for(const d in MATDIM[x]){
+              const av=MATDIM[x][d]||0,bv=MATDIM[y][d]||0;
+              o[d]=(d==='hard'||d==='cohesive'||d==='thresh'||d==='fuel')?Math.round((av+bv)/2):Math.max(av,bv);
+            }
+            MATDIM[n]=o;
+          }
+          if(!suits(n,need))continue;
+          a.inv[x]--;a.inv[y]--;
+          a.inv[n]=(a.inv[n]||0)+1;a.task='working '+n;
+          a._compCd=S.tick+60;_made=n;
+        }
+        if(_made)return;
+      }
+    }
+  }
   // F1.0c (D-360): ATT ARBETA METALL ÄR EN ARBETSHANDLING, INTE EN UPPTÄCKT.
   // Den som kan hantverket och har ingredienserna förbrukar dem och får tinget.
   // Saknas en ingrediens blir DEN det man går och hämtar — i stället för att, som

@@ -11,7 +11,7 @@ namespace Emergence.Runtime
 {
     public sealed class EmergenceJintHost
     {
-        public const string ExpectedEngineSha = "76d62feea79e1d448713836876e542a5a50b8af39ae70eca825853db142f222e"; // + F1.2b (D-383/D-404): pickAlt replaced -- exact recipe first, then property-derived substitution under the UNION rule (both materials' key dims, z>=0.8 min 2, band 0.6*sd), taboo checked against the actually consumed material (G-review I2). No handwritten requirement rows, no rand draws. Goldens ARE re-baselined for this step: RED -> reviewed diff -> new canon -> GREEN, both horizons. Prior sha: 02cbae1eb1ff...
+        public const string ExpectedEngineSha = "bd3f1874dda3c8c25dc027475213b5ef3133e20b53c838b1bece35b5d6bfc6cc"; // + F1.2c (D-374/D-390/D-409): composition -- two materials become a new one in the workshop, gated by hasLeisure (D-086 culture law), fire + heat >= max(thresh)+2, depth <= 1, taboo on both parts, 60-tick cooldown. Mix: LIMITING dims averaged, others max. Goldens re-baselined where divergent: RED -> reviewed diff -> new canon -> GREEN. Prior sha (F1.2b): 76d62feea79e...
 
         private readonly Jint.Engine _engine;
         public string EngineSha256 { get; }
