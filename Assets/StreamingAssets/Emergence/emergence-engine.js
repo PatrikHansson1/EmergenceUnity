@@ -1713,7 +1713,8 @@ function agentTick(S,a){
     if((a.inv.clay||0)>0)tryObserve(S,a,'marksRemain',.03*boost);
   }
 
-  if(a.hunger<45){
+  if(a.traits.social>0.6&&a.hunger>=30&&a.hunger<45&&a.social<50&&(a.talkCd||0)<=0){const nb=nearestAgent(S,a,null,40);if(nb){moveToward(S,a,nb);a.task='seeking company';return;}}
+  if(a.hunger<(45-(a.traits.diligence-0.5)*26-(a.traits.ambition-0.5)*14)){
     const b=findNearest(S,a,'berry');
     if(a.knows.has('spear')&&(!b||(winter&&Math.hypot(b.x-a.x,b.y-a.y)>6))){
       const deer=nearestOf(S.animals.filter(an=>an.type==='deer'),a);
@@ -1745,7 +1746,7 @@ function agentTick(S,a){
     }
     doSeek(S,a,'berry',()=>{S.tiles[a.ty][a.tx0].n--;if(S.tiles[a.ty][a.tx0].n<=0)regrowLater(S,a.tx0,a.ty,'berry');a.hunger=clamp(a.hunger+45+(worldKnows(S,'mill')?20:0),0,140);a.task='eating';tryObserve(S,a,'seedsSprout',.09);tryObserve(S,a,'herbsHeal',a.hunger<60?.06:.025);/*D-239 nit, declared rather than silently carried: hunger is read AFTER the +45 the meal just gave, so this is the .025 branch almost always. The hook is reachable either way and that was the point; re-ordering it moves the sim stream, so it waits for the next engine wave instead of buying a re-baseline for a rate tweak.*/{const w2=findNearest(S,a,'water');if(w2&&Math.hypot(w2.x-a.x,w2.y-a.y)<4)tryObserve(S,a,'fishGather',.12);}if(S.rand()<.1)speak(S,a,pickSay(S,a,'hungry'),'hungry');});return;
   }
-  if(night&&a.warmth<70){
+  if(night&&a.warmth<(70+(a.traits.empathy-0.5)*32)){
     const f=nearestOf(S.fires.concat(S.huts),a);
     if(f&&dist(f,a)<25){moveToward(S,a,f);a.task='seeking warmth';if(S.rand()<.05)speak(S,a,pickSay(S,a,'cold'),'cold');return;}
     if(a.knows.has('fire')&&(a.inv.wood||0)>=2){a.inv.wood-=2;S.fires.push({x:a.x,y:a.y,fuel:600});a.task='lighting a fire';S.bgDirty=true;return;}
@@ -1760,7 +1761,7 @@ function agentTick(S,a){
   if(!night&&S.hour===19&&hasCustomKind(S,a,'value','fire')&&a.knows.has('fire')&&(a.inv.wood||0)>=2&&!S.fires.some(f=>dist(f,a)<6)){
     a.inv.wood-=2;S.fires.push({x:a.x,y:a.y,fuel:600});a.task='tending the flame';S.bgDirty=true;return;
   }
-  if(a.energy<15)a.sleeping=true;
+  if(a.energy<(15-(a.traits.diligence-0.5)*14)+((a.traits.social-0.5)*-6))a.sleeping=true;
   if(a.sleeping){a.task='sleeping';a.energy+=4;if(a.energy>=80)a.sleeping=false;else return;}
   starTick(S,a); // ENGINE 2.2 (D-088): stars -> cosmology -> sky-faith; star-gazing unlocks the calendar
   if(S.tick%8===0&&a.hunger>45&&maybeTill(S,a))return; // Engine 1.1: spring tilling when not starving
@@ -1818,7 +1819,7 @@ function agentTick(S,a){
   if((a.talkCd||0)<=0){
     const other=S.agents.find(o=>o!==a&&!o.dead&&dist(o,a)<3.5&&(o.talkCd||0)<=0);
     if(other&&(a.social<70||S.rand()<.2)){talk(S,a,other);return;}
-    if(a.social<55){
+    if(a.social<(55+(a.traits.social-0.5)*58)){
       const near=nearestAgent(S,a,null,40);
       if(near){moveToward(S,a,near);a.task='seeking company';return;}
     }

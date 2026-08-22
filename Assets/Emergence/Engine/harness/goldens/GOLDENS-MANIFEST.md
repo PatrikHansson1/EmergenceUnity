@@ -1,3 +1,19 @@
+# GOLDENS — ENGINE 2.6.0 + F1.0c + F1.2a-d + F1.4 + B5b ★ VÅG A:s MOTOR KLAR ★ (alla 8 kanoner om-baselinerade 2026-08-22, D-471)
+
+**B5b (D-457): BEHOVSVIKTNING UR EGENSKAPER.** Egenskaper viktar VILKET behov som agerar —
+flit/ambition höjer hungertoleransen, empati sänker värmetröskeln, social söker sällskap tidigt
++ order-flip (mild hunger viker för sällskap). Deterministiskt ur befintliga traits, ingen ny
+RNG-ström. Rigg-dom: D_viktad 0,393 (≥0,33), tillskott +0,154 (≥0,10), 0 extra utdöda; acceptansen
+OMMÄTT på F1.4-motorn: GRÖN (D 0,337, +0,115). **Baselineringen 2026-08-22:** kanonerna moln-
+genererade (harness-troheten förbevisad mot F1.4-basen), installerade byte-exakt, Unity/Jint GRÖN
+direkt på båda horisonter (t720 4/4 85–130 s; t8640 4/4 1 609–4 265 s, ~5 h 15 min — 20260718 blev
+en 3,1 MB-kanon under viktningen). Varje jintSha == molnprediktion. Engine SHA: 201950d0c9dea116…
+(föregående F1.4: 2a77bfcf23717502…; backup-ref backup/pre-b5b-2026-08-21 → 9695bd6a2947…; gamla
+kanoner i goldens/.pre-b5b/). **VÅG A:s motorarbete (F1.4 + B5b) därmed KLART — kvar: A4 Jint-mätning
++ A5 M-FÖRDELNING mot låst motor.**
+
+---
+
 # GOLDENS — ENGINE 2.6.0 + F1.0c + F1.2a-d + F1.4 ★ TÖRSTEN BASELINEAD ★ (alla 8 kanoner om-baselinerade 2026-08-21, D-462)
 
 **F1.4 (D-451): TÖRSTEN OCH PLATSEN.** Törst-behov (init 80) · avtappning säsong × krukbärande

@@ -11,7 +11,7 @@ namespace Emergence.Runtime
 {
     public sealed class EmergenceJintHost
     {
-        public const string ExpectedEngineSha = "2a77bfcf23717502c83db356f1b0c9532d18ab6e2e7ad08e77e18d024ee9bbab"; // + F1.4 (D-451): thirst -- init 80, drain (season x pottery x dry-year), ~1/7 dry years via FNV, opportunistic+seeking drink, dehydration WEAKENS (energy -1.5) not kills. Slutprov 32 seeds: W1 0.33, 1 dead/32 (31337 lives), 0 thirst-deaths. Worldgen+agentinit change -> goldens RED from first tick by design. Prior sha (F1.2d): 8a473f0dff7d...
+        public const string ExpectedEngineSha = "201950d0c9dea116597295707398e2cd0aae83d6f748e9c368333d1bd7982777"; // + B5b (D-457): trait-weighted need gates (hunger/warmth/social/sleep + social order-flip); D 0.337, gain +0.115 on F1.4 engine, no harm. // + F1.4 (D-451): thirst -- init 80, drain (season x pottery x dry-year), ~1/7 dry years via FNV, opportunistic+seeking drink, dehydration WEAKENS (energy -1.5) not kills. Slutprov 32 seeds: W1 0.33, 1 dead/32 (31337 lives), 0 thirst-deaths. Worldgen+agentinit change -> goldens RED from first tick by design. Prior sha (F1.2d): 8a473f0dff7d...
 
         private readonly Jint.Engine _engine;
         public string EngineSha256 { get; }
