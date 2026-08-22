@@ -2399,6 +2399,24 @@ function writeHistory(S){
   };
 }
 
+// B2.0 (D-481): AGGREGAT-SPEGELN — byn som kohorter, ren avläsning på begäran.
+// Lagrar INGET på S/v (kanon-neutral), konsumerar ingen S.rand. Braudel-LOD:s första sten:
+// samma sanning i två upplösningar; B2.1 bygger demografin på dessa kohorter.
+function villageAggregate(S,v){
+  const mem=[]; for(const a of S.agents){ if(a.dead)continue;
+    let bd=1e9,bv=null; for(const w of S.villages){const d=Math.hypot((a.home?a.home.x:a.x)-w.x,(a.home?a.home.y:a.y)-w.y);if(d<bd){bd=d;bv=w;}}
+    if(bv===v)mem.push(a); }
+  const coh={c0_13:0,c14_39:0,c40_64:0,c65p:0};
+  for(const a of mem){ if(a.age<14)coh.c0_13++; else if(a.age<40)coh.c14_39++; else if(a.age<65)coh.c40_64++; else coh.c65p++; }
+  const knows=new Set(); let scribes=0, wsum=0;
+  const tsum={curiosity:0,social:0,diligence:0}, tsq={curiosity:0,social:0,diligence:0};
+  for(const a of mem){ for(const k of a.knows)knows.add(k); if(a.knows.has('writing'))scribes++;
+    for(const k in a.inv)wsum+=a.inv[k]||0;
+    for(const t of ['curiosity','social','diligence']){const x=a.traits[t]||0;tsum[t]+=x;tsq[t]+=x*x;} }
+  const n=mem.length||1;
+  const traits={}; for(const t of ['curiosity','social','diligence']){const mu=tsum[t]/n;traits[t]={mean:mu,sd:Math.sqrt(Math.max(0,tsq[t]/n-mu*mu))};}
+  return {pop:mem.length,cohorts:coh,knows:[...knows].sort(),scribes,wealth:wsum,traits};
+}
 function resimulate(seed,toTick){
   const S=createWorld(seed);
   S.silent=true;
@@ -2407,5 +2425,5 @@ function resimulate(seed,toTick){
   return S;
 }
 
-return {createWorld,tickWorld,computeDNA,villageScope,resimulate,writeHistory,roleOf,verbOf,worldEra,eraName,ERAS,wealthOf:wealth,TECHS,TECH,OBS,QUIRK,W,H,YEAR,SEASONS,VERSION:'2.6.0'};
+return {createWorld,tickWorld,computeDNA,villageScope,resimulate,writeHistory,roleOf,verbOf,worldEra,eraName,ERAS,wealthOf:wealth,TECHS,TECH,OBS,QUIRK,W,H,YEAR,SEASONS,VERSION:'2.6.0',villageAggregate};
 });
