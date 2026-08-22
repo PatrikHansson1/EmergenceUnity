@@ -1,3 +1,16 @@
+# GOLDENS — …+ B5b + GEO2 ★ VÅG B PÅBÖRJAD ★ (8 kanoner om-baselinerade 2026-08-22, D-482 — PRELIMINÄR, väntar t8640-grön + commit)
+
+**GEO2 (D-480): FYNDIGHETSMODELLEN.** Malmen kommer i deposits (2 centrum/material, FNV per
+frö+material, tät radie 6; lera uniform golv), ej uniformt. Grund: VARIATION — deposit-geologi
+höjer parvis världsdivergens +20% (D-479, acceptans 8 frön grön). Handeln flyttad till Våg C
+(D-478: tre riggar visade att geologi ensam ej väcker handel — räckvidd spänner regioner + byar
+klumpas). Engine SHA: 98a190aa7dd09e66… (föreg. B5b: 201950d0…; backup-ref pre-geo2 → e6248b9;
+gamla kanoner i goldens/.pre-geo2/). Worldgen ändras ⇒ golden RÖD från tick 0 med avsikt; kanoner
+moln-genererade (harness-trohet förbevisad F1.4/B5b), t720 GRÖN 4/4 (96–119 s, alla jintSha ==
+prediktion). t8640 kör. 32-frönstalen mäts om på riktig motor efter baselining (F1.2d-precedens).
+
+---
+
 # GOLDENS — ENGINE 2.6.0 + F1.0c + F1.2a-d + F1.4 + B5b ★ VÅG A:s MOTOR KLAR ★ (alla 8 kanoner om-baselinerade 2026-08-22, D-471)
 
 **B5b (D-457): BEHOVSVIKTNING UR EGENSKAPER.** Egenskaper viktar VILKET behov som agerar —

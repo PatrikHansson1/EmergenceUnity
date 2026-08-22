@@ -663,10 +663,16 @@ function makeWorld(S){
     }
   };
   hb('water',1,5);hb('forest',5,5);hb('stone',3,3);hb('berry',6,3);
+  // GEO2 (D-480): malmen kommer i FYNDIGHETER, ej uniformt. 2 centrum per material
+  // (FNV per frö+material, aldrig sim-RNG), tiles klungade inom radie 6; lera uniform (golv).
+  // Grund: variation — deposit-geologi höjde parvis divergens +20% (D-479). Handel = Våg C.
+  const _dep=(type)=>{ const cs=[]; for(let k=0;k<2;k++){ let h=2166136261>>>0; const s=String(S.seed||0)+'/'+type+'/dep'+k; for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)>>>0;} cs.push([2+(h%(W-4)),2+((h>>>8)%(H-4))]); } return cs; };
   const scatter=(near,type,count)=>{
-    let placed=0,guard=0;
-    while(placed<count&&guard++<4000){
-      const x=RI(S,1,W-2),y=RI(S,1,H-2);
+    let placed=0,guard=0; const cl=(type!=='clay'); const deps=cl?_dep(type):null; const RAD=6;
+    while(placed<count&&guard++<12000){
+      let x,y;
+      if(cl){const c=deps[RI(S,0,deps.length-1)];x=c[0]+RI(S,-RAD,RAD);y=c[1]+RI(S,-RAD,RAD);if(x<1||x>W-2||y<1||y>H-2)continue;}
+      else{x=RI(S,1,W-2);y=RI(S,1,H-2);}
       if(S.tiles[y][x].t!=='grass')continue;
       let ok=false;
       for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++){const t=(S.tiles[y+dy]||[])[x+dx];if(t&&t.t===near)ok=true;}
