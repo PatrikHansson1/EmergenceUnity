@@ -1,0 +1,2 @@
+DONE 12:51:19 verdict=GREEN msPerTick10k=167,03 growth20kOver10k=1,01 v=2
+se Reports/b24-skalprov.txt (GILTIGHETSVAKT: kolla massa-kvar-kolumnen)

@@ -663,16 +663,10 @@ function makeWorld(S){
     }
   };
   hb('water',1,5);hb('forest',5,5);hb('stone',3,3);hb('berry',6,3);
-  // GEO2 (D-480): malmen kommer i FYNDIGHETER, ej uniformt. 2 centrum per material
-  // (FNV per frö+material, aldrig sim-RNG), tiles klungade inom radie 6; lera uniform (golv).
-  // Grund: variation — deposit-geologi höjde parvis divergens +20% (D-479). Handel = Våg C.
-  const _dep=(type)=>{ const cs=[]; for(let k=0;k<2;k++){ let h=2166136261>>>0; const s=String(S.seed||0)+'/'+type+'/dep'+k; for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)>>>0;} cs.push([2+(h%(W-4)),2+((h>>>8)%(H-4))]); } return cs; };
   const scatter=(near,type,count)=>{
-    let placed=0,guard=0; const cl=(type!=='clay'); const deps=cl?_dep(type):null; const RAD=6;
-    while(placed<count&&guard++<12000){
-      let x,y;
-      if(cl){const c=deps[RI(S,0,deps.length-1)];x=c[0]+RI(S,-RAD,RAD);y=c[1]+RI(S,-RAD,RAD);if(x<1||x>W-2||y<1||y>H-2)continue;}
-      else{x=RI(S,1,W-2);y=RI(S,1,H-2);}
+    let placed=0,guard=0;
+    while(placed<count&&guard++<4000){
+      const x=RI(S,1,W-2),y=RI(S,1,H-2);
       if(S.tiles[y][x].t!=='grass')continue;
       let ok=false;
       for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++){const t=(S.tiles[y+dy]||[])[x+dx];if(t&&t.t===near)ok=true;}
@@ -712,7 +706,7 @@ function makeAgent(S,x,y,parents,founder){
   const a={
     id:S.nextId++, name:NAMES[S.usedNames++%NAMES.length]+(S.usedNames>NAMES.length?' II':''),
     x,y, age:parents?0:RI(S,17,24), gen:parents?Math.max(parents[0].gen,parents[1].gen)+1:1,
-    lifespan:RI(S,55,85), hunger:80,thirst:80,energy:90,warmth:90,social:70,
+    lifespan:RI(S,55,85), hunger:80,energy:90,warmth:90,social:70,
     inv:{},knows:new Set(),obs:new Set(),customs:new Set(),rel:{},task:'thinking',expT:0,expTech:null,expAlt:null,
     say:'',sayT:0,sayAct:null,inspired:0,childCd:0,talkCd:0,phase:R(S,0,6.28),
     hue:parents?(parents[0].hue+parents[1].hue)/2+RI(S,-20,20):RI(S,0,360),
@@ -771,7 +765,7 @@ function createWorld(seed,founders){
     tiles:null,agents:[],fires:[],huts:[],villages:[],regrows:[],
     events:[],knowledge:{},customs:{},nextCustomId:1,
     nextId:1,maxGeneration:1,usedNames:0,ended:false,
-    maxPop:4,aggregates:[],stats:{talks:0,births:0,deaths:{starvation:0,cold:0,age:0,wolves:0},failedExperiments:0,observations:0,conversions:0,hunts:0,harshWinters:0},
+    maxPop:4,stats:{talks:0,births:0,deaths:{starvation:0,cold:0,age:0,wolves:0},failedExperiments:0,observations:0,conversions:0,hunts:0,harshWinters:0},
     animals:[],nextAnimalId:1,fields:[],season:'spring',winterSeverity:1,seenWinter:false,brewing:null,
     traitSum:{curiosity:0,social:0,diligence:0,n:0},
     onEvent:null,silent:false,bgDirty:true,
@@ -1208,7 +1202,7 @@ function talk(S,a,b){
   else if((a.rel[b.id]||0)>70)speak(S,a,pickSay(S,a,'love'),'love');
   else speak(S,a,pickSay(S,a,'small'),'small');
   if(a.rel[b.id]>45&&b.rel[a.id]>45&&a.age>16&&b.age>16&&a.age<52&&b.age<52
-     &&a.childCd===0&&b.childCd===0&&a.hunger>40&&b.hunger>40&&((S._aliveN||S.agents.filter(x=>!x.dead).length)+(S.aggregates&&S.aggregates.length?S.aggregates.reduce((t,g)=>t+g.cohorts[0]+g.cohorts[1]+g.cohorts[2]+g.cohorts[3],0):0))<carryingCapacity(S) // E1 MALTHUS: the land sets the ceiling (cached alive count)
+     &&a.childCd===0&&b.childCd===0&&a.hunger>40&&b.hunger>40&&(S._aliveN||S.agents.filter(x=>!x.dead).length)<carryingCapacity(S) // E1 MALTHUS: the land sets the ceiling (cached alive count)
      &&S.rand()<(worldKnows(S,'farming')||worldKnows(S,'fishing')?0.26:0.20)){ // TENSION PROTO: births eased for a more populous world (EP request) — rel bar 60→45, fertile window +2y, rate up
     const child=makeAgent(S,a.x,a.y,[a,b]);child.born=S.tick/YEAR;
     // ENGINE 2.1 (D-086): writing's durability is now COMMUNITY-local, not global — a child inherits
@@ -1670,7 +1664,7 @@ function warTick(S){
 function agentTick(S,a){
   const night=S.hour<5||S.hour>21;
   const winter=S.season==='winter';
-  a.hunger-=0.35;a.thirst-=(S.season==='summer'?0.4:0.3)*(a.knows.has('pottery')?0.55:1)*(S._dry?1.3:1);a.energy-=night?0.5:0.25;a.social-=0.3;
+  a.hunger-=0.35;a.energy-=night?0.5:0.25;a.social-=0.3;
   if(a.talkCd>0)a.talkCd--;
   const coldDrain=winter?2.2*S.winterSeverity+0.6:S.season==='summer'?1.6:2.2;
   if(night){
@@ -1678,14 +1672,13 @@ function agentTick(S,a){
     else if(nearby(S,a,1.4).length>0)a.warmth+=Math.max(0.2,0.9-(winter?0.4*(S.winterSeverity-1):0));
     else a.warmth-=coldDrain;
   } else a.warmth+=winter?0.6:1.5;
-  a.hunger=clamp(a.hunger,0,100+(a.knows.has('pottery')?40:0));a.thirst=clamp(a.thirst,0,100);
+  a.hunger=clamp(a.hunger,0,100+(a.knows.has('pottery')?40:0));
   a.energy=clamp(a.energy,0,100);a.warmth=clamp(a.warmth,0,100);a.social=clamp(a.social,0,100);
   if(a.inspired>0)a.inspired--;
   if(a.childCd>0)a.childCd--;
   if(a.sayT>0)a.sayT--;
   a.age=S.tick/YEAR-(a.born||0);
 
-  if(a.thirst<=0){a.thirst=0;a.energy=Math.max(0,a.energy-1.5);}
   if(a.hunger<=0||a.warmth<=0||a.age>a.lifespan){
     const causeKey=a.hunger<=0?'starvation':a.warmth<=0?'cold':'age';
     const cause=a.hunger<=0?'starved to death':a.warmth<=0?(winter?'froze to death in the winter cold':'froze to death'):'died of old age at '+Math.floor(a.age);
@@ -1696,7 +1689,6 @@ function agentTick(S,a){
     return;
   }
   const child=a.age<14;
-  {const wN=findNearest(S,a,'water');if(wN&&Math.hypot(wN.x-a.x,wN.y-a.y)<1.6&&a.thirst<70){a.thirst=(S._dry?70:100);}}  if(a.thirst<20&&a.hunger>30){const yr=Math.floor(S.tick/YEAR);if(S._wellY!==yr){S._wellY=yr;{let h=2166136261>>>0;const s=String(S.seed)+'@'+yr;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)>>>0;}S._dry=(h%7===0);}}{const w=findNearest(S,a,'water');if(w){if(Math.hypot(w.x-a.x,w.y-a.y)<1.6){a.thirst=(S._dry?70:100);a.task='drinking';}else{moveToward(S,a,w);a.task='walking to water';return;}}}}
 
   // TENSION PROTO: the SAME friction resolves as trade OR force. Try the peaceful path first
   // (cooperation-inclined souls trade), then force (conflictTick); aspiration hoards a surplus.
@@ -1719,8 +1711,7 @@ function agentTick(S,a){
     if((a.inv.clay||0)>0)tryObserve(S,a,'marksRemain',.03*boost);
   }
 
-  if(a.traits.social>0.6&&a.hunger>=30&&a.hunger<45&&a.social<50&&(a.talkCd||0)<=0){const nb=nearestAgent(S,a,null,40);if(nb){moveToward(S,a,nb);a.task='seeking company';return;}}
-  if(a.hunger<(45-(a.traits.diligence-0.5)*26-(a.traits.ambition-0.5)*14)){
+  if(a.hunger<45){
     const b=findNearest(S,a,'berry');
     if(a.knows.has('spear')&&(!b||(winter&&Math.hypot(b.x-a.x,b.y-a.y)>6))){
       const deer=nearestOf(S.animals.filter(an=>an.type==='deer'),a);
@@ -1752,7 +1743,7 @@ function agentTick(S,a){
     }
     doSeek(S,a,'berry',()=>{S.tiles[a.ty][a.tx0].n--;if(S.tiles[a.ty][a.tx0].n<=0)regrowLater(S,a.tx0,a.ty,'berry');a.hunger=clamp(a.hunger+45+(worldKnows(S,'mill')?20:0),0,140);a.task='eating';tryObserve(S,a,'seedsSprout',.09);tryObserve(S,a,'herbsHeal',a.hunger<60?.06:.025);/*D-239 nit, declared rather than silently carried: hunger is read AFTER the +45 the meal just gave, so this is the .025 branch almost always. The hook is reachable either way and that was the point; re-ordering it moves the sim stream, so it waits for the next engine wave instead of buying a re-baseline for a rate tweak.*/{const w2=findNearest(S,a,'water');if(w2&&Math.hypot(w2.x-a.x,w2.y-a.y)<4)tryObserve(S,a,'fishGather',.12);}if(S.rand()<.1)speak(S,a,pickSay(S,a,'hungry'),'hungry');});return;
   }
-  if(night&&a.warmth<(70+(a.traits.empathy-0.5)*32)){
+  if(night&&a.warmth<70){
     const f=nearestOf(S.fires.concat(S.huts),a);
     if(f&&dist(f,a)<25){moveToward(S,a,f);a.task='seeking warmth';if(S.rand()<.05)speak(S,a,pickSay(S,a,'cold'),'cold');return;}
     if(a.knows.has('fire')&&(a.inv.wood||0)>=2){a.inv.wood-=2;S.fires.push({x:a.x,y:a.y,fuel:600});a.task='lighting a fire';S.bgDirty=true;return;}
@@ -1767,7 +1758,7 @@ function agentTick(S,a){
   if(!night&&S.hour===19&&hasCustomKind(S,a,'value','fire')&&a.knows.has('fire')&&(a.inv.wood||0)>=2&&!S.fires.some(f=>dist(f,a)<6)){
     a.inv.wood-=2;S.fires.push({x:a.x,y:a.y,fuel:600});a.task='tending the flame';S.bgDirty=true;return;
   }
-  if(a.energy<(15-(a.traits.diligence-0.5)*14)+((a.traits.social-0.5)*-6))a.sleeping=true;
+  if(a.energy<15)a.sleeping=true;
   if(a.sleeping){a.task='sleeping';a.energy+=4;if(a.energy>=80)a.sleeping=false;else return;}
   starTick(S,a); // ENGINE 2.2 (D-088): stars -> cosmology -> sky-faith; star-gazing unlocks the calendar
   if(S.tick%8===0&&a.hunger>45&&maybeTill(S,a))return; // Engine 1.1: spring tilling when not starving
@@ -1825,7 +1816,7 @@ function agentTick(S,a){
   if((a.talkCd||0)<=0){
     const other=S.agents.find(o=>o!==a&&!o.dead&&dist(o,a)<3.5&&(o.talkCd||0)<=0);
     if(other&&(a.social<70||S.rand()<.2)){talk(S,a,other);return;}
-    if(a.social<(55+(a.traits.social-0.5)*58)){
+    if(a.social<55){
       const near=nearestAgent(S,a,null,40);
       if(near){moveToward(S,a,near);a.task='seeking company';return;}
     }
@@ -2093,9 +2084,7 @@ function tickWorld(S){
   if(S.tick%YEAR===0)cultureYearTick(S);
   if(S.tick%YEAR===0)warTick(S); // TENSION PROTO: village-scale organised violence (the war rung)
   if(S.tick%YEAR===0)leaderTick(S); // E1.5 (D-166 B1): prestige -> recognized leader + tribute upward
-  if(S.tick%YEAR===0)knowledgeRetentionTick(S);
-  if(S.tick%YEAR===0)aggregateTick(S); // B2.2a: vilande tills T_AGG nås
-  if(S.tick%YEAR===0)sicknessTick(S); // B4 (D-507): feberns år — tyst under tröskeln // ENGINE 2.1 (D-086): per-community knowledge census + local loss/rediscovery (yearly; pure readout)
+  if(S.tick%YEAR===0)knowledgeRetentionTick(S); // ENGINE 2.1 (D-086): per-community knowledge census + local loss/rediscovery (yearly; pure readout)
   for(const f of S.fires)f.fuel--;
   S.fires=S.fires.filter(f=>f.fuel>0);
   for(let i=S.regrows.length-1;i>=0;i--){
@@ -2401,138 +2390,6 @@ function writeHistory(S){
   };
 }
 
-// B2.0 (D-481): AGGREGAT-SPEGELN — byn som kohorter, ren avläsning på begäran.
-// Lagrar INGET på S/v (kanon-neutral), konsumerar ingen S.rand. Braudel-LOD:s första sten:
-// samma sanning i två upplösningar; B2.1 bygger demografin på dessa kohorter.
-function villageAggregate(S,v){
-  const mem=[]; for(const a of S.agents){ if(a.dead)continue;
-    let bd=1e9,bv=null; for(const w of S.villages){const d=Math.hypot((a.home?a.home.x:a.x)-w.x,(a.home?a.home.y:a.y)-w.y);if(d<bd){bd=d;bv=w;}}
-    if(bv===v)mem.push(a); }
-  const coh={c0_13:0,c14_39:0,c40_64:0,c65p:0};
-  for(const a of mem){ if(a.age<14)coh.c0_13++; else if(a.age<40)coh.c14_39++; else if(a.age<65)coh.c40_64++; else coh.c65p++; }
-  const knows=new Set(); let scribes=0, wsum=0;
-  const tsum={curiosity:0,social:0,diligence:0}, tsq={curiosity:0,social:0,diligence:0};
-  for(const a of mem){ for(const k of a.knows)knows.add(k); if(a.knows.has('writing'))scribes++;
-    for(const k in a.inv)wsum+=a.inv[k]||0;
-    for(const t of ['curiosity','social','diligence']){const x=a.traits[t]||0;tsum[t]+=x;tsq[t]+=x*x;} }
-  const n=mem.length||1;
-  const traits={}; for(const t of ['curiosity','social','diligence']){const mu=tsum[t]/n;traits[t]={mean:mu,sd:Math.sqrt(Math.max(0,tsq[t]/n-mu*mu))};}
-  return {pop:mem.length,cohorts:coh,knows:[...knows].sort(),scribes,wealth:wsum,traits};
-}
-// B2.2a (D-497): AGGREGATSWITCHEN — vilande skyddsnät. T_AGG/T_DE via S._aggT (test kan sänka).
-function _fnvh(s){let h=2166136261>>>0;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)>>>0;}return h;}
-function _bearerScore(a){return a.knows.size*2+(a.epithets?a.epithets.length:0)+a.age/10;}
-function _catchments(S){
-  const map=new Map(); for(const v of S.villages)map.set(v,[]);
-  for(const a of S.agents){ if(a.dead)continue; let bd=1e9,bv=null;
-    for(const v of S.villages){const d=Math.hypot((a.home?a.home.x:a.x)-v.x,(a.home?a.home.y:a.y)-v.y);if(d<bd){bd=d;bv=v;}}
-    if(bv)map.get(bv).push(a); }
-  return map;
-}
-const _AGGDR=[0.0011,0.0015,0.0131,0.0892], _AGGFERT=0.0774, _AGGN=10;
-function aggregateTick(S){
-  const T=S._aggT||{agg:200,de:140};
-  const catch_=_catchments(S);
-  // 1) uppdatera existerande aggregat (kohortår) + ev. re-individualisering
-  for(let i=S.aggregates.length-1;i>=0;i--){
-    const g=S.aggregates[i];
-    // v3 (D-498): EKONOMIKOPPLINGEN — vuxenkohorten räknas som fältarbete (fyller fältgapet mot 24-taket)
-    const _fgap=Math.max(0,24-Math.min(S.fields.length,24));
-    const _cpop=g.cohorts[0]+g.cohorts[1]+g.cohorts[2]+g.cohorts[3];
-    // v6 (D-499): BÄRYTAN är befolkningsdriven (seedsSprout-ekologin) — kohortmassan 'äter-och-sår'.
-    // Kalibrering ur jämviktsanalys: ref-värld ~275 sites vid pop 391, agg-värld ~204 vid ~15 aktiva
-    // ⇒ befolkningsbidrag ≈ (275-204)/(391-15) ≈ 0,19 sites/själ. Term: cpop*0,19*0,28*KLIFT.
-    const _bonus=_cpop*0.19*0.28;
-    const K=Math.max(1,carryingCapacity(S)+_bonus);
-    let c=g.cohorts, pop=c[0]+c[1]+c[2]+c[3];
-    const bearersAlive=S.agents.filter(a=>!a.dead&&g.bearers.indexOf(a.id)>=0).length;
-    const damp=Math.max(0,1-Math.pow((pop+bearersAlive)/K,_AGGN));
-    const births=_AGGFERT*c[1]*damp, a01=c[0]/14,a12=c[1]/26,a23=c[2]/25;
-    c[0]=Math.max(0,c[0]+births-a01-_AGGDR[0]*c[0]);
-    c[1]=Math.max(0,c[1]+a01-a12-_AGGDR[1]*c[1]);
-    c[2]=Math.max(0,c[2]+a12-a23-_AGGDR[2]*c[2]);
-    c[3]=Math.max(0,c[3]+a23-_AGGDR[3]*c[3]);
-    pop=c[0]+c[1]+c[2]+c[3];
-    if(pop+bearersAlive>K){ const f=Math.max(0,(K-bearersAlive))/pop; for(let ci2=0;ci2<4;ci2++)c[ci2]*=f; pop=c[0]+c[1]+c[2]+c[3]; } // v3: Malthus hårdkap
-    if(pop+bearersAlive<T.de){
-      // RE-INDIVIDUALISERING: så själar deterministiskt ur kohorterna
-      const v=S.villages.find(v2=>v2.name===g.village); const yr=Math.floor(S.tick/YEAR);
-      const bounds=[[1,13],[14,39],[40,64],[65,80]];
-      for(let ci=0;ci<4;ci++){ const n=Math.round(c[ci]);
-        for(let k=0;k<n;k++){ const h=_fnvh(String(S.seed)+'/'+g.village+'/'+yr+'/'+ci+'/'+k);
-          const age=bounds[ci][0]+h%(bounds[ci][1]-bounds[ci][0]+1);
-          const a=makeAgent(S,(v?v.x:50)+((h>>>8)%7)-3,(v?v.y:35)+((h>>>16)%7)-3,null,false);
-          a.age=age;
-          for(const t in g.traitsM){const mu=g.traitsM[t].mean,sd=g.traitsM[t].sd;
-            a.traits[t]=clamp(mu+((h>>>24)/255-0.5)*2*sd,0.05,0.95);}
-          // kunskap: bärarkapacitetslagen approximeras — vuxna får slumpfri delmängd av unionen
-          if(age>=14){const ks=g.knowsUnion; const take=Math.min(ks.length,2+(h%4));
-            for(let j=0;j<take;j++)a.knows.add(ks[(h+j*2654435761)%ks.length]);}
-        }}
-      S.aggregates.splice(i,1);
-      ev(S,'aggregate',`🏘️ ${g.village} åter i sikte: själarna träder ur mängden (${Math.round(pop)} själar).`,{village:g.village});
-    }
-  }
-  // 2) nya aggregat: upptagningsområde ≥ T.agg
-  for(const [v,mem] of catch_){
-    if(S.aggregates.some(g=>g.village===v.name))continue;
-    const alive=mem.filter(a=>!a.dead);
-    if(alive.length>=T.agg){
-      const sorted=[...alive].sort((a,b)=>_bearerScore(b)-_bearerScore(a));
-      const bearers=sorted.slice(0,15);
-      const fold=sorted.slice(15);
-      const c=[0,0,0,0]; const knows=new Set(); const tM={curiosity:{s:0,q:0},social:{s:0,q:0},diligence:{s:0,q:0}};
-      for(const a of fold){ const ci=a.age<14?0:(a.age<40?1:(a.age<65?2:3)); c[ci]++;
-        for(const k of a.knows)knows.add(k);
-        for(const t in tM){const x=a.traits[t]||0.5;tM[t].s+=x;tM[t].q+=x*x;}
-        a.dead=true; a._folded=true; if(a.home)a.home.free=true; // viks in — INTE killAgent (inga dödsevent för massan)
-      }
-      const n=fold.length||1; const traitsM={};
-      for(const t in tM){const mu=tM[t].s/n;traitsM[t]={mean:mu,sd:Math.sqrt(Math.max(0,tM[t].q/n-mu*mu))};}
-      for(const b of bearers)for(const k of b.knows)knows.add(k);
-      S.aggregates.push({village:v.name,cohorts:c,knowsUnion:[...knows].sort(),wealth:0,traitsM,bearers:bearers.map(b=>b.id)});
-      ev(S,'aggregate',`🏙️ ${v.name} har växt bortom den enskilda blicken — ${fold.length} själar lever nu som folkmängd; ${bearers.length} namn bär krönikan.`,{village:v.name});
-    }
-  }
-}
-// B4 v1 (D-507/D-508): ENDEMISK SJUKDOM — täthetens pris (McNeill-benet).
-// Feberns år: tryck q=0,02·max(0,N−50)/50 per person-år över upptagningsområdets massa
-// (levande + kohortmassa — B2.2a-kontraktet), barn ×2/äldre ×3, medicine-bärare ×0,5,
-// aqueduct ×0,7. Deterministisk; ingen ny rand-ström; glesa världar hör aldrig feberns år.
-// Rigg-dom D-508: M1 2,19‰/0,00‰ · M2 1v1 utdöda, −6,5% pop · M4 Δ0,3pe · M5 80%/0 läckage.
-function sicknessTick(S){
-  const catch_=_catchments(S);
-  for(const pair of catch_){
-    const v=pair[0], mem=pair[1];
-    const alive=mem.filter(a=>!a.dead);
-    let cmass=0, g=null;
-    if(S.aggregates&&S.aggregates.length){ g=S.aggregates.find(g2=>g2.village===v.name)||null;
-      if(g)cmass=g.cohorts[0]+g.cohorts[1]+g.cohorts[2]+g.cohorts[3]; }
-    const N=alive.length+cmass;
-    const q0=0.02*Math.max(0,N-50)/50;
-    const healer=alive.some(a=>!a.dead&&a.knows.has('medicine'));
-    if(q0<=0)continue;
-    const aq=worldKnows(S,'aqueduct')?0.7:1;
-    const hm=healer?0.5:1;
-    let died=0;
-    for(const a of alive){
-      if(a.dead)continue;
-      const w=a.age<14?2:(a.age>=65?3:1);
-      if(S.rand()<q0*aq*w*hm){
-        died++;
-        killAgent(S,a,'sickness','was taken by the fever that walks where many live close',[]);
-      }
-    }
-    if(g){ const wc=[2,1,1,3];
-      for(let ci=0;ci<4;ci++)g.cohorts[ci]=Math.max(0,g.cohorts[ci]*(1-Math.min(0.9,q0*aq*wc[ci]*hm)));
-    }
-    if(died>0){ S._sickSeen=S._sickSeen||{};
-      if(!S._sickSeen[v.name]){ S._sickSeen[v.name]=1;
-        ev(S,'sickness','🤒 The fever\'s year has come to <b>'+v.name+'</b> — where many live close, death walks quicker.',{village:v.name});
-      }
-    }
-  }
-}
 function resimulate(seed,toTick){
   const S=createWorld(seed);
   S.silent=true;
@@ -2541,5 +2398,5 @@ function resimulate(seed,toTick){
   return S;
 }
 
-return {createWorld,tickWorld,computeDNA,villageScope,resimulate,writeHistory,roleOf,verbOf,worldEra,eraName,ERAS,wealthOf:wealth,TECHS,TECH,OBS,QUIRK,W,H,YEAR,SEASONS,VERSION:'2.6.0',villageAggregate};
+return {createWorld,tickWorld,computeDNA,villageScope,resimulate,writeHistory,roleOf,verbOf,worldEra,eraName,ERAS,wealthOf:wealth,TECHS,TECH,OBS,QUIRK,W,H,YEAR,SEASONS,VERSION:'2.6.0'};
 });

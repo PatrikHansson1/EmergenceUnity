@@ -3,7 +3,7 @@
 // läckagedetektorn: försvinner utfallet HELT när en regel stängs av, VAR den regeln utfallet.
 'use strict';
 const fs = require('fs');
-const SRC = fs.readFileSync('./spike-v5.js', 'utf8');
+const SRC = fs.readFileSync('./spike-v7.js', 'utf8');
 
 function variant(name, patch) {
   const code = patch(SRC);
@@ -24,6 +24,10 @@ const V = [
     "  if (proc.tier !== undefined && proc.tier > W.heatCap) { if (W.methods.written) W.memo.add(tk); return null; }", "")),
   variant('utan MEMOISERING (metod 3)', s => s.replace(
     "  if (W.methods.written && W.memo.has(tk)) { W.stats.memoHits++; return null; }", "")),
+  variant('utan TRYCK (konflikt+sjukdom)', s => s.replace(
+    "  if (!W.pressureOn) return;", "  return;")),
+  variant('utan EFTERFRÅGAN men MED tryck', s => s.replace(
+    "function scheduleDemand(W, n) {", "function scheduleDemand(W, n) { return;")),
 ];
 
 const SEEDS = [4242, 777, 1234];

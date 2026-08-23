@@ -1,0 +1,18 @@
+EMERGENCE — B2.4 SKALPROVET v2 (D-481): bär aggregatet 10 000 själar i Jint?
+genererad 2026-08-23 12:41:11   seed 4242, bas-SHA 1493016cacf8 ASSERTERAD, K-lyft i minnet (disk orörd)
+
+  massa(mål)   KLIFT   massa(kvar)   levande   ms/tick medel   ms/tick värsta block   mot 625
+  --------------------------------------------------------------------------------------------
+        1000      10          1054         5          153,05                 159,97         
+        5000      50          5269         5          166,02                 195,48         
+       10000     100         10537         5          167,03                 185,88        ✓
+       20000     200         21075         5          167,95                 183,09         
+
+## VAD DET BETYDER
+  MÅLTAL (D-481): 10 000 själar ≤ 625 ms/tick — uppmätt 167,03 ms/tick  ✓
+  DÖDSKRITERIUM superlinjäritet: 20k/10k = 1,01× (platt ≈ 1,0× förväntas; >2,5× fäller)  ✓
+  (5k som form-kontroll: 166,02 ms/tick)
+
+  GILTIGHETSVAKT: massa(kvar) ska vara samma storleksordning som massa(mål) — annars är
+  mätningen ogiltig (v1-läxan). Kostnaden som prövas är aggregatmaskineriets MARGINAL ovanpå
+  världens fasta Jint-kostnad (~140–260 ms/tick, jfr golden-t720); individkurvan äger JintPace.
