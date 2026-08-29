@@ -1,0 +1,5 @@
+ALLT PÅ   urb120 7/8   peaks 93 97 87 130 81 94 56 78
+-SOIL     urb120 6/8   peaks 113 72 68 78 75 114 68 85
+-FOREST   urb120 8/8   peaks 80 101 78 77 82 96 102 98
+-CLIMATE  urb120 5/8   peaks 99 86 76 109 69 99 41 67
+ALLT AV   urb120 7/8   peaks 107 86 23 116 79 94 97 88

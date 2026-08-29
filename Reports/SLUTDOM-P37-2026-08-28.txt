@@ -1,0 +1,15 @@
+EMERGENCE — §37-DOMEN (32 frön × 700 år, motor 20f5eb84, mognad 170/60, FULL fysik + PACE)
+genererad 2026-08-28, workers 4×8 frön, per-frö-checkpoint. Måltal förregistrerade D-548.
+
+P1 mitten:  masonry 181 · law 183 · university 522 · science 551  — ALLA I BAND: OK
+P2 öppning: farming 9 · writing 9 · tin 12 · förstagånger≤år10 median 18  : OK
+P3 urbanisering: 14/32 (måltal ≥18): MISS
+P4 toppen: steam 0/32 · steel 0/32 · clock 0/32 (måltal steam 2-10, steel 4-16): MISS
+P5 utdöda: 11/32 (måltal ≤4): MISS — dödsår 7, 136, 153, 177, 178, 204, 216, 247, 287, 595, 656
+extra: optics 22/32 · printpress 1/32 · peak-spann 83-198
+
+VERDICT: RÖTT — pacing-KÄRNAN bevisad (P1+P2: mognadslagen lägger mitten rätt utan att röra öppningen),
+men tre strukturella interaktioner fälls: (1) P3 städer under lagarna — eskaleras till egen § per förregistrering;
+(2) P4 städer kan inte uppfinna (kohort/individ-luckan, D-550) — etapp 4-mekanik krävs för toppen;
+(3) P5 den utsträckta feber-eran — städer lever nu sekler före sanitet (aqueduct ~420 mot 22); 7 av 11 dödsfall
+    i tidiga stads-eran. Naturlig lösning = etapp 3:s behovsdrivna forskning (nöd → sanitet/medicin accelereras).

@@ -1,0 +1,29 @@
+EMERGENCE — DAGENS SLUTRAPPORT 2026-08-28→29: FRÅN PACING-IDÉ TILL SLUTEN ELD→ÅNGA-KEDJA
+(D-548–D-558; §37–§41; motorkedja 79a88f35→…→45207ded, alla diskade i Reports/rig/)
+
+══ VAD SOM BEVISADES ══
+1. MOGNADSLAGEN (pacing-kärnan) — 4 domar i rad i band:
+   'en förkunskap bär högre lärdom först efter 170 år i världen (60 inom samma era)'
+   masonry ~180 · law ~183 · university ~522 · science ~532 (baslinjen var 15–40!)
+   Öppningen ALLTID intakt: ~18 förstagånger ≤år 10, farming/writing ≤år 11.
+2. STADEN SOM SINNE — gillen uppfinner (steel 15/32, printpress 19/32, median 6/värld),
+   staden räknas som bärar-institution, nöden riktar forskningen, jorden slits ∝ agrar-beroende.
+3. BY-OSMOSEN — staden absorberar sina levande bybors kunskap ⇒ dödläget löst:
+   TRE KOMPLETTA BÅGAR ELD→ÅNGA: steam år 584 (3131) · 595 (31415) · 616 (1515).
+   Urverksprecision: steam = clock+170 exakt (581/593/614 beräknat, 584/595/616 uppmätt).
+   Två av tre industri-världar föll efter ångan (740, 678) — uppgång→industri→fall.
+
+══ ÖPPNA PUNKTER (namngivna, med väg) ══
+A. O1-marginalen: clock 3/8 (krävde 4) — de 5 clock-lösa världarnas städer cyklar fold/de-fold
+   och tappar institutionen ⇒ hör ihop med B.
+B. Q3 urbanisering 15/32 — hållbarhetslagarna trycker städer; egen § (förregistrerad plikt ur §37).
+C. Feber-fällan: 5/32 dör före år 300 (PACE-pris: sanitet dröjer) — kontrollen visar 0/8 utan PACE;
+   djuptidsdöd EFTER 300 är stackens natur (2/8 även utan PACE).
+
+══ REKOMMENDATION ══
+Diska HELA PACE-paketet VILANDE (gated __PACE, dormans verifierad i varje version, goldens
+opåverkade = kanon-neutralt B2.2a-mönster) som §36-etapp-1-fundamentet. Aktivering i kanon
+väntar på A/B/C. Disken är en Patrik-kväll: merge av gated-block till live-motorn 1493016c,
+SHA-kvartetten, RUN_COMPILE→RUN_GOLDEN (byte-identiska väntas), commit.
+
+Rådata: verdict-p37/p38-all.json, ctrl-p38-all.json, h39/h41-all.json (Reports/rig/).

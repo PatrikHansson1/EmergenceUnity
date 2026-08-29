@@ -247,26 +247,6 @@ const TECHS=[
    flavor:'joined scholars and students into a lasting house of learning', effect:'Learning institutionalized — the engine of every later age.'},
  {id:'science',   icon:'🔬', base:'Science',          alts:[{}],                      pre:['philosophy','numbers','optics'], insights:[], var:['the method','experiment','natural philosophy'], era:6, branch:'cul', needsLeisure:true,
    flavor:'tested the guess against the world and kept only what held', effect:'The method that unlocks everything after — the modern mind.'},
- // §42 (D-559, __PACE-riggen): TRAPPAN OVANPÅ ÅNGAN — etapp 4-epokerna, era 7–10. Endast innehåll;
- // gillen uppfinner dem via S2 (mognadslag + osmos), individer i praktiken aldrig. Vilande i kanon.
- {id:'electricity',icon:'⚡', base:'Electricity',     alts:[{}], pre:['steam','science'],               insights:[], var:['the current','the dynamo','the spark harnessed'], era:7, branch:'craft',
-   flavor:'coaxed the lightning into a wire and made it work', effect:'Light without fire. Power without rivers. The second dawn.'},
- {id:'combustion', icon:'🛢️', base:'Combustion engine',alts:[{}], pre:['steam','steel'],                insights:[], var:['the engine','the motor','burning heart'], era:7, branch:'craft',
-   flavor:'tamed the explosion into a rhythm of pistons', effect:'Machines that carry themselves — roads shrink the world.'},
- {id:'antibiotics',icon:'💊', base:'Antibiotics',     alts:[{}], pre:['medicine','science','glassblowing'], insights:[], var:['the mold that heals','the cure','penicillin'], era:8, branch:'cul', needsLeisure:true,
-   flavor:'found in spoiled cultures the death of death itself', effect:'The fever loses its harvest. Cities stop devouring their children.'},
- {id:'flight',     icon:'✈️', base:'Flight',          alts:[{}], pre:['combustion','optics'],           insights:[], var:['the wing','the flying machine','the air conquered'], era:8, branch:'craft',
-   flavor:'gave the engine wings and left the ground', effect:'No mountain, sea or border holds anymore.'},
- {id:'atompower',  icon:'☢️', base:'Atomic power',    alts:[{}], pre:['science','electricity'],         insights:[], var:['the split atom','the pile','the inner fire'], era:9, branch:'cul', needsLeisure:true,
-   flavor:'split what cannot be seen and lit a city with it', effect:'Power beyond coal — and a shadow beyond wars.'},
- {id:'computing',  icon:'💻', base:'Computing',       alts:[{}], pre:['electricity','numbers','printpress'], insights:[], var:['the thinking machine','the calculator','the engine of logic'], era:9, branch:'cul', needsLeisure:true,
-   flavor:'taught the current to count and remember', effect:'A million clerks in a box. Knowledge stops dying.'},
- {id:'rocketry',   icon:'🚀', base:'Rocketry',        alts:[{}], pre:['flight','atompower'],            insights:[], var:['the rocket','the ascending fire','the arrow of stars'], era:9, branch:'craft',
-   flavor:'pointed the engine at the sky and let go', effect:'The sky is not the roof. It is the floor.'},
- {id:'spaceflight',icon:'🌕', base:'Spaceflight',     alts:[{}], pre:['rocketry','computing'],          insights:[], var:['the moonshot','the vessel between worlds','the leaving'], era:10, branch:'cul', needsLeisure:true,
-   flavor:'left the cradle and looked back at the whole world at once', effect:'Footprints in another dust. The chronicle becomes cosmic.'},
- {id:'ai',         icon:'🧠', base:'Artificial mind', alts:[{}], pre:['computing','university'],        insights:[], var:['the artificial mind','the oracle engine','the child of logic'], era:10, branch:'cul', needsLeisure:true,
-   flavor:'taught the thinking machine to ask its own questions', effect:'The world now holds two kinds of minds — and history a new author.'},
 ];
 const TECH=Object.fromEntries(TECHS.map(t=>[t.id,t]));
 const MATSOURCE={wood:'forest',stone:'stone',fiber:'grass',clay:'clay',iron:'iron',sand:'sand',copper:'copper',tin:'tin',coal:'coal',gold:'gold',pigment:'pigment'};
@@ -696,7 +676,7 @@ function makeWorld(S){
       if(S.tiles[y][x].t!=='grass')continue;
       let ok=false;
       for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++){const t=(S.tiles[y+dy]||[])[x+dx];if(t&&t.t===near)ok=true;}
-      if(ok){S.tiles[y][x]={t:type,n:(globalThis.__G29&&({copper:1,tin:1})[type])?RI(S,8,15):RI(S,3,7)};placed++;}
+      if(ok){S.tiles[y][x]={t:type,n:RI(S,3,7)};placed++;}
     }
   };
   // F1.2d (D-377/D-384): MARKEN SKILJER SIG ÅT. 30 % av världarna bär inget av ett
@@ -705,32 +685,13 @@ function makeWorld(S){
   // sand är också geologi (tegel, glas, krukor); lera har golv 6 så krukmakeriet
   // aldrig blir omöjligt, bara fattigt. Mätt mot 32 frön: utdöendet står på 3 %,
   // parvis skillnad 6,9 — en värld utan malm blir ANNORLUNDA, inte dödsdömd.
-  const _DEVMET={copper:1,tin:1};
   const _geo=(m)=>{ let h=2166136261>>>0; const _s=String(S.seed||0)+'/'+m;
     for(let i=0;i<_s.length;i++){ h^=_s.charCodeAt(i); h=Math.imul(h,16777619)>>>0; }
-    const r=h%100;
-    if(globalThis.__G29&&_DEVMET[m])return r<30?0.6:(r<70?1.0:1.8);
-    if(globalThis.__G29&&m==='gold')return r<45?0:(r<80?0.6:1.0);
-    return r<30?0:(r<70?0.4:1.6); };
+    const r=h%100; return r<30?0:(r<70?0.4:1.6); };
   scatter('water','clay',Math.max(6,Math.round(35*_geo('clay'))));scatter('stone','iron',Math.round(20*_geo('iron')));
   // deeper geology (ENGINE 2.1, D-086): ores are LOCAL and scarcer the deeper the era — this is the
   // world-motor that gates bronze/steel/coin, so worlds differentiate by what the land beneath offers.
   scatter('stone','copper',Math.round(14*_geo('copper')));scatter('stone','tin',Math.round(9*_geo('tin')));scatter('stone','coal',Math.round(12*_geo('coal')));scatter('stone','gold',Math.round(5*_geo('gold')));scatter('clay','pigment',Math.round(10*_geo('pigment')));
-  if(globalThis.__G29){
-    const MIN=6;
-    for(const gm of ['copper','tin']){
-      let cnt=0; for(let yy=0;yy<H;yy++)for(let xx=0;xx<W;xx++)if(S.tiles[yy][xx].t===gm)cnt++;
-      if(cnt>=MIN)continue;
-      let h=2166136261>>>0; const s='G29/'+String(S.seed||0)+'/'+gm; for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)>>>0;}
-      const cx=2+(h%(W-4)), cy=2+((h>>>8)%(H-4)); let placed=cnt, rad=2;
-      while(placed<MIN&&rad<40){ for(let dy=-rad;dy<=rad&&placed<MIN;dy++)for(let dx=-rad;dx<=rad&&placed<MIN;dx++){ const x=cx+dx,y=cy+dy; if(x<1||x>W-2||y<1||y>H-2)continue; if(S.tiles[y][x].t!=='grass')continue; S.tiles[y][x]={t:gm,n:RI(S,8,15)}; placed++; } rad+=2; }
-    }
-    const GOLDCAP=6;
-    let gc=0; for(let yy=0;yy<H;yy++)for(let xx=0;xx<W;xx++)if(S.tiles[yy][xx].t==='gold')gc++;
-    let want=Math.min(GOLDCAP,Math.round(5*_geo('gold')));
-    if(want>0&&gc<want){ let h2=2166136261>>>0; const s2='G29g/'+String(S.seed||0); for(let i=0;i<s2.length;i++){h2^=s2.charCodeAt(i);h2=Math.imul(h2,16777619)>>>0;} const gx=2+(h2%(W-4)),gy=2+((h2>>>8)%(H-4)); let rad=2; while(gc<want&&rad<40){ for(let dy=-rad;dy<=rad&&gc<want;dy++)for(let dx=-rad;dx<=rad&&gc<want;dx++){const x=gx+dx,y=gy+dy;if(x<1||x>W-2||y<1||y>H-2)continue;if(S.tiles[y][x].t!=='grass')continue;S.tiles[y][x]={t:'gold',n:RI(S,3,7)};gc++;} rad+=2; } }
-    if(gc>GOLDCAP){ let rm=0; for(let yy=0;yy<H&&gc-rm>GOLDCAP;yy++)for(let xx=0;xx<W&&gc-rm>GOLDCAP;xx++)if(S.tiles[yy][xx].t==='gold'){S.tiles[yy][xx]={t:'grass',n:0};rm++;} }
-  }
   // loose boulders and patches — the world invites curiosity everywhere
   let placed=0,guard=0;
   const loose=[['stone',25],['sand',12],['clay',10]];
@@ -856,28 +817,8 @@ function carryingCapacity(S){
   }
   // A STABLE, BOUNDED band (Director call): populous enough to feel alive (~80–140), low enough that
   // the sim stays fast and can run toward the 6000-year horizon. Land-bounded — no runaway.
-  let _ff=S.fields.length; if(globalThis.__SOIL){_ff=0;for(const f of S.fields)_ff+=(f.fertility===undefined?1:f.fertility);}
-  let _fcap=24,_ffac=1.8,_smul=1;
-  if(globalThis.__LADDER){const _K=S.knowledge||{};const _ev=id=>_K[id]!==undefined;
-    if(_ev('steel'))_fcap=60;else if(_ev('bronzetools'))_fcap=40;
-    if(_ev('granary'))_ffac=2.4;
-    if(_ev('aqueduct'))_smul=1.25;}
-  const _farm=Math.min(_ff,_fcap)*_ffac*(globalThis.__PACE&&S._qFarm?S._qFarm:1); // §43: bättre plogar höjer taket
-  let cap=10+S._capSites*0.28*_smul+_farm;
+  let cap=10+S._capSites*0.28+Math.min(S.fields.length,24)*1.8;
   if(S._capFish)cap+=8;
-  // §34 KLIMAT (D-544-rigg) — epok-multiplikator på bärkraften. 18-års epoker; faktorn är FNV-1a
-  // per (frö,epok), aldrig dragen ur sim-RNG (=> canon-neutral, exakt som torkan S._dry rad ~1724).
-  // Goda epoker (25%) boomar världen ×1.25, dåliga (33%) stryper ×0.75 ⇒ historiska upp-/nedgångar
-  // som skiljer världars banor åt. Vilande: rörs BARA när globalThis.__CLIMATE är satt.
-  if(globalThis.__CLIMATE){
-    const _ep=Math.floor((S.tick/YEAR)/18);
-    if(S._climEp!==_ep){ S._climEp=_ep; let _h=2166136261>>>0; const _s='CLIM/'+String(S.seed||0)+'/'+_ep;
-      for(let _i=0;_i<_s.length;_i++){_h^=_s.charCodeAt(_i);_h=Math.imul(_h,16777619)>>>0;}
-      const _r=_h%100; S._climate=_r<33?0.75:(_r<67?1.0:1.25); }
-    // §37 M-C (D-548, __PACE): agrar sårbarhet — klimatepoken slår mot ÅKRARNA, inte samlandet.
-    if(globalThis.__PACE){ cap+=_farm*(S._climate-1); } else { cap*=S._climate; }
-  }
-  if(globalThis.__PACE)S._farmdep=cap>0?_farm/Math.max(1,cap):0; // §38 S4: åkerandel av bärkraften
   return Math.floor(cap);
 }
 function worldKnows(S,id){return !!S.knowledge[id]&&S.knowledge[id].status==='alive';}
@@ -1093,13 +1034,7 @@ function pickAlt(S,a,t){
   }
   return null;
 }
-// §38 S3 (D-552): NÖDEN SOM RIKTNING — död i sjukdom/svält/köld ger 15 års behovsboost för matchade tekniker.
-const NEED_TECHS={sick:['medicine','well','aqueduct'],hunger:['farming','granary','mill','fishing'],cold:['hut','weaving']};
-function needBoost(S,id){ if(!globalThis.__PACE)return false; const _y=Math.floor(S.tick/YEAR);
-  const _on=(k,ts)=>S[k]!==undefined&&_y-S[k]<=15&&ts.indexOf(id)>=0;
-  return _on('_needSick',NEED_TECHS.sick)||_on('_needHunger',NEED_TECHS.hunger)||_on('_needCold',NEED_TECHS.cold); }
 function canAttempt(S,a,t){
-  if((t.era||0)>=7 && !globalThis.__PACE)return false; // §42 kanon-vakt: trappan ovanpå ångan finns bara under PACE
   if(a.knows.has(t.id))return false;
   if(!t.pre.every(p=>a.knows.has(p)))return false;
   if(!t.insights.every(o=>a.obs.has(o)))return false;   // must have SEEN it before imagining it
@@ -1108,25 +1043,6 @@ function canAttempt(S,a,t){
   // food-secure community has the free time to make them. This is why culture blooms only where the
   // material base can spare the hands — the society-motor gating the culture branch.
   if(t.needsLeisure && !hasLeisure(S,a))return false;
-  // §37 M-A (D-548, __PACE, vilande): högre lärdom kräver kunskaps-INFRASTRUKTUR — samhället måste
-  // hålla varje förkunskap med 2+(era-2)*2 levande bärare (stad med kunskapen räknas som institution, +3).
-  if(globalThis.__PACE && (t.era||0)>=3 && t.pre.length){
-    // M-B v3 (kalibrering 2): högre lärdom kräver GENERATIONERS MOGNAD — varje förkunskap måste ha
-    // funnits i världen ≥170 år (≈5 generationer) innan den bär vidare. En konstant, samma för alla.
-    const _yr=Math.floor(S.tick/YEAR);
-    // v4: REVOLUTION kräver generationer (kors-era: 170 år), FÖRFINING en (samma era: 60 år).
-    const _nb=needBoost(S,t.id);
-    for(const _p0 of t.pre){ const _k0=S.knowledge[_p0]; if(!_k0)return false;
-      let _mog=((TECH[_p0]&&TECH[_p0].era||0)===(t.era||0))?60:170; if(_nb)_mog*=0.5;
-      if(_yr-(_k0.yearBorn||0)<_mog)return false; }
-    const _need=2+((t.era||0)-2)*2;
-    for(const _p of t.pre){
-      let _n=0;
-      for(const _b of S.agents){ if(!_b.dead&&_b.knows.has(_p)&&Math.hypot(_b.x-a.x,_b.y-a.y)<=24){_n++; if(_n>=_need)break;} }
-      if(_n<_need && S.aggregates)for(const _g of S.aggregates){ if(_g.knowsUnion&&_g.knowsUnion.indexOf(_p)>=0){_n+=Math.min(_need,Math.floor((_g.cohorts[0]+_g.cohorts[1]+_g.cohorts[2]+_g.cohorts[3])/15));break;} } // §38 S1: institutionen bär i skala
-      if(_n<_need)return false;
-    }
-  }
   return !!pickAlt(S,a,t);
 }
 // leisure = personal slack AND a surrounding community with food to spare (the surplus that frees hands)
@@ -1445,9 +1361,8 @@ const TUNE={
 };
 function wealth(a){let w=0;for(const k in a.inv)w+=a.inv[k]||0;return w;} // E1.5: exported as wealthOf — the Almanac's wealth sort feeds on this
 // means of force: a weapon or metal makes coercion viable AND lethal (ties violence to the tech tree).
-function forceMeans(a,S){
-  const _q=(globalThis.__PACE&&S&&S._qCraft)?S._qCraft:1; // §43: skarpare svärd — kvalitet multiplicerar
-  if(a.knows.has('steel'))return 1.0*_q;
+function forceMeans(a){
+  if(a.knows.has('steel'))return 1.0;
   if(a.knows.has('bronze'))return 0.8;
   if(a.knows.has('spear')||a.knows.has('bow'))return 0.55;
   if(a.knows.has('sharp'))return 0.3;
@@ -1512,7 +1427,7 @@ function conflictTick(S,a){
   let drive=0;
   if(desp)          drive=0.85*desp+agg*0.2-restraint*0.45-kin;
   else if(revenge)  drive=0.30+a.traits.vindictiveness*0.6-restraint*0.35-kin;   // honor: the grudge burns by disposition
-  else if(greed>0)  drive=greed*0.6+agg*0.35+forceMeans(a,S)*0.2-restraint*0.7-kin; // predation on the richer
+  else if(greed>0)  drive=greed*0.6+agg*0.35+forceMeans(a)*0.2-restraint*0.7-kin; // predation on the richer
   drive*=(0.7+0.6*fric); // FRICTION: scarcity makes every gap sharper (population pressure as DRIVER, D-089->D-166)
   if(drive<=0)return false;
   const rate=desp?TUNE.theftRate:revenge?TUNE.feudRate:TUNE.raidRate;         // E1.5: each rung has its own rarity
@@ -1534,7 +1449,7 @@ function conflictTick(S,a){
   // target's hoard-milestone (or the leadership whose tribute fed the pile), the raid cites it.
   let greedEv=tgt.hoardEv;
   if(greedEv===undefined){const tv=villageOf(S,tgt);if(tv&&tv.leader===tgt.id&&tv.leaderEv!==undefined)greedEv=tv.leaderEv;}
-  const armedMe=forceMeans(a,S), armedYou=forceMeans(tgt,S);
+  const armedMe=forceMeans(a), armedYou=forceMeans(tgt);
   const meStr=armedMe+a.traits.dexterity*0.5, youStr=armedYou+tgt.traits.dexterity*0.5;
   let outcome, actEv;
   if(kind==='steal-food'){
@@ -1722,7 +1637,7 @@ function warTick(S){
   const info=new Map();
   for(const v of vs)info.set(v,{ppl:[],hungry:0,armed:0,wealth:0});
   for(const a of S.agents){ if(a.dead||a.age<14)continue; const v=villageOf(S,a); if(!v||!info.has(v))continue;
-    const I=info.get(v); I.ppl.push(a); if(a.hunger<45)I.hungry++; if(forceMeans(a,S)>=0.5)I.armed++; I.wealth+=wealth(a); }
+    const I=info.get(v); I.ppl.push(a); if(a.hunger<45)I.hungry++; if(forceMeans(a)>=0.5)I.armed++; I.wealth+=wealth(a); }
   const fric=pressure(S); // scarcity: the land contested. This is where war is born.
   for(const A of vs){ const IA=info.get(A); if(!IA||IA.ppl.length<3)continue;
     const stress=Math.max(IA.hungry/IA.ppl.length, fric-0.5); // hungry now, OR the land is over-full
@@ -1733,14 +1648,14 @@ function warTick(S){
       const hostility=stress*0.7+(surplus>6?0.3:0)+(grud>1?0.35:0);
       if(IA.armed<2||might<-2||hostility<TUNE.warHostility)continue;
       if(S.rand()>TUNE.warChance)continue; // ripe tension only sometimes breaks into a raid
-      const party=IA.ppl.filter(a=>forceMeans(a,S)>=0.4).slice(0,TUNE.warParty);
-      const defenders=IB.ppl.slice().sort((x,y)=>forceMeans(y,S)-forceMeans(x,S));
+      const party=IA.ppl.filter(a=>forceMeans(a)>=0.4).slice(0,TUNE.warParty);
+      const defenders=IB.ppl.slice().sort((x,y)=>forceMeans(y)-forceMeans(x));
       let deadA=0,deadB=0,loot=0;
       for(const raider of party){
         const def=defenders.find(d=>!d.dead)||null;
         if(def){ for(const m in def.inv){ if(def.inv[m]>0){ raider.inv[m]=(raider.inv[m]||0)+def.inv[m]; loot+=def.inv[m]; def.inv[m]=0; } }
-          const rs=forceMeans(raider,S)+raider.traits.dexterity*0.5, ds=forceMeans(def,S)+def.traits.dexterity*0.5;
-          const lethal=TUNE.warLethalBase+TUNE.warLethalArm*Math.max(forceMeans(raider,S),forceMeans(def,S));
+          const rs=forceMeans(raider)+raider.traits.dexterity*0.5, ds=forceMeans(def)+def.traits.dexterity*0.5;
+          const lethal=TUNE.warLethalBase+TUNE.warLethalArm*Math.max(forceMeans(raider),forceMeans(def));
           if(S.rand()<lethal){ const loser=(rs+S.rand()*0.4)<(ds+S.rand()*0.4)?raider:def, enemy=loser===raider?def:raider;
             const wde=killAgent(S,loser,'violence',`fell in the raid on ${B.name}`,['agent:'+enemy.id,'cause:war']); if(loser===raider)deadA++;else deadB++;
             for(const w of S.agents){if(w.dead)continue;if((w.rel[loser.id]||0)>30){w.rel[enemy.id]=(w.rel[enemy.id]||0)-60;if(w.grudges)w.grudges[enemy.id]=wde.id;}} } } // war deepens the feud — and E1.5 books WHICH death each survivor holds against whom
@@ -1778,7 +1693,6 @@ function agentTick(S,a){
     // E1.5b (V6, review I1): a starvation death is the village's famine-mark — bookkept so a
     // desperation steal in the same village within a year can cite the hunger that drove it.
     if(causeKey==='starvation'){const v=villageOf(S,a);S.lastStarve={id:de.id,tick:S.tick,vil:v?v.name:null};}
-    if(globalThis.__PACE){const _yn=Math.floor(S.tick/YEAR);if(causeKey==='starvation')S._needHunger=_yn;else if(causeKey==='cold')S._needCold=_yn;}
     return;
   }
   const child=a.age<14;
@@ -1826,7 +1740,7 @@ function agentTick(S,a){
     // Engine 1.1 (D-049): FARMING — autumn harvest of your own ripe field beats foraging
     if(a.knows.has('farming')&&S.season==='autumn'){
       const f=S.fields.find(f2=>f2.owner===a.name&&f2.stage>=3);
-      if(f){if(Math.hypot(f.x-a.x,f.y-a.y)<1.4){f.stage=-1;const _fy=globalThis.__SOIL?(f.fertility===undefined?1:f.fertility):1;a.hunger=clamp(a.hunger+Math.round(80*_fy),0,140);a.task='harvesting';S.stats.harvests=(S.stats.harvests||0)+1;if(S.rand()<.35)ev(S,'field',`🌾 <b>${disp(a)}</b> brings in the harvest from ${f.name||'the field'}. Winter holds less fear now.`,{agent:a.id,x:f.x,y:f.y});maybeEmergeCustom(S,a,'hunt');return;}moveToward(S,a,f);a.task='going to the harvest';return;}
+      if(f){if(Math.hypot(f.x-a.x,f.y-a.y)<1.4){f.stage=-1;a.hunger=clamp(a.hunger+80,0,140);a.task='harvesting';S.stats.harvests=(S.stats.harvests||0)+1;if(S.rand()<.35)ev(S,'field',`🌾 <b>${disp(a)}</b> brings in the harvest from ${f.name||'the field'}. Winter holds less fear now.`,{agent:a.id,x:f.x,y:f.y});maybeEmergeCustom(S,a,'hunt');return;}moveToward(S,a,f);a.task='going to the harvest';return;}
     }
     // Engine 1.1: FISHING — open water feeds those who know the line (not in winter)
     if(a.knows.has('fishing')&&S.season!=='winter'){
@@ -1898,7 +1812,7 @@ function agentTick(S,a){
     // Not the smartest villages invent — the ones with food to spare.
     let fed=0;for(const o of nearby(S,a,8)){if(o.hunger>60&&++fed>=3)break;}
     const attempt=(slack||a.inspired>0)?TECHS.find(t=>canAttempt(S,a,t)&&!t.alts.every(alt=>Object.keys(alt).some(m=>isTaboo(S,a,m)))):null;
-    if(attempt&&(S.rand()<(a.traits.curiosity*.5+(a.inspired>0?.5:0))*(1+.12*fed)*(globalThis.__PACE&&(attempt.era||0)>=3&&!needBoost(S,attempt.id)?0.15:1))){
+    if(attempt&&(S.rand()<(a.traits.curiosity*.5+(a.inspired>0?.5:0))*(1+.12*fed))){
       a.expTech=attempt;a.expAlt=pickAlt(S,a,attempt);a.expT=6;return;
     }
     if(a.knows.has('hut')&&!a.home){
@@ -2119,22 +2033,6 @@ function animalsTick(S){
   }
 }
 function fieldsTick(S){
-  // §43 (D-561, __PACE): FÖRBÄTTRINGSFORSKNINGEN — kvaliteter växer med bruk, nöd boostar, kollaps raserar.
-  if(globalThis.__PACE&&S.tick%YEAR===0){
-    if(S._qFarm===undefined){S._qFarm=1;S._qCraft=1;}
-    const _yq=Math.floor(S.tick/YEAR);
-    const _K=S.knowledge||{}; const _al=id=>_K[id]&&_K[id].status==='alive';
-    if((_al('granary')||_al('mill'))&&(S._farmdep||0)>0.2){
-      const _hb=(S._needHunger!==undefined&&_yq-S._needHunger<=15)?3:1;
-      S._qFarm=S._qFarm+0.0013*Math.min(1,2*(S._farmdep||0))*_hb/S._qFarm;} // §44: dq∝1/q — aldrig stopp, aldrig explosion
-    if(_al('smithing')||_al('metaltools'))S._qCraft=S._qCraft+0.0013/S._qCraft; // §44
-  }
-  if(globalThis.__SOIL&&S.tick%YEAR===0&&S.fields.length){
-    const pop=S._aliveN||S.agents.filter(x=>!x.dead).length;
-    const intensity=pop/S.fields.length;
-    for(const f of S.fields){ if(f.fertility===undefined)f.fertility=1;
-      f.fertility=Math.max(0.15,Math.min(1, f.fertility + 0.10*(1-f.fertility) - 0.03*intensity*(globalThis.__PACE?Math.min(1,1.2*(S._farmdep!==undefined?S._farmdep:0.5)):1) )); } // §38 S4: degradering ∝ agrar-beroende
-  }
   if(S.tick%12!==0)return;
   for(const f of S.fields){
     if(S.season==='winter'){f.stage=0;continue;}
@@ -2202,9 +2100,7 @@ function tickWorld(S){
   S.fires=S.fires.filter(f=>f.fuel>0);
   for(let i=S.regrows.length-1;i>=0;i--){
     const r=S.regrows[i];
-    if(S.tick>=r.at){let _ok=(S.tiles[r.y][r.x].t===r.type||S.tiles[r.y][r.x].t==='grass');
-      if(_ok&&globalThis.__FOREST&&r.type==='forest'){let _h=2166136261>>>0;const _s='F'+r.x+'_'+r.y+'_'+r.at;for(let _i=0;_i<_s.length;_i++){_h^=_s.charCodeAt(_i);_h=Math.imul(_h,16777619)>>>0;}if(_h%100<25)_ok=false;}
-      if(_ok){S.tiles[r.y][r.x]={t:r.type,n:RI(S,3,6)};S.bgDirty=true;}S.regrows.splice(i,1);}
+    if(S.tick>=r.at){if(S.tiles[r.y][r.x].t===r.type||S.tiles[r.y][r.x].t==='grass'){S.tiles[r.y][r.x]={t:r.type,n:RI(S,3,6)};S.bgDirty=true;}S.regrows.splice(i,1);}
   }
   if(!S.agents.some(a=>!a.dead)&&!S.ended){
     S.ended=true;S.endedYear=Math.floor(S.tick/YEAR)+1;
@@ -2336,7 +2232,7 @@ function computeDNA(S){
   return {
     seed:S.seed,years,dna,
     population:S.agents.filter(a=>!a.dead).length,maxPop:S.maxPop,generations:S.maxGeneration,
-    knowledgeCount:Object.keys(S.knowledge).length,knowledgeMax:(globalThis.__PACE?TECHS.length:TECHS.filter(t=>(t.era||0)<7).length),
+    knowledgeCount:Object.keys(S.knowledge).length,knowledgeMax:TECHS.length,
     villages:S.villages.map(v=>v.name),
     births:S.stats.births,talks:S.stats.talks,deaths:S.stats.deaths,
     knowledgeLosses:losses,rediscoveries,
@@ -2574,18 +2470,14 @@ function aggregateTick(S){
             for(let j=0;j<take;j++)a.knows.add(ks[(h+j*2654435761)%ks.length]);}
         }}
       S.aggregates.splice(i,1);
-      if(globalThis.__PACE&&S._qFarm!==undefined){S._qFarm=1+(S._qFarm-1)*0.6;S._qCraft=1+(S._qCraft-1)*0.6;} // §43: traditionen dör med institutionen
       ev(S,'aggregate',`🏘️ ${g.village} åter i sikte: själarna träder ur mängden (${Math.round(pop)} själar).`,{village:g.village});
     }
   }
-  // 2) nya aggregat: upptagningsområde ≥ T.agg (RIG: POP_CAP-fallback tvingar aggregering av största by vid överskott, så avskogade världar ändå foldar till kohorter = snabbt)
-  const _POPCAP=(S._popCap||130);
-  let _totAlive=0; for(const [,mem2] of catch_)_totAlive+=mem2.filter(a=>!a.dead).length;
-  let _maxC=0; for(const [,mem3] of catch_){const _c=mem3.filter(a=>!a.dead).length;if(_c>_maxC)_maxC=_c;}
+  // 2) nya aggregat: upptagningsområde ≥ T.agg
   for(const [v,mem] of catch_){
     if(S.aggregates.some(g=>g.village===v.name))continue;
     const alive=mem.filter(a=>!a.dead);
-    if(alive.length>=T.agg || (_totAlive>_POPCAP && alive.length===_maxC && alive.length>=12)){
+    if(alive.length>=T.agg){
       const sorted=[...alive].sort((a,b)=>_bearerScore(b)-_bearerScore(a));
       const bearers=sorted.slice(0,15);
       const fold=sorted.slice(15);
@@ -2600,37 +2492,6 @@ function aggregateTick(S){
       for(const b of bearers)for(const k of b.knows)knows.add(k);
       S.aggregates.push({village:v.name,cohorts:c,knowsUnion:[...knows].sort(),wealth:0,traitsM,bearers:bearers.map(b=>b.id)});
       ev(S,'aggregate',`🏙️ ${v.name} har växt bortom den enskilda blicken — ${fold.length} själar lever nu som folkmängd; ${bearers.length} namn bär krönikan.`,{village:v.name});
-    }
-  }
-  // §38 S2 (D-552): STADEN SOM UPPFINNARE — ett gillesförsök per stad och år på mognadsklara tekniker.
-  if(globalThis.__PACE && S.aggregates.length && S.tick%YEAR===0){
-    const _yr2=Math.floor(S.tick/YEAR);
-    for(const _g2 of S.aggregates){
-      // §41 S5-v2 (D-557): KUNSKAPS-OSMOSEN — staden absorberar sina LEVANDE bybors kunskap årligen
-      // (v1 via bärarlistan var strukturellt död: mästarna hinner dö före de sena uppfinningarna).
-      { const _ks=new Set(_g2.knowsUnion); let _grew=false;
-        for(const _ba of S.agents){ if(_ba.dead)continue; const _v=_ba._vil;
-          if(_v&&_v.name===_g2.village){ for(const _kk of _ba.knows)if(!_ks.has(_kk)){_ks.add(_kk);_grew=true;} } }
-        if(_grew)_g2.knowsUnion=[..._ks].sort(); }
-      const _pop2=_g2.cohorts[0]+_g2.cohorts[1]+_g2.cohorts[2]+_g2.cohorts[3]; if(_pop2<30)continue;
-      const _ku=new Set(_g2.knowsUnion); let _cand=null;
-      for(const _t of TECHS){
-        if(S.knowledge[_t.id])continue;
-        if(!_t.pre.length)continue;
-        if(!_t.pre.every(_p=>_ku.has(_p)))continue;
-        let _ok=true;
-        if((_t.era||0)>=3){ const _nb2=needBoost(S,_t.id);
-          for(const _p of _t.pre){ const _k=S.knowledge[_p]; if(!_k){_ok=false;break;}
-            let _m=((TECH[_p]&&TECH[_p].era||0)===(_t.era||0))?60:170; if(_nb2)_m*=0.5;
-            if(_yr2-(_k.yearBorn||0)<_m){_ok=false;break;} } }
-        if(_ok){_cand=_t;break;}
-      }
-      if(_cand && S.rand()<(needBoost(S,_cand.id)?0.5:0.18)*Math.min(2,_pop2/60)){
-        const _v2=S.villages.find(_vv=>_vv.name===_g2.village);
-        S.knowledge[_cand.id]={id:_cand.id,name:_cand.base,status:'alive',inventedBy:'the guild of '+_g2.village,yearBorn:_yr2,rediscoveries:0,losses:0,madeFrom:''};
-        _g2.knowsUnion=[...new Set([..._g2.knowsUnion,_cand.id])].sort();
-        ev(S,'tech',`${_cand.icon} In <b>${_g2.village}</b>, the guild has mastered <b>${_cand.base}</b> — the city itself has learned.`,{tech:_cand.id,x:_v2?_v2.x:0,y:_v2?_v2.y:0});
-      }
     }
   }
 }
@@ -2665,7 +2526,7 @@ function sicknessTick(S){
     if(g){ const wc=[2,1,1,3];
       for(let ci=0;ci<4;ci++)g.cohorts[ci]=Math.max(0,g.cohorts[ci]*(1-Math.min(0.9,q0*aq*wc[ci]*hm)));
     }
-    if(died>0){ if(globalThis.__PACE)S._needSick=Math.floor(S.tick/YEAR); S._sickSeen=S._sickSeen||{};
+    if(died>0){ S._sickSeen=S._sickSeen||{};
       if(!S._sickSeen[v.name]){ S._sickSeen[v.name]=1;
         ev(S,'sickness','🤒 The fever\'s year has come to <b>'+v.name+'</b> — where many live close, death walks quicker.',{village:v.name});
       }

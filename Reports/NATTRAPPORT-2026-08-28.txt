@@ -1,0 +1,72 @@
+EMERGENCE — NATTENS MÄTNINGAR 2026-08-28 (SD, Patrik sov; D-545–D-547)
+
+=== §35b DJUPTIDS-DOMEN (ren, moln-node, motor 79a88f35) ===
+§35b DJUPTIDS-DOMEN — 32 frön × 120 år × 2 armar, motor 79a88f35c7ae05c4, REN (de=50, inga hack)
+  G1 divergens: FULL 0.099 · BAS 0.070 (1.43x)  MÅLTAL >1,3x: OK
+  G2 ren körning: utdöda FULL 1/32 · BAS 1/32  MÅLTAL ≤BAS+2 & ≤6: OK
+  G3 toppop-spann: FULL 99 · BAS 119 (0.83x)  MÅLTAL ≥1,3x: MISS
+  G4 avskogning: >30% tapp i 0/32  MÅLTAL ≥8: MISS
+  G5 klimat: toppop goda-epok 55 (n10) vs dåliga 71 (n10): NEJ
+  urbanisering (peak≥70): FULL 12/32 · BAS 21/32
+  peak-spann FULL: 9–108 · BAS: 6–125
+  VERDICT: RÖTT/NYANSERAT
+
+=== §36 ETAPP 0 — BASLINJE-ANKOMSTKURVAN ===
+§36 ETAPP 0 — BASLINJE-ANKOMSTKURVA (32 frön × 120 år, stack 79a88f35, FULL fysik)
+teknik            era  median  min–max   når(av 32)
+fire               0       1   1–9        32/32
+storytelling       1       1   1–1        32/32
+rope               0       2   1–8        31/32
+weaving            2       3   1–12       31/32
+sharp              0       4   1–31       32/32
+song               1       4   1–107      31/32
+pottery            0     5.5   2–16       32/32
+spear              0       6   2–32       31/32
+fishing            0     6.5   2–44       30/32
+axe                0       7   3–32       31/32
+kiln               0     7.5   2–19       32/32
+hut                0       8   3–34       31/32
+wheel              0       8   3–34       31/32
+bow                0       8   3–35       31/32
+farming            0       8   2–28       32/32
+writing            2       8   2–20       32/32
+brick              1     9.5   3–21       32/32
+well               1      11   4–21       31/32
+granary            1      11   3–28       31/32
+numbers            2    11.5   1–117      32/32
+mill               0      12   4–41       31/32
+sailing            2      12   4–35       31/32
+tin                2      13   6–32       31/32
+calendar           2      13   2–120      31/32
+philosophy         3    15.5   2–43       30/32
+masonry            3      17   8–81       31/32
+glass              0      18   6–106      31/32
+medicine           3      18   4–51       30/32
+road               3      20   8–83       31/32
+law                3    20.5   7–46       30/32
+school             4    21.5   8–50       30/32
+architecture       3      22   9–82       31/32
+aqueduct           3      22   10–83      31/32
+composition        4      22   7–56       30/32
+glassblowing       4      23   10–106     31/32
+windmill           4      23   12–83      31/32
+painting           2      23   8–38       13/32
+scholarship        4      23   9–52       30/32
+temple             4      30   13–115     30/32
+optics             5      32   15–106     30/32
+university         5      34   14–96      29/32
+smithing           0      37   10–83      15/32
+metaltools         0      37   11–83      15/32
+science            6    39.5   21–108     30/32
+copper             2      44   10–115     26/32
+coal               3      44   13–92      11/32
+bronze             2      47   18–115     25/32
+bronzetools        2      51   18–116     25/32
+clock              4      55   19–118     23/32
+coinage            3    56.5   39–84      8/32
+printpress         5    65.5   29–106     14/32
+steel              3      66   56–97      3/32
+steam              6      84   84–84      1/32
+
+ÖPPNING: median förstagånger t.o.m. år 10: 20 · t.o.m. år 40: 41.5 · totalt median: 46.5
+utdöda: 1/32
