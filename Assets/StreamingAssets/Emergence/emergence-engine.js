@@ -1757,7 +1757,8 @@ function agentTick(S,a){
   const winter=S.season==='winter';
   a.hunger-=0.35;a.thirst-=(S.season==='summer'?0.4:0.3)*(a.knows.has('pottery')?0.55:1)*(S._dry?1.3:1);a.energy-=night?0.5:0.25;a.social-=0.3;
   if(a.talkCd>0)a.talkCd--;
-  const coldDrain=winter?2.2*S.winterSeverity+0.6:S.season==='summer'?1.6:2.2;
+  let coldDrain=winter?2.2*S.winterSeverity+0.6:S.season==='summer'?1.6:2.2;
+  if(globalThis.__PROD&&a.clothes)coldDrain*=0.55; // §46: sydda kläder biter mot vintern
   if(night){
     if(nearWarmth(S,a))a.warmth+=2.5;
     else if(nearby(S,a,1.4).length>0)a.warmth+=Math.max(0.2,0.9-(winter?0.4*(S.winterSeverity-1):0));
@@ -1814,6 +1815,7 @@ function agentTick(S,a){
         if(dist(deer,a)<(bowR?3.0:1.3)){
           S.animals.splice(S.animals.indexOf(deer),1);
           S.stats.hunts++;a.huntCount=(a.huntCount||0)+1;
+          if(globalThis.__PROD){a.inv.hide=(a.inv.hide||0)+2;a.inv.bone=(a.inv.bone||0)+1;} // §46: djuret ÄR kött, hud och ben
           if(a.huntCount>=5)giveEpithet(S,a,'the Hunter');
           a.hunger=clamp(a.hunger+75,0,140);a.task='feasting on the hunt';
           if(S.rand()<.12)ev(S,'hunt',`🗡️ <b>${disp(a)}</b> brought down a deer${winter?' in the deep of winter':''}. Tonight, no one goes hungry.`,{agent:a.id,x:a.x,y:a.y});
@@ -1826,13 +1828,13 @@ function agentTick(S,a){
     // Engine 1.1 (D-049): FARMING — autumn harvest of your own ripe field beats foraging
     if(a.knows.has('farming')&&S.season==='autumn'){
       const f=S.fields.find(f2=>f2.owner===a.name&&f2.stage>=3);
-      if(f){if(Math.hypot(f.x-a.x,f.y-a.y)<1.4){f.stage=-1;const _fy=globalThis.__SOIL?(f.fertility===undefined?1:f.fertility):1;a.hunger=clamp(a.hunger+Math.round(80*_fy),0,140);a.task='harvesting';S.stats.harvests=(S.stats.harvests||0)+1;if(S.rand()<.35)ev(S,'field',`🌾 <b>${disp(a)}</b> brings in the harvest from ${f.name||'the field'}. Winter holds less fear now.`,{agent:a.id,x:f.x,y:f.y});maybeEmergeCustom(S,a,'hunt');return;}moveToward(S,a,f);a.task='going to the harvest';return;}
+      if(f){if(Math.hypot(f.x-a.x,f.y-a.y)<1.4){f.stage=-1;const _fy=globalThis.__SOIL?(f.fertility===undefined?1:f.fertility):1;if(globalThis.__PROD&&S.knowledge.mill&&S.knowledge.mill.status==='alive'){a.inv.grain=(a.inv.grain||0)+(a.plow?3:2);}if(globalThis.__PROD&&a.plow){a.hunger=clamp(a.hunger+25,0,140);}a.hunger=clamp(a.hunger+Math.round(80*_fy),0,140);a.task='harvesting';S.stats.harvests=(S.stats.harvests||0)+1;if(S.rand()<.35)ev(S,'field',`🌾 <b>${disp(a)}</b> brings in the harvest from ${f.name||'the field'}. Winter holds less fear now.`,{agent:a.id,x:f.x,y:f.y});maybeEmergeCustom(S,a,'hunt');return;}moveToward(S,a,f);a.task='going to the harvest';return;}
     }
     // Engine 1.1: FISHING — open water feeds those who know the line (not in winter)
     if(a.knows.has('fishing')&&S.season!=='winter'){
       const w=findNearest(S,a,'water');
       if(w&&Math.hypot(w.x-a.x,w.y-a.y)<12){
-        if(Math.hypot(w.x-a.x,w.y-a.y)<1.7){a.hunger=clamp(a.hunger+42,0,140);a.task='fishing';if(S.rand()<.03)ev(S,'hunt',`🎣 <b>${disp(a)}</b> pulled silver from the water.`,{agent:a.id,x:a.x,y:a.y});return;}
+        if(Math.hypot(w.x-a.x,w.y-a.y)<1.7){a.hunger=clamp(a.hunger+((globalThis.__PROD&&a.hook)?58:42),0,140);a.task='fishing';if(S.rand()<.03)ev(S,'hunt',`🎣 <b>${disp(a)}</b> pulled silver from the water.`,{agent:a.id,x:a.x,y:a.y});return;}
         moveToward(S,a,w);a.task='going fishing';return;
       }
     }
@@ -1894,6 +1896,29 @@ function agentTick(S,a){
     }
     // When is it rational to try something new instead of surviving? Only with slack.
     const slack=a.hunger>55&&a.warmth>45&&a.energy>30;
+    // §46 (D-570, __PROD, vilande): PRODUKTION — material blir produkter med synliga följder.
+    if(globalThis.__PROD&&slack&&!child){
+      if(!a.clothes&&a.knows.has('weaving')&&(a.inv.hide||0)>=3){
+        a.inv.hide-=3;a.clothes=1;a.task='sewing clothes from hides';
+        if(!S._prodSeen)S._prodSeen={};
+        if(!S._prodSeen.clothes){S._prodSeen.clothes=1;ev(S,'product',`🧥 <b>${disp(a)}</b> sewed clothes from hides — winter has met its match.`,{agent:a.id,x:a.x,y:a.y});}
+        return;}
+      if(!a.hook&&a.knows.has('fishing')&&(a.inv.bone||0)>=2){
+        a.inv.bone-=2;a.hook=1;a.task='carving fishhooks from bone';
+        if(!S._prodSeen)S._prodSeen={};
+        if(!S._prodSeen.hook){S._prodSeen.hook=1;ev(S,'product',`🪝 <b>${disp(a)}</b> carved fishhooks from bone — the water gives more to the prepared.`,{agent:a.id,x:a.x,y:a.y});}
+        return;}
+      if(!a.plow&&a.knows.has('smithing')&&(a.inv.iron||0)>=2){
+        a.inv.iron-=2;a.plow=1;a.task='forging a plow';
+        if(!S._prodSeen)S._prodSeen={};
+        if(!S._prodSeen.plow){S._prodSeen.plow=1;ev(S,'product',`🛠️ <b>${disp(a)}</b> forged a plow of iron — the field will yield as never before.`,{agent:a.id,x:a.x,y:a.y});}
+        return;}
+      if((a.inv.grain||0)>=2&&S.fires.some(f=>dist(f,a)<3)){
+        a.inv.grain-=2;a.hunger=clamp(a.hunger+35,0,140);a.task='baking bread';
+        if(!S._prodSeen)S._prodSeen={};
+        if(!S._prodSeen.bread){S._prodSeen.bread=1;ev(S,'product',`🍞 <b>${disp(a)}</b> baked bread by the fire — the mill's flour becomes a meal.`,{agent:a.id,x:a.x,y:a.y});}
+        return;}
+    }
     // INNOVATION NEEDS SURPLUS: surplus energy -> specialization -> experiments.
     // Not the smartest villages invent — the ones with food to spare.
     let fed=0;for(const o of nearby(S,a,8)){if(o.hunger>60&&++fed>=3)break;}
