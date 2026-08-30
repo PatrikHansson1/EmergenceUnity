@@ -20,7 +20,7 @@ namespace Emergence.Editor
 
         private const string TestFounders = "[{name:'Ask the First',traits:{curiosity:0.9,social:0.4,diligence:0.6,conformity:0.3}},{name:'Embla the First'},{traits:{social:0.85}},null]";
         private static readonly (string label, long seed, int ticks, string founders)[] Suite60 =
-            { ("97013", 97013, 720, null), ("4242", 4242, 720, null), ("20260718", 20260718, 720, null), ("4242-founders", 4242, 720, TestFounders) };
+            { ("97013", 97013, 720, null), ("4242", 4242, 720, null), ("20260718", 20260718, 720, null), ("97013-founders", 97013, 720, TestFounders) };
 
         // D-131 (grind-review objection): the 720-tick horizon is the PER-STEP cadence (a full-depth run
         // is ~30 min — incompatible with "golden GREEN after every build step"). Depth-override lets the

@@ -2560,7 +2560,7 @@ function _catchments(S){
 }
 const _AGGDR=[0.0011,0.0015,0.0131,0.0892], _AGGFERT=0.0774, _AGGN=10;
 function aggregateTick(S){
-  const T=S._aggT||{agg:200,de:140};
+  const T=S._aggT||(globalThis.__PACE?{agg:70,de:50}:{agg:200,de:140}); // D-577: aktiverings-default = den mätta konfigurationen
   const catch_=_catchments(S);
   // 1) uppdatera existerande aggregat (kohortår) + ev. re-individualisering
   for(let i=S.aggregates.length-1;i>=0;i--){
@@ -2604,7 +2604,7 @@ function aggregateTick(S){
     }
   }
   // 2) nya aggregat: upptagningsområde ≥ T.agg (RIG: POP_CAP-fallback tvingar aggregering av största by vid överskott, så avskogade världar ändå foldar till kohorter = snabbt)
-  const _POPCAP=(S._popCap||130);
+  const _POPCAP=(S._popCap||(globalThis.__PACE?80:130)); // D-577: dito backstop
   let _totAlive=0; for(const [,mem2] of catch_)_totAlive+=mem2.filter(a=>!a.dead).length;
   let _maxC=0; for(const [,mem3] of catch_){const _c=mem3.filter(a=>!a.dead).length;if(_c>_maxC)_maxC=_c;}
   for(const [v,mem] of catch_){
