@@ -1,0 +1,19 @@
+V8-PACE PÅ HEAD (cf5cba65), 2026-08-30, moln-node v22.22.2, frö 4242, AKTIVERAD fysik (alla 7 flaggor)
+Metod: samma som Reports/jint-pace.txt (s/simår vid årsmilstolpar). OBS: HEAD-världen viker in i aggregat
+(~år 100 och ~år 250), så detalj-pop förblir låg — direkt jämförelse med jint-pace.txt (äldre SHA, pop 126
+år 160) är VÄRLDS-skild; Jint-sidan på HEAD mäts i Unity-riggen (JintPace) efter golden.
+year   1: 0.193 s/simår  pop 5   agg 0
+year  20: 0.162          pop 8   agg 0
+year  40: 0.201          pop 10  agg 0
+year  60: 0.374          pop 20  agg 0
+year  80: 0.728          pop 37  agg 0
+year 100: 0.258          pop 13  agg 1   <- första fold
+year 140: 0.102          pop 5   agg 1
+year 200: 0.465          pop 24  agg 1
+year 240: 1.119          pop 55  agg 1
+year 260: 0.822          pop 37  agg 2   <- andra fold
+year 320: 1.109          pop 49  agg 2
+TOTALT: 320 simår på 171,6 s ≈ 0,54 s/simår genomsnitt i V8.
+Extrapolation (grov, pop-bunden av aggregeringen): 3000 år ≈ 30–90 min i V8 — BAKAD HISTORIA är
+plausibel som produktväg; skarp siffra kräver djupkörning (görs i runtime-underlagets nästa steg).
+Kostnaden följer POP, inte året (pop^~1,45, D-385) — aggregeringen är det som gör djuptid billig.

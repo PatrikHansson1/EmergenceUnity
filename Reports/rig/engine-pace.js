@@ -401,6 +401,9 @@ function checkExtinct(S){
     const k=S.knowledge[id];
     if(k.status!=='alive')continue;
     if(!S.agents.some(a=>!a.dead&&a.knows.has(id))){
+      // §48 J-A (D-581, __PACE): institutionen bär — kunskap i en levande stads knowsUnion är levande
+      // kunskap (biblioteket, skrået, skriften). Henrich-bärare generaliserat till institutioner.
+      if(globalThis.__PACE&&S.aggregates&&S.aggregates.some(_g=>_g.knowsUnion&&_g.knowsUnion.indexOf(id)>=0))continue;
       k.status='extinct'; k.diedYear=Math.floor(S.tick/YEAR)+1; k.losses++;
       // R2 INK1: record the loss event's id so a future rediscovery can reference the loss it undoes.
       k.evLost=ev(S,'knowledgeLost',`🕯️ With <b>${k.lastKnownBy||'the last of them'}</b> died the last knowledge of ${k.name} (${TECH[id].base}). It is <b>extinct</b> — until someone rediscovers it.`,{tech:id}).id;
@@ -2598,6 +2601,7 @@ function aggregateTick(S){
           if(age>=14){const ks=g.knowsUnion; const take=Math.min(ks.length,2+(h%4));
             for(let j=0;j<take;j++)a.knows.add(ks[(h+j*2654435761)%ks.length]);}
         }}
+      if(globalThis.__PACE&&v){v._legacy=[...g.knowsUnion];} // §48 J-B: ruinen minns — arvet sparas hos byn
       S.aggregates.splice(i,1);
       if(globalThis.__PACE&&S._qFarm!==undefined){S._qFarm=1+(S._qFarm-1)*0.6;S._qCraft=1+(S._qCraft-1)*0.6;} // §43: traditionen dör med institutionen
       ev(S,'aggregate',`🏘️ ${g.village} åter i sikte: själarna träder ur mängden (${Math.round(pop)} själar).`,{village:g.village});
@@ -2623,6 +2627,10 @@ function aggregateTick(S){
       const n=fold.length||1; const traitsM={};
       for(const t in tM){const mu=tM[t].s/n;traitsM[t]={mean:mu,sd:Math.sqrt(Math.max(0,tM[t].q/n-mu*mu))};}
       for(const b of bearers)for(const k of b.knows)knows.add(k);
+      // §48 J-B (D-581, __PACE): arvet återvänder — 70 %/teknik överlever i skrifter och ruiner (FNV, aldrig sim-RNG).
+      if(globalThis.__PACE&&v._legacy){const _yr3=Math.floor(S.tick/YEAR);
+        for(const _lk of v._legacy){const _h3=_fnvh('LEG/'+String(S.seed)+'/'+v.name+'/'+_yr3+'/'+_lk);if(_h3%100<70)knows.add(_lk);}
+        delete v._legacy;}
       S.aggregates.push({village:v.name,cohorts:c,knowsUnion:[...knows].sort(),wealth:0,traitsM,bearers:bearers.map(b=>b.id)});
       ev(S,'aggregate',`🏙️ ${v.name} har växt bortom den enskilda blicken — ${fold.length} själar lever nu som folkmängd; ${bearers.length} namn bär krönikan.`,{village:v.name});
     }
