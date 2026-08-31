@@ -58,9 +58,7 @@ namespace Emergence.Editor
             "ledare","medelalder","befolkning","fodda","doda","stolder","kronikan","kronika",
             "almanacken","almanacka","oversikt","samhalle","teknik","dynastier","vandpunkter",
             "markbart","pausad","skriven","vantar","motorns","varlden","varld","egenskaper","klicka",
-            "levande","presenterade","framsta","erkand","varje","nagon","nagot","mycket","ocksa",
-            // D-613: the chronicle text lives in JS — diacritic forms the engine actually writes
-            "själar","växt","bortom","folkmängd","enskilda","blicken","krönikan","också","från","när","där","än"
+            "levande","presenterade","framsta","erkand","varje","nagon","nagot","mycket","ocksa"
         };
 
         // Instruments, not product: these WRITE EVIDENCE FILES for us and are never read by a buyer.
@@ -133,33 +131,7 @@ namespace Emergence.Editor
                 }
             }
 
-            // D-613: the player reads the CHRONICLE before any C# label — and that text is written in JS
-            // (StreamingAssets/Emergence/*.js: engine events + presentation layer). Scan every quoted literal
-            // there too (single, double and backtick quotes). D-605 found the aggregate line in Swedish.
-            var jsDir = Path.Combine(Application.streamingAssetsPath, "Emergence");
-            var jsFiles = Directory.Exists(jsDir) ? Directory.GetFiles(jsDir, "*.js", SearchOption.TopDirectoryOnly).OrderBy(f => f).ToArray() : new string[0];
-            var rxJs = new Regex("(?:\"((?:[^\"\\\\]|\\\\.)*)\"|'((?:[^'\\\\]|\\\\.)*)'|`((?:[^`\\\\]|\\\\.)*)`)");
-            foreach (var f in jsFiles)
-            {
-                scanned++;
-                var lines = File.ReadAllLines(f);
-                for (int i = 0; i < lines.Length; i++)
-                {
-                    var raw = lines[i];
-                    if (raw.TrimStart().StartsWith("//")) continue;
-                    var cm = raw.IndexOf(" // ", StringComparison.Ordinal); if (cm > 0) raw = raw.Substring(0, cm); // trailing comment = archive, not product (D-614)
-                    foreach (Match m in rxJs.Matches(raw))
-                    {
-                        var s = m.Groups[1].Success ? m.Groups[1].Value : (m.Groups[2].Success ? m.Groups[2].Value : m.Groups[3].Value);
-                        if (s.Length < 2) continue;
-                        literals++;
-                        if (!Suspect(s)) continue;
-                        findings.Add("  " + Path.GetFileName(f) + ":" + (i + 1) + "  \"" + (s.Length > 90 ? s.Substring(0, 90) + "…" : s) + "\"");
-                    }
-                }
-            }
-
-            sb.AppendLine("scanned " + scanned + " runtime files (C# + StreamingAssets JS), " + literals + " string literals");
+            sb.AppendLine("scanned " + scanned + " runtime files, " + literals + " string literals");
             sb.AppendLine();
             if (findings.Count == 0)
                 sb.AppendLine("  PASS  no Swedish found in any player-facing string");

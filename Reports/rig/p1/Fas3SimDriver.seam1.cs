@@ -116,7 +116,6 @@ namespace Emergence.Runtime
 engineVersion:E.VERSION,seed:__seed,years:Math.floor(S.tick/E.YEAR),tick:S.tick,ended:!!S.ended,season:''+S.season,
 era:(function(){var m=0;S.agents.forEach(function(a){if(a.dead)return;a.knows.forEach(function(t){var q=E.TECH[t];if(q&&q.era>m)m=q.era})});return m})(),
 eraName:''+E.eraName(E.worldEra(S)),
-intervalReport:(function(){try{var P=globalThis.EmergencePresentation;if(!P||!P.writeIntervalReport)return '';var y=Math.floor(S.tick/E.YEAR);return ''+P.writeIntervalReport(S,Math.max(0,y-99),y).text}catch(e){return ''}})(),
 W:E.W,H:E.H,
 tileTypes:(function(){var o='';for(var y=0;y<E.H;y++)for(var x=0;x<E.W;x++)o+=(''+S.tiles[y][x].t).charAt(0);return o})(),tileN:(function(){var o=[];for(var y=0;y<E.H;y++)for(var x=0;x<E.W;x++)o.push(S.tiles[y][x].n);return o})(),
 agents:S.agents.filter(function(a){return !a.dead}).map(function(a){return {id:a.id,name:''+a.name,x:a.x,y:a.y,age:a.age,gen:a.gen,task:''+a.task,verb:''+E.verbOf(a.task),say:''+(a.say||''),sayAct:''+(a.sayAct||''),home:!!a.home,wealth:E.wealthOf(a)}}),

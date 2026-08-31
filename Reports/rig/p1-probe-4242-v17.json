@@ -1,0 +1,190 @@
+{
+ "seed": 4242,
+ "maxYear": 300,
+ "events": 3136,
+ "withCauses": 424,
+ "causeShare": 0.135,
+ "causeKinds": {
+  "ev": 48,
+  "agent": 535,
+  "cause": 114,
+  "tech": 2
+ },
+ "fields": {
+  "id": 2000,
+  "tick": 2000,
+  "day": 2000,
+  "year": 2000,
+  "type": 2000,
+  "txt": 2000,
+  "tech": 665,
+  "agent": 918,
+  "x": 794,
+  "y": 794,
+  "causes": 252,
+  "custom": 96,
+  "label": 29,
+  "obs": 28,
+  "cause": 48,
+  "from": 17,
+  "village": 17
+ },
+ "recircTop": [],
+ "maxGapYears": 31,
+ "gapAfterYear": 4,
+ "bigYearCount": 84,
+ "topTypes": [
+  [
+   "taught",
+   1047
+  ],
+  [
+   "star",
+   398
+  ],
+  [
+   "season",
+   393
+  ],
+  [
+   "child",
+   246
+  ],
+  [
+   "hunt",
+   165
+  ],
+  [
+   "death",
+   110
+  ],
+  [
+   "field",
+   97
+  ],
+  [
+   "journey",
+   92
+  ],
+  [
+   "trade",
+   78
+  ],
+  [
+   "moved",
+   65
+  ],
+  [
+   "failed",
+   49
+  ],
+  [
+   "imitated",
+   47
+  ],
+  [
+   "tech",
+   45
+  ],
+  [
+   "observed",
+   42
+  ],
+  [
+   "quirk",
+   36
+  ],
+  [
+   "custom",
+   34
+  ],
+  [
+   "customLost",
+   30
+  ],
+  [
+   "conversion",
+   25
+  ],
+  [
+   "legend",
+   19
+  ],
+  [
+   "tradition",
+   17
+  ],
+  [
+   "customBack",
+   14
+  ],
+  [
+   "leader",
+   12
+  ],
+  [
+   "hut",
+   11
+  ],
+  [
+   "epithet",
+   10
+  ],
+  [
+   "hoard",
+   10
+  ]
+ ],
+ "sample": [
+  {
+   "y": 1,
+   "type": "tech",
+   "causes": [
+    "ev:5"
+   ],
+   "txt": "🧶 <b>Torv</b> crossed threads over threads until cloth grew on the frame — <b>Torv's warp"
+  },
+  {
+   "y": 1,
+   "type": "child",
+   "causes": [
+    "agent:3",
+    "agent:2"
+   ],
+   "txt": "👶 <b>Embla</b> and <b>Ask</b> have had a child, <b>Liv</b> — generation 2. They inherit t"
+  },
+  {
+   "y": 2,
+   "type": "child",
+   "causes": [
+    "agent:4",
+    "agent:1"
+   ],
+   "txt": "👶 <b>Torv</b> and <b>Eira</b> have had a child, <b>Sten</b> — generation 2. They inherit "
+  },
+  {
+   "y": 4,
+   "type": "death",
+   "causes": [
+    "cause:starvation"
+   ],
+   "txt": "<b>Eira the Firebringer</b> starved to death. Much knowledge died with them — unless someo"
+  },
+  {
+   "y": 4,
+   "type": "tech",
+   "causes": [
+    "ev:5"
+   ],
+   "txt": "🎣 <b>Torv</b> let a twisted line sink where the fish gather — <b>Torv's the net</b> (Fish"
+  },
+  {
+   "y": 8,
+   "type": "tech",
+   "causes": [
+    "ev:1"
+   ],
+   "txt": "🎵 <b>Torv</b> found that a struck string and a voice could ring together — <b>Torv's melo"
+  }
+ ]
+}

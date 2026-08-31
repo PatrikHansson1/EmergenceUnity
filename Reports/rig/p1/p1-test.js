@@ -1,0 +1,21 @@
+globalThis.__G29=true;globalThis.__SOIL=true;globalThis.__LADDER=true;globalThis.__FOREST=true;
+globalThis.__CLIMATE=true;globalThis.__PACE=true;globalThis.__PROD=true;
+const _m=require('./engine-pace.js'); const E=globalThis.Emergence||_m;
+require('./emergence-presentation.js'); const P=globalThis.EmergencePresentation;
+const crypto=require('crypto');
+const YEAR=144, seed=Number(process.argv[2]||97013), years=Number(process.argv[3]||300);
+const S=E.createWorld(seed); S.silent=true;
+const evBefore=S.events.length;
+while(S.tick<years*YEAR && !S.ended) E.tickWorld(S);
+const snap=JSON.stringify({ev:S.events.length,tick:S.tick,agents:S.agents.length});
+const r1=P.writeIntervalReport(S,0,99), r2=P.writeIntervalReport(S,100,199), r3=P.writeIntervalReport(S,200,299);
+const snap2=JSON.stringify({ev:S.events.length,tick:S.tick,agents:S.agents.length});
+console.log('PURE-READ (state unchanged):', snap===snap2);
+console.log('\n'+r1.text+'\n\n'+r2.text+'\n\n'+r3.text);
+console.log('\nWHY-kedja för första raden i intervall 2:', JSON.stringify(r2.lines[0]&&r2.lines[0].why,null,0).slice(0,400));
+const d=P.reportDigest(S,100); const h=crypto.createHash('sha256').update(d).digest('hex');
+console.log('\nP1-DIGEST sha256', h.slice(0,16), 'len', d.length);
+// determinism: second world, same seed
+const S2=E.createWorld(seed); S2.silent=true; while(S2.tick<years*YEAR && !S2.ended) E.tickWorld(S2);
+const h2=crypto.createHash('sha256').update(P.reportDigest(S2,100)).digest('hex');
+console.log('DETERMINISTISK (två världar samma frö):', h===h2);

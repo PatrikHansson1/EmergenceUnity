@@ -1,0 +1,9 @@
+y97 alive=53 K=? aggs=[Stenholm:14.0/b15 Emblastead:14.0/b15] :: 🏙️ Stenholm has grown past the single gaze — 14 souls now live as a people; 15 names carry the chronicle.
+y97 alive=53 K=? aggs=[Stenholm:14.0/b15 Emblastead:14.0/b15] :: 🏙️ Emblastead has grown past the single gaze — 14 souls now live as a people; 15 names carry the chronicle.
+y98 alive=55 K=? aggs=[] :: 🏘️ Emblastead is in sight again: souls step out of the crowd (14 souls).
+y98 alive=55 K=? aggs=[] :: 🏘️ Stenholm is in sight again: souls step out of the crowd (14 souls).
+y111 alive=63 K=? aggs=[Livholm:18.0/b15] :: 🏙️ Livholm has grown past the single gaze — 18 souls now live as a people; 15 names carry the chronicle.
+y112 alive=62 K=? aggs=[] :: 🏘️ Livholm is in sight again: souls step out of the crowd (18 souls).
+y119 alive=60 K=? aggs=[Stenholm:21.0/b15] :: 🏙️ Stenholm has grown past the single gaze — 21 souls now live as a people; 15 names carry the chronicle.
+y120 alive=64 K=? aggs=[] :: 🏘️ Stenholm is in sight again: souls step out of the crowd (21 souls).
+done 125 alive 74

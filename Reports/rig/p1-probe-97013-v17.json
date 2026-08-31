@@ -1,0 +1,225 @@
+{
+ "seed": 97013,
+ "maxYear": 300,
+ "events": 6435,
+ "withCauses": 1278,
+ "causeShare": 0.199,
+ "causeKinds": {
+  "agent": 1679,
+  "ev": 207,
+  "cause": 320
+ },
+ "fields": {
+  "id": 2000,
+  "tick": 2000,
+  "day": 2000,
+  "year": 2000,
+  "type": 2000,
+  "txt": 2000,
+  "obs": 46,
+  "agent": 1009,
+  "x": 900,
+  "y": 900,
+  "tech": 677,
+  "causes": 389,
+  "custom": 116,
+  "label": 41,
+  "village": 50,
+  "victim": 46,
+  "cause": 80,
+  "from": 20
+ },
+ "recircTop": [
+  [
+   "Loke",
+   9
+  ],
+  [
+   "Freja",
+   5
+  ],
+  [
+   "Embla",
+   5
+  ],
+  [
+   "Idun",
+   5
+  ],
+  [
+   "Sixten",
+   4
+  ],
+  [
+   "Maja",
+   4
+  ],
+  [
+   "Alve",
+   4
+  ],
+  [
+   "Kare",
+   3
+  ]
+ ],
+ "maxGapYears": 11,
+ "gapAfterYear": 53,
+ "bigYearCount": 146,
+ "topTypes": [
+  [
+   "taught",
+   2201
+  ],
+  [
+   "star",
+   874
+  ],
+  [
+   "child",
+   657
+  ],
+  [
+   "season",
+   366
+  ],
+  [
+   "hunt",
+   325
+  ],
+  [
+   "moved",
+   191
+  ],
+  [
+   "death",
+   183
+  ],
+  [
+   "hoard",
+   148
+  ],
+  [
+   "field",
+   131
+  ],
+  [
+   "journey",
+   124
+  ],
+  [
+   "observed",
+   121
+  ],
+  [
+   "failed",
+   109
+  ],
+  [
+   "imitated",
+   99
+  ],
+  [
+   "quirk",
+   85
+  ],
+  [
+   "aggregate",
+   82
+  ],
+  [
+   "conversion",
+   73
+  ],
+  [
+   "customLost",
+   69
+  ],
+  [
+   "leader",
+   66
+  ],
+  [
+   "custom",
+   49
+  ],
+  [
+   "legend",
+   49
+  ],
+  [
+   "hut",
+   47
+  ],
+  [
+   "tribute",
+   45
+  ],
+  [
+   "steal",
+   42
+  ],
+  [
+   "tech",
+   41
+  ],
+  [
+   "epithet",
+   38
+  ]
+ ],
+ "sample": [
+  {
+   "y": 1,
+   "type": "child",
+   "causes": [
+    "agent:2",
+    "agent:1"
+   ],
+   "txt": "👶 <b>Ask</b> and <b>Eira</b> have had a child, <b>Liv</b> — generation 2. They inherit tr"
+  },
+  {
+   "y": 2,
+   "type": "tech",
+   "causes": [
+    "ev:5"
+   ],
+   "txt": "🏺 <b>Eira</b> placed shaped clay in the fire and found it hard as stone — <b>Eira's jar</"
+  },
+  {
+   "y": 2,
+   "type": "tech",
+   "causes": [
+    "ev:5",
+    "ev:24"
+   ],
+   "txt": "🧱 <b>Eira</b> built a stone chamber that gathered the heat of the fire — <b>Eira's burnov"
+  },
+  {
+   "y": 3,
+   "type": "tech",
+   "causes": [
+    "ev:24",
+    "ev:28"
+   ],
+   "txt": "🧱 <b>Eira</b> fired shaped clay into blocks that stack true — <b>Eira's fired brick</b> ("
+  },
+  {
+   "y": 4,
+   "type": "tech",
+   "causes": [
+    "ev:24"
+   ],
+   "txt": "🌱 <b>Eira</b> pressed spilled seeds into turned soil and waited — <b>Eira's seedcraft</b>"
+  },
+  {
+   "y": 5,
+   "type": "child",
+   "causes": [
+    "agent:4",
+    "agent:1"
+   ],
+   "txt": "👶 <b>Torv</b> and <b>Eira</b> have had a child, <b>Sten</b> — generation 2. They inherit "
+  }
+ ]
+}

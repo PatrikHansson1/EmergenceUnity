@@ -105,9 +105,6 @@ namespace Emergence.Runtime
         // canonical name ("The First Morning" … "The Age of Steam"). Old snapshots/checkpoints lack
         // the field → null/"" → WorldEras interim fallback. Additive field only — parser untouched.
         public string eraName;
-        // P1 (D-611): the interval report — 3–5 lines for the last ~century, written by the presentation layer
-        // (emergence-presentation.js, a pure read over S.events). Empty when the layer is not loaded. Additive.
-        public string intervalReport;
         public int W, H; public string tileTypes; public int[] tileN;
         public WorldAgent[] agents; public WorldHut[] huts; public WorldFire[] fires;
         public WorldField[] fields; public WorldVillage[] villages; public WorldAnimal[] animals;

@@ -1,24 +1,24 @@
 EMERGENCE — JINT PACE (D-259, port P0): kostnaden per simulerat år DÄR SPELET KÖR
-genererad 2026-08-15 16:28:29   seed 4242, 160 år, motor-SHA 70c5ff639e8c
+genererad 2026-08-30 18:50:06   seed 4242, 160 år, motor-SHA cf5cba658777
 
   år   levande   byar    Jint s/år    V8 s/år    multiplikator
   --------------------------------------------------------------
-    20         7      0       13,583      0,110         123,5x
-    40        13      1       25,476      0,074         344,3x
-    60        20      2       33,175      0,144         230,4x
-    80        38      2       65,908      0,290         227,3x
-   100        68      3      129,889      0,604         215,0x
-   120       112      3      227,680      1,125         202,4x
-   140       126      6      315,629      1,482         213,0x
-   160       126      6      313,112      1,676         186,8x
+    20         8      0       40,361      0,110         366,9x
+    40        10      0       52,236      0,074         705,9x
+    60        20      0       96,028      0,144         666,9x
+    80        37      0      176,453      0,290         608,5x
+   100        13      1       67,665      0,604         112,0x
+   120         8      2       44,998      1,125          40,0x
+   140         5      2       25,276      1,482          17,1x
+   160         8      2       39,882      1,676          23,8x
 
 ## VAD DET BETYDER
-  sista mätpunkten: 313,112 s per simulerat år vid pop 126, 6 byar
-  3 000 år i den takten, UTAN spatial grid: 260,9 timmar ren beräkning
-  samma sak med grid (antag samma 7,5x som V8-uppskattningen): 34,8 timmar
-  värsta uppmätta multiplikator mot V8: 344,3x (år 40)
+  sista mätpunkten: 39,882 s per simulerat år vid pop 8, 2 byar
+  3 000 år i den takten, UTAN spatial grid: 33,2 timmar ren beräkning
+  samma sak med grid (antag samma 7,5x som V8-uppskattningen): 4,4 timmar
+  värsta uppmätta multiplikator mot V8: 705,9x (år 40)
 
-  ✗ 344,3x > 20x — D-259:s avbrottskriterium slår till. PORTNINGSBESLUTET LYFTS FÖRE P2.
+  ✗ 705,9x > 20x — D-259:s avbrottskriterium slår till. PORTNINGSBESLUTET LYFTS FÖRE P2.
     Motorlogiken ändras fortfarande i JS i huvudlinjen; det som ska beslutas är om de
     heta vägarna körs som C# under bit-likhetsgrind (trimningsstegen, JINT-GOLDEN §8).
 

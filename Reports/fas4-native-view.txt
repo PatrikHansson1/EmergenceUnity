@@ -1,8 +1,8 @@
 EMERGENCE — FAS 4 PROBE: the native chronicle view (UI Toolkit, feed/book)
-generated 2026-08-14 15:12:52
+generated 2026-08-31 08:24:49
 data source = the SAME Fas4ChronicleFeed as v0 (no new truth); styling per almanac reference
 
-## PLAY PHASE (frames=16681)
+## PLAY PHASE (frames=46671)
 ready: view READY=True on Resources/Fas4PanelSettings, IMGUI v0 stood down=True (OK)
 feed rows: 8 rendered / expected 8 of 8 entries (OK)
 filter: vändpunkter -> only ★ rows, 2 shown OK; allt restored OK
@@ -11,7 +11,7 @@ book content: 8/8 entries, newest first y5>=y0 (OK)
 why-expander: click row 0 -> visible OK, survives rebuild OK (line = engine causes[] via Fas4ProseDirector, prose wiring 2026-08-13)
 book close: pause state restored (paused=False), feed panel back (OK)
 book evidence: OK (end-of-frame backbuffer, nonwhite 100%) -> Reports/fas4-native-book.png
-feed evidence: OK (end-of-frame backbuffer, nonwhite 100%) -> Reports/fas4-native-feed.png
+feed evidence: OK (end-of-frame backbuffer, nonwhite 98%) -> Reports/fas4-native-feed.png
 disarm branch: bogus PanelSettings resource -> view disarms itself (Ready=False, enabled=False, error set=True), IMGUI v0 STANDS (showUI=True) (OK)
 
 caveat: three scales are out of v1 scope. The why-expander is LIVE (engine causes[] -> Fas4ProseDirector); LLM prose itself stays flag-gated OFF until a model passes RUN_FAS4PROSELIVE on tone.

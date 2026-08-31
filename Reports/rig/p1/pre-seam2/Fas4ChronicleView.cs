@@ -85,16 +85,6 @@ namespace Emergence.Runtime
         sealed class PendingWhy { public string key; public System.Threading.Tasks.Task<string> task; }
         readonly List<PendingWhy> _pendingWhy = new List<PendingWhy>();
         Fas4ProseDirector _prose;
-        // P1 (D-611): THE SPAN — the interval report from the presentation layer, shown at the top of the book.
-        Label _spanLabel; Fas3WorldRuntime _rt;
-        Fas3WorldRuntime Rt() { if (_rt == null) _rt = FindAnyObjectByType<Fas3WorldRuntime>(); return _rt; }
-        void UpdateSpan()
-        {
-            if (_spanLabel == null) return;
-            var rt = Rt(); var txt = (rt != null && rt.LastState != null) ? rt.LastState.intervalReport : null;
-            if (string.IsNullOrEmpty(txt)) { _spanLabel.style.display = DisplayStyle.None; return; }
-            _spanLabel.text = txt; _spanLabel.style.display = DisplayStyle.Flex;
-        }
         /// <summary>Proof seam: why-lines answered from the director (rule-based or model).</summary>
         public int WhyResolvedCount { get; private set; }
         public string LastWhy { get; private set; } = "";
@@ -358,14 +348,6 @@ namespace Emergence.Runtime
             sub.style.color = ColSub; sub.style.fontSize = 13; sub.style.marginBottom = 8;
             card.Add(sub);
 
-            // P1 (D-611): the span — what the last century kept. Read from WorldState.intervalReport; hidden when empty.
-            _spanLabel = new Label("");
-            _spanLabel.style.color = ColInk; _spanLabel.style.fontSize = 14; _spanLabel.style.whiteSpace = WhiteSpace.Normal;
-            _spanLabel.style.marginBottom = 10; _spanLabel.style.paddingBottom = 8;
-            _spanLabel.style.borderBottomWidth = 1; _spanLabel.style.borderBottomColor = ColLine;
-            _spanLabel.style.display = DisplayStyle.None;
-            card.Add(_spanLabel);
-
             var bookFilters = new VisualElement(); RowFlex(bookFilters); bookFilters.style.marginBottom = 6;
             for (int i = 0; i < 3; i++)
             {
@@ -408,7 +390,6 @@ namespace Emergence.Runtime
 
         void RebuildBookRows(Fas4ChronicleFeed f)
         {
-            UpdateSpan(); // P1 (D-611)
             _bookScroll.Clear();
             _bookRows.Clear();
 

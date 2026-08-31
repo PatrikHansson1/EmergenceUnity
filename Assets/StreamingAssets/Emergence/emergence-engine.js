@@ -2604,7 +2604,7 @@ function aggregateTick(S){
       if(globalThis.__PACE&&v){v._legacy=[...g.knowsUnion];} // §48 J-B: ruinen minns — arvet sparas hos byn
       S.aggregates.splice(i,1);
       if(globalThis.__PACE&&S._qFarm!==undefined){S._qFarm=1+(S._qFarm-1)*0.6;S._qCraft=1+(S._qCraft-1)*0.6;} // §43: traditionen dör med institutionen
-      ev(S,'aggregate',`🏘️ ${g.village} åter i sikte: själarna träder ur mängden (${Math.round(pop)} själar).`,{village:g.village});
+      ev(S,'aggregate',`🏘️ ${g.village} is in sight again: souls step out of the crowd (${Math.round(pop)} souls).`,{village:g.village}); // D-614: text-only (was Swedish, D-605/D-613)
     }
   }
   // 2) nya aggregat: upptagningsområde ≥ T.agg (RIG: POP_CAP-fallback tvingar aggregering av största by vid överskott, så avskogade världar ändå foldar till kohorter = snabbt)
@@ -2632,7 +2632,7 @@ function aggregateTick(S){
         for(const _lk of v._legacy){const _h3=_fnvh('LEG/'+String(S.seed)+'/'+v.name+'/'+_yr3+'/'+_lk);if(_h3%100<70)knows.add(_lk);}
         delete v._legacy;}
       S.aggregates.push({village:v.name,cohorts:c,knowsUnion:[...knows].sort(),wealth:0,traitsM,bearers:bearers.map(b=>b.id)});
-      ev(S,'aggregate',`🏙️ ${v.name} har växt bortom den enskilda blicken — ${fold.length} själar lever nu som folkmängd; ${bearers.length} namn bär krönikan.`,{village:v.name});
+      ev(S,'aggregate',`🏙️ ${v.name} has grown past the single gaze — ${fold.length} souls now live as a people; ${bearers.length} names carry the chronicle.`,{village:v.name}); // D-614: text-only (was Swedish, D-605/D-613)
     }
   }
   // §38 S2 (D-552): STADEN SOM UPPFINNARE — ett gillesförsök per stad och år på mognadsklara tekniker.
