@@ -1,5 +1,5 @@
 /* ============================================================================
-   EMERGENCE — presentation layer, P1: THE INTERVAL REPORT  (v0.4, 2026-08-31, D-605/D-613/D-615)
+   EMERGENCE — presentation layer, P1: THE INTERVAL REPORT  (v0.3, 2026-08-31, D-605/D-613)
    A PURE READ over a world state S. Never writes to S. Never draws randomness.
    Loaded AFTER emergence-engine.js by every host (Jint, node bake-runner, browser).
    NOT part of the engine SHA — carries its own SHA (P1-text golden: seed+interval => byte-identical).
@@ -97,9 +97,18 @@
   }
 
   // ---- line rendering: engine txt by default; own English template where the engine text is not shippable ----
+  function villageName(S, id) {
+    if (S.villages) for (var i = 0; i < S.villages.length; i++) if (S.villages[i] && S.villages[i].id === id) return S.villages[i].name || ('settlement #' + id);
+    return null;
+  }
   function renderLine(ev, idx, S) {
-    // v0.4 (D-615): the engine speaks English since v18 (D-614) — the aggregate mask is retired; every line
-    // comes from the engine log through the same first-sentence + disambiguation path.
+    if (ev.type === 'aggregate') {
+      // engine emits this line in Swedish (D-605 motor debt); the report speaks English.
+      var m = String(ev.txt || '').match(/^(?:<b>)?([^<—]+?)(?:<\/b>)? har växt.*?(\d+) själar/);
+      var vn = (m ? m[1] : (villageName(S, ev.village) || 'A settlement')).replace(/^[^A-Za-z0-9]+/, '').trim();
+      var n = m ? m[2] : '';
+      return vn + ' has grown past the single gaze — ' + (n ? n + ' souls now live as a people' : 'its people now live as a crowd') + '; the chronicle keeps only the names that mattered.';
+    }
     return disambiguate(firstSentence(ev.txt), ev, idx, S);
   }
   var CAUSE_WORDS = { age: 'of old age', hunger: 'of hunger', cold: 'of cold', sickness: 'of sickness', war: 'in war', raid: 'in a raid', thirst: 'of thirst' };
@@ -155,5 +164,5 @@
     return parts.join('\n\n');
   }
 
-  root.EmergencePresentation = { VERSION: '0.4.0', writeIntervalReport: writeIntervalReport, reportDigest: reportDigest, WEIGHT: WEIGHT, _firstSentence: firstSentence };
+  root.EmergencePresentation = { VERSION: '0.3.0', writeIntervalReport: writeIntervalReport, reportDigest: reportDigest, WEIGHT: WEIGHT, _firstSentence: firstSentence };
 })(typeof globalThis !== 'undefined' ? globalThis : (typeof self !== 'undefined' ? self : this));

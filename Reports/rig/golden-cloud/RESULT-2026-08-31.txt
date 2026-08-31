@@ -1,0 +1,4 @@
+golden-cloud (V8, node) 2026-08-31 ~15:00 UTC — D-623
+HEAD d02bb1ee vs H0(a) 8907f6f6 — alla 8 SHA identiska med incheckade goldens:
+720:  97013 83e875ba… 318627 B | 4242 11763185… 311181 B | 20260718 12ed3552… 323364 B | 97013-founders 1944f84f… 319489 B
+8640: 97013 93d64ce2… 1220843 B (40 s) | 4242 e525d652… 443329 B (48 s) | 20260718 322507ab… 1045999 B (51 s) | 97013-founders 54e7c15e… 1603122 B (46 s)

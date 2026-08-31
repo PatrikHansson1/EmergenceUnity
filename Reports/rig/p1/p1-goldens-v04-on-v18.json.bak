@@ -1,18 +1,18 @@
 {
  "presentationVersion": "0.4.0",
  "presentationSha": "38ffc1009c2ff3dfd9f7728bf1bf6feccf6099d3e3174e2125302591099a073d",
- "engineSha": "8907f6f6",
+ "engineSha": "d02bb1ee",
  "years": 150,
  "step": 50,
  "goldens": {
   "4242": "001e4419ce98d8118f9ea8ee83ce778c0957b07c455f7763ef75379918c6f5ae",
-  "97013": "edd5caa77eca9702b0bfe916813acfbb1852dd59f20c5bc70e28e38370cb7c37",
-  "20260718": "21f6e73be77dd8649381129cd3bbfc1bbece34e3819c706ece2fe92c066d62ec"
+  "97013": "b134c34dfa34e2a236556756e78dd2f24004dbe570ec2971d45432462b3bb875",
+  "20260718": "77c2db795e2310b725792948eab9a4e4592f8e567990b8f4ae6174abf95039a8"
  },
  "samples": {
   "4242": "Years 0–49:\n[1] Eira told the day back as a story worth remembering — Eira's oral saga (Storytelling) has been invented!\n[1] Torv began carving a sign into a flat stone when something new is made — no one told them to.\n[4] Eira the Firebringer starved to death.\n[8] From that day on, Ask was known as Ask the Spearmaker.\n[39] Rune sewed clothes from hides — winter has met its match.",
   "97013": "Years 0–49:\n[1] Eira told the day back as a story worth remembering — Eira's oral saga (Storytelling) has been invented!\n[33] Bjorn set upon Liv the Founder and seized goods — the gap was cheaper to close by force.\n[34] In Livholm, the people have begun to listen when Ask the Ironhand speaks — prestige has hardened into leadership.\n[38] Need drove the hand: Bjorn took what could be carried from Liv the Founder.\n[39] Ask the Ironhand died of old age at 55.",
   "20260718": "Years 0–49:\n[1] Embla told the day back as a story worth remembering — Embla's the telling (Storytelling) has been invented!\n[1] From that day on, Ask was known as Ask the Firebringer.\n[27] Hunger owned the hand: Bjorn wrenched food from Torv the Rememberer.\n[38] Embla the Spearmaker died of old age at 57.\n[45] In Ylvahaven, the people have begun to listen when Eira speaks — prestige has hardened into leadership."
  },
- "note": "P1 v0.4 goldens on engine v19 (8907f6f6, H0(a) D-623). 4242 UNCHANGED vs v18; 97013 changed (H0a: inga flimmer-folds y97–149); 20260718 changed. Generated 2026-08-31 (D-625)."
+ "note": "P1 v0.4 goldens on engine v18 (d02bb1ee); generated 2026-08-31 pending v18 commit (D-615)"
 }

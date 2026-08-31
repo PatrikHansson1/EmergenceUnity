@@ -2614,7 +2614,7 @@ function aggregateTick(S){
   for(const [v,mem] of catch_){
     if(S.aggregates.some(g=>g.village===v.name))continue;
     const alive=mem.filter(a=>!a.dead);
-    if(alive.length>=T.agg || (_totAlive>_POPCAP && alive.length===_maxC && alive.length>=12)){
+    if(alive.length>=T.agg || (_totAlive>_POPCAP && alive.length===_maxC && alive.length>=T.de+15)){ // H0(a) RIGG D-617: fallback-fold aldrig under de-fold-tröskeln (pop+bärare ≥ T.de)
       const sorted=[...alive].sort((a,b)=>_bearerScore(b)-_bearerScore(a));
       const bearers=sorted.slice(0,15);
       const fold=sorted.slice(15);

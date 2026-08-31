@@ -1,0 +1,9 @@
+C5-KONTROLL (§11c) på motor v19 8907f6f6 — 8 prereg-frön × 120 år, moln-V8 2026-08-31 (D-630)
+{"seed":97013,...,"alive":140,"violenceFamily":{"violence":7,"steal":26,"raid":32,"feud":6,"mourn":3,"total":71},"nonViolent":{"sharing":10,"giftway":3,"tribute":9,"trade":13,"peaceLawBorn":1,"tabooBroken":0},"grudges":{"openAtEnd":4,"holders":4},"killings":3}
+{"seed":4242,"alive":8,"violenceFamily":{"total":0},"nonViolent":{"sharing":1,"giftway":0,"tribute":1,"trade":35,"peaceLawBorn":0},"grudges":{"openAtEnd":0},"killings":0}
+{"seed":20260718,"alive":108,"violenceFamily":{"violence":2,"steal":14,"raid":12,"feud":0,"total":28},"nonViolent":{"sharing":10,"giftway":3,"tribute":3,"trade":6,"peaceLawBorn":0},"grudges":{"openAtEnd":14,"holders":14},"killings":1}
+{"seed":31415,"alive":125,"violenceFamily":{"violence":6,"steal":13,"raid":16,"feud":0,"total":35},"nonViolent":{"sharing":8,"giftway":3,"tribute":2,"trade":5,"peaceLawBorn":0},"grudges":{"openAtEnd":1},"killings":0}
+{"seed":2323,"alive":101,"violenceFamily":{"violence":14,"steal":42,"raid":74,"feud":7,"total":137},"nonViolent":{"sharing":9,"giftway":4,"tribute":14,"trade":9,"peaceLawBorn":0},"grudges":{"openAtEnd":4,"holders":3},"killings":1}
+{"seed":1618,"alive":42,"violenceFamily":{"violence":1,"steal":19,"raid":9,"feud":1,"total":30},"nonViolent":{"sharing":14,"giftway":2,"tribute":4,"trade":84,"peaceLawBorn":0},"grudges":{"openAtEnd":0},"killings":0}
+{"seed":777,"alive":48,"violenceFamily":{"violence":1,"steal":7,"raid":0,"feud":0,"total":8},"nonViolent":{"sharing":6,"giftway":1,"tribute":3,"trade":6,"peaceLawBorn":0},"grudges":{"openAtEnd":0},"killings":0}
+{"seed":"97013-founders","alive":135,"violenceFamily":{"violence":18,"steal":21,"raid":108,"feud":35,"total":182},"nonViolent":{"sharing":7,"giftway":3,"tribute":19,"trade":13,"peaceLawBorn":0},"grudges":{"openAtEnd":62,"holders":51},"killings":5}

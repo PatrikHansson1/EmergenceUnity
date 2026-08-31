@@ -1,0 +1,12 @@
+y25 alive=5 agg=0 aggPop=0 folds=0 4s
+y50 alive=10 agg=0 aggPop=0 folds=0 8s
+y75 alive=19 agg=0 aggPop=0 folds=0 16s
+y100 alive=28 agg=0 aggPop=0 folds=0 30s
+y125 alive=50 agg=0 aggPop=0 folds=0 55s
+y150 alive=12 agg=1 aggPop=77 folds=0 81s
+y175 alive=5 agg=1 aggPop=100 folds=0 87s
+y200 alive=5 agg=1 aggPop=108 folds=0 91s
+y225 alive=8 agg=1 aggPop=110 folds=0 95s
+y250 alive=10 agg=1 aggPop=109 folds=0 103s
+y275 alive=10 agg=1 aggPop=113 folds=0 108s
+y300 alive=19 agg=1 aggPop=122 folds=0 119s

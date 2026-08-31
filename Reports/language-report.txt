@@ -1,16 +1,13 @@
 EMERGENCE — LANGUAGE PROBE: does the game speak English?
-generated 2026-08-31 09:39:33
+generated 2026-08-31 14:39:09
 scope: STRING LITERALS in runtime code. Comments, Editor/ and reports are
   deliberately exempt — the studio reasons in Swedish and that is the archive.
 
-scanned 47 runtime files (C# + StreamingAssets JS), 3308 string literals
+scanned 47 runtime files (C# + StreamingAssets JS), 3296 string literals
 
-  FAIL  3 player-facing strings still speak Swedish:
-  emergence-engine.js:1206  "aldrig såg någon använda vattnet"
-  emergence-engine.js:2607  "🏘️ ${g.village} åter i sikte: själarna träder ur mängden (${Math.round(pop)} själar)."
-  emergence-engine.js:2635  "🏙️ ${v.name} har växt bortom den enskilda blicken — ${fold.length} själar lever nu som fo…"
+  PASS  no Swedish found in any player-facing string
 
-VERDICT: RED
+VERDICT: GREEN
 declared: a word list is not a language. This catches the drift we actually make —
   a Swedish label typed by someone thinking in Swedish — and it will not catch a
   sentence that happens to avoid every word in the list. Widen the list when one slips.

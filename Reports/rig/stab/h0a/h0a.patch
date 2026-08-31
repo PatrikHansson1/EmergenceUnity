@@ -1,0 +1,4 @@
+2617c2617
+<     if(alive.length>=T.agg || (_totAlive>_POPCAP && alive.length===_maxC && alive.length>=12)){
+---
+>     if(alive.length>=T.agg || (_totAlive>_POPCAP && alive.length===_maxC && alive.length>=T.de+15)){ // H0(a) RIGG D-617: fallback-fold aldrig under de-fold-tröskeln (pop+bärare ≥ T.de)

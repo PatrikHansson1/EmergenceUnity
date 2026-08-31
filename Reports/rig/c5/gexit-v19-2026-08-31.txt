@@ -1,0 +1,10 @@
+GRUDGE-UTGÅNGAR (instrumenterad tvilling engine-ginstr, ren räkning) — v19 8907f6f6, 8 frön × 120 år (D-632)
+{"seed":97013,"born":95,"revenge":6,"death":4,"cooled":76,"openAtEnd":4,"leaders":3,"medianWealth":6}
+{"seed":4242,"born":0,"revenge":0,"death":0,"cooled":0,"openAtEnd":0,"leaders":0,"medianWealth":17}
+{"seed":20260718,"born":109,"revenge":0,"death":15,"cooled":76,"openAtEnd":14,"leaders":1,"medianWealth":7}
+{"seed":31415,"born":28,"revenge":0,"death":0,"cooled":25,"openAtEnd":1,"leaders":2,"medianWealth":2}
+{"seed":2323,"born":205,"revenge":7,"death":16,"cooled":168,"openAtEnd":4,"leaders":1,"medianWealth":8}
+{"seed":1618,"born":29,"revenge":1,"death":2,"cooled":26,"openAtEnd":0,"leaders":1,"medianWealth":32}
+{"seed":777,"born":7,"revenge":0,"death":0,"cooled":7,"openAtEnd":0,"leaders":0,"medianWealth":12}
+{"seed":"97013-f","born":534,"revenge":35,"death":106,"cooled":309,"openAtEnd":62,"leaders":3,"medianWealth":9}
+Restpost = bärarens egen död (räknas ej). Avkylning dominerar (76–90 % av utgångarna) men tar ~14 år (+4 rel/år från −75 till −20) — feud-fönstret (rel<−55) står öppet i ~5 år per grudge.
