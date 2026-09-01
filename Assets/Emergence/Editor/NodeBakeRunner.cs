@@ -41,11 +41,35 @@ namespace Emergence.Editor
                 if (args.Length == 0 || args.Length > 200 || !Regex.IsMatch(args, @"^[A-Za-z0-9_\-\. ]+$"))
                 { File.WriteAllText(Done, "REFUSED bad args " + DateTime.Now.ToString("HH:mm:ss") + "\n"); return; }
                 var stamp = DateTime.Now.ToString("yyyyMMdd-HHmmss");
+                // resolve node.exe: PATH first, then common install locations (Unity's env can lack PATH entries)
+                string nodeExe = "node";
+                try
+                {
+                    var candidates = new string[] {
+                        @"C:\Program Files\nodejs\node.exe",
+                        @"C:\Program Files (x86)\nodejs\node.exe",
+                        Environment.ExpandEnvironmentVariables(@"%LOCALAPPDATA%\Programs\nodejs\node.exe"),
+                        Environment.ExpandEnvironmentVariables(@"%USERPROFILE%\scoop\apps\nodejs\current\node.exe"),
+                        Environment.ExpandEnvironmentVariables(@"%ProgramData%\chocolatey\bin\node.exe")
+                    };
+                    foreach (var c in candidates) if (File.Exists(c)) { nodeExe = c; break; }
+                }
+                catch {}
+                if (args == "diag")
+                {
+                    var diagLog = Path.Combine(BakeDir, "nodebake-diag.txt");
+                    var sb = new System.Text.StringBuilder();
+                    sb.AppendLine("resolved nodeExe = " + nodeExe + (nodeExe == "node" ? " (PATH fallback — no candidate file found)" : " (file exists)"));
+                    try { var pw = System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo { FileName = "cmd.exe", Arguments = "/c where node", UseShellExecute = false, RedirectStandardOutput = true, RedirectStandardError = true, CreateNoWindow = true }); sb.AppendLine("where node -> " + pw.StandardOutput.ReadToEnd().Trim() + pw.StandardError.ReadToEnd().Trim()); pw.WaitForExit(5000); } catch (Exception dx) { sb.AppendLine("where failed: " + dx.Message); }
+                    File.WriteAllText(diagLog, sb.ToString());
+                    File.WriteAllText(Done, "DIAG " + DateTime.Now.ToString("HH:mm:ss") + " -> rig/bake/nodebake-diag.txt\n");
+                    return;
+                }
                 var log = Path.Combine(BakeDir, "nodebake-" + stamp + ".log");
                 var psi = new System.Diagnostics.ProcessStartInfo
                 {
                     FileName = "cmd.exe",
-                    Arguments = "/c node " + args + " > \"" + log + "\" 2>&1",
+                    Arguments = "/c \"\"" + nodeExe + "\" " + args + "\"" + " > \"" + log + "\" 2>&1",
                     WorkingDirectory = BakeDir,
                     UseShellExecute = false,
                     CreateNoWindow = true

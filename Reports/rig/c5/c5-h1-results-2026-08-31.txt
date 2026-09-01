@@ -1,0 +1,12 @@
+H-C5 v1 MÄTNING (prereg LÅST D-633) — motor v19-tvilling engine-c5.js, 8 frön × 120 år, moln-V8 2026-08-31 (D-634)
+frö            settl (första år)  feud bas→C5   vTotal bas→C5  öppna grudges bas→C5  alive bas→C5  qCraft bas→C5
+97013          5 (y100)           6→12          71→86          4→8                   140→142       1,113→1,113
+4242           0                  0→0           0→0            0→0                   8→8           (identisk)
+20260718       5 (y117)           0→0           28→28          14→12                 108→108
+31415          0                  0→0           35→35          1→1                   125→125       (identisk)
+2323           6 (y83)            7→5 (−28,6%)  137→116        4→2                   101→85
+1618           0                  1→1           30→30          0→0                   42→42         (identisk)
+777            0                  0→0           8→8            0→0                   48→48         (identisk)
+97013-founders 11 (y76)           35→16 (−54%)  182→163        62→24                 135→134
+T1 GRÖN (4/8 ≥ 3/8) · T2 RÖD (1/4: founders −54% enda gröna; 2323 −28,6% under golvet 30; 97013 FÖRDUBBLAD 6→12; 20260718 0 vid bas) · T3 GRÖN (4242/777/31415/1618: 0 settlements, identiska profiler) · T4 GRÖN på definierade mått (0 nya döda; qCraft ±0%) · T5 GRÖN (causes: grudge-ev + ledar-ev + agent; "Before Rune, Tuva II laid goods at Falk II's feet")
+UTFALL UTAN REGEL I FALLTRÄDET (T2 röd + övriga gröna) ⇒ bokförs som OVÄNTAT, ingen improvisation, H-C5 v1 går EJ till disk.

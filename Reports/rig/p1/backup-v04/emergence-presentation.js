@@ -1,5 +1,5 @@
 /* ============================================================================
-   EMERGENCE — presentation layer, P1: THE INTERVAL REPORT  (v0.5, 2026-08-31, D-605/D-613/D-615/D-626)
+   EMERGENCE — presentation layer, P1: THE INTERVAL REPORT  (v0.4, 2026-08-31, D-605/D-613/D-615)
    A PURE READ over a world state S. Never writes to S. Never draws randomness.
    Loaded AFTER emergence-engine.js by every host (Jint, node bake-runner, browser).
    NOT part of the engine SHA — carries its own SHA (P1-text golden: seed+interval => byte-identical).
@@ -10,17 +10,13 @@
   'use strict';
 
   // ---- dramatic pressure per event type (P1-spec: death > fall > guild > product > epithet) ----
-  // v0.5 (D-626): keyed to the ENGINE'S actual 48 ev-types (grep over v19 8907f6f6) — v0.4 carried 8 dead keys
-  // (villageFallen/fall/war/famine/plague/city/guild/extinct) and 21 real types fell to default 1.
-  // Unknown future types weigh 1. Routine noise weighs 0 (never reported).
+  // Types observed on v17 (D-604 probe). Unknown types weigh 1. Routine noise weighs 0 (never reported).
   var WEIGHT = {
-    end: 100, start: 85, violence: 75, raid: 70, feud: 62, death: 60, wolfAttack: 58, sickness: 56,
-    aggregate: 55, village: 55, rebel: 52, reformation: 50, religion: 48, tabooBroken: 46,
-    knowledgeLost: 45, leader: 40, tribute: 38, tradition: 34, rediscovered: 32, trade: 30,
-    steal: 30, legend: 30, tech: 28, product: 26, mutation: 24, epithet: 22, conversion: 20,
-    customLost: 20, normFades: 18, customBack: 16, mourn: 15, custom: 14, giftway: 12,
-    hut: 8, field: 6, journey: 4, hoard: 3, moved: 2, quirk: 2, failed: 1, imitated: 1, observed: 1,
-    sharing: 1, taught: 0, star: 0, child: 0, season: 0, hunt: 0
+    extinct: 100, villageFallen: 90, fall: 90, war: 80, raid: 70, famine: 70, plague: 65,
+    death: 60, aggregate: 55, city: 55, guild: 50, leader: 40, tribute: 38, steal: 30, legend: 30,
+    epithet: 22, tech: 28, product: 26, conversion: 20, customLost: 20, custom: 14, hut: 8, field: 6,
+    journey: 4, hoard: 3, moved: 2, quirk: 2, failed: 1, imitated: 1, observed: 1,
+    taught: 0, star: 0, child: 0, season: 0, hunt: 0
   };
 
   // ---- deterministic helpers ----
@@ -159,5 +155,5 @@
     return parts.join('\n\n');
   }
 
-  root.EmergencePresentation = { VERSION: '0.5.0', writeIntervalReport: writeIntervalReport, reportDigest: reportDigest, WEIGHT: WEIGHT, _firstSentence: firstSentence };
+  root.EmergencePresentation = { VERSION: '0.4.0', writeIntervalReport: writeIntervalReport, reportDigest: reportDigest, WEIGHT: WEIGHT, _firstSentence: firstSentence };
 })(typeof globalThis !== 'undefined' ? globalThis : (typeof self !== 'undefined' ? self : this));

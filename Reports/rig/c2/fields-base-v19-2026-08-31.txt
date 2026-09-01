@@ -1,0 +1,9 @@
+FÄLTENS ÖDE — instrumenterad baslinje (engine-fields: räknar harvested / ripe-lost vid vinter / orphan / cap-blocked), motor v19, 7 frön × 120 år (founders timeout), moln-V8 2026-08-31 natt (D-638)
+{"seed":97013,"alive":140,"fields":60,"orphanFields":24,"harvested":89,"lostRipe":3491,"lostOrphan":749,"harvestShare":0.025,"capBlockedTries":112}
+{"seed":4242,"alive":8,"fields":31,"orphanFields":28,"harvested":49,"lostRipe":1858,"lostOrphan":856,"harvestShare":0.026,"capBlockedTries":576}
+{"seed":20260718,"alive":108,"fields":60,"orphanFields":23,"harvested":87,"lostRipe":2987,"lostOrphan":687,"harvestShare":0.028,"capBlockedTries":491}
+{"seed":31415,"alive":125,"fields":60,"orphanFields":23,"harvested":111,"lostRipe":3393,"lostOrphan":805,"harvestShare":0.032,"capBlockedTries":431}
+{"seed":2323,"alive":101,"fields":59,"orphanFields":25,"harvested":83,"lostRipe":3250,"lostOrphan":787,"harvestShare":0.025,"capBlockedTries":85}
+{"seed":1618,"alive":42,"fields":60,"orphanFields":26,"harvested":99,"lostRipe":3257,"lostOrphan":712,"harvestShare":0.029,"capBlockedTries":260}
+{"seed":777,"alive":48,"fields":47,"orphanFields":13,"harvested":64,"lostRipe":1812,"lostOrphan":596,"harvestShare":0.034,"capBlockedTries":1039}
+Läsning: 97–97,5 % av alla mogna fält-år förloras i vintern (stage 3 → 0, rad 2168); skörd 0,5–0,9 per år och värld; 13–28 fält är föräldralösa (död ägare, tas aldrig bort — S.fields filtreras aldrig) och låser 25–90 % av fältkapaciteten (cap = levande, rad 2176; hårt tak ~60 syns). "Kan inte skörda i tid" är alltså inte undantaget utan REGELN.

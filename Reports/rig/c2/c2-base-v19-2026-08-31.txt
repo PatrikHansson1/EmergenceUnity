@@ -1,0 +1,11 @@
+C2-BASLINJE (Coase-premissen, §-lönearbetet) — motor v19 8907f6f6, 8 frön × 120 år, moln-V8 2026-08-31 (D-636)
+Instrument: engine-c2instr (ren räkning av handelspar via stats.trades-platsen; OBS ev('trade') är 5 %-sampel — verklig täthet läses ur stats.trades)
+{"seed":97013,"alive":140,"trades":301,"tpcy":0.018,"pairs":169,"maxPair":10,"pairsGe5":9,"pairsGe10":2,"gini":0.760,"specialists":90,"leaders":3}
+{"seed":4242,"alive":8,"trades":851,"tpcy":0.886,"pairs":172,"maxPair":82,"pairsGe5":46,"pairsGe10":25,"gini":0.517,"specialists":7,"leaders":0,"agg":1}
+{"seed":20260718,"alive":108,"trades":146,"tpcy":0.011,"pairs":76,"maxPair":22,"pairsGe5":4,"pairsGe10":3,"gini":0.721,"specialists":58,"leaders":1}
+{"seed":31415,"alive":125,"trades":85,"tpcy":0.006,"pairs":51,"maxPair":6,"pairsGe5":3,"pairsGe10":0,"gini":0.778,"specialists":76,"leaders":2}
+{"seed":2323,"alive":101,"trades":239,"tpcy":0.020,"pairs":122,"maxPair":13,"pairsGe5":11,"pairsGe10":1,"gini":0.648,"specialists":54,"leaders":1}
+{"seed":1618,"alive":42,"trades":1443,"tpcy":0.286,"pairs":466,"maxPair":38,"pairsGe5":93,"pairsGe10":20,"gini":0.475,"specialists":34,"leaders":1,"agg":1}
+{"seed":777,"alive":48,"trades":87,"tpcy":0.015,"pairs":42,"maxPair":18,"pairsGe5":3,"pairsGe10":2,"gini":0.586,"specialists":28,"leaders":0}
+{"seed":"97013-f","alive":135,"trades":306,"tpcy":0.019,"pairs":156,"maxPair":15,"pairsGe5":11,"pairsGe10":3,"gini":0.663,"specialists":124,"leaders":3}
+Fynd: (1) stående bilaterala handelsrelationer FINNS redan (1618: 20 par ≥10 affärer, topp-par 38; 4242 topp 82) — Coase-förutsättningen är mätbar och spridd 150× (tpcy 0,006–0,886). (2) Handelstäta världar är JÄMLIKARE (gini 0,475–0,517) än våldstäta (0,76–0,78) — mönstret brist likriktar/utbyte utjämnar. (3) Lönearbete (arbete åt annan mot ersättning) = 0 av konstruktion.

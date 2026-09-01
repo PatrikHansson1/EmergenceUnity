@@ -16,7 +16,7 @@ namespace Emergence.Runtime
 
         // P1 (D-605/D-610): the presentation layer is a SEPARATE file with its OWN sha — it never touches the engine sha above.
         // A pure read over S (writeIntervalReport); loaded after the engine when a host supplies it. Null = not loaded (golden/harness paths unchanged).
-        public const string ExpectedPresentationSha = "38ffc1009c2ff3dfd9f7728bf1bf6feccf6099d3e3174e2125302591099a073d"; // emergence-presentation.js v0.4 (D-615/D-619: aggregate mask removed — engine v18 lines are English; P1-goldens on d02bb1ee). Prior: 3b1c7134… (v0.3) // v0.3 (D-613: actor spread; P1-goldens Reports/rig/p1/p1-goldens.json). Prior: 22438a87… (v0.2)
+        public const string ExpectedPresentationSha = "1c7ba2da72684f748a54f52150aad1c4adf17162cc9503edb6ed875bcd1bd3f3"; // emergence-presentation.js v0.5 (D-626/D-632: WEIGHT keyed to the engine's real 48 ev-types; P1-goldens on 8907f6f6). Prior: 38ffc100… (v0.4) // v0.4 (D-615/D-619: aggregate mask removed — engine v18 lines are English; P1-goldens on d02bb1ee). Prior: 3b1c7134… (v0.3) // v0.3 (D-613: actor spread; P1-goldens Reports/rig/p1/p1-goldens.json). Prior: 22438a87… (v0.2)
 
         private readonly Jint.Engine _engine;
         public string EngineSha256 { get; }

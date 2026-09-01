@@ -1,0 +1,10 @@
+C1-BASLINJE (biblioteket: läsning som återupptäckt) — motor v19, 7 frön × 120 år (founders timeout), moln-V8 2026-09-01 (D-642)
+Mått: literate village-years (v.literate, ≥3 skrivare), library-only village-years (v.holds innehåller kunskap ingen levande bybo bär), knowledgeLost/rediscovered-event
+{"seed":97013,"writingYear":6,"firstLit":21,"litVY":163,"libOnlyVY":0,"libOnlyCraftYears":0,"knowledgeLost":9,"rediscovered":0}
+{"seed":4242,"writingYear":13,"firstLit":94,"litVY":41,"libOnlyVY":0,"libOnlyCraftYears":0,"knowledgeLost":0,"rediscovered":0}
+{"seed":20260718,"writingYear":7,"firstLit":27,"litVY":157,"libOnlyVY":0,"libOnlyCraftYears":0,"knowledgeLost":4,"rediscovered":0}
+{"seed":31415,"writingYear":11,"firstLit":86,"litVY":79,"libOnlyVY":0,"libOnlyCraftYears":0,"knowledgeLost":6,"rediscovered":0}
+{"seed":2323,"writingYear":2,"firstLit":33,"litVY":265,"libOnlyVY":0,"libOnlyCraftYears":0,"knowledgeLost":7,"rediscovered":1}
+{"seed":1618,"writingYear":11,"firstLit":12,"litVY":205,"libOnlyVY":8,"libOnlyCraftYears":8,"maxAtOnce":1,"crafts":["bronzetools"],"knowledgeLost":14,"rediscovered":6}
+{"seed":777,"writingYear":6,"firstLit":40,"litVY":81,"libOnlyVY":0,"libOnlyCraftYears":0,"knowledgeLost":4,"rediscovered":4}
+Läsning: på 120 år håller skriften nästan aldrig något som de levande inte bär (8 av 991 literata by-år, ett hantverk). "Läsning som återupptäckt" har inget mål på denna horisont — dess ärende är djuptidens mörka åldrar (LIT_MIN-fall), som bara nattbakningar kan mäta.

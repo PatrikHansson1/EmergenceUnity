@@ -1,18 +1,18 @@
 {
- "presentationVersion": "0.4.0",
- "presentationSha": "38ffc1009c2ff3dfd9f7728bf1bf6feccf6099d3e3174e2125302591099a073d",
+ "presentationVersion": "0.5.0",
+ "presentationSha": "1c7ba2da72684f748a54f52150aad1c4adf17162cc9503edb6ed875bcd1bd3f3",
  "engineSha": "8907f6f6",
  "years": 150,
  "step": 50,
  "goldens": {
-  "4242": "001e4419ce98d8118f9ea8ee83ce778c0957b07c455f7763ef75379918c6f5ae",
-  "97013": "edd5caa77eca9702b0bfe916813acfbb1852dd59f20c5bc70e28e38370cb7c37",
-  "20260718": "21f6e73be77dd8649381129cd3bbfc1bbece34e3819c706ece2fe92c066d62ec"
+  "97013": "cc9c6dd8deeecf378f60d7f2ab2812790f752fbf1e473fca3c41c73e2f89c2af",
+  "4242": "99e2a8fb09cc78cac0ce501624f99f854e47c0c3d35db78353ecd8a9cc4dd538",
+  "20260718": "7d609552b9f1a83ca585d7ec7797452d5468508640dc70e7bbef540129162553"
  },
  "samples": {
-  "4242": "Years 0–49:\n[1] Eira told the day back as a story worth remembering — Eira's oral saga (Storytelling) has been invented!\n[1] Torv began carving a sign into a flat stone when something new is made — no one told them to.\n[4] Eira the Firebringer starved to death.\n[8] From that day on, Ask was known as Ask the Spearmaker.\n[39] Rune sewed clothes from hides — winter has met its match.",
-  "97013": "Years 0–49:\n[1] Eira told the day back as a story worth remembering — Eira's oral saga (Storytelling) has been invented!\n[33] Bjorn set upon Liv the Founder and seized goods — the gap was cheaper to close by force.\n[34] In Livholm, the people have begun to listen when Ask the Ironhand speaks — prestige has hardened into leadership.\n[38] Need drove the hand: Bjorn took what could be carried from Liv the Founder.\n[39] Ask the Ironhand died of old age at 55.",
-  "20260718": "Years 0–49:\n[1] Embla told the day back as a story worth remembering — Embla's the telling (Storytelling) has been invented!\n[1] From that day on, Ask was known as Ask the Firebringer.\n[27] Hunger owned the hand: Bjorn wrenched food from Torv the Rememberer.\n[38] Embla the Spearmaker died of old age at 57.\n[45] In Ylvahaven, the people have begun to listen when Eira speaks — prestige has hardened into leadership."
+  "97013": "Years 0–49:\n[1] Four humans wake in an untouched world: Eira, Ask, Embla, Torv.\n[21] Three huts have become more — Livholm has been founded!\n[33] Bjorn set upon Liv the Founder and seized goods — the gap was cheaper to close by force.\n[34] In Livholm, the people have begun to listen when Ask the Ironhand speaks — prestige has hardened into leadership.\n[39] Ask the Ironhand died of old age at 55.",
+  "4242": "Years 0–49:\n[1] Four humans wake in an untouched world: Eira, Ask, Embla, Torv.\n[1] Eira told the day back as a story worth remembering — Eira's oral saga (Storytelling) has been invented!\n[4] Eira the Firebringer starved to death.\n[26] Ask the Spearmaker and Sten struck a fair trade.\n[39] Rune sewed clothes from hides — winter has met its match.",
+  "20260718": "Years 0–49:\n[1] Four humans wake in an untouched world: Eira, Ask, Embla, Torv.\n[27] Three huts have become more — Ylvahaven has been founded!\n[38] Embla the Spearmaker died of old age at 57.\n[41] Wolves found Torv the Rememberer alone in the winter night.\n[45] In Ylvahaven, the people have begun to listen when Eira speaks — prestige has hardened into leadership."
  },
- "note": "P1 v0.4 goldens on engine v19 (8907f6f6, H0(a) D-623). 4242 UNCHANGED vs v18; 97013 changed (H0a: inga flimmer-folds y97–149); 20260718 changed. Generated 2026-08-31 (D-625)."
+ "note": "P1 v0.5 goldens on engine v19 (8907f6f6). WEIGHT keyed to the engine's real 48 ev-types (D-626): reports now open with world start, village foundings, wolf attacks, feuds. Generated 2026-08-31."
 }

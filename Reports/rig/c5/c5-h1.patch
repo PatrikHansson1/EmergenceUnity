@@ -1,0 +1,33 @@
+1620a1621,1650
+> // ===== C5 H-C5 RIGG (PREREG LÅST D-633): FÖRLIKNINGEN — weregild via erkänd ledare =====
+> // En öppen grudge kan lösas UTAN blod: i en by med erkänd ledare betalar gärningsmannen bot (3 enheter)
+> // till bäraren; vreden sätts under åter-armeringsnivån och oförrätten släpps — och krönikan berättar det.
+> // Brist-matchad av konstruktion: ingen ledare => ingen förlikning; wealth < BOT => ingen bot. Noll rand.
+> function settlementTick(S){
+>   const BOT=3;
+>   const paid=new Set(); // max EN förlikning per gärningsman och år
+>   for(const v of S.villages){
+>     if(v.dead||v.leader==null)continue;
+>     const holders=[]; for(const a of S.agents){ if(!a.dead&&a.grudges&&Object.keys(a.grudges).length&&villageOf(S,a)===v)holders.push(a); }
+>     holders.sort((x,y)=>x.id-y.id);
+>     for(const w of holders){
+>       const oids=Object.keys(w.grudges).map(Number).sort((x,y)=>x-y);
+>       for(const oid of oids){
+>         if(paid.has(oid))continue;
+>         const o=S.agents.find(z=>z.id===oid&&!z.dead); if(!o)continue;
+>         if(villageOf(S,o)!==v)continue;
+>         let wo=0; for(const k in o.inv)wo+=o.inv[k]||0; if(wo<BOT)continue;
+>         // boten: 3 enheter i sorterad nyckelordning
+>         let left=BOT; const keys=Object.keys(o.inv).sort();
+>         for(const k of keys){ if(left<=0)break; const take=Math.min(left,o.inv[k]||0); if(take>0){o.inv[k]-=take; w.inv[k]=(w.inv[k]||0)+take; left-=take;} }
+>         const gev=w.grudges[oid]; delete w.grudges[oid];
+>         w.rel[oid]=-10;
+>         paid.add(oid);
+>         ev(S,'settlement',`⚖️ Before <b>${v.leaderName}</b>, <b>${disp(o)}</b> laid goods at <b>${disp(w)}</b>'s feet — the wrong is paid for, and no blood answers it.`,{agent:o.id,victim:w.id,village:v.name,x:w.x,y:w.y,causes:['ev:'+gev].concat(v.leaderEv!==undefined?['ev:'+v.leaderEv]:[]).concat(['agent:'+o.id])});
+>         if(globalThis.__GEXIT)__GEXIT.settled=(__GEXIT.settled||0)+1;
+>       }
+>     }
+>   }
+> }
+2225a2256
+>   if(S.tick%YEAR===0)settlementTick(S); // C5 RIGG (D-633): förlikningen — weregild via ledare

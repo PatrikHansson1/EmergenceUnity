@@ -1,0 +1,2 @@
+resolved nodeExe = node (PATH fallback — no candidate file found)
+where node -> INFO: Could not find files for the given pattern(s).

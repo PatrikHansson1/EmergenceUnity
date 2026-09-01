@@ -1,0 +1,13 @@
+H-C2 v1 (PREREG LÅST D-640) — motor v19-tvilling engine-c2.js, 8 frön × 120 år, moln-V8 2026-09-01 (D-641)
+frö        wagework (första år)  kvarn år  par≥5  skördeandel  popMax  qCraft  vTotal
+97013      0                     10        9      0,0249       140     1,113   71     (= bas)
+4242       1 (y78)               24        30     0,0335       97      1,015   0      (bas 0,026 — 1 händelse, divergens efter y78)
+20260718   0                     7         4      0,0283       108     1,000   28     (= bas)
+31415      0                     11        3      0,0317       125     1,098   35     (= bas)
+2323       0                     11        11     0,0249       101     1,000   137    (= bas)
+1618       0                     18        93     0,0295       105     1,093   30     (= bas)
+777        0                     9         3      0,0341       48      1,000   8      (= bas)
+97013-f    0                     11        11     0,0275       139     1,123   182    (= bas)
+DOM: T1 RÖD (1/8 < 2/8). Övriga ej utvärderbara (ingen värld ≥5 wagework) utom T3 (kontrollvärldar byte-identiska ✓). Fallträd: exakt en röd = T1 ⇒ FÖRKASTAS I SIN FORM.
+DIAGNOS (deskriptiv, tillåten per fallträd), 1618 = handelstätaste världen: grenen nåddes 302 ggr av hungriga bönder i höst; eget moget fält 0 ggr; kvarn saknades 17; 285 behöriga; 595 kandidatfält (moget, samma by, ≤8 rutor) — ALLA 595 föll på parvillkoret (≥5 byten med ägaren).
+LÄSNING: de hungriga landlösa och fältägarna är inte handelspartners — de stående paren (93 i 1618) binder de välförsedda med varandra. Lönearbete är i motorns värld inte en förlängning av bytesrelationen utan ett SUBSTITUT för den (den som måste sälja sitt arbete har inget att byta). En ev. v2 måste gata på närhet/by/släkt (rel) — ny prereg, inte metodnot.
