@@ -1,0 +1,11 @@
+P1 v0.5 (1c7ba2da) vs v0.6 (51cca887) reportDigest(S,50), 150 år, motor v20 f39e0684 — moln-V8 2026-09-01 11:30Z
+v0.5 på v20 == v0.5 på v19 för alla tre frön (cc9c6dd8 / 99e2a8fb / 7d609552): ledgern är presentationsneutral.
+4242: identisk (99e2a8fb) — inga av v0.6:s tre ändringar utlöses i 4242:s första 150 år.
+97013:
+11c11  < [73] In Livholm, Eira's cave-marks is lost — …   > [78] In Livholm, Torv's red metal is lost — …   (weightOf knowledgeLost skalad 20/45 → annan förlustrad vinner intervallet)
+26,27  < Halvar II (born 0) … / Torv II (born 0) …        > Halvar II of Stenholm … / Torv II of Stenholm …   (tagFor by-tagg i stället för P1:s egen /144-division)
+20260718:
+8a9    > [50] Ylvahaven is without a leader — Eira's voice is gone, and no one yet speaks for all.   (vinner plats när förlustraden vägs ner)
+13d13  < [85] In Ylvahaven, Eira's red metal is lost — …   (bortvägd)
+20c20  < Ylva II came for Sten II (born 0) …              > Ylva II came for Sten II of Stenvik …
+Alla skillnader = de tre avsedda v0.6-kategorierna (D-648). Inga andra rader rörda.

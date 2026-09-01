@@ -1,0 +1,44 @@
+--- engine-pace.js	2026-09-01 10:15:58.136132929 +0000
++++ engine-ledger.js	2026-09-01 10:15:58.177944178 +0000
+@@ -834,6 +834,10 @@
+     for(let i=0;i<2;i++)S.animals.push({id:S.nextAnimalId++,type:'wolf',x:clamp(cx+R(S,-1,1),1,W-2),y:clamp(cy+R(S,-1,1),1,H-2),pack:p,h:RI(S,0,200)});
+   }
+   ev(S,'start',`🌍 Four humans wake in an untouched world: <b>${S.agents.map(a=>a.name).join('</b>, <b>')}</b>. They know nothing — but they can observe everything. What will they create?`,{});
++    // ===== EMISSIONSKONTRAKTET (D-649/D-650, RIGG): S.ledger — a top-level field OUTSIDE the golden payload
++  // (harness endState lists stats/agents/villages/… but never S itself). Write-only from mechanics, read by
++  // export/presentation/bake. No S.rand(), no ev(), never read in tickWorld logic. Keys = ids/indices, never names.
++  S.ledger={births:{},deadBook:[],extract:{},depleted:{},meals:{},teach:{byPair:{},byTeacher:{}},trade:{},rel:{},travel:{},stripped:{},smelt:{},wood:{},huts:{},fires:{},tribute:{},hardship:{},cohortDeaths:{},snapshot:[]};
+   return S;
+ }
+ 
+@@ -1304,6 +1308,7 @@
+     // engine and it makes writing the pivotal discovery (the Memory Engine, D-072's "writing fix").
+     if(groupKnows(S,a,'writing')){for(const k of a.knows)if(S.rand()<.5)child.knows.add(k);}
+     S.agents.push(child);S.stats.births++;
++    if(S.ledger)S.ledger.births[child.id]={parents:[a.id,b.id],year:_lyear(S),village:_lvix(S,a)}; // K2 födelseboken
+     S.maxPop=Math.max(S.maxPop,S.agents.filter(x=>!x.dead).length);
+     {const cd=(worldKnows(S,'farming')||worldKnows(S,'fishing'))?380:520;a.childCd=cd;b.childCd=cd;} // TENSION PROTO: shorter birth spacing for a more populous world (EP request)
+     ev(S,'child',`👶 <b>${a.name}</b> and <b>${b.name}</b> have had a child, <b>${child.name}</b> — generation ${child.gen}. They inherit traits from both.`,{agent:child.id,x:a.x,y:a.y,causes:['agent:'+a.id,'agent:'+b.id]}); // R2 INK1 causes: a birth is caused by its parents
+@@ -1328,9 +1333,14 @@
+   }
+ }
+ 
++// ledger helpers (D-650): village index (villages are push-only, no id), chronicle year (same formula as ev())
++function _lvix(S,a){const v=villageOf(S,a);return v?S.villages.indexOf(v):-1;}
++function _lyear(S){return Math.floor(S.tick/YEAR)+1;}
++function _linc(o,k){o[k]=(o[k]||0)+1;return o;}
+ function killAgent(S,a,causeKey,causeTxt,extraCauses){
+   for(const kid of a.knows){const k=S.knowledge[kid];if(k)k.lastKnownBy=disp(a);}
+   S.stats.deaths[causeKey]=(S.stats.deaths[causeKey]||0)+1;
++  if(S.ledger){const _b=S.ledger.births[a.id];S.ledger.deadBook.push({id:a.id,name:a.name,born:a.born,died:_lyear(S),age:a.age,gen:a.gen,parentIds:_b?_b.parents:null,village:_lvix(S,a),epithet:a.epithet||null,knowsN:a.knows.size,customsN:a.customs.size,cause:causeKey,wealth:wealth(a)});} // K1 dödsboken
+   // R2 INK1 causes: a death is caused by its cause key (starvation/cold/age/wolves/violence).
+   // E1.5: a VIOLENT death may additionally chain the act that dealt it + the hand that held the
+   // blade (extraCauses, R2 grammar) — and the death event is returned so grief can reference it.
+@@ -2186,6 +2196,7 @@
+ }
+ function tickWorld(S){
+   if(S.ended)return;
++  if(!S.ledger)S.ledger={births:{},deadBook:[],extract:{},depleted:{},meals:{},teach:{byPair:{},byTeacher:{}},trade:{},rel:{},travel:{},stripped:{},smelt:{},wood:{},huts:{},fires:{},tribute:{},hardship:{},cohortDeaths:{},snapshot:[]}; // ledger init for older checkpoints (pathUse pattern)
+   S.tick++;S.hour=(S.hour+1)%24;if(S.hour===0)S.day++;
+   assignVillages(S); // ENGINE 2.1 (D-086): cache village membership once per tick (O(1) lookups after)
+   buildGrid(S);      // ENGINE 2.3 (D-089): spatial hash for O(local) neighbour scans + alive count cache

@@ -578,7 +578,7 @@ function cultureYearTick(S){
       const others=S.villages.filter(v=>v!==hv);
       if(others.length){
         const v=others[Math.floor(S.rand()*others.length)];
-        a.hunger=clamp(a.hunger+25,0,140);a.visit={x:v.x,y:v.y,name:v.name,t:15,k0:a.knows.size,cs:[...a.customs].sort().join()}; // they pack food for the road
+        a.hunger=clamp(a.hunger+25,0,140);a.visit={x:v.x,y:v.y,name:v.name,t:15,k0:a.knows.size,cs:[...a.customs].sort().join()};if(S.ledger)_linc(_lyv(S.ledger.travel,S,S.villages.indexOf(hv)),S.villages.indexOf(v)); // K8 travel [year][from][to] // they pack food for the road
         ev(S,'journey',`🚶 <b>${disp(a)}</b> set out for ${v.name}. Ideas travel on foot.`,{agent:a.id,x:a.x,y:a.y});
       }
     }
@@ -834,6 +834,10 @@ function createWorld(seed,founders){
     for(let i=0;i<2;i++)S.animals.push({id:S.nextAnimalId++,type:'wolf',x:clamp(cx+R(S,-1,1),1,W-2),y:clamp(cy+R(S,-1,1),1,H-2),pack:p,h:RI(S,0,200)});
   }
   ev(S,'start',`🌍 Four humans wake in an untouched world: <b>${S.agents.map(a=>a.name).join('</b>, <b>')}</b>. They know nothing — but they can observe everything. What will they create?`,{});
+  // ===== EMISSIONSKONTRAKTET (D-649/D-650): S.ledger — a top-level field OUTSIDE the golden payload
+  // (harness endState lists stats/agents/villages/… but never S itself). Write-only from mechanics, read by
+  // export/presentation/bake. No S.rand(), no ev(), never read in tickWorld logic. Keys = ids/indices, never names.
+  S.ledger={births:{},deadBook:[],extract:{},depleted:{},meals:{},teach:{byPair:{},byTeacher:{},byYear:{}},trade:{},rel:{},travel:{},stripped:{},smelt:{},wood:{},huts:{},fires:{},tribute:{},hardship:{},cohortDeaths:{},snapshot:[]};
   return S;
 }
 
@@ -1007,7 +1011,7 @@ function knowledgeRetentionTick(S){
     // fire, pottery, farming, hut, mill) is never stripped, so a resource-poor village stays alive and
     // simple rather than starving. Geography decides how FAR a place climbs, not whether it survives.
     const sustain=sustainableCrafts(S,v);
-    for(const a of v._mem)for(const k of [...a.knows]) if(techScarceRes(k)!==null && (TECH[k].era||0)>=2 && !sustain.has(k)) a.knows.delete(k);
+    for(const a of v._mem)for(const k of [...a.knows]) if(techScarceRes(k)!==null && (TECH[k].era||0)>=2 && !sustain.has(k)){a.knows.delete(k);if(S.ledger)_linc(_lyv(S.ledger.stripped,S,S.villages.indexOf(v)),k);} // K9 stripped knowledge
     // now recount what living hands hold, and let writing preserve the record
     for(const a of v._mem)if(a.knows.has('writing'))v._scribes++;
     const living=new Set(); for(const a of v._mem)for(const k of a.knows)living.add(k);
@@ -1259,7 +1263,7 @@ function talk(S,a,b){
     if(b.hunger<30&&a.hunger>65){giver=a;taker=b;}
     else if(a.hunger<30&&b.hunger>65){giver=b;taker=a;}
     if(giver){
-      giver.hunger-=15;taker.hunger=clamp(taker.hunger+25,0,140);
+      giver.hunger-=15;taker.hunger=clamp(taker.hunger+25,0,140);if(S.ledger)_linc(_lyv(S.ledger.meals,S,_lvix(S,taker)),'shared');
       S.stats.gifts=(S.stats.gifts||0)+1;tryObserve(S,giver,'weightsBalance',.07);tryObserve(S,taker,'weightsBalance',.05);
       const gv=villageOf(S,giver);
       if(gv){
@@ -1285,6 +1289,7 @@ function talk(S,a,b){
   for(const k of a.knows){
     if(!b.knows.has(k)&&S.rand()<(0.5/techDepth(k))*reach){
       gainKnowledge(S,b,k,'taught');taught=true;
+      if(S.ledger&&b.knows.has(k)){_linc(S.ledger.teach.byPair,a.id+'>'+b.id);const _t=S.ledger.teach.byTeacher,_r=_t[a.id]||(_t[a.id]={n:0,techs:{}});_r.n++;_linc(_r.techs,k);const _y=_lyv(S.ledger.teach.byYear,S,_lvix(S,a));_y.n=(_y.n||0)+1;if(!sameVillage)_y.cross=(_y.cross||0)+1;} // K5 acts of teaching
       if(S.rand()<.3)ev(S,'taught',`<b>${a.name}</b> taught <b>${b.name}</b> the secret of ${S.knowledge[k]?S.knowledge[k].name:TECH[k].base}. The knowledge spreads.`,{tech:k});
       break;
     }
@@ -1304,6 +1309,7 @@ function talk(S,a,b){
     // engine and it makes writing the pivotal discovery (the Memory Engine, D-072's "writing fix").
     if(groupKnows(S,a,'writing')){for(const k of a.knows)if(S.rand()<.5)child.knows.add(k);}
     S.agents.push(child);S.stats.births++;
+    if(S.ledger)S.ledger.births[child.id]={parents:[a.id,b.id],year:_lyear(S),village:_lvix(S,a)}; // K2 the book of births
     S.maxPop=Math.max(S.maxPop,S.agents.filter(x=>!x.dead).length);
     {const cd=(worldKnows(S,'farming')||worldKnows(S,'fishing'))?380:520;a.childCd=cd;b.childCd=cd;} // TENSION PROTO: shorter birth spacing for a more populous world (EP request)
     ev(S,'child',`👶 <b>${a.name}</b> and <b>${b.name}</b> have had a child, <b>${child.name}</b> — generation ${child.gen}. They inherit traits from both.`,{agent:child.id,x:a.x,y:a.y,causes:['agent:'+a.id,'agent:'+b.id]}); // R2 INK1 causes: a birth is caused by its parents
@@ -1314,7 +1320,7 @@ function talk(S,a,b){
 function tryBuildHut(S,a){
   if((a.inv.wood||0)<8)return;
   a.inv.wood-=8;
-  const h={x:a.x,y:a.y,owner:a.name};S.huts.push(h);a.home=h;S.bgDirty=true;
+  const h={x:a.x,y:a.y,owner:a.name};S.huts.push(h);a.home=h;S.bgDirty=true;if(S.ledger){_linc(_lyv(S.ledger.huts,S,_lvix(S,a)),'built');const _w=_lyv(S.ledger.wood,S,_lvix(S,a));_w.hut=(_w.hut||0)+8;} // K10 huts/wood
   ev(S,'hut',`🛖 <b>${a.name}</b> built a hut.`,{x:a.x,y:a.y});
   const cluster=S.huts.filter(o=>dist(o,h)<7);
   if(cluster.length>=3&&!S.villages.some(v=>dist(v,h)<12)){ // E1: village spacing widened with the map
@@ -1328,9 +1334,28 @@ function tryBuildHut(S,a){
   }
 }
 
+// ledger helpers (D-650): village index (villages are push-only, no id), chronicle year (same formula as ev()),
+// counters, and per-(year,village) buckets. All pure; none touch S.rand or events.
+function _lvix(S,a){const v=villageOf(S,a);return v?S.villages.indexOf(v):-1;}
+function _lvixn(S,name){for(let i=0;i<S.villages.length;i++)if(S.villages[i].name===name)return i;return -1;}
+function _lyear(S){return Math.floor(S.tick/YEAR)+1;}
+function _linc(o,k){o[k]=(o[k]||0)+1;return o;}
+function _lyv(o,S,vix){const y=_lyear(S);const t=o[y]||(o[y]={});return t[vix]||(t[vix]={});}
+function _lr2(x){return Math.round(x*100)/100;}
+// K11 year snapshot: state at the close of chronicle-year S.tick/YEAR (called at S.tick%YEAR===0 after the yearly ticks).
+function ledgerYearSnapshot(S){
+  const alive=S.agents.filter(a=>!a.dead).length; const vs=[];
+  for(let i=0;i<S.villages.length;i++){const v=S.villages[i];const ag=villageAggregate(S,v);
+    let cm=0;if(S.aggregates)for(const g of S.aggregates)if(g.village===v.name)cm+=g.cohorts[0]+g.cohorts[1]+g.cohorts[2]+g.cohorts[3];
+    vs.push({v:i,pop:ag.pop,c:[ag.cohorts.c0_13,ag.cohorts.c14_39,ag.cohorts.c40_64,ag.cohorts.c65p],k:ag.knows.length,scribes:ag.scribes,wealth:ag.wealth,agg:_lr2(cm),
+      tr:[_lr2(ag.traits.curiosity.mean),_lr2(ag.traits.social.mean),_lr2(ag.traits.diligence.mean)]});}
+  S.ledger.snapshot.push({year:S.tick/YEAR,alive,births:S.stats.births,deaths:Object.values(S.stats.deaths).reduce((t,x)=>t+x,0),trades:S.stats.trades||0,
+    villages:S.villages.length,fields:S.fields.length,huts:S.huts.length,fires:S.fires.length,knowledge:Object.keys(S.knowledge).length,customs:S.customs?Object.keys(S.customs).length:0,v:vs});
+}
 function killAgent(S,a,causeKey,causeTxt,extraCauses){
   for(const kid of a.knows){const k=S.knowledge[kid];if(k)k.lastKnownBy=disp(a);}
   S.stats.deaths[causeKey]=(S.stats.deaths[causeKey]||0)+1;
+  if(S.ledger){const _b=S.ledger.births[a.id];S.ledger.deadBook.push({id:a.id,name:a.name,born:a.born,died:_lyear(S),age:a.age,gen:a.gen,parentIds:_b?_b.parents:null,village:_lvix(S,a),epithet:a.epithet||null,knowsN:a.knows.size,customsN:a.customs.size,cause:causeKey,wealth:wealth(a)});} // K1 the book of the dead
   // R2 INK1 causes: a death is caused by its cause key (starvation/cold/age/wolves/violence).
   // E1.5: a VIOLENT death may additionally chain the act that dealt it + the hand that held the
   // blade (extraCauses, R2 grammar) — and the death event is returned so grief can reference it.
@@ -1543,7 +1568,7 @@ function conflictTick(S,a){
   if(kind==='steal-food'){
     const took=Math.min(28,Math.max(10,tgt.hunger-30));
     tgt.hunger=clamp(tgt.hunger-took,0,140); a.hunger=clamp(a.hunger+took*0.8,0,140);
-    a.task='taking food by force'; outcome='took food';
+    a.task='taking food by force'; outcome='took food';if(S.ledger)_linc(_lyv(S.ledger.meals,S,_lvix(S,a)),'stolen');
     S.stats.steals=(S.stats.steals||0)+1;
     actEv=ev(S,'steal',`🥀 Hunger owned the hand: <b>${disp(a)}</b> wrenched food from <b>${disp(tgt)}</b>.`,{agent:a.id,victim:tgt.id,x:a.x,y:a.y,cause:'desperation',causes:(driveEv!==undefined?['ev:'+driveEv]:[]).concat(['agent:'+tgt.id,'cause:desperation'],S.season==='winter'?['cause:winter']:[])});
     speak(S,a,pickSay(S,a,'steal'),'steal');
@@ -1670,7 +1695,7 @@ function leaderTick(S){
       if(a.dead||a===L||a.age<16||villageOf(S,a)!==v)continue;
       if(wealth(a)<TUNE.tributeMin)continue;
       let bk=null,bq=0;for(const m in a.inv){if(a.inv[m]>bq){bq=a.inv[m];bk=m;}}
-      if(bk&&bq>2){a.inv[bk]--;L.inv[bk]=(L.inv[bk]||0)+1;given++;}
+      if(bk&&bq>2){a.inv[bk]--;L.inv[bk]=(L.inv[bk]||0)+1;given++;if(S.ledger){const _o=_lyv(S.ledger.tribute,S,S.villages.indexOf(v));_o.n=(_o.n||0)+1;_o.leader=L.id;_linc(_o.mat||(_o.mat={}),bk);}} // K10 tribute
     }
     if(given&&S.rand()<0.12)ev(S,'tribute',`🧺 In <b>${v.name}</b>, ${given} household${given>1?'s':''} laid a share at <b>${disp(L)}</b>'s door. So surplus flows upward, and standing becomes wealth.`,{village:v.name,agent:L.id,x:v.x,y:v.y,causes:['agent:'+L.id].concat(v.leaderEv!==undefined?['ev:'+v.leaderEv]:[])});
   }
@@ -1699,6 +1724,7 @@ function tryTrade(S,a){
   const tq=Math.min(b.inv[need],q);b.inv[need]-=tq;a.inv[need]=(a.inv[need]||0)+tq;
   a.rel[b.id]=(a.rel[b.id]||0)+15;b.rel[a.id]=(b.rel[a.id]||0)+15; // a bond forms — trade partners rarely raid each other
   a.task='trading';S.stats.trades=(S.stats.trades||0)+1;
+  if(S.ledger){const _o=_lyv(S.ledger.trade,S,_lvix(S,a));_o.n=(_o.n||0)+1;if(cross)_o.cross=(_o.cross||0)+1;if(offerFood)_o.food=(_o.food||0)+1;const _m=_o.mat||(_o.mat={});_m[need]=(_m[need]||0)+tq;} // K6 trade
   if(S.rand()<0.05)ev(S,'trade',`🤝 <b>${disp(a)}</b> and <b>${disp(b)}</b> struck a fair trade${cross?' across village lines':''}.`,{agent:a.id,x:a.x,y:a.y});
   return true;
 }
@@ -1734,6 +1760,7 @@ function warTick(S){
       const surplus=IB.wealth-IA.wealth, might=IA.armed-IB.armed;
       // war = a hungry/crowded village + a neighbour worth taking + the means, OR a blood-feud boiling over
       const hostility=stress*0.7+(surplus>6?0.3:0)+(grud>1?0.35:0);
+      if(S.ledger)_lyv(S.ledger.rel,S,S.villages.indexOf(A))[S.villages.indexOf(B)]={stress:_lr2(stress),surplus:_lr2(surplus),might,grud,host:_lr2(hostility)}; // K7 village relations (readout of the friction)
       if(IA.armed<2||might<-2||hostility<TUNE.warHostility)continue;
       if(S.rand()>TUNE.warChance)continue; // ripe tension only sometimes breaks into a raid
       const party=IA.ppl.filter(a=>forceMeans(a,S)>=0.4).slice(0,TUNE.warParty);
@@ -1749,6 +1776,7 @@ function warTick(S){
             for(const w of S.agents){if(w.dead)continue;if((w.rel[loser.id]||0)>30){w.rel[enemy.id]=(w.rel[enemy.id]||0)-60;if(w.grudges)w.grudges[enemy.id]=wde.id;}} } } // war deepens the feud — and E1.5 books WHICH death each survivor holds against whom
       }
       S.stats.wars=(S.stats.wars||0)+1;
+      if(S.ledger){const _o=_lyv(S.ledger.rel,S,S.villages.indexOf(A))[S.villages.indexOf(B)];if(_o){_o.raid=1;_o.deadA=deadA;_o.deadB=deadB;_o.loot=loot;}} // K7 the raid itself
       ev(S,'violence',`🔥⚔️ Driven by a failing harvest, the people of <b>${A.name}</b> fell upon <b>${B.name}</b> — a raid for grain and goods.${(deadA+deadB)>0?' '+(deadA+deadB)+' lay dead ('+deadB+' of '+B.name+', '+deadA+' of '+A.name+').':' They took what they could carry.'}`,{x:A.x,y:A.y,label:'WAR',causes:(grud>1?['cause:grudge']:[]).concat(['cause:scarcity'])});
       return; // one war per year keeps it momentous
     }
@@ -1769,6 +1797,7 @@ function agentTick(S,a){
   } else a.warmth+=winter?0.6:1.5;
   a.hunger=clamp(a.hunger,0,100+(a.knows.has('pottery')?40:0));a.thirst=clamp(a.thirst,0,100);
   a.energy=clamp(a.energy,0,100);a.warmth=clamp(a.warmth,0,100);a.social=clamp(a.social,0,100);
+  if(S.ledger&&(a.hunger<25||a.warmth<25)){const _o=_lyv(S.ledger.hardship,S,_lvix(S,a));if(a.hunger<25)_o.hungry=(_o.hungry||0)+1;if(a.warmth<25)_o.cold=(_o.cold||0)+1;} // K12 hardship (aggregated per year/village)
   if(a.inspired>0)a.inspired--;
   if(a.childCd>0)a.childCd--;
   if(a.sayT>0)a.sayT--;
@@ -1820,7 +1849,7 @@ function agentTick(S,a){
           S.stats.hunts++;a.huntCount=(a.huntCount||0)+1;
           if(globalThis.__PROD){a.inv.hide=(a.inv.hide||0)+2;a.inv.bone=(a.inv.bone||0)+1;} // §46: djuret ÄR kött, hud och ben
           if(a.huntCount>=5)giveEpithet(S,a,'the Hunter');
-          a.hunger=clamp(a.hunger+75,0,140);a.task='feasting on the hunt';
+          a.hunger=clamp(a.hunger+75,0,140);a.task='feasting on the hunt';if(S.ledger)_linc(_lyv(S.ledger.meals,S,_lvix(S,a)),'hunt');
           if(S.rand()<.12)ev(S,'hunt',`🗡️ <b>${disp(a)}</b> brought down a deer${winter?' in the deep of winter':''}. Tonight, no one goes hungry.`,{agent:a.id,x:a.x,y:a.y});
           maybeEmergeCustom(S,a,'hunt');
           return;
@@ -1831,22 +1860,22 @@ function agentTick(S,a){
     // Engine 1.1 (D-049): FARMING — autumn harvest of your own ripe field beats foraging
     if(a.knows.has('farming')&&S.season==='autumn'){
       const f=S.fields.find(f2=>f2.owner===a.name&&f2.stage>=3);
-      if(f){if(Math.hypot(f.x-a.x,f.y-a.y)<1.4){f.stage=-1;const _fy=globalThis.__SOIL?(f.fertility===undefined?1:f.fertility):1;if(globalThis.__PROD&&S.knowledge.mill&&S.knowledge.mill.status==='alive'){a.inv.grain=(a.inv.grain||0)+(a.plow?3:2);}if(globalThis.__PROD&&a.plow){a.hunger=clamp(a.hunger+25,0,140);}a.hunger=clamp(a.hunger+Math.round(80*_fy),0,140);a.task='harvesting';S.stats.harvests=(S.stats.harvests||0)+1;if(S.rand()<.35)ev(S,'field',`🌾 <b>${disp(a)}</b> brings in the harvest from ${f.name||'the field'}. Winter holds less fear now.`,{agent:a.id,x:f.x,y:f.y});maybeEmergeCustom(S,a,'hunt');return;}moveToward(S,a,f);a.task='going to the harvest';return;}
+      if(f){if(Math.hypot(f.x-a.x,f.y-a.y)<1.4){f.stage=-1;const _fy=globalThis.__SOIL?(f.fertility===undefined?1:f.fertility):1;if(globalThis.__PROD&&S.knowledge.mill&&S.knowledge.mill.status==='alive'){a.inv.grain=(a.inv.grain||0)+(a.plow?3:2);}if(globalThis.__PROD&&a.plow){a.hunger=clamp(a.hunger+25,0,140);}a.hunger=clamp(a.hunger+Math.round(80*_fy),0,140);a.task='harvesting';S.stats.harvests=(S.stats.harvests||0)+1;if(S.ledger)_linc(_lyv(S.ledger.meals,S,_lvix(S,a)),'harvest');if(S.rand()<.35)ev(S,'field',`🌾 <b>${disp(a)}</b> brings in the harvest from ${f.name||'the field'}. Winter holds less fear now.`,{agent:a.id,x:f.x,y:f.y});maybeEmergeCustom(S,a,'hunt');return;}moveToward(S,a,f);a.task='going to the harvest';return;}
     }
     // Engine 1.1: FISHING — open water feeds those who know the line (not in winter)
     if(a.knows.has('fishing')&&S.season!=='winter'){
       const w=findNearest(S,a,'water');
       if(w&&Math.hypot(w.x-a.x,w.y-a.y)<12){
-        if(Math.hypot(w.x-a.x,w.y-a.y)<1.7){a.hunger=clamp(a.hunger+((globalThis.__PROD&&a.hook)?58:42),0,140);a.task='fishing';if(S.rand()<.03)ev(S,'hunt',`🎣 <b>${disp(a)}</b> pulled silver from the water.`,{agent:a.id,x:a.x,y:a.y});return;}
+        if(Math.hypot(w.x-a.x,w.y-a.y)<1.7){a.hunger=clamp(a.hunger+((globalThis.__PROD&&a.hook)?58:42),0,140);a.task='fishing';if(S.ledger)_linc(_lyv(S.ledger.meals,S,_lvix(S,a)),'fish');if(S.rand()<.03)ev(S,'hunt',`🎣 <b>${disp(a)}</b> pulled silver from the water.`,{agent:a.id,x:a.x,y:a.y});return;}
         moveToward(S,a,w);a.task='going fishing';return;
       }
     }
-    doSeek(S,a,'berry',()=>{S.tiles[a.ty][a.tx0].n--;if(S.tiles[a.ty][a.tx0].n<=0)regrowLater(S,a.tx0,a.ty,'berry');a.hunger=clamp(a.hunger+45+(worldKnows(S,'mill')?20:0),0,140);a.task='eating';tryObserve(S,a,'seedsSprout',.09);tryObserve(S,a,'herbsHeal',a.hunger<60?.06:.025);/*D-239 nit, declared rather than silently carried: hunger is read AFTER the +45 the meal just gave, so this is the .025 branch almost always. The hook is reachable either way and that was the point; re-ordering it moves the sim stream, so it waits for the next engine wave instead of buying a re-baseline for a rate tweak.*/{const w2=findNearest(S,a,'water');if(w2&&Math.hypot(w2.x-a.x,w2.y-a.y)<4)tryObserve(S,a,'fishGather',.12);}if(S.rand()<.1)speak(S,a,pickSay(S,a,'hungry'),'hungry');});return;
+    doSeek(S,a,'berry',()=>{S.tiles[a.ty][a.tx0].n--;if(S.ledger)_linc(_lyv(S.ledger.extract,S,_lvix(S,a)),'berry');if(S.tiles[a.ty][a.tx0].n<=0){regrowLater(S,a.tx0,a.ty,'berry');if(S.ledger)_linc(_lyv(S.ledger.depleted,S,_lvix(S,a)),'berry');}a.hunger=clamp(a.hunger+45+(worldKnows(S,'mill')?20:0),0,140);a.task='eating';if(S.ledger)_linc(_lyv(S.ledger.meals,S,_lvix(S,a)),'berry');tryObserve(S,a,'seedsSprout',.09);tryObserve(S,a,'herbsHeal',a.hunger<60?.06:.025);/*D-239 nit, declared rather than silently carried: hunger is read AFTER the +45 the meal just gave, so this is the .025 branch almost always. The hook is reachable either way and that was the point; re-ordering it moves the sim stream, so it waits for the next engine wave instead of buying a re-baseline for a rate tweak.*/{const w2=findNearest(S,a,'water');if(w2&&Math.hypot(w2.x-a.x,w2.y-a.y)<4)tryObserve(S,a,'fishGather',.12);}if(S.rand()<.1)speak(S,a,pickSay(S,a,'hungry'),'hungry');});return;
   }
   if(night&&a.warmth<(70+(a.traits.empathy-0.5)*32)){
     const f=nearestOf(S.fires.concat(S.huts),a);
     if(f&&dist(f,a)<25){moveToward(S,a,f);a.task='seeking warmth';if(S.rand()<.05)speak(S,a,pickSay(S,a,'cold'),'cold');return;}
-    if(a.knows.has('fire')&&(a.inv.wood||0)>=2){a.inv.wood-=2;S.fires.push({x:a.x,y:a.y,fuel:600});a.task='lighting a fire';S.bgDirty=true;return;}
+    if(a.knows.has('fire')&&(a.inv.wood||0)>=2){a.inv.wood-=2;S.fires.push({x:a.x,y:a.y,fuel:600});a.task='lighting a fire';if(S.ledger){_linc(_lyv(S.ledger.fires,S,_lvix(S,a)),'lit');const _w=_lyv(S.ledger.wood,S,_lvix(S,a));_w.fire=(_w.fire||0)+2;}S.bgDirty=true;return;}
     const buddy=nearestAgent(S,a,null,30);
     if(buddy&&dist(buddy,a)>1.2){moveToward(S,a,buddy);a.task='huddling for warmth';return;}
   }
@@ -1856,7 +1885,7 @@ function agentTick(S,a){
   }
   // the fire cult keeps a flame burning even when warm
   if(!night&&S.hour===19&&hasCustomKind(S,a,'value','fire')&&a.knows.has('fire')&&(a.inv.wood||0)>=2&&!S.fires.some(f=>dist(f,a)<6)){
-    a.inv.wood-=2;S.fires.push({x:a.x,y:a.y,fuel:600});a.task='tending the flame';S.bgDirty=true;return;
+    a.inv.wood-=2;S.fires.push({x:a.x,y:a.y,fuel:600});a.task='tending the flame';if(S.ledger){_linc(_lyv(S.ledger.fires,S,_lvix(S,a)),'tended');const _w=_lyv(S.ledger.wood,S,_lvix(S,a));_w.fire=(_w.fire||0)+2;}S.bgDirty=true;return;
   }
   if(a.energy<(15-(a.traits.diligence-0.5)*14)+((a.traits.social-0.5)*-6))a.sleeping=true;
   if(a.sleeping){a.task='sleeping';a.energy+=4;if(a.energy>=80)a.sleeping=false;else return;}
@@ -1886,6 +1915,7 @@ function agentTick(S,a){
         if(alt&&S.rand()<p&&canAttempt(S,a,t)){
           Object.entries(alt).forEach(([m,q])=>a.inv[m]-=q);
           gainKnowledge(S,a,t.id,'invented',alt);
+          if(S.ledger){const _o=_lyv(S.ledger.smelt,S,_lvix(S,a));const _r=_o[t.id]||(_o[t.id]={});for(const _m in alt)_r[_m]=(_r[_m]||0)+alt[_m];} // K10 materials consumed by invention
           if(t.id==='hut')tryBuildHut(S,a);
         }else{
           S.stats.failedExperiments++;
@@ -1912,12 +1942,12 @@ function agentTick(S,a){
         if(!S._prodSeen.hook){S._prodSeen.hook=1;ev(S,'product',`🪝 <b>${disp(a)}</b> carved fishhooks from bone — the water gives more to the prepared.`,{agent:a.id,x:a.x,y:a.y});}
         return;}
       if(!a.plow&&a.knows.has('smithing')&&(a.inv.iron||0)>=2){
-        a.inv.iron-=2;a.plow=1;a.task='forging a plow';
+        a.inv.iron-=2;a.plow=1;a.task='forging a plow';if(S.ledger){const _o=_lyv(S.ledger.smelt,S,_lvix(S,a));const _r=_o.plow||(_o.plow={});_r.iron=(_r.iron||0)+2;} // K10 the plow
         if(!S._prodSeen)S._prodSeen={};
         if(!S._prodSeen.plow){S._prodSeen.plow=1;ev(S,'product',`🛠️ <b>${disp(a)}</b> forged a plow of iron — the field will yield as never before.`,{agent:a.id,x:a.x,y:a.y});}
         return;}
       if((a.inv.grain||0)>=2&&S.fires.some(f=>dist(f,a)<3)){
-        a.inv.grain-=2;a.hunger=clamp(a.hunger+35,0,140);a.task='baking bread';
+        a.inv.grain-=2;a.hunger=clamp(a.hunger+35,0,140);a.task='baking bread';if(S.ledger)_linc(_lyv(S.ledger.meals,S,_lvix(S,a)),'bread');
         if(!S._prodSeen)S._prodSeen={};
         if(!S._prodSeen.bread){S._prodSeen.bread=1;ev(S,'product',`🍞 <b>${disp(a)}</b> baked bread by the fire — the mill's flour becomes a meal.`,{agent:a.id,x:a.x,y:a.y});}
         return;}
@@ -2010,7 +2040,8 @@ function agentTick(S,a){
   if(need&&S.rand()<a.traits.diligence){
     doSeek(S,a,MATSOURCE[need],()=>{
       S.tiles[a.ty][a.tx0].n--;
-      if(S.tiles[a.ty][a.tx0].n<=0&&MATSOURCE[need]!=='grass'){const typ=S.tiles[a.ty][a.tx0].t;S.tiles[a.ty][a.tx0]={t:'grass',n:0};if(typ==='forest'||typ==='clay'||typ==='sand')regrowLater(S,a.tx0,a.ty,typ);S.bgDirty=true;}
+      if(S.ledger)_linc(_lyv(S.ledger.extract,S,_lvix(S,a)),need); // K3 extraction
+      if(S.tiles[a.ty][a.tx0].n<=0&&MATSOURCE[need]!=='grass'){const typ=S.tiles[a.ty][a.tx0].t;if(S.ledger)_linc(_lyv(S.ledger.depleted,S,_lvix(S,a)),typ);S.tiles[a.ty][a.tx0]={t:'grass',n:0};if(typ==='forest'||typ==='clay'||typ==='sand')regrowLater(S,a.tx0,a.ty,typ);S.bgDirty=true;}
       const mult=a.knows.has('metaltools')?3:a.knows.has('axe')||a.knows.has('sharp')?2:1;
       a.inv[need]=(a.inv[need]||0)+mult;
       a.task='gathering '+need;
@@ -2068,7 +2099,8 @@ function agentTick(S,a){
       const m=a.forage;
       doSeek(S,a,MATSOURCE[m],()=>{
         S.tiles[a.ty][a.tx0].n--;
-        if(S.tiles[a.ty][a.tx0].n<=0&&MATSOURCE[m]!=='grass'){const typ=S.tiles[a.ty][a.tx0].t;S.tiles[a.ty][a.tx0]={t:'grass',n:0};if(typ==='forest'||typ==='clay'||typ==='sand')regrowLater(S,a.tx0,a.ty,typ);S.bgDirty=true;}
+        if(S.ledger)_linc(_lyv(S.ledger.extract,S,_lvix(S,a)),m); // K3 extraction (forage)
+        if(S.tiles[a.ty][a.tx0].n<=0&&MATSOURCE[m]!=='grass'){const typ=S.tiles[a.ty][a.tx0].t;if(S.ledger)_linc(_lyv(S.ledger.depleted,S,_lvix(S,a)),typ);S.tiles[a.ty][a.tx0]={t:'grass',n:0};if(typ==='forest'||typ==='clay'||typ==='sand')regrowLater(S,a.tx0,a.ty,typ);S.bgDirty=true;}
         a.inv[m]=(a.inv[m]||0)+1;a.task='collecting curiosities';a.forage=null;
         for(const[o,ch]of(GATHER_OBS[m]||[]))tryObserve(S,a,o,ch*1.5);
       });
@@ -2186,6 +2218,7 @@ function maybeTill(S,a){
 }
 function tickWorld(S){
   if(S.ended)return;
+  if(!S.ledger)S.ledger={births:{},deadBook:[],extract:{},depleted:{},meals:{},teach:{byPair:{},byTeacher:{},byYear:{}},trade:{},rel:{},travel:{},stripped:{},smelt:{},wood:{},huts:{},fires:{},tribute:{},hardship:{},cohortDeaths:{},snapshot:[]}; // ledger init for older checkpoints (pathUse pattern)
   S.tick++;S.hour=(S.hour+1)%24;if(S.hour===0)S.day++;
   assignVillages(S); // ENGINE 2.1 (D-086): cache village membership once per tick (O(1) lookups after)
   buildGrid(S);      // ENGINE 2.3 (D-089): spatial hash for O(local) neighbour scans + alive count cache
@@ -2226,6 +2259,7 @@ function tickWorld(S){
   if(S.tick%YEAR===0)knowledgeRetentionTick(S);
   if(S.tick%YEAR===0)aggregateTick(S); // B2.2a: vilande tills T_AGG nås
   if(S.tick%YEAR===0)sicknessTick(S); // B4 (D-507): feberns år — tyst under tröskeln // ENGINE 2.1 (D-086): per-community knowledge census + local loss/rediscovery (yearly; pure readout)
+  if(S.tick%YEAR===0&&S.ledger)ledgerYearSnapshot(S); // K11 year snapshot (ledger; pure readout, after the yearly ticks)
   for(const f of S.fires)f.fuel--;
   S.fires=S.fires.filter(f=>f.fuel>0);
   for(let i=S.regrows.length-1;i>=0;i--){
@@ -2580,12 +2614,15 @@ function aggregateTick(S){
     const bearersAlive=S.agents.filter(a=>!a.dead&&g.bearers.indexOf(a.id)>=0).length;
     const damp=Math.max(0,1-Math.pow((pop+bearersAlive)/K,_AGGN));
     const births=_AGGFERT*c[1]*damp, a01=c[0]/14,a12=c[1]/26,a23=c[2]/25;
+    const _ld=_AGGDR[0]*c[0]+_AGGDR[1]*c[1]+_AGGDR[2]*c[2]+_AGGDR[3]*c[3]; // K13 (ledger): natural cohort deaths this year, read before the update
     c[0]=Math.max(0,c[0]+births-a01-_AGGDR[0]*c[0]);
     c[1]=Math.max(0,c[1]+a01-a12-_AGGDR[1]*c[1]);
     c[2]=Math.max(0,c[2]+a12-a23-_AGGDR[2]*c[2]);
     c[3]=Math.max(0,c[3]+a23-_AGGDR[3]*c[3]);
     pop=c[0]+c[1]+c[2]+c[3];
+    const _lp0=pop;
     if(pop+bearersAlive>K){ const f=Math.max(0,(K-bearersAlive))/pop; for(let ci2=0;ci2<4;ci2++)c[ci2]*=f; pop=c[0]+c[1]+c[2]+c[3]; } // v3: Malthus hårdkap
+    if(S.ledger){const _o=_lyv(S.ledger.cohortDeaths,S,_lvixn(S,g.village));_o.nat=_lr2((_o.nat||0)+_ld);if(_lp0>pop)_o.malthus=_lr2((_o.malthus||0)+(_lp0-pop));} // K13 cohort deaths
     if(pop+bearersAlive<T.de){
       // RE-INDIVIDUALISERING: så själar deterministiskt ur kohorterna
       const v=S.villages.find(v2=>v2.name===g.village); const yr=Math.floor(S.tick/YEAR);
@@ -2695,8 +2732,9 @@ function sicknessTick(S){
         killAgent(S,a,'sickness','was taken by the fever that walks where many live close',[]);
       }
     }
-    if(g){ const wc=[2,1,1,3];
+    if(g){ const wc=[2,1,1,3]; const _lc0=g.cohorts[0]+g.cohorts[1]+g.cohorts[2]+g.cohorts[3];
       for(let ci=0;ci<4;ci++)g.cohorts[ci]=Math.max(0,g.cohorts[ci]*(1-Math.min(0.9,q0*aq*wc[ci]*hm)));
+      if(S.ledger){const _o=_lyv(S.ledger.cohortDeaths,S,S.villages.indexOf(v));_o.sick=_lr2((_o.sick||0)+(_lc0-(g.cohorts[0]+g.cohorts[1]+g.cohorts[2]+g.cohorts[3])));} // K13 cohort deaths (fever)
     }
     if(died>0){ if(globalThis.__PACE)S._needSick=Math.floor(S.tick/YEAR); S._sickSeen=S._sickSeen||{};
       if(!S._sickSeen[v.name]){ S._sickSeen[v.name]=1;
