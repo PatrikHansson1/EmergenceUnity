@@ -1,9 +1,9 @@
 EMERGENCE — LANGUAGE PROBE: does the game speak English?
-generated 2026-09-01 17:05:37
+generated 2026-09-01 17:15:36
 scope: STRING LITERALS in runtime code. Comments, Editor/ and reports are
   deliberately exempt — the studio reasons in Swedish and that is the archive.
 
-scanned 47 runtime files (C# + StreamingAssets JS), 3308 string literals
+scanned 47 runtime files (C# + StreamingAssets JS), 3309 string literals
 
   PASS  no Swedish found in any player-facing string
 
