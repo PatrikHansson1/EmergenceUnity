@@ -1,0 +1,19 @@
+# pop-probe 97013-founders x 1200y on v20 f39e0684 (B-arm, DJUPTID-OVERLEVNAD D-659) — every 80 years; cloud run 2026-09-01 21:1x–23:15Z
+year,alive,aggPop,aggregates
+80,66,0.0,0
+160,130,0.0,0
+240,127,66.3,1
+320,140,100.8,1
+400,76,123.1,1
+480,120,125.7,1
+560,17,136.2,1
+640,109,130.7,1
+720,24,128.8,1
+800,128,119.9,1
+880,158,111.4,1
+960,115,114.6,1
+1040,76,120.7,1
+1120,140,109.2,1
+1200,131,107.8,1
+# END year=1200 ended=false aggregates=[{"v":"Lokevik","c":[32.9,43,24.5,7.4],"bearers":15}]
+# ONE stable city (Lokevik, ~110-136 souls-eq, y~230-1200), individuals dip to 17/24 and recover — same survivor shape as B-97013 (one city + many free villages, here 8).

@@ -1,0 +1,19 @@
+# pop-probe 1618 x 1200y on v20 f39e0684 (B-arm, DJUPTID-OVERLEVNAD D-659) — every 80 years; cloud run 2026-09-02 01:5x–04:35Z
+year,alive,aggPop,aggregates
+80,37,0.0,0
+160,58,87.5,1
+240,104,66.4,1
+320,152,77.1,1
+400,100,112.7,1
+480,132,122.1,1
+560,18,132.7,1
+640,138,130.0,1
+720,13,133.0,1
+800,62,135.3,1
+880,156,111.5,1
+960,137,113.2,1
+1040,66,121.4,1
+1120,158,112.1,1
+1200,129,113.2,1
+# END year=1200 ended=false aggregates=[{"v":"Torvheim","c":[34.5,45.2,25.8,7.8],"bearers":15}]
+# Fourth B-arm survivor: ONE stable city (Torvheim ~66-135 souls-eq, y~150-1200) + 10 villages; individuals dip to 13/18 and recover.

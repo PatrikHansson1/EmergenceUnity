@@ -1,0 +1,19 @@
+# pop-probe 1618 x 1200y on v18 d02bb1ee (A-arm, DJUPTID-OVERLEVNAD D-659) — every 80 years; cloud run 2026-09-02 04:3x–06:20Z
+year,alive,aggPop,aggregates
+80,37,0.0,0
+160,49,53.2,1
+240,127,59.3,1
+320,121,88.3,1
+400,98,111.6,1
+480,88,123.4,1
+560,27,132.2,1
+640,99,127.1,1
+720,48,130.7,1
+800,53,119.6,1
+880,85,126.6,1
+960,62,125.6,1
+1040,59,128.8,1
+1120,75,121.2,1
+1200,76,123.3,1
+# END year=1200 ended=false aggregates=[{"v":"Torvheim","c":[37.4,49.3,28.2,8.5],"bearers":15}]
+# 1618 holds a STABLE city on v18 too (Torvheim ~53-132 souls-eq, y~150-1200) — one-city + 9 villages survivor shape on BOTH arms. v18 is not always a flicker-governor.

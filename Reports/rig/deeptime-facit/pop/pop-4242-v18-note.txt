@@ -1,0 +1,3 @@
+pop-probe 4242 x 1200y on v18 (sista kökörningen, 2026-09-02 06:1x–06:31Z):
+# END year=391 ended=true aggregates=[{"v":"Ormstead","c":[38.5,51.4,29,8.4],"bearers":15}]
+⇒ ÄVEN A-4242:s död år 391 är STOPPAD-MED-STAD (Ormstead ~127 souls-eq). Klassning †→SMS; rå ΔS1 opåverkad.

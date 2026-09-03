@@ -1,0 +1,19 @@
+# pop-probe 97013-founders x 1200y on v18 d02bb1ee (A-arm, DJUPTID-OVERLEVNAD D-659) — every 80 years; cloud run 2026-09-01 23:1x–2026-09-02 00:2xZ
+year,alive,aggPop,aggregates
+80,66,0.0,0
+160,77,0.0,0
+240,79,0.0,0
+320,80,0.0,0
+400,70,0.0,0
+480,70,0.0,0
+560,77,0.0,0
+640,74,0.0,0
+720,71,12.0,1
+800,74,0.0,0
+880,79,0.0,0
+960,77,0.0,0
+1040,77,0.0,0
+1120,79,4.0,1
+1200,77,0.0,0
+# END year=1200 ended=false aggregates=[]
+# 253 flicker-years (max 12 souls) — governor-by-deletion; alive ~66-80. Contrast B-founders: one stable city + 131 individuals at y1200.

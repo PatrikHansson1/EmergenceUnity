@@ -1,0 +1,21 @@
+# b23-probe 777 x 1200y on engine-b23 (kandidat-v21 sha 9da69373, prereg D-682) — every 80 years; cloud 2026-09-02 06:59–09:27Z
+year,alive,aggPop,aggregates
+80,18,0.0,0
+160,24,73.9,1
+240,110,121.4,2
+320,102,133.0,2
+400,94,168.7,2
+480,70,177.9,2
+560,77,179.0,2
+640,47,161.9,2
+720,159,106.8,1
+800,92,160.2,2
+880,109,152.0,2
+960,97,145.1,2
+1040,95,168.9,2
+1120,65,173.8,2
+1200,114,148.8,2
+# END year=1200 ended=false aggregates=[{"v":"Bjornholm","c":[33.8,39.1,24.9,8.3],"bearers":15},{"v":"Frejaholm","c":[14.4,14,10.4,3.9],"bearers":15}]
+# M2-style: aliveMinAfterFold=15, cityYears=1064, bearersAlive>=12 in 100%
+# M7: defolds=3, ok=true — {y290 exp37 delta37},{y720 exp36 delta37},{y1013 exp36 delta35} (±2-slack per prereg (i))
+# 777 was SMS 558 on BOTH v18 and v20; on B2.3 it lives 1200y with TWO cities + 9 villages and real de-folds that RETURN souls.

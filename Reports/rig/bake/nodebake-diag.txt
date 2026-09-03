@@ -1,2 +1,2 @@
-resolved nodeExe = node (PATH fallback — no candidate file found)
+resolved nodeExe = C:\Program Files\nodejs\node.exe (file exists)
 where node -> INFO: Could not find files for the given pattern(s).

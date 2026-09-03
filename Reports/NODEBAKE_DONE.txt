@@ -1,1 +1,1 @@
-DIAG 21:02:45 -> rig/bake/nodebake-diag.txt
+STARTED 23:43:27 pid=41216 args=b23f.js 1200 . log=nodebake-20260902-234327.log

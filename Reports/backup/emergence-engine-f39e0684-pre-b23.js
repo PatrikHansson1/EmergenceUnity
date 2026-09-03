@@ -2623,29 +2623,6 @@ function aggregateTick(S){
     const _lp0=pop;
     if(pop+bearersAlive>K){ const f=Math.max(0,(K-bearersAlive))/pop; for(let ci2=0;ci2<4;ci2++)c[ci2]*=f; pop=c[0]+c[1]+c[2]+c[3]; } // v3: Malthus hårdkap
     if(S.ledger){const _o=_lyv(S.ledger.cohortDeaths,S,_lvixn(S,g.village));_o.nat=_lr2((_o.nat||0)+_ld);if(_lp0>pop)_o.malthus=_lr2((_o.malthus||0)+(_lp0-pop));} // K13 cohort deaths
-    // B2.3 (D-681/D-682): a city always keeps its 15 faces — when a bearer dies, a soul steps out
-    // of the crowd (<=2/year, FNV 'B23/' keys, mass conserved; adults first). Placed after Malthus,
-    // before the de-fold test (prereg (g)).
-    {
-      g.bearers=g.bearers.filter(id=>{for(const a2 of S.agents){if(a2.id===id)return !a2.dead;}return false;});
-      let _need=15-g.bearers.length,_made=0;
-      if(_need>0){
-        const v2=S.villages.find(vv=>vv.name===g.village); const yr2=Math.floor(S.tick/YEAR);
-        const B23B=[[1,13],[14,39],[40,64],[65,80]], cis=[1,2,0,3];
-        while(_need>0&&_made<2){
-          let ci=-1; for(const c2 of cis){if(c[c2]>=1){ci=c2;break;}} if(ci<0)break;
-          const h=_fnvh('B23/'+String(S.seed)+'/'+g.village+'/'+yr2+'/'+_made);
-          const age=B23B[ci][0]+h%(B23B[ci][1]-B23B[ci][0]+1);
-          const a=makeAgent(S,(v2?v2.x:50)+((h>>>8)%7)-3,(v2?v2.y:35)+((h>>>16)%7)-3,null,false);
-          a.age=age;a.born=S.tick/YEAR-age;a._fromCity=S.villages.indexOf(v2);
-          for(const t in g.traitsM){const mu=g.traitsM[t].mean,sd=g.traitsM[t].sd;a.traits[t]=clamp(mu+((h>>>24)/255-0.5)*2*sd,0.05,0.95);}
-          if(age>=14){const ks=g.knowsUnion; const take=Math.min(ks.length,2+(h%4));
-            for(let j=0;j<take;j++)a.knows.add(ks[(h+j*2654435761)%ks.length]);}
-          c[ci]=Math.max(0,c[ci]-1);S.agents.push(a);g.bearers.push(a.id);_need--;_made++;
-        }
-        pop=c[0]+c[1]+c[2]+c[3];
-      }
-    }
     if(pop+bearersAlive<T.de){
       // RE-INDIVIDUALISERING: så själar deterministiskt ur kohorterna
       const v=S.villages.find(v2=>v2.name===g.village); const yr=Math.floor(S.tick/YEAR);
@@ -2660,7 +2637,6 @@ function aggregateTick(S){
           // kunskap: bärarkapacitetslagen approximeras — vuxna får slumpfri delmängd av unionen
           if(age>=14){const ks=g.knowsUnion; const take=Math.min(ks.length,2+(h%4));
             for(let j=0;j<take;j++)a.knows.add(ks[(h+j*2654435761)%ks.length]);}
-          a.born=S.tick/YEAR-a.age;a._fromCity=S.villages.indexOf(v);S.agents.push(a); // B2.3 defektfix (D-663): the soul actually enters the world
         }}
       if(globalThis.__PACE&&v){v._legacy=[...g.knowsUnion];} // §48 J-B: ruinen minns — arvet sparas hos byn
       S.aggregates.splice(i,1);
@@ -2775,5 +2751,5 @@ function resimulate(seed,toTick){
   return S;
 }
 
-return {createWorld,tickWorld,computeDNA,villageScope,resimulate,writeHistory,roleOf,verbOf,worldEra,eraName,ERAS,wealthOf:wealth,TECHS,TECH,OBS,QUIRK,W,H,YEAR,SEASONS,VERSION:'2.6.0',villageAggregate,MATDIM};
+return {createWorld,tickWorld,computeDNA,villageScope,resimulate,writeHistory,roleOf,verbOf,worldEra,eraName,ERAS,wealthOf:wealth,TECHS,TECH,OBS,QUIRK,W,H,YEAR,SEASONS,VERSION:'2.6.0',villageAggregate};
 });

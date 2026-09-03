@@ -1,0 +1,3 @@
+b23-probe på engine-b23 (kandidat-v21 9da69373), cloud 2026-09-02:
+31415 × 1200: END ended=false, 2 städer (Emblavik 95 + Disaheim 104 souls-eq), aliveMinAfterFold 51, bärare ≥12 i 100 % av 1073 stadsår, 0 de-folds. (v20: SMS 836.)
+1618 × 1200: END ended=false, aggregat 0 vid slutet (staden de-foldade år ~1190 och SLÄPPTE UT folket — 152 individer, 13 byar), aliveMinAfterFold 39, bärare 100 % av 1084 stadsår, 4 massbevarande de-folds (224/424/782/119x). M7-total nu 17/17.

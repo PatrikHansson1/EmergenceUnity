@@ -1,0 +1,20 @@
+# b23-probe 2323 x 1200y on engine-b23 (kandidat-v21 9da69373, prereg D-682 M2) — every 80 years; cloud 2026-09-02 06:59–10:38Z
+year,alive,aggPop,aggregates
+80,36,0.0,0
+160,96,63.5,1
+240,115,49.2,1
+320,180,48.6,1
+400,172,40.9,1
+480,135,63.1,1
+560,177,58.9,1
+640,69,49.9,1
+720,92,81.4,1
+800,171,80.0,1
+880,122,65.9,1
+960,133,53.8,1
+1040,134,109.0,2
+1120,141,63.7,1
+1200,126,54.0,1
+# END year=1200 ended=false aggregates=[{"v":"Ronjastead","c":[17.1,20.3,12.1,4.5],"bearers":15}]
+# M2: aliveMinAfterFold=51 (mål >=10 i 100 % — grön med marginal), bearersAlive>=12 i 100 % av 1064 stadsår (mål >=95 %), INGEN STOPPAD-MED-STAD.
+# M7: defolds=4 (Runestead 283/464/691 + en till), alla massbevarande inom ±2.

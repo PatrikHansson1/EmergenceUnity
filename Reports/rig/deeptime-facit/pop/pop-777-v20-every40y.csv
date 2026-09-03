@@ -1,0 +1,18 @@
+# pop-probe 777 x 1200y on v20 f39e0684 (B-arm, DJUPTID-OVERLEVNAD D-659) — every 40 years; cloud run 2026-09-01 20:2x–20:54Z
+year,alive,aggPop,aggregates,villages
+40,6,0.0,0,1
+80,18,0.0,0,1
+120,48,0.0,0,1
+160,6,88.9,1,1
+200,5,108.3,1,1
+240,13,109.0,1,1
+280,12,115.8,1,1
+320,22,124.2,1,1
+360,35,121.0,1,1
+400,57,111.0,1,1
+440,81,91.4,1,1
+480,113,71.2,1,1
+520,138,53.3,1,1
+# END year=558 ended=true aggregates=[{"v":"Bjornholm","c":[41.3,54.2,30.3,8.8],"bearers":15}]
+# tail: alive climbs to 138 (y520, aggPop declining 124->50) — then y535 a RE-FOLD sweeps 124->15 (aggPop 49->111) and the layer drains to 0 by 558. STOPPAD-MED-STAD.
+# Shape 3: ONE-village world — the only village IS the city; when individuals regrow past the cap the city re-absorbs them all. No external villages to refill from (contrast B-97013: 6 villages, 1 city, survives).

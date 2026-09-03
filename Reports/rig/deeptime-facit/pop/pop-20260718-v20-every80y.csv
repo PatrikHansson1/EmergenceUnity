@@ -1,0 +1,19 @@
+# pop-probe 20260718 x 1200y on v20 f39e0684 (B-arm, DJUPTID-OVERLEVNAD D-659) — every 80 years; cloud run 2026-09-01 22:5x–2026-09-02 00:19Z
+year,alive,aggPop,aggregates
+80,33,0.0,0
+160,105,54.5,1
+240,78,78.5,1
+320,134,101.3,1
+400,81,122.6,1
+480,105,120.1,1
+560,128,114.5,1
+640,102,117.1,1
+720,94,128.6,1
+800,153,115.5,1
+880,161,120.6,1
+960,43,121.6,1
+1040,164,122.4,1
+1120,110,113.7,1
+1200,113,114.6,1
+# END year=1200 ended=false aggregates=[{"v":"Ylvahaven","c":[34.9,45.8,26.1,7.9],"bearers":15}]
+# ONE stable city (Ylvahaven ~55-129 souls-eq, y~150-1200) + 5 free villages; individuals 33-164, dip y960 recovers. Third B-arm survivor, same one-city shape.

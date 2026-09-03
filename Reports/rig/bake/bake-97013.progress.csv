@@ -1,0 +1,7 @@
+# start 2026-09-02T20:14:51.053Z seed=97013 years=NaN node=v24.20.0
+# DONE 2026-09-02T20:14:51.096Z endYear=0 ended=false totalSecs=0 clock=false printpress=false events=1
+# start 2026-09-02T20:16:21.141Z seed=97013 years=3 node=v24.20.0
+1,64,5,0,0
+2,51,5,0,0
+3,43,5,0,0
+# DONE 2026-09-02T20:16:21.312Z endYear=3 ended=false totalSecs=0 clock=false printpress=false events=35

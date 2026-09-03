@@ -1,0 +1,5 @@
+b23-probe 4242 x 1200y on engine-b23 (kandidat-v21 9da69373) — cloud 2026-09-02 09:3x–12:00Z
+# END year=1200 ended=false aggregates=[{"v":"Ormstead","c":[22.4,24.8,16,5.8],"bearers":15},{"v":"Nannaholm","c":[26.2,28,18.7,6.7],"bearers":15}]
+# M2-style: aliveMinAfterFold=15, bearersAlive>=12 in 100% of 1104 city-years
+# M7: defolds=6 ok=true ({y200 Ormstead 35→34},{y314 Nannaholm 39→39},{y630 36→37},{y782 Ormstead …},…)
+4242 var SMS 394 (v20) / SMS 391 (v18) — på B2.3 lever den 1200 år med TVÅ städer och 81 individer.

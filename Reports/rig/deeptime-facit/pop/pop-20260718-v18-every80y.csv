@@ -1,0 +1,19 @@
+# pop-probe 20260718 x 1200y on v18 d02bb1ee (A-arm, DJUPTID-OVERLEVNAD D-659) — every 80 years; cloud run 2026-09-02 00:2x–01:58Z
+year,alive,aggPop,aggregates
+80,33,0.0,0
+160,66,0.0,0
+240,68,0.0,0
+320,79,0.0,0
+400,72,0.0,0
+480,72,0.0,0
+560,80,0.0,0
+640,53,29.0,1
+720,75,0.0,0
+800,80,0.0,0
+880,80,0.0,0
+960,75,0.0,0
+1040,77,0.0,0
+1120,76,0.0,0
+1200,71,0.0,0
+# END year=1200 ended=false aggregates=[]
+# 116 flicker-years — governor-by-deletion; alive ~33-80.
