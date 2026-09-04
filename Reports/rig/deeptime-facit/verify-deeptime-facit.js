@@ -1,5 +1,5 @@
 'use strict';
-// DJUPTIDS-REGRESSIONSNÄTET (D-587, facit omspelat på v20 f39e0684 = v19-dynamik, D-658): kör efter varje motorändring.
+// DJUPTIDS-REGRESSIONSNÄTET (D-587; facit omspelat på v21 9da69373 = B2.3-dynamik, dubbelkörd byte-identiskt, D-703): kör efter varje motorändring.
 // Bruk:  node verify-deeptime-facit.js <motorfil>   (facit-filer i samma katalog; engelska aggregat-rader sedan v18 — ingen mappning längre)
 const fs=require('fs'),path=require('path');
 const ENGINE=process.argv[2]||'../../Assets/StreamingAssets/Emergence/emergence-engine.js';

@@ -1,0 +1,8 @@
+M-D1e (kostnadstak, harness LÅST i preregen D-715): 3×(4 kanonfrön × 720 ticks), moln-V8, samma
+maskin och session (node v22.22.2, container omstagat 4 sep ~09:35Z; motor-shas verifierade:
+v21 9da69373… · v22 952f21f6…).
+v21 baslinje: 3615/3370/3192 ms → medel 3392 ms
+v22 kandidat: 3412/3139/3262 ms → medel 3271 ms
+Δ = −3,57 % (v22 under baslinjen; tak +3 %) ⇒ M-D1e GRÖN.
+Ärlig not: negativt utslag ligger inom JIT-uppvärmnings-/containerbrus (v21-blocket kördes först,
+kall JIT); det relevanta är att +3 %-taket inte är hotat. Mätt 2026-09-04 ~09:40Z (D-720).

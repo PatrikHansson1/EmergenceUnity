@@ -805,14 +805,14 @@ function makeAgent(S,x,y,parents,founder){
   return a;
 }
 
-function createWorld(seed,founders){
+function createWorld(seed,founders,xp){
   const S={
     seed:seed>>>0, rand:mulberry32(seed>>>0),
     rand2:mulberry32((seed^0x00E15DA7)>>>0), // E1.5: secondary mulberry32 stream — birth-time conflict traits ONLY (never in the tick path)
     tick:0,hour:6,day:1,
     tiles:null,agents:[],fires:[],huts:[],villages:[],regrows:[],
-    events:[],knowledge:{},customs:{},nextCustomId:1,
-    nextId:1,maxGeneration:1,usedNames:0,ended:false,
+    events:[],knowledge:{},customs:{},nextCustomId:1,hypos:{},nextHypoId:1,ways:{},nextWayId:1,
+    nextId:1,maxGeneration:1,usedNames:0,ended:false,_xp:xp||null,_xpPoked:false,
     maxPop:4,aggregates:[],stats:{talks:0,births:0,deaths:{starvation:0,cold:0,age:0,wolves:0},failedExperiments:0,observations:0,conversions:0,hunts:0,harshWinters:0},
     animals:[],nextAnimalId:1,fields:[],season:'spring',winterSeverity:1,seenWinter:false,brewing:null,
     traitSum:{curiosity:0,social:0,diligence:0,n:0},
@@ -833,6 +833,8 @@ function createWorld(seed,founders){
     let cx,cy;do{cx=RI(S,4,W-5);cy=RI(S,4,H-5);}while(S.tiles[cy][cx].t==='water');
     for(let i=0;i<2;i++)S.animals.push({id:S.nextAnimalId++,type:'wolf',x:clamp(cx+R(S,-1,1),1,W-2),y:clamp(cy+R(S,-1,1),1,H-2),pack:p,h:RI(S,0,200)});
   }
+  // XP tune-overstyrning (D-710): mutates module TUNE once -- one xp-world per process.
+  if(xp&&xp.tune){for(const _tk in xp.tune)TUNE[_tk]=xp.tune[_tk];}
   ev(S,'start',`🌍 Four humans wake in an untouched world: <b>${S.agents.map(a=>a.name).join('</b>, <b>')}</b>. They know nothing — but they can observe everything. What will they create?`,{});
   // ===== EMISSIONSKONTRAKTET (D-649/D-650): S.ledger — a top-level field OUTSIDE the golden payload
   // (harness endState lists stats/agents/villages/… but never S itself). Write-only from mechanics, read by
@@ -1002,6 +1004,42 @@ function sustainableCrafts(S,v){
 // no coal -> no steel) truly LOSES it from living memory. That is real differentiation, grounded in the
 // world-motor (EP's philosophy: simulate causes, not outcomes). The census/event pass then narrates what
 // was lost/rediscovered. Consumes no S.rand for the readout; the mutation is deterministic.
+// D1 varv 2 helpers (prereg LOCKED 2026-09-04). Name pools are the LOCKED 3x6 lists.
+function _wayPool(need){
+  if(need==='hunger')return ['gleaning way','lean-year way','gathering way','ember-bread way','field-edge way','sparing way'];
+  if(need==='cold')return ['ember way','windbreak way','huddling way','ash-bank way','peat way','shelter way'];
+  return ['bitter-leaf way','boiled-water way','sickbed way','clean-hearth way','elder-root way','quiet-house way'];}
+function hypoNeedOf(S,id){const _y=Math.floor(S.tick/YEAR);
+  if(S._needSick!==undefined&&_y-S._needSick<=15&&NEED_TECHS.sick.indexOf(id)>=0)return 'sick';
+  if(S._needHunger!==undefined&&_y-S._needHunger<=15&&NEED_TECHS.hunger.indexOf(id)>=0)return 'hunger';
+  if(S._needCold!==undefined&&_y-S._needCold<=15&&NEED_TECHS.cold.indexOf(id)>=0)return 'cold';
+  return '';}
+// hypotheses die with their holder (illiterate law is the default: single-holder objects)
+function hypoSweep(S){if(!S.hypos)return;
+  for(const hid in S.hypos){const h=S.hypos[hid];if(h.status!=='alive')continue;
+    let live=false;for(const a of S.agents){if(a.id===h.holder&&!a.dead){live=true;break;}}
+    if(!live){h.status='dead';h.died=Math.floor(S.tick/YEAR);}}}
+// ways carry the knowledge life cycle: die with the last bearer; spread deterministically
+// (<=1 new bearer/way/year, nearest non-bearer within 8 of a bearer -- NO rand in yearly ticks).
+function waySweep(S){if(!S.ways)return;
+  for(const wid in S.ways){const w=S.ways[wid];if(w.status!=='alive')continue;
+    w.bearers=w.bearers.filter(id=>{for(const a of S.agents){if(a.id===id)return !a.dead;}return false;});
+    if(!w.bearers.length){w.status='dead';w.died=Math.floor(S.tick/YEAR);
+      ev(S,'wayLost',`🕯️ With its last keeper gone, <b>${w.name}</b> is no longer practiced anywhere.`,{way:wid,causes:w.evId!==undefined?['ev:'+w.evId]:[]});continue;}
+    let best=null,bd=1e9;
+    for(const bid of w.bearers){let b=null;for(const a of S.agents){if(a.id===bid){b=a;break;}}if(!b)continue;
+      for(const o of S.agents){if(o.dead||o.age<14||w.bearers.indexOf(o.id)>=0)continue;const d=dist(o,b);if(d<8&&d<bd){bd=d;best=o;}}}
+    if(best)w.bearers.push(best.id);}}
+// effect guard (NON-CANNIBALIZATION, D-707): the way's boost acts ONLY while its tech is absent
+// from the practitioner's community.
+function _wayBoost(S,a,need){if(!S.ways)return false;
+  for(const wid in S.ways){const w=S.ways[wid];
+    if(w.status==='alive'&&w.need===need&&w.bearers.indexOf(a.id)>=0&&!groupKnows(S,a,w.tech))return true;}
+  return false;}
+function _villageWayGuard(S,vname,need){if(!S.ways)return false;
+  for(const wid in S.ways){const w=S.ways[wid];if(w.status!=='alive'||w.need!==need)continue;
+    for(const bid of w.bearers){for(const a of S.agents){if(a.id===bid&&!a.dead){const v=villageOf(S,a);if(v&&v.name===vname&&!groupKnows(S,a,w.tech))return true;}}}}
+  return false;}
 function knowledgeRetentionTick(S){
   for(const v of S.villages){ if(!v.everHeld)v.everHeld=new Set(); if(!v.lostNow)v.lostNow=new Set(); v._mem=[]; v._scribes=0; }
   for(const a of S.agents){ if(a.dead)continue; const v=villageOf(S,a); if(!v)continue; v._mem.push(a); }
@@ -1790,6 +1828,7 @@ function agentTick(S,a){
   if(a.talkCd>0)a.talkCd--;
   let coldDrain=winter?2.2*S.winterSeverity+0.6:S.season==='summer'?1.6:2.2;
   if(globalThis.__PROD&&a.clothes)coldDrain*=0.55; // §46: sydda kläder biter mot vintern
+  if(_wayBoost(S,a,'cold'))coldDrain*=0.78; // D1 varv 2: a kept cold-way blunts the winter -- only while the tech is missing (D-707)
   if(night){
     if(nearWarmth(S,a))a.warmth+=2.5;
     else if(nearby(S,a,1.4).length>0)a.warmth+=Math.max(0.2,0.9-(winter?0.4*(S.winterSeverity-1):0));
@@ -1870,7 +1909,7 @@ function agentTick(S,a){
         moveToward(S,a,w);a.task='going fishing';return;
       }
     }
-    doSeek(S,a,'berry',()=>{S.tiles[a.ty][a.tx0].n--;if(S.ledger)_linc(_lyv(S.ledger.extract,S,_lvix(S,a)),'berry');if(S.tiles[a.ty][a.tx0].n<=0){regrowLater(S,a.tx0,a.ty,'berry');if(S.ledger)_linc(_lyv(S.ledger.depleted,S,_lvix(S,a)),'berry');}a.hunger=clamp(a.hunger+45+(worldKnows(S,'mill')?20:0),0,140);a.task='eating';if(S.ledger)_linc(_lyv(S.ledger.meals,S,_lvix(S,a)),'berry');tryObserve(S,a,'seedsSprout',.09);tryObserve(S,a,'herbsHeal',a.hunger<60?.06:.025);/*D-239 nit, declared rather than silently carried: hunger is read AFTER the +45 the meal just gave, so this is the .025 branch almost always. The hook is reachable either way and that was the point; re-ordering it moves the sim stream, so it waits for the next engine wave instead of buying a re-baseline for a rate tweak.*/{const w2=findNearest(S,a,'water');if(w2&&Math.hypot(w2.x-a.x,w2.y-a.y)<4)tryObserve(S,a,'fishGather',.12);}if(S.rand()<.1)speak(S,a,pickSay(S,a,'hungry'),'hungry');});return;
+    doSeek(S,a,'berry',()=>{S.tiles[a.ty][a.tx0].n--;if(S.ledger)_linc(_lyv(S.ledger.extract,S,_lvix(S,a)),'berry');if(S.tiles[a.ty][a.tx0].n<=0){regrowLater(S,a.tx0,a.ty,'berry');if(S.ledger)_linc(_lyv(S.ledger.depleted,S,_lvix(S,a)),'berry');}a.hunger=clamp(a.hunger+45+(worldKnows(S,'mill')?20:0)+(_wayBoost(S,a,'hunger')?8:0),0,140);a.task='eating';if(S.ledger)_linc(_lyv(S.ledger.meals,S,_lvix(S,a)),'berry');tryObserve(S,a,'seedsSprout',.09);tryObserve(S,a,'herbsHeal',a.hunger<60?.06:.025);/*D-239 nit, declared rather than silently carried: hunger is read AFTER the +45 the meal just gave, so this is the .025 branch almost always. The hook is reachable either way and that was the point; re-ordering it moves the sim stream, so it waits for the next engine wave instead of buying a re-baseline for a rate tweak.*/{const w2=findNearest(S,a,'water');if(w2&&Math.hypot(w2.x-a.x,w2.y-a.y)<4)tryObserve(S,a,'fishGather',.12);}if(S.rand()<.1)speak(S,a,pickSay(S,a,'hungry'),'hungry');});return;
   }
   if(night&&a.warmth<(70+(a.traits.empathy-0.5)*32)){
     const f=nearestOf(S.fires.concat(S.huts),a);
@@ -1915,10 +1954,35 @@ function agentTick(S,a){
         if(alt&&S.rand()<p&&canAttempt(S,a,t)){
           Object.entries(alt).forEach(([m,q])=>a.inv[m]-=q);
           gainKnowledge(S,a,t.id,'invented',alt);
+          if(S.hypos)for(const hid in S.hypos){const h=S.hypos[hid];if(h.status==='alive'&&h.holder===a.id&&h.tech===t.id){h.status='held';h.trust=Math.min(1,h.trust+0.3);h.held=Math.floor(S.tick/YEAR);}}
           if(S.ledger){const _o=_lyv(S.ledger.smelt,S,_lvix(S,a));const _r=_o[t.id]||(_o[t.id]={});for(const _m in alt)_r[_m]=(_r[_m]||0)+alt[_m];} // K10 materials consumed by invention
           if(t.id==='hut')tryBuildHut(S,a);
         }else{
           S.stats.failedExperiments++;
+          // D1 varv 2 (prereg LOCKED 2026-09-04): a failed experiment against an OPEN need survives
+          // as a hypothesis, corrects on repeat -- and at the 8th failure the PRACTICE crystallizes
+          // into a way (the invention never came; the way never blocks it, D-707).
+          if(needBoost(S,t.id)){
+            let hy=null;for(const hid in S.hypos){const h=S.hypos[hid];if(h.status==='alive'&&h.holder===a.id&&h.tech===t.id){hy=h;break;}}
+            if(hy){hy.trials++;hy.trust=Math.max(0,hy.trust-0.15);
+              if(t.alts&&t.alts.length>1){hy.conj=Object.keys(t.alts[Math.floor(S.rand()*t.alts.length)]).join('+')||'plain';hy.mutations++;}
+              else hy.mutations++;
+              if(hy.trials===8&&!hy.wayId){
+                const ce=ev(S,'corrected',`<b>${a.name}</b> failed again — and changed the way of trying. The guess survives its maker's stubbornness.`,{agent:a.id,x:a.x,y:a.y,causes:hy.needEv!==undefined?['ev:'+hy.needEv]:[]});
+                const wid='W'+(S.nextWayId++);
+                const mats=(hy.conj||'plain');
+                const wname=a.name+"'s "+_wayPool(hy.need)[_fnvh(mats)%6];
+                S.ways[wid]={id:wid,name:wname,need:hy.need,tech:hy.tech,recipe:mats,inventedBy:a.name,yearBorn:Math.floor(S.tick/YEAR),bearers:[a.id],status:'alive',hypo:hy.id};
+                hy.wayId=wid;
+                const we=ev(S,'wayBorn',`✨ The invention never came — but the practice held. <b>${a.name}</b> now keeps <b>${wname}</b>, and others may learn it.`,{way:wid,agent:a.id,x:a.x,y:a.y,causes:['ev:'+ce.id].concat(hy.needEv!==undefined?['ev:'+hy.needEv]:[])});
+                S.ways[wid].evId=we.id;
+              }
+            }else{
+              const hid='H'+(S.nextHypoId++);
+              let _ne;for(let _i=S.events.length-1;_i>=0&&_i>S.events.length-400;_i--){const _p=S.events[_i];if(_p&&(_p.type==='death'||_p.type==='sickness')){_ne=_p.id;break;}}
+              S.hypos[hid]={id:hid,tech:t.id,need:hypoNeedOf(S,t.id),conj:alt?Object.keys(alt).join('+'):'plain',holder:a.id,village:(S.villages.find(v=>dist(v,a)<12)||{}).name||'',trust:0.5,trials:1,mutations:0,born:Math.floor(S.tick/YEAR),status:'alive',needEv:_ne};
+            }
+          }
           if(S.rand()<.35)speak(S,a,pickSay(S,a,'fail'),'fail');
           if(S.rand()<.15)ev(S,'failed',`<b>${a.name}</b> tried something with ${alt?Object.keys(alt).join(' and '):'what was at hand'} — and failed. But failure teaches.`,{agent:a.id}),a.obs.size&&null;
           if(alt&&S.rand()<.3&&a.inv[Object.keys(alt)[0]]>0)a.inv[Object.keys(alt)[0]]--;
@@ -2257,6 +2321,9 @@ function tickWorld(S){
   if(S.tick%YEAR===0)warTick(S); // TENSION PROTO: village-scale organised violence (the war rung)
   if(S.tick%YEAR===0)leaderTick(S); // E1.5 (D-166 B1): prestige -> recognized leader + tribute upward
   if(S.tick%YEAR===0)knowledgeRetentionTick(S);
+  if(S.tick%YEAR===0){hypoSweep(S);waySweep(S);}
+  // XP poke-hook (D-710): NO-OP carrier -- verbs are defined in the M5 prereg, not here.
+  if(S._xp&&S._xp.poke&&!S._xpPoked&&Math.floor(S.tick/YEAR)>=S._xp.poke.year){S._xpPoked=true;}
   if(S.tick%YEAR===0)aggregateTick(S); // B2.2a: vilande tills T_AGG nås
   if(S.tick%YEAR===0)sicknessTick(S); // B4 (D-507): feberns år — tyst under tröskeln // ENGINE 2.1 (D-086): per-community knowledge census + local loss/rediscovery (yearly; pure readout)
   if(S.tick%YEAR===0&&S.ledger)ledgerYearSnapshot(S); // K11 year snapshot (ledger; pure readout, after the yearly ticks)
@@ -2746,7 +2813,7 @@ function sicknessTick(S){
     const healer=alive.some(a=>!a.dead&&a.knows.has('medicine'));
     if(q0<=0)continue;
     const aq=worldKnows(S,'aqueduct')?0.7:1;
-    const hm=healer?0.5:1;
+    const hm=(healer?0.5:1)*(_villageWayGuard(S,v.name,'sick')?0.75:1); // D1 varv 2: a kept sick-way (only while medicine is absent, D-707)
     let died=0;
     for(const a of alive){
       if(a.dead)continue;

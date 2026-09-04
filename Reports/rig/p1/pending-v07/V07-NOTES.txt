@@ -1,0 +1,14 @@
+P1 v0.7 PENDING (väg C, TEXTPAKET-OMSPELNINGSPLAN-2026-09-03) — LYFTS EJ utan beslut + live-protokoll.
+sha c72a612136d23c1e7e7e3df8e5e299ea9f145bb8391828cc54d1c3b716b3357d (byte-identisk moln/device via mkv07.py).
+Digest-bevis (moln-V8 mot v21-tvillingen, 150 år × 3 frön, reportDigest(S,50)):
+  v0.6 på v21: 97013 a185bc37 · 4242 b9fd9c16 · 20260718 699a93fa
+  v0.7 på v21: 97013 fb29bc52 · 4242 b9fd9c16 (IDENTISK) · 20260718 699a93fa (IDENTISK)
+  Radvis diff: EXAKT en rad — 97013 [82] "listen when Rune" -> "listen again when Rune" (fynd 14/9, korrekt:
+  Livholm hade redan en röst). Inga oavsiktliga ändringar.
+Unit-bevis (syntetiska events, moln): F11 "Ask's the sail"->"Ask's sail" ✓ · F12 död y7/förlust y18 ->
+"The last who knew Ask's fire, Ask the Firebringer, is long gone — …" ✓ · F13 "Ask the First, the
+Firebringer" ✓ · F14 första ledarraden orörd, omvalet får "listen again" ✓.
+Live-protokoll vid lyft: kopiera hit-filen till StreamingAssets + PRESENTATION-SHA.txt, ExpectedPresentationSha
+= c72a6121… i EmergenceJintHost, RUN_COMPILE, RUN_FAS4NATIVE ögonbevis, RUN_LANG, p1-goldens.json uppdateras,
+egen commit. P1-goldens på v21 (v0.6-bas): 97013 a185bc37 / 4242 b9fd9c16 / 20260718 699a93fa noteras som
+jämförelsepunkt (obs: p1-goldens.json:s gamla värden är mot v20-motorn).
