@@ -4030,9 +4030,6 @@
     "m_ActiveTargets": [
         {
             "m_Id": "1a68b7a8d2f3420f877a73412748f9a6"
-        },
-        {
-            "m_Id": "b2c6bfbb96374da89dea491e5b3d6cd6"
         }
     ]
 }
@@ -5327,7 +5324,7 @@
     "m_DefaultValue": {
         "x": 0.0,
         "y": 0.0,
-        "z": 1.0
+        "z": 0.0
     },
     "m_Labels": []
 }
@@ -6100,8 +6097,8 @@
     "m_ObjectId": "17ca39359eb94d04beb4096788273ae1",
     "m_Title": "Layer 2",
     "m_Position": {
-        "x": -5311.19921875,
-        "y": 2912.0
+        "x": -5311.19970703125,
+        "y": 2912.800048828125
     }
 }
 
@@ -6207,8 +6204,8 @@
     "m_ObjectId": "18ba22130fa04628a0bb3c1c3e736445",
     "m_Title": "Normal Blending",
     "m_Position": {
-        "x": -2123.199951171875,
-        "y": 1915.9998779296875
+        "x": -2123.2001953125,
+        "y": 1916.800048828125
     }
 }
 
@@ -6335,7 +6332,6 @@
     "m_SGVersion": 2,
     "m_Type": "UnityEditor.Rendering.BuiltIn.ShaderGraph.BuiltInTarget",
     "m_ObjectId": "1a68b7a8d2f3420f877a73412748f9a6",
-    "m_Datas": [],
     "m_ActiveSubTarget": {
         "m_Id": "2190b2672567445e94706fb629b659e4"
     },
@@ -6562,8 +6558,8 @@
     "m_ObjectId": "1df6d4a7282145d8adfa77ca0a33958e",
     "m_Title": "Tiling UVs",
     "m_Position": {
-        "x": -6440.00048828125,
-        "y": 1647.9998779296875
+        "x": -6440.0,
+        "y": 1648.800048828125
     }
 }
 
@@ -6702,7 +6698,7 @@
     "m_DefaultValue": {
         "x": 0.0,
         "y": 0.0,
-        "z": 1.0
+        "z": 0.0
     },
     "m_Labels": []
 }
@@ -7743,8 +7739,8 @@
     "m_ObjectId": "2bc7d1205c5a47e884819b04226d6340",
     "m_Title": "Layer 2",
     "m_Position": {
-        "x": -5311.19921875,
-        "y": 1933.5997314453125
+        "x": -5311.19970703125,
+        "y": 1933.60009765625
     }
 }
 
@@ -7864,7 +7860,7 @@
     "m_Group": {
         "m_Id": "a929523ab45c499087250af8230bd9d4"
     },
-    "m_Name": "MF_Cheap Contrast",
+    "m_Name": "MF_CheapContrast",
     "m_DrawState": {
         "m_Expanded": true,
         "m_Position": {
@@ -8422,7 +8418,7 @@
     "m_DefaultValue": {
         "x": 0.0,
         "y": 0.0,
-        "z": 1.0
+        "z": 0.0
     },
     "m_Labels": []
 }
@@ -9702,8 +9698,8 @@
     "m_ObjectId": "42987c3db0cf4febadf85a3bb88c14a8",
     "m_Title": "Layer 1",
     "m_Position": {
-        "x": -5311.19921875,
-        "y": 953.5999145507813
+        "x": -5311.19970703125,
+        "y": 953.5999755859375
     }
 }
 
@@ -13667,16 +13663,6 @@
 }
 
 {
-    "m_SGVersion": 2,
-    "m_Type": "UnityEditor.Rendering.Universal.ShaderGraph.UniversalLitSubTarget",
-    "m_ObjectId": "73c08ff1d6d24f68829c1af6733cfb6d",
-    "m_WorkflowMode": 1,
-    "m_NormalDropOffSpace": 0,
-    "m_ClearCoat": false,
-    "m_BlendModePreserveSpecular": true
-}
-
-{
     "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.DynamicVectorMaterialSlot",
     "m_ObjectId": "740a636718cb40ddb7eb5220186936d3",
@@ -13746,7 +13732,7 @@
     "m_Group": {
         "m_Id": "a929523ab45c499087250af8230bd9d4"
     },
-    "m_Name": "MF_Cheap Contrast",
+    "m_Name": "MF_CheapContrast",
     "m_DrawState": {
         "m_Expanded": true,
         "m_Position": {
@@ -14014,7 +14000,7 @@
     "m_DefaultValue": {
         "x": 0.0,
         "y": 0.0,
-        "z": 1.0
+        "z": 0.0
     },
     "m_Labels": []
 }
@@ -14187,8 +14173,8 @@
     "m_ObjectId": "78937c479dad464db201b05a374c75ad",
     "m_Title": "Coverage Layer",
     "m_Position": {
-        "x": -5311.19921875,
-        "y": -36.79999542236328
+        "x": -5311.19970703125,
+        "y": -36.0
     }
 }
 
@@ -16500,7 +16486,7 @@
     "m_Group": {
         "m_Id": ""
     },
-    "m_Name": "MF_Pivot Vertical Gradience",
+    "m_Name": "MF_PivotVerticalGradience",
     "m_DrawState": {
         "m_Expanded": true,
         "m_Position": {
@@ -16664,7 +16650,7 @@
     "m_DefaultValue": {
         "x": 0.0,
         "y": 0.0,
-        "z": 1.0
+        "z": 0.0
     },
     "m_Labels": []
 }
@@ -16714,7 +16700,7 @@
     "m_Group": {
         "m_Id": "a929523ab45c499087250af8230bd9d4"
     },
-    "m_Name": "MF_Cheap Contrast",
+    "m_Name": "MF_CheapContrast",
     "m_DrawState": {
         "m_Expanded": true,
         "m_Position": {
@@ -18211,8 +18197,8 @@
     "m_ObjectId": "a929523ab45c499087250af8230bd9d4",
     "m_Title": "Edge Masking",
     "m_Position": {
-        "x": -1569.599853515625,
-        "y": 505.60003662109377
+        "x": -1569.60009765625,
+        "y": 505.5999755859375
     }
 }
 
@@ -18845,7 +18831,7 @@
     "m_DefaultValue": {
         "x": 0.0,
         "y": 0.0,
-        "z": 1.0
+        "z": 0.0
     },
     "m_Labels": []
 }
@@ -19054,31 +19040,6 @@
         "x": 0.0,
         "y": 3.0
     }
-}
-
-{
-    "m_SGVersion": 1,
-    "m_Type": "UnityEditor.Rendering.Universal.ShaderGraph.UniversalTarget",
-    "m_ObjectId": "b2c6bfbb96374da89dea491e5b3d6cd6",
-    "m_Datas": [],
-    "m_ActiveSubTarget": {
-        "m_Id": "73c08ff1d6d24f68829c1af6733cfb6d"
-    },
-    "m_AllowMaterialOverride": false,
-    "m_SurfaceType": 0,
-    "m_ZTestMode": 4,
-    "m_ZWriteControl": 0,
-    "m_AlphaMode": 0,
-    "m_RenderFace": 2,
-    "m_AlphaClip": false,
-    "m_CastShadows": true,
-    "m_ReceiveShadows": true,
-    "m_DisableTint": false,
-    "m_AdditionalMotionVectorMode": 0,
-    "m_AlembicMotionVectors": false,
-    "m_SupportsLODCrossFade": false,
-    "m_CustomEditorGUI": "Polyart.RGB_RockCustomInspector",
-    "m_SupportVFX": false
 }
 
 {
@@ -19487,7 +19448,7 @@
     "m_DefaultValue": {
         "x": 0.0,
         "y": 0.0,
-        "z": 1.0
+        "z": 0.0
     },
     "m_Labels": []
 }
@@ -20020,7 +19981,7 @@
     "m_DefaultValue": {
         "x": 0.0,
         "y": 0.0,
-        "z": 1.0
+        "z": 0.0
     },
     "m_Labels": []
 }
@@ -20633,7 +20594,7 @@
     "m_Title": "Layer Blending",
     "m_Position": {
         "x": -3034.400146484375,
-        "y": 939.2000732421875
+        "y": 940.0
     }
 }
 
@@ -20738,7 +20699,7 @@
     "m_Group": {
         "m_Id": "a929523ab45c499087250af8230bd9d4"
     },
-    "m_Name": "MF_Cheap Contrast",
+    "m_Name": "MF_CheapContrast",
     "m_DrawState": {
         "m_Expanded": true,
         "m_Position": {
@@ -21314,7 +21275,7 @@
     "m_DefaultValue": {
         "x": 0.0,
         "y": 0.0,
-        "z": 1.0
+        "z": 0.0
     },
     "m_Labels": []
 }

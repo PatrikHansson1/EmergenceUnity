@@ -1,0 +1,15 @@
+{
+ "label": "97013-founders",
+ "years": 120,
+ "calls": 3310,
+ "discarded": 0,
+ "taughtNoAlt": 2680,
+ "techsWithAlt": 32,
+ "multiWayTechs": [],
+ "pass": false,
+ "end": {
+  "tick": 17280,
+  "ended": false,
+  "pop": 135
+ }
+}

@@ -2,24 +2,20 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 8
+  serializedVersion: 6
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: M_Dreamscape_Waterfall
   m_Shader: {fileID: 4800000, guid: 66906d5c57c4a9c4eb411e5bca74e37c, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
+  m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3000
+  m_CustomRenderQueue: 2450
   stringTagMap: {}
   disabledShaderPasses: []
-  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -71,24 +67,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - unity_Lightmaps:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_LightmapsInd:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_ShadowMasks:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
     m_Floats:
     - _ColorDepthFade: 0.43
     - _DisplaceStrength: 0
     - _DisplaceStrength1: 0.469
-    - _EnvironmentReflections: 1
     - _Float0: 0.84
     - _Line01ScaleX: 2
     - _Line01ScaleY: 2.45
@@ -106,13 +88,9 @@ Material:
     - _LinesScaleY2: 0.37
     - _LinesSpeed: -0.63
     - _LinesSpeed2: 0.6
-    - _QueueControl: 0
-    - _QueueOffset: 0
-    - _ReceiveShadows: 1
     - _RippleSpeed: 2
     - _Smoothness: 1
     - _Smoothness1: 1
-    - _SpecularHighlights: 1
     - _UVFade: -0.65
     - _VoronoiSpeed: 2.3
     - _WaveNormalIntensity: 0.597
@@ -126,7 +104,4 @@ Material:
     - _ColorDeep: {r: 0.06581525, g: 0.8207547, b: 0.7680069, a: 0}
     - _ColorShallow: {r: 0.35323954, g: 0.8556219, b: 0.9245283, a: 1}
     - _DisplacementMovement: {r: 0, g: 1, b: 0, a: 0}
-    - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _LineColor: {r: 0.44811314, g: 1, b: 0.9224879, a: 1}
-  m_BuildTextureStacks: []
-  m_AllowLocking: 1

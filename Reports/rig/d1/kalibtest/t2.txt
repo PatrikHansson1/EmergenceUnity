@@ -1,0 +1,20 @@
+{"tag": "1618", "tailByNeed": {"sick": {}, "hunger": {}}, "wayHypos": []}
+{"tag": "20260718", "tailByNeed": {"sick": {}, "hunger": {}}, "wayHypos": []}
+{"tag": "97013", "tailByNeed": {"sick": {}, "hunger": {}}, "wayHypos": []}
+{"tag": "97013-founders", "tailByNeed": {"sick": {}, "hunger": {}}, "wayHypos": []}
+{"tag": "1186834928", "tailByNeed": {"sick": {}, "hunger": {}}, "wayHypos": []}
+{"tag": "1203612547", "tailByNeed": {"sick": {}, "hunger": {}}, "wayHypos": []}
+{"tag": "1237167785", "tailByNeed": {"sick": {}, "hunger": {}}, "wayHypos": []}
+{"tag": "syn0", "tailByNeed": {"sick": {}, "hunger": {}}, "wayHypos": []}
+{"tag": "syn1", "tailByNeed": {"sick": {}, "hunger": {}}, "wayHypos": []}
+{"tag": "syn2", "tailByNeed": {"sick": {}, "hunger": {}}, "wayHypos": []}
+{"tag": "syn3", "tailByNeed": {"sick": {}, "hunger": {}}, "wayHypos": []}
+{"tag": "syn4", "tailByNeed": {"sick": {}, "hunger": {}}, "wayHypos": []}
+{"tag": "syn5", "tailByNeed": {"sick": {}, "hunger": {}}, "wayHypos": []}
+{"tag": "syn6", "tailByNeed": {"sick": {}, "hunger": {}}, "wayHypos": []}
+{"tag": "syn7", "tailByNeed": {"sick": {}, "hunger": {}}, "wayHypos": []}
+{"tag": "syn8", "tailByNeed": {"sick": {}, "hunger": {}}, "wayHypos": []}
+{"tag": "syn9", "tailByNeed": {"sick": {}, "hunger": {}}, "wayHypos": []}
+{"tag": "syn10", "tailByNeed": {"sick": {}, "hunger": {}}, "wayHypos": []}
+{"tag": "syn11", "tailByNeed": {"sick": {}, "hunger": {}}, "wayHypos": []}
+# DONE 20/20

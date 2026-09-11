@@ -6,6 +6,7 @@ ShaderImporter:
   - _TextureSample1: {fileID: 2800000, guid: 071aa86cdb9612048aab52bfbdee9d66, type: 3}
   - _TextureSample0: {fileID: 2800000, guid: f4d6674ab39631f47b9b78c8e92aee48, type: 3}
   nonModifiableTextures: []
+  preprocessorOverride: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
@@ -13,6 +14,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 186894
   packageName: 'Dreamscape Nature : Meadows : Stylized Open World Environment'
-  packageVersion: 2.2
+  packageVersion: 2.3
   assetPath: Assets/Polyart/PolyartStudio/SharedResources/Shaders/Deprecated/Dreamscape_CloudCard.shader
-  uploadId: 866086
+  uploadId: 915226

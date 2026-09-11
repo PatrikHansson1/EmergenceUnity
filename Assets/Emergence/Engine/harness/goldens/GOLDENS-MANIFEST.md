@@ -1,3 +1,23 @@
+# GOLDENS — ENGINE v24 e2285e55 ★ TEXT-REV (mktext F1/F3/F6/F7) ★ (8 kanoner om-baselinerade 2026-09-11 MED AVSIKT, D-733/D-758/D-759)
+
+**v24 = v23 + mktext.py (D-733, Patrik-godkänd väg C+B D-731):** F1 disp() lägger aldrig epitetet två gånger ·
+F3 gemena custom-namn mitt i mening (conversion/reformation) · F6 possessiva kunskapsnamn utan inledande "the "
+("Eira's song", inte "Eira's the song") · F7 taboo-traditioner "the rule holds: …". **Simuleringen är byte-identisk
+med v23** (strippad tillståndsdigest 97013×150 år 2c571ae3 = 2c571ae3, 20260718×151 år cf2d0c5d = cf2d0c5d; 425
+textdiffar, alla ∈ F3/F6/F7, 0 övriga — D-759). Kanonerna moln-genererade (golden-cloud.js, harness-trohet V8=Jint
+D-623) och editorbekräftade: t720 GREEN 4/4 (10:38, 104–149 s), t8640 se D-760. Engine SHA:
+**e2285e55991141eb2f17598fbc2edb8e47eab33a97554a71d79b5226158f5ca3** (föregående v23 2554ab41…, kanoner i
+Reports/backup/goldens-v23/; backup-motor Reports/backup/emergence-engine-2554ab41-pre-v24text.js).
+SHA 720: 97013 9f22597a · 4242 df4dde3a · 20260718 571c486b · 97013-founders 9e8e395d ·
+SHA 8640: 97013 ba8a4e19 · 4242 6ac72132 · 20260718 31f120ed · 97013-founders 4a97e621.
+**Historik sedan förra sektionen (manifestet var stale, D-599):** v17 cf5cba65 (epok-paketet) → v18 d02bb1ee (text-only,
+kanon-neutral) → v19 8907f6f6 (H0a) → v20 f39e0684 (ledger, golden-neutral) → v21 9da69373 (B2.3) → v22 952f21f6 (D1,
+golden-neutral) → v23 2554ab41 (D1 omvarv k_sick=9, golden-neutral) — kanonerna 83e875ba/11763185/12ed3552/1944f84f ·
+93d64ce2/e525d652/322507ab/54e7c15e gällde oförändrade från v21 t.o.m. v23. Djuptidsfacit 4242/2323 (t172800)
+omspelas på v24 (bake-facit3, D-760).
+
+---
+
 # GOLDENS — …+ B5b + GEO2 ★ VÅG B PÅBÖRJAD ★ (8 kanoner om-baselinerade 2026-08-22, D-482 — PRELIMINÄR, väntar t8640-grön + commit)
 
 **GEO2 (D-480): FYNDIGHETSMODELLEN.** Malmen kommer i deposits (2 centrum/material, FNV per

@@ -1,0 +1,159 @@
+=== PROV 1 ===
+--- A ---
+Years 50–99:
+[58] Three huts have become more — Ronjastead has been founded!
+[63] Driven by a failing harvest, the people of Frejaheim fell upon Ronjastead — a raid for grain and goods.
+[63] Torv died of old age at 82.
+[64] Ronja the Founder set upon Rune the Founder and seized goods — the gap was cheaper to close by force.
+[88] Idun the Voice of Majaheim came for Saga II — an old wrong, not forgotten, paid back in goods and bruises.
+--- B ---
+Years 100–149:
+[100] Ylva II set upon Torv II and seized goods — the gap was cheaper to close by force.
+[102] Embla II was killed by Ronja the Founder in a fight.
+[110] Driven by a failing harvest, the people of Majaheim fell upon Runestead — a raid for grain and goods.
+[113] Torv II the Voice of Frejaheim came for Saga II — an old wrong, not forgotten, paid back in goods and bruises.
+[129] The fever's year has come to Runestead — where many live close, death walks quicker.
+
+=== PROV 2 ===
+--- A ---
+Years 100–149:
+[100] Otto II the Voice of Disaholm set upon Embla II and seized goods — the gap was cheaper to close by force.
+[100] Embla II came for Otto II the Voice of Disaholm — an old wrong, not forgotten, paid back in goods and bruises.
+[101] Driven by a failing harvest, the people of Eirahaven fell upon Runestead — a raid for grain and goods.
+[101] Vera died of old age at 56.
+[135] Three huts have become more — Disaholm has been founded!
+--- B ---
+Years 100–149:
+[100] Maja II set upon Falk and seized goods — the gap was cheaper to close by force.
+[100] Rune the Voice of Livholm died of old age at 79.
+[101] Selma II came for Ask II of Stenholm — an old wrong, not forgotten, paid back in goods and bruises.
+[108] Ronja II left Otto bleeding — a healer's hands held death off.
+[124] The fever's year has come to Stenholm — where many live close, death walks quicker.
+
+=== PROV 3 ===
+--- A ---
+Years 50–99:
+[50] Ylvahaven is without a leader — Eira's voice is gone, and no one yet speaks for all.
+[50] Halvar set upon Ylva the Founder and seized goods — the gap was cheaper to close by force.
+[51] Wolves found Kare the Wolf-Marked alone in the winter night.
+[54] Bjorn was killed by Sten in a fight.
+[81] Three huts have become more — Majavik has been founded!
+--- B ---
+Years 0–49:
+[1] Four humans wake in an untouched world: Eira, Ask, Embla, Torv.
+[27] Three huts have become more — Ylvahaven has been founded!
+[38] Embla the Spearmaker died of old age at 57.
+[41] Wolves found Torv the Rememberer alone in the winter night.
+[45] In Ylvahaven, the people have begun to listen when Eira speaks — prestige has hardened into leadership.
+
+=== PROV 4 ===
+--- A ---
+Years 50–99:
+[55] Torv the Firebringer died of old age at 73.
+[62] In Torvheim, the people have begun to listen when Sten speaks — prestige has hardened into leadership.
+[74] Three huts have become more — Ylvavik has been founded!
+[87] Vidar set upon Rune and seized goods — the gap was cheaper to close by force.
+[89] Driven by a failing harvest, the people of Ylvavik fell upon Torvheim — a raid for grain and goods.
+--- B ---
+Years 50–99:
+[50] Ask the Spearmaker died of old age at 72.
+[86] Three huts have become more — Lokeheim has been founded!
+[91] The fever's year has come to Lokeheim — where many live close, death walks quicker.
+[96] Embla II set upon Signe and seized goods — the gap was cheaper to close by force.
+[96] Signe left Embla II bleeding — a healer's hands held death off.
+
+=== PROV 5 ===
+--- A ---
+Years 100–149:
+[100] Maja II set upon Falk and seized goods — the gap was cheaper to close by force.
+[100] Rune the Voice of Livholm died of old age at 79.
+[101] Selma II came for Ask II of Stenholm — an old wrong, not forgotten, paid back in goods and bruises.
+[108] Ronja II left Otto bleeding — a healer's hands held death off.
+[124] The fever's year has come to Stenholm — where many live close, death walks quicker.
+--- B ---
+Years 50–99:
+[53] Embla the Firebringer died of old age at 72.
+[68] Vidar set upon Bjorn and seized goods — the gap was cheaper to close by force.
+[73] In Livholm, Eira's cave-marks is lost — the land cannot feed the craft, or the last who knew it is gone.
+[82] In Livholm, the people have begun to listen again when Rune speaks — prestige has hardened into leadership.
+[84] Three huts have become more — Stenholm has been founded!
+
+=== PROV 6 ===
+--- A ---
+Years 0–49:
+[1] Four humans wake in an untouched world: Eira, Ask, Embla, Torv.
+[1] Embla told the day back as a story worth remembering — Embla's tale (Storytelling) has been invented!
+[7] Wolves found Embla alone in the winter night.
+[26] Torv the Firebringer and Liv struck a fair trade.
+[36] Eira the Wolf-Marked died of old age at 56.
+--- B ---
+Years 0–49:
+[1] Four humans wake in an untouched world: Eira, Ask, Embla, Torv.
+[1] Eira told the day back as a story worth remembering — Eira's oral saga (Storytelling) has been invented!
+[4] Eira the Firebringer starved to death.
+[26] Ask the Spearmaker and Sten struck a fair trade.
+[39] Rune sewed clothes from hides — winter has met its match.
+
+=== PROV 7 ===
+--- A ---
+Years 50–99:
+[53] In Bjornholm, carving a sign into the hut wall when something new is made is now simply what one does.
+[56] Embla the Rekindler died of old age at 75.
+[81] Ylva left Halvar bleeding — a healer's hands held death off.
+[94] In Bjornholm, the people have begun to listen when Bjorn the Founder speaks — prestige has hardened into leadership.
+[94] In Bjornholm, 10 households laid a share at Bjorn the Founder's door.
+--- B ---
+Years 100–149:
+[105] Rune II starved to death.
+[108] In Bjornholm, the people have begun to listen again when Rune speaks — prestige has hardened into leadership.
+[131] In Bjornholm, the old way is set aside: telling stories by the fire at dusk replaces humming at Dawn.
+[132] The fever's year has come to Bjornholm — where many live close, death walks quicker.
+[138] Bjornholm has grown past the single gaze — 58 souls now live as a people; 15 names carry the chronicle.
+
+=== PROV 8 ===
+--- A ---
+Years 100–149:
+[100] Three huts have become more — Nannaholm has been founded!
+[101] Nanna II starved to death.
+[112] The fever's year has come to Ormstead — where many live close, death walks quicker.
+[132] Sten II of Ormstead set upon Torv II and seized goods — the gap was cheaper to close by force.
+[143] Generations in Nannaholm have kept Burning a twig at an old tree so long that no one remembers why.
+--- B ---
+Years 100–149:
+[100] Freja died of old age at 78.
+[102] Maja set upon Otto and seized goods — the gap was cheaper to close by force.
+[105] Idun the Founder came for Maja II — an old wrong, not forgotten, paid back in goods and bruises.
+[114] Torvheim has grown past the single gaze — 54 souls now live as a people; 15 names carry the chronicle.
+[115] The fever's year has come to Torvheim — where many live close, death walks quicker.
+
+=== PROV 9 ===
+--- A ---
+Years 0–49:
+[1] Four humans wake in an untouched world: Eira, Ask, Embla, Torv.
+[7] Sten starved to death.
+[24] Ylva set upon Eira the Firebringer and seized goods — the gap was cheaper to close by force.
+[33] Three huts have become more — Runestead has been founded!
+[35] In Runestead, believing the stars are the eyes of the ancestors, so the dead are never wholly gone is now simply what one does.
+--- B ---
+Years 100–149:
+[100] Ylva II set upon Torv II and seized goods — the gap was cheaper to close by force.
+[102] Embla II was killed by Ronja the Founder in a fight.
+[110] Driven by a failing harvest, the people of Majaheim fell upon Runestead — a raid for grain and goods.
+[113] Torv II the Voice of Frejaheim came for Saga II — an old wrong, not forgotten, paid back in goods and bruises.
+[129] The fever's year has come to Runestead — where many live close, death walks quicker.
+
+=== PROV 10 ===
+--- A ---
+Years 0–49:
+[1] Four humans wake in an untouched world: Ask the First, Embla the First, Embla, Torv.
+[5] Wolves found Ask the First, the Firebringer alone in the winter night.
+[31] Three huts have become more — Sagavik has been founded!
+[39] Embla the First, the Voice of Runestead died of old age at 55.
+[46] With the last of them died the last knowledge of Torv's soft metal (Copper).
+--- B ---
+Years 0–49:
+[1] Four humans wake in an untouched world: Eira, Ask, Embla, Torv.
+[10] Three huts have become more — Torvheim has been founded!
+[11] Torv the Firebringer and Eira the Spearmaker struck a fair trade.
+[23] In Torvheim, believing a great herd walks the night sky, and the living must follow its path is now simply what one does.
+[38] Eira the Spearmaker died of old age at 59.

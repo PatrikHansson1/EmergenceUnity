@@ -1,0 +1,18 @@
+# start 2026-09-08T04:15:33.017Z v22=952f21f6 v23=2554ab41 node=v24.20.0 skip=0
+{"key":"v22:97013","engine":"v22","tag":"97013","endYear":1200,"ended":false,"secs":2318,"ways":0,"wayDetail":[],"pop":140,"fpr":"d0ed501c838e3919"}
+{"key":"v22:4242","engine":"v22","tag":"4242","endYear":1200,"ended":false,"secs":1779,"ways":0,"wayDetail":[],"pop":81,"fpr":"2322780f8045658c"}
+{"key":"v22:20260718","engine":"v22","tag":"20260718","endYear":1200,"ended":false,"secs":2234,"ways":0,"wayDetail":[],"pop":116,"fpr":"3a625e4eb7c7bc8f"}
+{"key":"v22:31415","engine":"v22","tag":"31415","endYear":1200,"ended":false,"secs":2546,"ways":0,"wayDetail":[],"pop":121,"fpr":"ae4f95bc20a295c0"}
+{"key":"v22:2323","engine":"v22","tag":"2323","endYear":1200,"ended":false,"secs":2836,"ways":0,"wayDetail":[],"pop":126,"fpr":"ae262e00fd2e7ae1"}
+{"key":"v22:1618","engine":"v22","tag":"1618","endYear":1200,"ended":false,"secs":2929,"ways":2,"wayDetail":[{"need":"sick","tech":"aqueduct","born":487,"st":"alive"},{"need":"sick","tech":"aqueduct","born":523,"st":"alive"}],"pop":216,"fpr":"a536439e0787a6d0"}
+{"key":"v22:777","engine":"v22","tag":"777","endYear":1200,"ended":false,"secs":1779,"ways":0,"wayDetail":[],"pop":114,"fpr":"6b4b8b4e857171ac"}
+{"key":"v22:97013-founders","engine":"v22","tag":"97013-founders","endYear":1200,"ended":false,"secs":2821,"ways":0,"wayDetail":[],"pop":129,"fpr":"6891f6f064ae7488"}
+{"key":"v23:97013","engine":"v23","tag":"97013","endYear":1200,"ended":false,"secs":2514,"ways":0,"wayDetail":[],"pop":140,"fpr":"d0ed501c838e3919"}
+{"key":"v23:4242","engine":"v23","tag":"4242","endYear":1200,"ended":false,"secs":1827,"ways":0,"wayDetail":[],"pop":81,"fpr":"2322780f8045658c"}
+{"key":"v23:20260718","engine":"v23","tag":"20260718","endYear":1200,"ended":false,"secs":2339,"ways":0,"wayDetail":[],"pop":116,"fpr":"3a625e4eb7c7bc8f"}
+{"key":"v23:31415","engine":"v23","tag":"31415","endYear":1200,"ended":false,"secs":2650,"ways":0,"wayDetail":[],"pop":121,"fpr":"ae4f95bc20a295c0"}
+{"key":"v23:2323","engine":"v23","tag":"2323","endYear":1200,"ended":false,"secs":2764,"ways":0,"wayDetail":[],"pop":126,"fpr":"ae262e00fd2e7ae1"}
+{"key":"v23:1618","engine":"v23","tag":"1618","endYear":1200,"ended":false,"secs":3200,"ways":1,"wayDetail":[{"need":"sick","tech":"aqueduct","born":487,"st":"alive"}],"pop":216,"fpr":"152c8bd9064fd6b8"}
+{"key":"v23:777","engine":"v23","tag":"777","endYear":1200,"ended":false,"secs":1798,"ways":0,"wayDetail":[],"pop":114,"fpr":"6b4b8b4e857171ac"}
+{"key":"v23:97013-founders","engine":"v23","tag":"97013-founders","endYear":1200,"ended":false,"secs":2885,"ways":0,"wayDetail":[],"pop":129,"fpr":"6891f6f064ae7488"}
+# DONE 16/16 2026-09-08T15:09:13.058Z

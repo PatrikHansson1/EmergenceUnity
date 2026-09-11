@@ -1,15 +1,15 @@
 fileFormatVersion: 2
-guid: 2c0b2e018c1710b44867976bd3691e95
+guid: 1793e4046ffe3c94db44cfa8912efb18
 NativeFormatImporter:
   externalObjects: {}
-  mainObjectFileID: 11400000
+  mainObjectFileID: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
 AssetOrigin:
   serializedVersion: 1
-  productId: 264352
-  packageName: Dreamscape Nature Mountains - Stylized Open World Environment
-  packageVersion: 1.1
+  productId: 186894
+  packageName: 'Dreamscape Nature : Meadows : Stylized Open World Environment'
+  packageVersion: 2.3
   assetPath: Assets/Polyart/PolyartStudio/SharedResources/Shaders/Deprecated/PolyartWorldAlignedBlend.asset
-  uploadId: 723103
+  uploadId: 915226

@@ -5,6 +5,7 @@ ShaderImporter:
   defaultTextures:
   - _Displace1: {fileID: 2800000, guid: 1206ec3b97ff9e043bab9ed180f8a4d7, type: 3}
   nonModifiableTextures: []
+  preprocessorOverride: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
@@ -12,6 +13,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 186894
   packageName: 'Dreamscape Nature : Meadows : Stylized Open World Environment'
-  packageVersion: 2.2
+  packageVersion: 2.3
   assetPath: Assets/Polyart/PolyartStudio/SharedResources/Shaders/Deprecated/Dreamscape_Waterfall.shader
-  uploadId: 866086
+  uploadId: 915226

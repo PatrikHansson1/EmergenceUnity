@@ -375,7 +375,7 @@ function gainKnowledge(S,a,id,via,altUsed){
   let k=S.knowledge[id];
   if(!k){
     const mat=altUsed?Object.keys(altUsed)[0]:null;
-    const name=`${a.name}'s ${mat==='iron'&&id==='axe'?'iron ':''}${pick(S,t.var)}`;
+    const name=`${a.name}'s ${mat==='iron'&&id==='axe'?'iron ':''}${pick(S,t.var).replace(/^the /,'')}`;
     k=S.knowledge[id]={id,name,status:'alive',inventedBy:a.name,yearBorn:Math.floor(S.tick/YEAR)+1,rediscoveries:0,losses:0,madeFrom:altUsed?Object.keys(altUsed).join('+'):''};
     // R2 INK1 causes: an invention is caused by its prerequisites — reference each pre's own
     // invention event where the world recorded one, else the tech id as a state reference.
@@ -494,7 +494,7 @@ function adoptCustom(S,a,cu){
       if(oc&&oid!==cu.id&&oc.slot===cu.slot){
         a.customs.delete(oid);
         S.stats.conversions++;
-        if(S.rand()<.12)ev(S,'conversion',`<b>${a.name}</b> has left ${oc.name} for ${cu.name}. Minds change; so do worlds.`,{custom:cu.id,from:oid});
+        if(S.rand()<.12)ev(S,'conversion',`<b>${a.name}</b> has left ${lcn(oc.name)} for ${lcn(cu.name)}. Minds change; so do worlds.`,{custom:cu.id,from:oid});
       }
     }
   }
@@ -636,7 +636,7 @@ function cultureYearTick(S){
       const c=S.customs[id];
       if(!c.norm&&counts[id]>=Math.ceil(adults.length*.75)&&year-c.yearBorn>=10){
         c.norm=true;c.normYear=year;c.normVillage=v.name;
-        ev(S,'tradition',`🏘️ In ${v.name}, ${c.txt} is now simply what one does. <b>${c.name}</b> has become a tradition.`,{custom:id,x:v.x,y:v.y});
+        ev(S,'tradition',c.txt&&c.txt.startsWith('that ')?`🏘️ In ${v.name}, the rule holds: ${c.txt.slice(5)}. <b>${c.name}</b> has become a tradition.`:`🏘️ In ${v.name}, ${c.txt} is now simply what one does. <b>${c.name}</b> has become a tradition.`,{custom:id,x:v.x,y:v.y});
         for(const cid in S.customs){const c2=S.customs[cid];if(c2.lens==='faith'&&c2.status==='alive')c2.trust=clamp(c2.trust+.02,0,1);}
       }
       if(c.norm&&c.normVillage===v.name&&(counts[id]||0)<Math.ceil(adults.length*.4)){
@@ -645,7 +645,7 @@ function cultureYearTick(S){
         for(const rid in counts){const rc=S.customs[rid];if(rc&&rid!==id&&rc.slot&&rc.slot===c.slot&&counts[rid]>=Math.ceil(adults.length*.6)){heir=rc;break;}}
         if(S.brewing&&S.brewing.norm===id)S.brewing=null; // the storm has broken
         if(heir){heir.norm=true;heir.normYear=year;heir.normVillage=v.name;
-          ev(S,'reformation',`⚡ In ${v.name}, the old way is set aside: <b>${heir.name}</b> replaces ${c.name}. The elders mutter; the young do not listen.`,{custom:heir.id,from:id,x:v.x,y:v.y});
+          ev(S,'reformation',`⚡ In ${v.name}, the old way is set aside: <b>${lcn(heir.name)}</b> replaces ${lcn(c.name)}. The elders mutter; the young do not listen.`,{custom:heir.id,from:id,x:v.x,y:v.y});
         } else ev(S,'normFades',`In ${v.name}, fewer and fewer keep ${c.name}. An age is quietly ending.`,{custom:id});
       }
       if(c.norm&&!c.religion&&year-c.normYear>=40&&(c.mutatedFrom||Object.values(S.customs).some(x=>x.mutatedFrom===id))&&S.rand()<.15&&!Object.values(S.customs).some(x=>x.religion&&x.normVillage===c.normVillage)){
@@ -845,7 +845,8 @@ function createWorld(seed,founders,xp){
 
 // ---------- behavior ----------
 function speak(S,a,txt,act){a.say=txt;a.sayT=40;a.sayAct=act||null;}
-function disp(a){return a.epithet?a.name+' '+a.epithet:a.name;}
+function disp(a){return a.epithet&&!a.name.endsWith(a.epithet)?a.name+' '+a.epithet:a.name;}
+function lcn(n){return n&&/^[A-Z]/.test(n)?n.charAt(0).toLowerCase()+n.slice(1):n;}
 function giveEpithet(S,a,ep){
   if(a.epithet||a.dead)return;
   a.epithet=ep;
@@ -1967,7 +1968,8 @@ function agentTick(S,a){
             if(hy){hy.trials++;hy.trust=Math.max(0,hy.trust-0.15);
               if(t.alts&&t.alts.length>1){hy.conj=Object.keys(t.alts[Math.floor(S.rand()*t.alts.length)]).join('+')||'plain';hy.mutations++;}
               else hy.mutations++;
-              if(hy.trials===8&&!hy.wayId){
+              if(hy.trials===((hy.need==='sick')?9:8)&&!hy.wayId){// v23 D1-omvarv K1: k_sick=9 (prereg D1-OMVARV-PREREG rev2 f21456be)
+                
                 const ce=ev(S,'corrected',`<b>${a.name}</b> failed again — and changed the way of trying. The guess survives its maker's stubbornness.`,{agent:a.id,x:a.x,y:a.y,causes:hy.needEv!==undefined?['ev:'+hy.needEv]:[]});
                 const wid='W'+(S.nextWayId++);
                 const mats=(hy.conj||'plain');

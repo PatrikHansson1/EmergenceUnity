@@ -60,7 +60,7 @@ Material:
         m_Scale: {x: 55, y: 30}
         m_Offset: {x: 0, y: 0}
     - _StoneTexture:
-        m_Texture: {fileID: 2800000, guid: c4dceeb6fda8b3b49ae7923205796b60, type: 3}
+        m_Texture: {fileID: 2800000, guid: b5f1c91aef5b4f9499b06d66d90e8ec2, type: 3}
         m_Scale: {x: 15, y: 15}
         m_Offset: {x: 0, y: 0}
     - _TextureSample0:
@@ -83,41 +83,23 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - unity_Lightmaps:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_LightmapsInd:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_ShadowMasks:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _BlendBias: -2.37
     - _BlendBias1: -1
     - _BlendSharpness: 8.65
     - _BlendSharpness1: 0
-    - _EnvironmentReflections: 1
     - _Float0: 0
     - _Float1: -3.07
     - _Float2: 1
     - _GrassBias: -6.81
     - _GrassSharpness: 15.8
     - _Normal: 0.506
-    - _QueueControl: 0
-    - _QueueOffset: 0
-    - _ReceiveShadows: 1
     - _SmoothnessMultiplier: -2
     - _SmoothnessMultiplier1: 0.07
-    - _SpecularHighlights: 1
     - _StoneDirtBias: -5.72
     - _StoneDirtSharpness: 14.9
     - __dirty: 0
-    m_Colors:
-    - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
+    m_Colors: []
   m_BuildTextureStacks: []
   m_AllowLocking: 1

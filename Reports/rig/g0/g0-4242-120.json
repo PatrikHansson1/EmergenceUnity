@@ -1,0 +1,15 @@
+{
+ "label": "4242",
+ "years": 120,
+ "calls": 1388,
+ "discarded": 0,
+ "taughtNoAlt": 1176,
+ "techsWithAlt": 26,
+ "multiWayTechs": [],
+ "pass": false,
+ "end": {
+  "tick": 17280,
+  "ended": false,
+  "pop": 30
+ }
+}

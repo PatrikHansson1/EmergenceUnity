@@ -1,0 +1,21 @@
+{"tag": "1618", "tailByNeed": {"sick": {"6": 3, "7": 3, "8": 3, "9": 3, "10": 3, "11": 3, "12": 3}, "hunger": {}}, "wayHypos": []}
+{"tag": "20260718", "tailByNeed": {"sick": {"6": 3, "7": 3, "8": 3, "9": 3, "10": 3, "11": 3, "12": 3}, "hunger": {}}, "wayHypos": []}
+{"tag": "97013", "tailByNeed": {"sick": {"6": 3, "7": 3, "8": 3, "9": 3, "10": 3, "11": 3, "12": 3}, "hunger": {}}, "wayHypos": []}
+{"tag": "97013-founders", "tailByNeed": {"sick": {"6": 3, "7": 3, "8": 3, "9": 3, "10": 3, "11": 3, "12": 3}, "hunger": {}}, "wayHypos": []}
+{"tag": "1186834928", "tailByNeed": {"sick": {"6": 3, "7": 3, "8": 3, "9": 3, "10": 3, "11": 3, "12": 3}, "hunger": {}}, "wayHypos": []}
+{"tag": "1203612547", "tailByNeed": {"sick": {"6": 3, "7": 3, "8": 3, "9": 3, "10": 3, "11": 3, "12": 3}, "hunger": {}}, "wayHypos": []}
+{"tag": "1237167785", "tailByNeed": {"sick": {"6": 3, "7": 3, "8": 3, "9": 3, "10": 3, "11": 3, "12": 3}, "hunger": {}}, "wayHypos": []}
+{"tag": "syn0", "tailByNeed": {"sick": {"6": 3, "7": 3, "8": 3, "9": 3, "10": 3, "11": 3, "12": 3}, "hunger": {}}, "wayHypos": []}
+{"tag": "syn1", "tailByNeed": {"sick": {"6": 3, "7": 3, "8": 3, "9": 3, "10": 3, "11": 3, "12": 3}, "hunger": {}}, "wayHypos": []}
+{"tag": "syn2", "tailByNeed": {"sick": {}, "hunger": {}}, "wayHypos": []}
+{"tag": "syn3", "tailByNeed": {"sick": {}, "hunger": {}}, "wayHypos": []}
+{"tag": "syn4", "tailByNeed": {"sick": {}, "hunger": {}}, "wayHypos": []}
+{"tag": "syn5", "tailByNeed": {"sick": {}, "hunger": {}}, "wayHypos": []}
+{"tag": "syn6", "tailByNeed": {"sick": {}, "hunger": {}}, "wayHypos": []}
+{"tag": "syn7", "tailByNeed": {"sick": {}, "hunger": {}}, "wayHypos": []}
+{"tag": "syn8", "tailByNeed": {"sick": {}, "hunger": {}}, "wayHypos": []}
+{"tag": "syn9", "tailByNeed": {"sick": {}, "hunger": {}}, "wayHypos": []}
+{"tag": "syn10", "tailByNeed": {"sick": {}, "hunger": {}}, "wayHypos": []}
+{"tag": "syn11", "tailByNeed": {"sick": {}, "hunger": {}}, "wayHypos": []}
+{"tag": "syn12", "tailByNeed": {"sick": {}, "hunger": {}}, "wayHypos": []}
+# DONE 20/20

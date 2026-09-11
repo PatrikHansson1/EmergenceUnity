@@ -64,18 +64,6 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - unity_Lightmaps:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_LightmapsInd:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_ShadowMasks:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _Amplitude1: 0.3
@@ -103,7 +91,6 @@ Material:
     - _EdgeFoamWavesNumber: 8.55
     - _EdgeLength: 58.4
     - _EdgeOpacityDistance: 0.55
-    - _EnvironmentReflections: 1
     - _Float: 0
     - _Float12: 16.55
     - _Float6: 3.27
@@ -134,8 +121,6 @@ Material:
     - _PeakFoamGradience: 2.55
     - _PeakFoamPowMax: 0.1
     - _PeakFoamPowMin: 28.19
-    - _QueueControl: 0
-    - _QueueOffset: 0
     - _ReflectionAmount: 0.976
     - _Refraction: 0.015
     - _ShallowWaterWPODistance: 5
@@ -152,9 +137,7 @@ Material:
     - _Steepness_1: 0.3
     - _SubsurfaceScattering: 0
     - _TerrainHeight: 1200
-    - _TessEdgeLength: 16
     - _TessMax: 25
-    - _TessMaxDisp: 25
     - _TessMin: 1
     - _TessValue: 15
     - _TextureNormalsStrength: 0.082
@@ -181,7 +164,6 @@ Material:
     - _Direction2: {r: 0.9, g: 0, b: 0.12, a: 0}
     - _Direction3: {r: 0.86, g: 0, b: -0.41, a: 0}
     - _Direction_1: {r: 1, g: 0, b: 0, a: 0}
-    - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _FlowPivot: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 1, g: 1, b: 1, a: 1}
     - _TerrainHeight: {r: 0, g: 0, b: 0, a: 0}
@@ -191,7 +173,6 @@ Material:
     - _WavePeakColor: {r: 0, g: 0.8684211, b: 1, a: 1}
     - _WindDirection: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
-  m_AllowLocking: 1
 --- !u!114 &3423973827606724713
 MonoBehaviour:
   m_ObjectHideFlags: 11

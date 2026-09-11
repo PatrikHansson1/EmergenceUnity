@@ -1,0 +1,11 @@
+           seed writ litVY nonVY litL nonL   L_lit   L_non      R meas  P1   press nopress  pVY   ext<   ext>  P3
+           1618   11  1217   107   39  114   0.032   1.065 33.247 True True   0.000   0.036  136  0.000  2.069 False
+       20260718    7   869     0   16    0   0.018       -      - True False   0.007   0.030  440  0.000  0.340 False
+           2323    2   980    83   19   72   0.019   0.867 44.743 True True       -   0.019    0  0.000  1.338 False
+          31415   11   692    40   37   61   0.053   1.525 28.522 True True       -   0.053    0  0.000  1.724 False
+           4242   13   408     0    4    0   0.010       -      - True False       -   0.010    0  0.000  0.694 False
+            777    6   560     9   12    0   0.021   0.000  0.000 True False   0.005   0.032  220  0.000  1.356 False
+          97013    6   923   201  161  189   0.174   0.940  5.391 True True   0.360   0.116  222  0.000  1.356 False
+ 97013-founders    9   935   508  261  305   0.279   0.600  2.151 True True   0.169   0.289   77  0.000  5.479 False
+mätbara världar 8 /8; P1 uppfyllda 5 /8 ⇒ A3-P1 GRÖN
+P3 uppfyllda 0 /8 (deskriptivt)

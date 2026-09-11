@@ -1,0 +1,10 @@
+--- engine-v24text.js
++++ engine-g0.js
+@@ -355,6 +355,7 @@
+ 
+ // ---------- Knowledge Engine ----------
+ function gainKnowledge(S,a,id,via,altUsed){
++  if(globalThis.__G0)globalThis.__G0(id,via,altUsed,a.knows.has(id));
+   if(a.knows.has(id))return;
+   // ENGINE 2.1 (D-086) SPECIALIZATION: no one masters everything. A deep craft (smithing, glass, mill,
+   // metal tools) is a life's dedication — a person carries at most DEEP_CAP of them. This caps only
