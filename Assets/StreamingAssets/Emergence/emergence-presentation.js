@@ -14,7 +14,7 @@
   // (villageFallen/fall/war/famine/plague/city/guild/extinct) and 21 real types fell to default 1.
   // Unknown future types weigh 1. Routine noise weighs 0 (never reported).
   var WEIGHT = {
-    end: 100, start: 85, violence: 75, raid: 70, feud: 62, death: 60, wolfAttack: 58, sickness: 56,
+    end: 100, start: 85, violence: 75, raid: 70, feud: 62, death: 25, wolfAttack: 58, sickness: 56,   // v0.8 (D-767): death 60->25 — FS1 fix, §12a READ-weight; an old-age death is background, not the turning point of every window
     aggregate: 55, village: 55, rebel: 52, reformation: 50, religion: 48, tabooBroken: 46,
     knowledgeLost: 45, leader: 40, tribute: 38, tradition: 34, rediscovered: 32, trade: 30,
     steal: 30, legend: 30, tech: 28, product: 26, mutation: 24, epithet: 22, conversion: 20,
@@ -213,5 +213,5 @@
     return parts.join('\n\n');
   }
 
-  root.EmergencePresentation = { VERSION: '0.7.0', writeIntervalReport: writeIntervalReport, reportDigest: reportDigest, WEIGHT: WEIGHT, _firstSentence: firstSentence };
+  root.EmergencePresentation = { VERSION: '0.8.0', writeIntervalReport: writeIntervalReport, reportDigest: reportDigest, WEIGHT: WEIGHT, _firstSentence: firstSentence };
 })(typeof globalThis !== 'undefined' ? globalThis : (typeof self !== 'undefined' ? self : this));

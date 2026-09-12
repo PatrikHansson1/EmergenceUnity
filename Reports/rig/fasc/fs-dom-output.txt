@@ -1,0 +1,54 @@
+== engine-v24text step50
+            97013 rader 15 typer  9 top1=raid,death (3)  {'death': 3, 'raid': 3, 'leader': 2, 'village': 2, 'feud': 1, 'knowledgeLost': 1, 'sickness': 1, 'start': 1, 'violence': 1}
+             4242 rader 15 typer 12 top1=death (3)  {'death': 3, 'village': 2, 'aggregate': 1, 'leader': 1, 'product': 1, 'raid': 1, 'religion': 1, 'sickness': 1, 'start': 1, 'tech': 1, 'trade': 1, 'tribute': 1}
+         20260718 rader 15 typer  9 top1=death (3)  {'death': 3, 'leader': 2, 'raid': 2, 'village': 2, 'wolfAttack': 2, 'feud': 1, 'sickness': 1, 'start': 1, 'violence': 1}
+            31415 rader 15 typer 10 top1=death (3)  {'death': 3, 'raid': 2, 'violence': 2, 'wolfAttack': 2, 'feud': 1, 'sickness': 1, 'start': 1, 'tech': 1, 'trade': 1, 'village': 1}
+             2323 rader 15 typer  8 top1=death,raid (3)  {'death': 3, 'raid': 3, 'feud': 2, 'village': 2, 'violence': 2, 'sickness': 1, 'start': 1, 'tradition': 1}
+             1618 rader 15 typer 11 top1=death (3)  {'death': 3, 'raid': 2, 'village': 2, 'aggregate': 1, 'feud': 1, 'leader': 1, 'sickness': 1, 'start': 1, 'trade': 1, 'tradition': 1, 'violence': 1}
+              777 rader 15 typer 12 top1=death (3)  {'death': 3, 'leader': 2, 'aggregate': 1, 'knowledgeLost': 1, 'reformation': 1, 'sickness': 1, 'start': 1, 'tradition': 1, 'tribute': 1, 'village': 1, 'violence': 1, 'wolfAttack': 1}
+   97013-founders rader 15 typer  8 top1=village,death (3)  {'death': 3, 'village': 3, 'feud': 2, 'raid': 2, 'violence': 2, 'knowledgeLost': 1, 'start': 1, 'wolfAttack': 1}
+  top1-räkning: {'death': 8, 'raid': 2, 'village': 1}
+  >50%-räkning: {}
+  top-3-flora: 18 ['aggregate', 'death', 'feud', 'knowledgeLost', 'leader', 'product', 'raid', 'reformation', 'religion', 'sickness', 'start', 'tech', 'trade', 'tradition', 'tribute', 'village', 'violence', 'wolfAttack']
+  FS1 RÖD · FS2 GRÖN · FS3 GRÖN
+== engine-v23 step50
+            97013 rader 15 typer  9 top1=raid,death (3)  {'death': 3, 'raid': 3, 'leader': 2, 'village': 2, 'feud': 1, 'knowledgeLost': 1, 'sickness': 1, 'start': 1, 'violence': 1}
+             4242 rader 15 typer 12 top1=death (3)  {'death': 3, 'village': 2, 'aggregate': 1, 'leader': 1, 'product': 1, 'raid': 1, 'religion': 1, 'sickness': 1, 'start': 1, 'tech': 1, 'trade': 1, 'tribute': 1}
+         20260718 rader 15 typer  9 top1=death (3)  {'death': 3, 'leader': 2, 'raid': 2, 'village': 2, 'wolfAttack': 2, 'feud': 1, 'sickness': 1, 'start': 1, 'violence': 1}
+            31415 rader 15 typer 10 top1=death (3)  {'death': 3, 'raid': 2, 'violence': 2, 'wolfAttack': 2, 'feud': 1, 'sickness': 1, 'start': 1, 'tech': 1, 'trade': 1, 'village': 1}
+             2323 rader 15 typer  8 top1=death,raid (3)  {'death': 3, 'raid': 3, 'feud': 2, 'village': 2, 'violence': 2, 'sickness': 1, 'start': 1, 'tradition': 1}
+             1618 rader 15 typer 11 top1=death (3)  {'death': 3, 'raid': 2, 'village': 2, 'aggregate': 1, 'feud': 1, 'leader': 1, 'sickness': 1, 'start': 1, 'trade': 1, 'tradition': 1, 'violence': 1}
+              777 rader 15 typer 12 top1=death (3)  {'death': 3, 'leader': 2, 'aggregate': 1, 'knowledgeLost': 1, 'reformation': 1, 'sickness': 1, 'start': 1, 'tradition': 1, 'tribute': 1, 'village': 1, 'violence': 1, 'wolfAttack': 1}
+   97013-founders rader 15 typer  8 top1=village,death (3)  {'death': 3, 'village': 3, 'feud': 2, 'raid': 2, 'violence': 2, 'knowledgeLost': 1, 'start': 1, 'wolfAttack': 1}
+  top1-räkning: {'death': 8, 'raid': 2, 'village': 1}
+  >50%-räkning: {}
+  top-3-flora: 18 ['aggregate', 'death', 'feud', 'knowledgeLost', 'leader', 'product', 'raid', 'reformation', 'religion', 'sickness', 'start', 'tech', 'trade', 'tradition', 'tribute', 'village', 'violence', 'wolfAttack']
+  FS1 RÖD · FS2 GRÖN · FS3 GRÖN
+== engine-v22 step50
+            97013 rader 15 typer  9 top1=raid,death (3)  {'death': 3, 'raid': 3, 'leader': 2, 'village': 2, 'feud': 1, 'knowledgeLost': 1, 'sickness': 1, 'start': 1, 'violence': 1}
+             4242 rader 15 typer 12 top1=death (3)  {'death': 3, 'village': 2, 'aggregate': 1, 'leader': 1, 'product': 1, 'raid': 1, 'religion': 1, 'sickness': 1, 'start': 1, 'tech': 1, 'trade': 1, 'tribute': 1}
+         20260718 rader 15 typer  9 top1=death (3)  {'death': 3, 'leader': 2, 'raid': 2, 'village': 2, 'wolfAttack': 2, 'feud': 1, 'sickness': 1, 'start': 1, 'violence': 1}
+            31415 rader 15 typer 10 top1=death (3)  {'death': 3, 'raid': 2, 'violence': 2, 'wolfAttack': 2, 'feud': 1, 'sickness': 1, 'start': 1, 'tech': 1, 'trade': 1, 'village': 1}
+             2323 rader 15 typer  8 top1=death,raid (3)  {'death': 3, 'raid': 3, 'feud': 2, 'village': 2, 'violence': 2, 'sickness': 1, 'start': 1, 'tradition': 1}
+             1618 rader 15 typer 11 top1=death (3)  {'death': 3, 'raid': 2, 'village': 2, 'aggregate': 1, 'feud': 1, 'leader': 1, 'sickness': 1, 'start': 1, 'trade': 1, 'tradition': 1, 'violence': 1}
+              777 rader 15 typer 12 top1=death (3)  {'death': 3, 'leader': 2, 'aggregate': 1, 'knowledgeLost': 1, 'reformation': 1, 'sickness': 1, 'start': 1, 'tradition': 1, 'tribute': 1, 'village': 1, 'violence': 1, 'wolfAttack': 1}
+   97013-founders rader 15 typer  8 top1=village,death (3)  {'death': 3, 'village': 3, 'feud': 2, 'raid': 2, 'violence': 2, 'knowledgeLost': 1, 'start': 1, 'wolfAttack': 1}
+  top1-räkning: {'death': 8, 'raid': 2, 'village': 1}
+  >50%-räkning: {}
+  top-3-flora: 18 ['aggregate', 'death', 'feud', 'knowledgeLost', 'leader', 'product', 'raid', 'reformation', 'religion', 'sickness', 'start', 'tech', 'trade', 'tradition', 'tribute', 'village', 'violence', 'wolfAttack']
+  FS1 RÖD · FS2 GRÖN · FS3 GRÖN
+== känslighet steg 25 (v24)
+== engine-v24text step25
+            97013 rader 30 typer 14 top1=raid,death (5)  {'death': 5, 'raid': 5, 'feud': 2, 'knowledgeLost': 2, 'leader': 2, 'steal': 2, 'trade': 2, 'tradition': 2, 'village': 2, 'violence': 2, 'aggregate': 1, 'sickness': 1, 'start': 1, 'tech': 1}
+             4242 rader 30 typer 17 top1=death (6)  {'death': 6, 'leader': 3, 'custom': 2, 'hut': 2, 'tech': 2, 'trade': 2, 'tribute': 2, 'village': 2, 'aggregate': 1, 'epithet': 1, 'mutation': 1, 'product': 1, 'raid': 1, 'religion': 1, 'sickness': 1, 'start': 1, 'tradition': 1}
+         20260718 rader 30 typer 16 top1=death (5)  {'death': 5, 'leader': 4, 'raid': 4, 'wolfAttack': 3, 'village': 2, 'violence': 2, 'custom': 1, 'epithet': 1, 'feud': 1, 'sickness': 1, 'start': 1, 'steal': 1, 'tech': 1, 'trade': 1, 'tradition': 1, 'tribute': 1}
+            31415 rader 30 typer 16 top1=death (5)  {'death': 5, 'raid': 3, 'violence': 3, 'feud': 2, 'mutation': 2, 'tech': 2, 'trade': 2, 'village': 2, 'wolfAttack': 2, 'conversion': 1, 'custom': 1, 'customLost': 1, 'epithet': 1, 'legend': 1, 'sickness': 1, 'start': 1}
+             2323 rader 30 typer 12 top1=death,raid (6)  {'death': 6, 'raid': 6, 'violence': 4, 'feud': 3, 'knowledgeLost': 2, 'trade': 2, 'village': 2, 'leader': 1, 'sickness': 1, 'start': 1, 'tech': 1, 'tradition': 1}
+             1618 rader 30 typer 14 top1=death (5)  {'death': 5, 'tradition': 4, 'leader': 3, 'raid': 3, 'village': 3, 'feud': 2, 'tech': 2, 'trade': 2, 'aggregate': 1, 'product': 1, 'sickness': 1, 'start': 1, 'tribute': 1, 'violence': 1}
+              777 rader 30 typer 20 top1=death (5)  {'death': 5, 'tradition': 3, 'leader': 2, 'rediscovered': 2, 'trade': 2, 'tribute': 2, 'aggregate': 1, 'epithet': 1, 'knowledgeLost': 1, 'legend': 1, 'mutation': 1, 'product': 1, 'reformation': 1, 'sickness': 1, 'start': 1, 'steal': 1, 'tech': 1, 'village': 1, 'violence': 1, 'wolfAttack': 1}
+   97013-founders rader 30 typer 15 top1=death (5)  {'death': 5, 'raid': 4, 'feud': 3, 'village': 3, 'violence': 3, 'knowledgeLost': 2, 'leader': 2, 'custom': 1, 'epithet': 1, 'reformation': 1, 'religion': 1, 'start': 1, 'tech': 1, 'tradition': 1, 'wolfAttack': 1}
+  top1-räkning: {'death': 8, 'raid': 2}
+  >50%-räkning: {}
+  top-3-flora: 15 ['custom', 'death', 'feud', 'hut', 'knowledgeLost', 'leader', 'raid', 'rediscovered', 'steal', 'tech', 'trade', 'tradition', 'tribute', 'village', 'violence']
+  FS1 RÖD · FS2 GRÖN · FS3 GRÖN
+FS4: v23==v24 typsekvens per rad: True | v22==v23: True
