@@ -1,0 +1,3 @@
+# start 2026-09-12T14:42:54.834Z engine=engine-v24 sha=e2285e55 node=v24.20.0 N=20 skip=[]
+{"tag":"3012878993","seed":3012878993,"endYear":49,"ended":true,"endedYear":50,"secs":1,"pop":0,"maxPop":4,"era":0,"eraName":"The First Morning","knowN":14,"reach":{"numbers":null,"calendar":null,"coinage":null,"clock":null,"printpress":null,"computing":null,"law":null,"school":null,"science":null,"writing":11}}
+{"tag":"2962546136","seed":2962546136,"endYear":3000,"ended":false,"endedYear":null,"secs":7512,"pop":144,"maxPop":225,"era":8,"eraName":"The Age of Steam","knowN":52,"reach":{"numbers":2,"calendar":4,"coinage":557,"clock":492,"printpress":403,"computing":null,"law":173,"school":173,"science":517,"writing":2}}

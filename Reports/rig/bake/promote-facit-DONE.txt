@@ -1,0 +1,9 @@
+# promote-facit  .v25.txt -> .canon.txt  2026-09-26T16:26:43.954Z
+# engine v25b 5dd13837 · Option B (enkel körning, golden-8640-backad determinism, D-871)
+seed 4242: v25 sha=3993255fc3730f65839f4e90b0397237abc1c72cccdf09b9523b20415deb08d4 bytes=18659045 OK (matchar facit-loggen)
+seed 2323: v25 sha=df9a1988b394d0d203196c9003b1aef1deb09601fdce470004ca7f27c447bade bytes=27464468 OK (matchar facit-loggen)
+seed 4242: v24-canon sha=f363ae0b66da363518d372844cdc32d3f11ea3db04e961caa12af1aa2557d2bb -> backup facit-seed-4242-t172800.f363ae0b.bak
+seed 4242: canon <- v25 · ny canon sha=3993255fc3730f65839f4e90b0397237abc1c72cccdf09b9523b20415deb08d4 OK
+seed 2323: v24-canon sha=776429bc469bd52155eaa55f6c3fdc4d790cfec769403cf48e62c7714b304530 -> backup facit-seed-2323-t172800.776429bc.bak
+seed 2323: canon <- v25 · ny canon sha=df9a1988b394d0d203196c9003b1aef1deb09601fdce470004ca7f27c447bade OK
+# DONE 2026-09-26T16:26:44.538Z

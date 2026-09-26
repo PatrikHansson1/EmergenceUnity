@@ -1,0 +1,1 @@
+{"tag":"826888987","capscale":1,"aggt":70,"endYear":60,"ended":false,"maxPopInd":26,"aliveInd":26,"cohortMass":0,"total":26,"cities":0,"villages":1,"era":3,"knowN":27,"computingYr":null,"aiYr":null,"frontier":{"electricity":null,"antibiotics":null,"flight":null,"atompower":null,"computing":null,"rocketry":null,"spaceflight":null,"ai":null},"starvDeaths":0,"secs":10}
