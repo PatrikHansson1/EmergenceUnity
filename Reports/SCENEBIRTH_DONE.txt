@@ -1,5 +1,5 @@
-DONE 12:30:24 OK floor born from demoscene_village_day → Assets/Emergence/Scenes/EmergenceFloor_day.unity
-SCENE BIRTH — 2026-09-27T12:30:17 (D-878, steg 5)
+DONE 13:36:17 OK floor born from demoscene_village_day → Assets/Emergence/Scenes/EmergenceFloor_day.unity
+SCENE BIRTH — 2026-09-27T13:36:09 (D-878, steg 5)
 RPGUARD: ok (PC_RPAsset)
 RPGUARD: ok (PC_RPAsset)
 DEMO sun 'Directional Light_day': rot=(62,3,32,2,28,3) color=(1,0,991,0,939) I=1,5 shadows=Soft strength=0,897 bias=1,6/0,07
@@ -48,12 +48,16 @@ WORLD dressed: Assets/Emergence/WorldStates/world-8919-y120-full.json floor=True
   MEASURE P_PROP_treetrunk_03: height 1,6 m at scale 1 (villager 1.75 m)
   MEASURE P_PROP_treetrunk_04: height 0,9 m at scale 1 (villager 1.75 m)
 TERRAIN layers=5 alphaRes=1024 material=Universal Render Pipeline/Terrain/Lit trees=73463 protos=4 detailProtos=5
+  GROUND under hut_Signe II at (460,9,317,9) cell (589,580): Layer_grass_01=0,60 · terrain pos (0.00, -3.00, 0.00) size (800.00, 72.00, 560.00)
+  GROUND under hut_Tuva at (456,1,292,4) cell (583,534): Layer_gravel=0,94 · terrain pos (0.00, -3.00, 0.00) size (800.00, 72.00, 560.00)
+  GROUND under hut_Liv II at (496,1,294,6) cell (634,538): Layer_grass_01=0,56 · terrain pos (0.00, -3.00, 0.00) size (800.00, 72.00, 560.00)
   LAYER 0: Layer_grass_01 tex=T_ENV_TERRAIN_grass_01_BC tile=2 dominant=969882 px (92,5%)
   LAYER 1: Layer_dirt tex=T_ENV_TERRAIN_dirt_BC tile=4 dominant=6649 px (0,6%)
   LAYER 2: Layer_gravel tex=T_ENV_TERRAIN_gravel_BC tile=3 dominant=30901 px (2,9%)
   LAYER 3: Layer_stone tex=T_ENV_stone_01_BC tile=2 dominant=40311 px (3,8%)
   LAYER 4: Layer_pavingstone_01 tex=T_ENV_pavingstone_01_BC tile=2 dominant=833 px (0,1%)
-CAPTURE birth-doc-gaze.png magenta=0/3686400 meanLum=122 cam=(400,55,190)
+WASH: switch off (Assets/Emergence/Materials/Washed/WASH-ON.txt absent) — pack shaders as authored
+CAPTURE birth-doc-gaze.png magenta=0/3686400 meanLum=121 cam=(400,55,190)
 eye-level bearing chosen: clear line 14,0 m of 14
 CAPTURE birth-eye-level.png magenta=0/3686400 meanLum=140 cam=(461,20,304)
 PINK materials in dressed scene: 0

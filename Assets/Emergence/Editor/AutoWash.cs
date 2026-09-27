@@ -37,10 +37,14 @@ namespace Emergence.Editor
 
         public static bool Enabled => File.Exists(Path.Combine(Path.GetDirectoryName(Application.dataPath), SwitchFile));
 
+        static Action _pending; static double _pendingAt;
+
         static void Tick()
         {
             if (EditorApplication.timeSinceStartup < _next) return;
             _next = EditorApplication.timeSinceStartup + 2.0;
+            if (_pending != null && EditorApplication.timeSinceStartup >= _pendingAt) { var p = _pending; _pending = null; p(); return; }
+            if (_pending != null) return;
             if (!File.Exists(Trigger)) return;
             string body = "";
             try { body = File.ReadAllText(Trigger).Trim().ToLowerInvariant(); File.Delete(Trigger); } catch { }
@@ -75,13 +79,29 @@ namespace Emergence.Editor
                 if (h0 != null) { FrameEye(cam, h0, rep); Capture(cam, Path.Combine(evDir, "wash-eye-before.png"), rep); }
                 var roots = UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects();
                 int swapped = Apply(roots, rep);
-                if (h0 != null) Capture(cam, Path.Combine(evDir, "wash-eye-after.png"), rep);
-                cam.transform.position = savedPos; cam.transform.rotation = savedRot;
-                Capture(cam, Path.Combine(evDir, "wash-doc-after.png"), rep);
-                File.WriteAllText(Path.Combine(evDir, "wash-report.txt"), rep.ToString());
-                return $"OK washed renderers={swapped} switch={(Enabled ? "ON" : "OFF")} dir={evDir}";
+                // it.2 SEEN: freshly created materials rendered NOTHING in the same tick (outline + shadow only, no forward pass);
+                // reloaded from disk two seconds later they rendered fine → the after-captures run on a later tick.
+                var eyePos = cam.transform.position; var eyeRot = cam.transform.rotation;
+                _pendingAt = EditorApplication.timeSinceStartup + 3.0;
+                _pending = () =>
+                {
+                    bool pa = ShaderUtil.allowAsyncCompilation; ShaderUtil.allowAsyncCompilation = false;
+                    try
+                    {
+                        if (h0 != null) { cam.transform.position = eyePos; cam.transform.rotation = eyeRot; Capture(cam, Path.Combine(evDir, "wash-eye-after.png"), rep); }
+                        cam.transform.position = savedPos; cam.transform.rotation = savedRot;
+                        Capture(cam, Path.Combine(evDir, "wash-doc-after.png"), rep);
+                        File.WriteAllText(Path.Combine(evDir, "wash-report.txt"), rep.ToString());
+                        var v = $"OK washed renderers={swapped} switch={(Enabled ? "ON" : "OFF")} dir={evDir}";
+                        File.WriteAllText(Done, "DONE " + DateTime.Now.ToString("HH:mm:ss") + " " + v + "\n" + rep);
+                        Debug.Log("[AutoWash] " + v);
+                    }
+                    catch (Exception e) { File.WriteAllText(Done, "DONE " + DateTime.Now.ToString("HH:mm:ss") + " ERROR(after) " + e.Message + "\n" + rep); }
+                    finally { ShaderUtil.allowAsyncCompilation = pa; cam.transform.position = savedPos; cam.transform.rotation = savedRot; }
+                };
+                return "PHASE1 washed renderers=" + swapped + " — after-captures pending";
             }
-            finally { ShaderUtil.allowAsyncCompilation = prevAsync; cam.transform.position = savedPos; cam.transform.rotation = savedRot; }
+            finally { ShaderUtil.allowAsyncCompilation = prevAsync; }
         }
 
         // Swap every URP/Lit material under the roots for its washed twin. Returns renderers touched. Idempotent.
@@ -126,6 +146,7 @@ namespace Emergence.Editor
             if (src.HasProperty("_BaseMap")) { m.SetTexture("_BaseMap", src.GetTexture("_BaseMap")); m.SetTextureScale("_BaseMap", src.GetTextureScale("_BaseMap")); m.SetTextureOffset("_BaseMap", src.GetTextureOffset("_BaseMap")); }
             m.SetColor("_BaseColor", src.HasProperty("_BaseColor") ? src.GetColor("_BaseColor") : Color.white);
             m.SetFloat("_TextureImpact", 1f);
+            if (src.HasProperty("_Cull") && m.HasProperty("_Cull")) m.SetFloat("_Cull", src.GetFloat("_Cull")); // A/B it.1 SEEN: the drying hide (two-sided, _Cull 0) vanished from behind
             if (src.HasProperty("_BumpMap") && src.GetTexture("_BumpMap") != null && m.HasProperty("_BumpMap")) m.SetTexture("_BumpMap", src.GetTexture("_BumpMap"));
             // ONE shading language
             m.SetFloat("_CelPrimaryMode", 1f); m.EnableKeyword("_CELPRIMARYMODE_SINGLE");
@@ -152,6 +173,18 @@ namespace Emergence.Editor
             }
             cam.transform.position = bestPos; cam.transform.LookAt(target);
             rep.AppendLine($"eye frame: hut {h0.name}, clear {bestClear:0.0} m of 14");
+            // ground diagnostic (D-881 it.2: the same hut stood on trodden dirt at 12:45 and on grass at 12:51 — which is the data?)
+            var t = Terrain.activeTerrain;
+            if (t != null && t.terrainData != null)
+            {
+                var td = t.terrainData; var tp = t.transform.position;
+                float u = Mathf.Clamp01((h0.position.x - tp.x) / td.size.x), v = Mathf.Clamp01((h0.position.z - tp.z) / td.size.z);
+                int ax = Mathf.Clamp((int)(u * (td.alphamapWidth - 1)), 0, td.alphamapWidth - 1), ay = Mathf.Clamp((int)(v * (td.alphamapHeight - 1)), 0, td.alphamapHeight - 1);
+                var a = td.GetAlphamaps(ax, ay, 1, 1); var sb = new StringBuilder();
+                for (int l = 0; l < td.alphamapLayers; l++) sb.Append(td.terrainLayers[l] != null ? td.terrainLayers[l].name : "?").Append('=').Append(a[0, 0, l].ToString("0.00")).Append(' ');
+                rep.AppendLine($"ground at hut: alphamap cell ({ax},{ay}) of {td.alphamapWidth} → {sb} · terrainData={AssetDatabase.GetAssetPath(td)} basemapDist={t.basemapDistance} material={(t.materialTemplate ? t.materialTemplate.shader.name : "none")} splatTex={(td.alphamapTextureCount > 0 && td.alphamapTextures[0] != null ? td.alphamapTextures[0].width.ToString() : "?")}");
+            }
+            else rep.AppendLine("ground at hut: no active terrain");
         }
 
         static void Capture(Camera cam, string file, StringBuilder rep)

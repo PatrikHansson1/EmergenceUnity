@@ -1,0 +1,8 @@
+DONE 13:10:19 OK washed renderers=4421 switch=OFF dir=C:\Users\patri\Dropbox\Emergence\45-UNITY\evidence\wash\2026-09-27
+WASH — 2026-09-27T13:10:09
+eye frame: hut hut_Signe II, clear 14,0 m of 14
+ground at hut: alphamap cell (589,580) of 1024 → Layer_grass_01=0,60 Layer_dirt=0,00 Layer_gravel=0,40 Layer_stone=0,00 Layer_pavingstone_01=0,00  · terrainData= basemapDist=1000 material=Universal Render Pipeline/Terrain/Lit splatTex=1024
+CAPTURE wash-eye-before.png magenta=0/3686400 meanLum=140
+WASH: renderers=4421 materialSlots=6901 distinct=41 newlyCreated=41 keptCutout/Transparent=66 keptPackShaders=4812
+CAPTURE wash-eye-after.png magenta=0/3686400 meanLum=143
+CAPTURE wash-doc-after.png magenta=0/3686400 meanLum=123

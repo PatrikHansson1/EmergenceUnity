@@ -252,6 +252,17 @@ namespace Emergence.Editor
             var am = d.GetAlphamaps(0, 0, d.alphamapWidth, d.alphamapHeight);
             var dom = new int[ls.Length];
             for (int y = 0; y < d.alphamapHeight; y++) for (int x = 0; x < d.alphamapWidth; x++) { int bi = 0; float bv = -1; for (int l = 0; l < ls.Length; l++) if (am[y, x, l] > bv) { bv = am[y, x, l]; bi = l; } dom[bi]++; }
+            // D-881 registration probe: dominant layer under the first three huts — must be identical run to run (it was NOT: 12:30 dirt, 12:49 grass)
+            var huts = GameObject.Find("Huts");
+            if (huts != null)
+                for (int i = 0; i < Mathf.Min(3, huts.transform.childCount); i++)
+                {
+                    var h = huts.transform.GetChild(i); var tp = t.transform.position;
+                    float u = Mathf.Clamp01((h.position.x - tp.x) / d.size.x), v = Mathf.Clamp01((h.position.z - tp.z) / d.size.z);
+                    int ax = Mathf.Clamp((int)(u * (d.alphamapWidth - 1)), 0, d.alphamapWidth - 1), ay = Mathf.Clamp((int)(v * (d.alphamapHeight - 1)), 0, d.alphamapHeight - 1);
+                    int bi = 0; float bv = -1; for (int l = 0; l < ls.Length; l++) if (am[ay, ax, l] > bv) { bv = am[ay, ax, l]; bi = l; }
+                    rep.AppendLine($"  GROUND under {h.name} at ({h.position.x:0.0},{h.position.z:0.0}) cell ({ax},{ay}): {(ls[bi] ? ls[bi].name : "?")}={bv:0.00} · terrain pos {tp} size {d.size}");
+                }
             for (int l = 0; l < ls.Length; l++) rep.AppendLine($"  LAYER {l}: {(ls[l] ? ls[l].name : "null")} tex={(ls[l] && ls[l].diffuseTexture ? ls[l].diffuseTexture.name : "none")} tile={(ls[l] ? ls[l].tileSize.x.ToString("0.#") : "?")} dominant={dom[l]} px ({100.0 * dom[l] / (d.alphamapWidth * d.alphamapHeight):0.0}%)");
         }
 

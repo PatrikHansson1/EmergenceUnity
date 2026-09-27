@@ -25,9 +25,14 @@ namespace Emergence.Editor
     public static class WorldDresser
     {
         public const float TileSize = 8f;          // meters per sim tile (Producer knob)
-        // D-880: dwelling sets (Patrik's list — edit freely). NOT dwellings: 01 tower, 13 water mill, 14 windmill.
-        public static readonly string[] HouseSetYoung = { "P_BLD_house_02", "P_BLD_house_06", "P_BLD_house_09", "P_BLD_house_10" };            // small cottages: the young edge
-        public static readonly string[] HouseSetOld   = { "P_BLD_house_03", "P_BLD_house_04", "P_BLD_house_08", "P_BLD_house_12", "P_BLD_house_02", "P_BLD_house_09" }; // the settled heart
+        // D-882 (Patrik 2026-09-27: "en liten blandning av hus när civilisationen utvecklas … så levande värld som möjligt"):
+        // a dwelling is chosen by TIER from the sim state — the village's development (RoadTier: pop + tech), the owner's
+        // wealth rank among the living, and the hut's age — then by a deterministic hash within the tier's set, so one
+        // save always renders the same houses while no two neighbours need look alike. All 11 dwellings are in play;
+        // NOT dwellings: 01 tower, 13 water mill, 14 windmill. Lists are Patrik's to edit (contact sheet evidence/houses).
+        public static readonly string[] HouseTier0 = { "P_BLD_house_02", "P_BLD_house_06", "P_BLD_house_09", "P_BLD_house_10" };                    // cottages — a hamlet, the poor, the founders' first roofs
+        public static readonly string[] HouseTier1 = { "P_BLD_house_03", "P_BLD_house_04", "P_BLD_house_08", "P_BLD_house_06", "P_BLD_house_09" }; // timber houses — a developing village
+        public static readonly string[] HouseTier2 = { "P_BLD_house_05", "P_BLD_house_07", "P_BLD_house_11", "P_BLD_house_12", "P_BLD_house_04" }; // the big houses — a town's rich, the settled heart rebuilt
         public const int   AlphaRes = 1024;        // D-879: terrain splat resolution (0,78 m/cell at W=100) — trails need it
         public const string FloorScenePath = "Assets/Emergence/Scenes/EmergenceFloor_day.unity"; // D-878: born from demoscene_village_day
         public const string NatureRoot = "Assets/Fantastic Nature Pack";   // D-875: L3 family = FANTASTIC; Dreamscape is out (magenta in URP 17.5)
@@ -272,9 +277,14 @@ namespace Emergence.Editor
             // field/dirt/gravel=0) while the same code painted 55745/360/7850/1573 in runs 1–3 and 5. Only the reuse of the
             // existing TerrainData_generated.asset differed between runs — so the old asset is deleted first and the alphamap
             // is written AFTER the data has become a persistent asset.
+            // D-881 MEASURED (13:03 birth): with the TerrainData as an ASSET, any save/reimport of it (SaveAssets at birth end, a
+            // domain reload after RUN_COMPILE) hands back an all-grass alphamap — the splat textures SetAlphamaps creates are
+            // not carried through the import (dresser diag right after SetAlphamaps: grass=969543 of 1048576; TerrainDiag a
+            // few calls later: 1048576). The dressed world is rebuilt from S every time and never saved into the scene, so the
+            // TerrainData now lives IN MEMORY only — no asset, nothing to reimport, nothing to go stale.
             const string TdPath = "Assets/Emergence/Scenes/TerrainData_generated.asset";
-            if (AssetDatabase.LoadAssetAtPath<TerrainData>(TdPath) != null) AssetDatabase.DeleteAsset(TdPath);
-            AssetDatabase.CreateAsset(data, TdPath);
+            if (AssetDatabase.LoadAssetAtPath<TerrainData>(TdPath) != null) AssetDatabase.DeleteAsset(TdPath); // retire the old asset
+            data.name = "TerrainData_generated (in-memory, D-881)";
             data.SetAlphamaps(0, 0, am);
             var tgo = Terrain.CreateTerrainGameObject(data);
             tgo.name = "Terrain";
@@ -948,6 +958,23 @@ namespace Emergence.Editor
             var genOf = new Dictionary<string, int>(); int maxGen = 1;
             if (S.agents != null) foreach (var a in S.agents) { if (!string.IsNullOrEmpty(a.name)) genOf[a.name] = a.gen; if (a.gen > maxGen) maxGen = a.gen; }
             int yardCount = 0, ageMarks = 0;
+            // D-882: wealth rank among the living (E1.5 agents[].wealth; old snapshots → 0 everywhere → everyone 0.5)
+            var wealthRank = new Dictionary<string, float>();
+            if (S.agents != null && S.agents.Length > 1)
+            {
+                // it.1 MEASURED (8919 y120): ranked among ALL the living, hut owners were all in the top → 32 of 33 houses "big".
+                // Owners are the established adults; the rank that separates them is the rank among OWNERS.
+                // it.2 MEASURED: names are NOT unique (D-876: two living "Eira II") — a rank keyed by name let a namesake's
+                // wealth lift a penniless owner to 0,68. Wealth per name = the poorest namesake (conservative), and the
+                // rank is the share of owners strictly poorer — ties (the many at 0) all rank low, as they should.
+                var owners = new HashSet<string>(S.huts.Where(x => !string.IsNullOrEmpty(x.owner)).Select(x => x.owner));
+                var wealthOf = new Dictionary<string, float>();
+                foreach (var a in S.agents) if (!string.IsNullOrEmpty(a.name) && owners.Contains(a.name)) wealthOf[a.name] = wealthOf.TryGetValue(a.name, out var prev) ? Mathf.Min(prev, a.wealth) : a.wealth;
+                var ws = wealthOf.Values.OrderBy(w => w).ToArray();
+                bool anyWealth = ws.Length > 0 && ws[ws.Length - 1] > 0f;
+                foreach (var kv in wealthOf) wealthRank[kv.Key] = anyWealth ? ws.Count(w => w < kv.Value) / (float)Mathf.Max(1, ws.Length - 1) : 0.5f;
+            }
+            var tierCount = new int[3];
             for (int i = 0; i < S.huts.Length; i++)
             {
                 var h = S.huts[i];
@@ -958,20 +985,32 @@ namespace Emergence.Editor
                 // edge gets small cottages. Both lists are Patrik's to edit (contact sheet 45-UNITY/evidence/houses/2026-09-27).
                 int og = genOf.TryGetValue(h.owner, out var gg) ? gg : maxGen;
                 float ageFrac = maxGen > 1 ? 1f - og / (float)maxGen : 0.5f; // 1 = oldest (founder), 0 = newest edge
-                var set = ageFrac > 0.55f ? HouseSetOld : HouseSetYoung;
+                int hvi = NearestVillageIdx(S, h.x, h.y);
+                int dev = (hvi >= 0 && S.villages != null && hvi < S.villages.Length) ? RoadTier(S.villages[hvi]) : 0; // 0 hamlet · 1 village · 2 town
+                float wealthPct = wealthRank.TryGetValue(h.owner, out var wp) ? wp : 0.5f;                                  // 0 poorest … 1 richest among the living
+                // a hamlet is cottages; a village mixes cottages and houses; a town adds big houses for its richest third —
+                // and a founder's roof is kept small unless wealth rebuilt it.
+                // it.4 (Patrik: "en liten blandning … så levande som möjligt, inte statisk"): the village's development sets the
+                // CEILING (hamlet cottages only · village up to houses · town up to big houses), and within that ceiling each
+                // hut lands on a tier by wealth + age + a per-hut hash — so a town shows all three types mixed, a village two,
+                // a hamlet one. Deterministic (same save → same houses) but neighbours differ. MEASURED spread 8919 y120: 0/1/2 all present.
+                float lift = 0.42f * wealthPct + 0.33f * ageFrac + 0.25f * Hash01(hx, hy, 23);
+                int tier = Mathf.Clamp(Mathf.RoundToInt(lift * dev * 1.35f), 0, dev);
+                var set = tier == 2 ? HouseTier2 : tier == 1 ? HouseTier1 : HouseTier0;
                 var pick = set[(int)(Hash(hx, hy, 21) % (uint)set.Length)];
+                tierCount[tier]++;
                 var prefab = FindPrefabExact(pick) ?? FindPrefabExact("P_BLD_house_02");
                 if (prefab == null) { Debug.LogWarning("[Dresser] no house prefab found"); return; }
                 var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, parent);
                 go.transform.position = Ground(S, h.x, h.y);
                 float yaw = HouseYaw(S, h, greens, hx, hy);
                 go.transform.rotation = Quaternion.Euler(0, yaw, 0);
-                go.transform.localScale = Vector3.one * HouseScale; // v2: pack houses are oversized at 1
+                go.transform.localScale = Vector3.one * HouseScale * (0.94f + 0.12f * Hash01(hx, hy, 22)); // v2: pack houses are oversized at 1 · D-882: ±6 % so no two roofs sit at the same height
                 go.name = $"hut_{h.owner}";
                 yardCount += PlaceYard(S, go, h, hx, hy, yaw, yardProps, yardParent);
                 ageMarks += PlaceHutAge(S, h, hx, hy, ageFrac, mossProps, freshProps, ageParent);
             }
-            Debug.Log($"[Dresser] {S.huts.Length} houses (scale {HouseScale}) + {yardCount} yard props + {ageMarks} age marks (v2.2 grammar, maxGen {maxGen})");
+            Debug.Log($"[Dresser] {S.huts.Length} houses (scale {HouseScale}; tiers cottage {tierCount[0]} / house {tierCount[1]} / big {tierCount[2]}, D-882) + {yardCount} yard props + {ageMarks} age marks (v2.2 grammar, maxGen {maxGen})");
         }
 
         // TD-031 v2.2: one hut's age marks — old huts overgrow (moss/bush), new huts show fresh timber.
