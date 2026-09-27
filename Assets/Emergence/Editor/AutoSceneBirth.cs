@@ -39,7 +39,9 @@ namespace Emergence.Editor
         const string LookAsset   = "Assets/Emergence/Rendering/EmergenceLook_day.asset";
         const string FogAsset    = "Assets/Emergence/Rendering/EmergenceFog.asset";
         const string Marker      = "FLOOR:demoscene_village_day";
-        const string DefaultWorld = "Assets/Emergence/WorldStates/world-codex-demo.json";
+        // D-879: default = a FULL export (Tools/export-world-full.js) of the canonical v25b engine — tiles + footfall (pathUse).
+        // world-codex-demo.json (2026-07-20 vintage, no pathUse, no era) stays as the codex-coverage fixture.
+        const string DefaultWorld = "Assets/Emergence/WorldStates/world-8919-y120-full.json";
         const string RpPath      = "Assets/Settings/PC_RPAsset.asset";
         const float FogNear = 120f, FogFar = 700f, FogIntensity = 0.55f;   // our camera scale (see it.2 note)
         const string NatureRoot = "Assets/Fantastic Nature Pack";
@@ -167,6 +169,10 @@ namespace Emergence.Editor
                 bool prevAsync = ShaderUtil.allowAsyncCompilation; ShaderUtil.allowAsyncCompilation = false;
                 try
                 {
+                    // D-881 THE WASH (steg 6): when Patrik's switch is on, every URP/Lit material on the dressed instances is swapped
+                    // for its FlatKit Stylized Surface twin before the evidence is captured. Off = pack shaders as authored.
+                    if (AutoWash.Enabled) AutoWash.Apply(UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects(), rep);
+                    else rep.AppendLine("WASH: switch off (" + AutoWash.SwitchFile + " absent) — pack shaders as authored");
                     var cam = Camera.main; if (cam == null) return "FAIL: no Camera.main after dressing";
                     Capture(cam, Path.Combine(evDir, "birth-doc-gaze.png"), rep);
                     // eye level (D-064 gaze 2): 1.75 m at the first hut, looking along the settlement

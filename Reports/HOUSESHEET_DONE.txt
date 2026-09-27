@@ -1,0 +1,16 @@
+DONE 12:09:48 OK houses=14/14 dir=C:\Users\patri\Dropbox\Emergence\45-UNITY\evidence\houses\2026-09-27
+HOUSE SHEET — 2026-09-27T12:09:46 HouseScale=0,55
+  HOUSE P_BLD_house_01: scale1 footprint 8,2x8,6 m height 18,5 m · at 0,55: 4,5x4,8 m height 10,2 m (villager 1,75) · magenta=0 meanLum=122 -> P_BLD_house_01.png
+  HOUSE P_BLD_house_02: scale1 footprint 7,9x8,6 m height 9,9 m · at 0,55: 4,3x4,8 m height 5,5 m (villager 1,75) · magenta=0 meanLum=117 -> P_BLD_house_02.png
+  HOUSE P_BLD_house_03: scale1 footprint 9,7x13,5 m height 15,2 m · at 0,55: 5,3x7,4 m height 8,3 m (villager 1,75) · magenta=0 meanLum=119 -> P_BLD_house_03.png
+  HOUSE P_BLD_house_04: scale1 footprint 11,4x17,5 m height 12,1 m · at 0,55: 6,3x9,6 m height 6,7 m (villager 1,75) · magenta=0 meanLum=119 -> P_BLD_house_04.png
+  HOUSE P_BLD_house_05: scale1 footprint 17,4x11,6 m height 12,6 m · at 0,55: 9,5x6,4 m height 6,9 m (villager 1,75) · magenta=0 meanLum=120 -> P_BLD_house_05.png
+  HOUSE P_BLD_house_06: scale1 footprint 7,2x9,1 m height 11,7 m · at 0,55: 4,0x5,0 m height 6,4 m (villager 1,75) · magenta=0 meanLum=120 -> P_BLD_house_06.png
+  HOUSE P_BLD_house_07: scale1 footprint 14,1x18,9 m height 14,6 m · at 0,55: 7,8x10,4 m height 8,0 m (villager 1,75) · magenta=0 meanLum=120 -> P_BLD_house_07.png
+  HOUSE P_BLD_house_08: scale1 footprint 11,5x16,3 m height 14,1 m · at 0,55: 6,3x9,0 m height 7,8 m (villager 1,75) · magenta=0 meanLum=117 -> P_BLD_house_08.png
+  HOUSE P_BLD_house_09: scale1 footprint 8,7x8,2 m height 10,4 m · at 0,55: 4,8x4,5 m height 5,7 m (villager 1,75) · magenta=0 meanLum=120 -> P_BLD_house_09.png
+  HOUSE P_BLD_house_10: scale1 footprint 7,4x7,4 m height 10,5 m · at 0,55: 4,0x4,1 m height 5,8 m (villager 1,75) · magenta=0 meanLum=120 -> P_BLD_house_10.png
+  HOUSE P_BLD_house_11: scale1 footprint 15,8x15,1 m height 15,0 m · at 0,55: 8,7x8,3 m height 8,2 m (villager 1,75) · magenta=0 meanLum=123 -> P_BLD_house_11.png
+  HOUSE P_BLD_house_12: scale1 footprint 13,0x13,0 m height 14,7 m · at 0,55: 7,2x7,2 m height 8,1 m (villager 1,75) · magenta=0 meanLum=119 -> P_BLD_house_12.png
+  HOUSE P_BLD_house_13: scale1 footprint 10,8x9,1 m height 12,8 m · at 0,55: 6,0x5,0 m height 7,0 m (villager 1,75) · magenta=0 meanLum=118 -> P_BLD_house_13.png
+  HOUSE P_BLD_house_14: scale1 footprint 17,1x9,6 m height 20,7 m · at 0,55: 9,4x5,3 m height 11,4 m (villager 1,75) · magenta=0 meanLum=128 -> P_BLD_house_14.png

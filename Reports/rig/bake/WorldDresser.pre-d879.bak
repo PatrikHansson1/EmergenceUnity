@@ -25,10 +25,6 @@ namespace Emergence.Editor
     public static class WorldDresser
     {
         public const float TileSize = 8f;          // meters per sim tile (Producer knob)
-        // D-880: dwelling sets (Patrik's list — edit freely). NOT dwellings: 01 tower, 13 water mill, 14 windmill.
-        public static readonly string[] HouseSetYoung = { "P_BLD_house_02", "P_BLD_house_06", "P_BLD_house_09", "P_BLD_house_10" };            // small cottages: the young edge
-        public static readonly string[] HouseSetOld   = { "P_BLD_house_03", "P_BLD_house_04", "P_BLD_house_08", "P_BLD_house_12", "P_BLD_house_02", "P_BLD_house_09" }; // the settled heart
-        public const int   AlphaRes = 1024;        // D-879: terrain splat resolution (0,78 m/cell at W=100) — trails need it
         public const string FloorScenePath = "Assets/Emergence/Scenes/EmergenceFloor_day.unity"; // D-878: born from demoscene_village_day
         public const string NatureRoot = "Assets/Fantastic Nature Pack";   // D-875: L3 family = FANTASTIC; Dreamscape is out (magenta in URP 17.5)
         public const string VillageRoot = "Assets/Fantastic Village Pack";
@@ -228,16 +224,13 @@ namespace Emergence.Editor
             int liCobble = AddLayer(layers, new[] { "Layer_pavingstone_01", "Layer_stone", "Layer_Cobblestone" }, new Color(0.55f, 0.53f, 0.5f));
             data.terrainLayers = layers.ToArray();
 
-            // D-879 (Patrik): roads start as narrow trails and only widen/pave as the civilisation develops. At 256 the
-            // alphamap cell was 3,1 m (100 tiles x 8 m / 256) so the thinnest brush was a 9 m band — the "wide roads" seen
-            // in D-878. 1024 gives 0,78 m cells: a trail can be ~1,5 m, a cart path ~3 m, a paved street ~4,5 m.
-            data.alphamapResolution = AlphaRes;
-            var am = new float[AlphaRes, AlphaRes, layers.Count];
-            for (int ay = 0; ay < AlphaRes; ay++)
-                for (int ax = 0; ax < AlphaRes; ax++)
+            data.alphamapResolution = 256;
+            var am = new float[256, 256, layers.Count];
+            for (int ay = 0; ay < 256; ay++)
+                for (int ax = 0; ax < 256; ax++)
                 {
-                    float sx = ax / (float)(AlphaRes - 1) * (S.W - 1);
-                    float sy = (1f - ay / (float)(AlphaRes - 1)) * (S.H - 1);
+                    float sx = ax / 255f * (S.W - 1);
+                    float sy = (1f - ay / 255f) * (S.H - 1);
                     int tx = Mathf.Clamp(Mathf.RoundToInt(sx), 0, S.W - 1), ty = Mathf.Clamp(Mathf.RoundToInt(sy), 0, S.H - 1);
                     char tt = Tile(S, tx, ty);
                     if (tt == 's' || tt == 'i')
@@ -264,10 +257,8 @@ namespace Emergence.Editor
                         am[ay, ax, liGravel] += wRock;
                     }
                 }
-            int trodden = PaintTrodden(S, am, AlphaRes, liPath, liGrass); // D-879: footfall wears the grass (states with pathUse)
-            Debug.Log($"[Dresser] TRODDEN GROUND: {trodden} cells worn from pathUse (max footfall {(S.pathUse != null && S.pathUse.Length > 0 ? S.pathUse.Max() : 0)})");
-            StampFields(S, am, liField, AlphaRes); // TD-031 v2.1b: tilled soil inside the field enclosures (was never stamped)
-            PaintRoutes(S, am, AlphaRes, liPath, liCobble); // D-116/120/879 EMERGENT ROADS: tie-derived, tech-tiered trail→path→paved
+            StampFields(S, am, liField, 256); // TD-031 v2.1b: tilled soil inside the field enclosures (was never stamped)
+            PaintRoutes(S, am, 256, liPath, liCobble); // D-116/120 EMERGENT ROADS: tie-derived, wear→width, tech-gated COBBLE tier
             // D-878 it.6 MEASURED: every OTHER birth came out with an all-grass alphamap (Editor.log runs 4 and 6: grass=65536,
             // field/dirt/gravel=0) while the same code painted 55745/360/7850/1573 in runs 1–3 and 5. Only the reuse of the
             // existing TerrainData_generated.asset differed between runs — so the old asset is deleted first and the alphamap
@@ -512,9 +503,8 @@ namespace Emergence.Editor
             {
                 int ax = Mathf.RoundToInt(f.x / Mathf.Max(1, S.W - 1) * (res - 1));
                 int ay = Mathf.RoundToInt((1f - f.y / Mathf.Max(1, S.H - 1)) * (res - 1));
-                int rad = Mathf.Max(1, Mathf.RoundToInt(0.5f * (res - 1) / Mathf.Max(1, S.W - 1))); // D-879: half a tile in cells (1 at 256, 5 at 1024)
-                for (int dy = -rad; dy <= rad; dy++)
-                    for (int dx = -rad; dx <= rad; dx++)
+                for (int dy = -1; dy <= 1; dy++)
+                    for (int dx = -1; dx <= 1; dx++)
                     {
                         int cx = ax + dx, cy = ay + dy;
                         if (cx < 0 || cy < 0 || cx >= res || cy >= res) continue;
@@ -535,57 +525,7 @@ namespace Emergence.Editor
         // (shared culture + walkable reach + trade tech — NOT nearest-neighbour); wear→brush WIDTH; tech-gated
         // COBBLE tier (both hold masonry + high traffic) else dirt. Genesis: no huts ⇒ no roads. Growth/overgrow
         // fall out of the per-year rebuild (more ties → more roads; a lost village → its roads gone). Deterministic.
-        struct Route { public Vector2 a, b; public float wear; public int layer; public int tier; } // tier: 0 trail, 1 path, 2 paved (D-879)
-
-        // D-879 (Patrik 2026-09-27): "vägarna kanske ska vara smalare som stigar i början och sen när civ utvecklas så kan
-        // dom bli bredare och stenlagda." Tier is READ from the village's tech (sim state), never authored:
-        //   TRAIL  — no road tech: a trodden line of worn dirt, ~1,5 m, grass showing through
-        //   PATH   — the village knows 'road' or 'wheel': carts widen it to ~3 m of gravel
-        //   PAVED  — both ends know 'road' AND 'masonry': a ~4,5 m paved street (pavingstone blended with worn dirt)
-        // MEASURED 2026-09-27 (seq-8919 y55/85, 97013, 900913): every village already knows road+wheel+masonry the year it is
-        // founded — tech alone would pave everything at once. So the tier also needs the traffic to justify it: PATH from
-        // 10 souls, PAVED from 20 (a paved street is a public work, not a hamlet's).
-        static int RoadTier(WorldVillage v)
-        {
-            if (v == null) return 0;
-            bool road = Holds(v, "road") || Holds(v, "wheel"), stone = Holds(v, "road") && Holds(v, "masonry");
-            if (stone && v.pop >= 20) return 2;
-            if (road && v.pop >= 10) return 1;
-            return 0;
-        }
-
-        // D-879 TRODDEN GROUND: where the engine has counted footfall (pathUse, R2 INK1), the grass wears to earth in
-        // proportion — the village heart becomes trodden dirt, the forage spokes faint worn lines. Bilinear over the
-        // 8 m tiles so the wear reads as ground, not as a checkerboard. Log-scaled: a tile walked 1/10 as much as the
-        // busiest is still a visible line. Pure read of S; RNG-neutral.
-        static int PaintTrodden(WorldState S, float[,,] am, int res, int liDirt, int liGrass)
-        {
-            if (S.pathUse == null || S.pathUse.Length < S.W * S.H) return 0;
-            int max = 0; foreach (var u in S.pathUse) if (u > max) max = u;
-            if (max <= 0) return 0;
-            float lmax = Mathf.Log(1f + max);
-            var wear = new float[S.H, S.W];
-            for (int y = 0; y < S.H; y++) for (int x = 0; x < S.W; x++) { int u = S.pathUse[y * S.W + x]; wear[y, x] = u > 0 ? Mathf.Log(1f + u) / lmax : 0f; }
-            int cells = 0;
-            for (int ay = 0; ay < res; ay++)
-                for (int ax = 0; ax < res; ax++)
-                {
-                    float sx = ax / (float)(res - 1) * (S.W - 1);
-                    float sy = (1f - ay / (float)(res - 1)) * (S.H - 1);
-                    int x0 = Mathf.Clamp((int)sx, 0, S.W - 2), y0 = Mathf.Clamp((int)sy, 0, S.H - 2);
-                    float fx = Mathf.Clamp01(sx - x0), fy = Mathf.Clamp01(sy - y0);
-                    float f = Mathf.Lerp(Mathf.Lerp(wear[y0, x0], wear[y0, x0 + 1], fx), Mathf.Lerp(wear[y0 + 1, x0], wear[y0 + 1, x0 + 1], fx), fy);
-                    if (f < 0.45f) continue;                                   // lightly walked grass stays grass
-                    float w = Mathf.Clamp01((f - 0.45f) / 0.55f) * 0.85f;       // the busiest heart is ~85 % bare earth
-                    w *= 0.85f + 0.3f * Mathf.PerlinNoise(sx * 0.7f + 31f, sy * 0.7f + 13f); // mottled, not a gradient
-                    w = Mathf.Clamp01(w);
-                    int nl = am.GetLength(2);
-                    for (int l = 0; l < nl; l++) am[ay, ax, l] *= 1f - w;
-                    am[ay, ax, liDirt] += w;
-                    cells++;
-                }
-            return cells;
-        }
+        struct Route { public Vector2 a, b; public float wear; public int layer; }
 
         static bool Holds(WorldVillage v, string tech) => v.knows != null && System.Array.IndexOf(v.knows, tech) >= 0;
         static bool HoldsTrade(WorldVillage v) => Holds(v, "wheel") || Holds(v, "sailing");
@@ -609,9 +549,7 @@ namespace Emergence.Editor
                     int vi = NearestVillageIdx(S, h.x, h.y);
                     Vector2 g = (vi >= 0 && greens != null && vi < greens.Length) ? greens[vi] : new Vector2(h.x, h.y);
                     int pop = (vi >= 0 && S.villages != null && vi < S.villages.Length) ? S.villages[vi].pop : 2;
-                    var hv = (vi >= 0 && S.villages != null && vi < S.villages.Length) ? S.villages[vi] : null;
-                    int htier = Mathf.Min(RoadTier(hv), 1); // a hut's own lane is never paved — the street is, the doorstep path is not
-                    routes.Add(new Route { a = new Vector2(h.x, h.y), b = g, wear = Mathf.Clamp01(0.30f + pop / 45f), layer = liDirt, tier = htier });
+                    routes.Add(new Route { a = new Vector2(h.x, h.y), b = g, wear = Mathf.Clamp01(0.30f + pop / 45f), layer = liDirt });
                 }
             // 2) village → village: ONLY where a real relationship exists (shared culture OR mutual trade tech,
             //    within a walkable reach). This is the "not random" fix — never nearest-neighbour geometry.
@@ -631,8 +569,7 @@ namespace Emergence.Editor
                         // Dreamscape Cobblestone TEXTURE reads as the light checkerboard the EP disliked, so the paved
                         // tier is HELD at warm dirt (width still marks the busy trade route) pending a better paved
                         // texture / EP confirmation. Re-enable true cobble by flipping this layer to liCobble.
-                        int tier = Mathf.Min(RoadTier(vi), RoadTier(vj)); // the road is as developed as its lesser end
-                        routes.Add(new Route { a = new Vector2(vi.x, vi.y), b = new Vector2(vj.x, vj.y), wear = wear, layer = tier == 2 ? liCobble : liDirt, tier = tier });
+                        routes.Add(new Route { a = new Vector2(vi.x, vi.y), b = new Vector2(vj.x, vj.y), wear = wear, layer = liDirt });
                     }
             return routes;
         }
@@ -645,12 +582,7 @@ namespace Emergence.Editor
             foreach (var r in routes)
             {
                 if (r.layer == liCobble) cobbleRoutes++;
-                // D-879 WIDTH by tier: metres → cells (0,78 m/cell at 1024). Trail ~1,5 m · path ~3 m · paved ~4,5 m;
-                // a heavily worn route (wear > 0,7) gains one cell. Soft-edged brush so the verge frays into grass.
-                float cellM = Mathf.Max(1, S.W - 1) * TileSize / (res - 1);
-                float halfW = r.tier == 2 ? 2.25f : r.tier == 1 ? 1.5f : 0.75f;
-                int rr = Mathf.Max(1, Mathf.RoundToInt(halfW / cellM)) + (r.wear > 0.7f ? 1 : 0);
-                float strength = r.tier == 0 ? 0.8f : 1f;                              // a trail never fully hides the grass
+                int rr = 1 + Mathf.RoundToInt(Mathf.Clamp01(r.wear) * 2f);           // WIDTH by wear: 1..3 cells
                 float len = Vector2.Distance(r.a, r.b);
                 int steps = Mathf.Max(1, Mathf.CeilToInt(len * 4f));
                 for (int s = 0; s <= steps; s++)
@@ -661,24 +593,19 @@ namespace Emergence.Editor
                     for (int dy = -rr; dy <= rr; dy++)
                         for (int dx = -rr; dx <= rr; dx++)
                         {
-                            float d2 = dx * dx + dy * dy;
-                            if (d2 > rr * rr + 1) continue;                          // round brush
+                            if (dx * dx + dy * dy > rr * rr + 1) continue;           // round brush
                             int cx = ax + dx, cy = ay + dy;
                             if (cx < 0 || cy < 0 || cx >= res || cy >= res) continue;
-                            float w = strength * Mathf.Clamp01(1.15f - Mathf.Sqrt(d2) / Mathf.Max(1f, rr)); // 1 at centre → 0 at the verge
-                            if (w <= 0.02f) continue;
-                            float keep = 1f - w;
-                            for (int l = 0; l < nlayers; l++) am[cy, cx, l] *= keep;
-                            // D-120/879: paved = pavingstone blended with worn dirt so it reads as a WARM trodden street,
-                            // not a stark checkerboard; path/trail = dirt/gravel blended over what was there.
-                            if (r.layer == liCobble) { am[cy, cx, liCobble] += 0.55f * w; am[cy, cx, liDirt] += 0.45f * w; }
-                            else am[cy, cx, r.layer] += w;
+                            for (int l = 0; l < nlayers; l++) am[cy, cx, l] = 0f;
+                            // D-120: paved tier = mostly cobble but blended with worn dirt so it reads as a WARM
+                            // trodden street, not a stark white checkerboard; dirt/trail tiers = full dirt.
+                            if (r.layer == liCobble) { am[cy, cx, liCobble] = 0.4f; am[cy, cx, liDirt] = 0.6f; }
+                            else am[cy, cx, r.layer] = 1f;
                             cells++;
                         }
                 }
             }
-            int t0 = routes.Count(x => x.tier == 0), t1 = routes.Count(x => x.tier == 1);
-            Debug.Log($"[Dresser] EMERGENT ROADS: {routes.Count} routes (trail {t0} / path {t1} / paved {cobbleRoutes}), {cells} cells painted at {res} — tie-derived, tech-tiered width (D-116/D-879)");
+            Debug.Log($"[Dresser] EMERGENT ROADS: {routes.Count} routes ({cobbleRoutes} paved/cobble), {cells} cells painted — tie-derived, wear→width (D-116)");
         }
 
         // D-115: Dreamscape's own ambient particle FX — drifting leaves (Leaf_Particle_Wind) + dust motes
@@ -952,15 +879,8 @@ namespace Emergence.Editor
             {
                 var h = S.huts[i];
                 int hx = Mathf.RoundToInt(h.x), hy = Mathf.RoundToInt(h.y);
-                // D-880 (Patrik 2026-09-27, "fler typer av hus … mysigare"): the old hash over 01..13 lotted the water mill
-                // (13) and the tower (01) in as dwellings. Now a dwelling is drawn from a SET chosen by the owner's generation
-                // (TD-031 "time made visible"): founder-era houses in the settled heart are the larger timber houses, the young
-                // edge gets small cottages. Both lists are Patrik's to edit (contact sheet 45-UNITY/evidence/houses/2026-09-27).
-                int og = genOf.TryGetValue(h.owner, out var gg) ? gg : maxGen;
-                float ageFrac = maxGen > 1 ? 1f - og / (float)maxGen : 0.5f; // 1 = oldest (founder), 0 = newest edge
-                var set = ageFrac > 0.55f ? HouseSetOld : HouseSetYoung;
-                var pick = set[(int)(Hash(hx, hy, 21) % (uint)set.Length)];
-                var prefab = FindPrefabExact(pick) ?? FindPrefabExact("P_BLD_house_02");
+                int variant = 1 + (int)(Hash(hx, hy, 21) % 13); // P_BLD_house_01..13 (14 exists too; 13 keeps U-day-verified range)
+                var prefab = FindPrefab($"P_BLD_house_{variant:00}") ?? FindPrefab("P_BLD_house_01");
                 if (prefab == null) { Debug.LogWarning("[Dresser] no house prefab found"); return; }
                 var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, parent);
                 go.transform.position = Ground(S, h.x, h.y);
@@ -969,6 +889,8 @@ namespace Emergence.Editor
                 go.transform.localScale = Vector3.one * HouseScale; // v2: pack houses are oversized at 1
                 go.name = $"hut_{h.owner}";
                 yardCount += PlaceYard(S, go, h, hx, hy, yaw, yardProps, yardParent);
+                int og = genOf.TryGetValue(h.owner, out var gg) ? gg : maxGen;
+                float ageFrac = maxGen > 1 ? 1f - og / (float)maxGen : 0.5f; // 1 = oldest (founder), 0 = newest edge
                 ageMarks += PlaceHutAge(S, h, hx, hy, ageFrac, mossProps, freshProps, ageParent);
             }
             Debug.Log($"[Dresser] {S.huts.Length} houses (scale {HouseScale}) + {yardCount} yard props + {ageMarks} age marks (v2.2 grammar, maxGen {maxGen})");

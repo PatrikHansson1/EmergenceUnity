@@ -118,6 +118,9 @@ namespace Emergence.Runtime
         // union over villages would silence the whole opening by an accident of the data model
         // rather than by law. The world's own living knowledge closes that hole. Pure read.
         public string[] worldKnows;
+        // D-879 (2026-09-27): R2 INK1 §pathUse — cumulative footfall per tile (row-major y*W+x) as the engine exports it.
+        // Old snapshots lack it → null/empty → the dresser's tie-derived roads stand alone. Additive, parser untouched.
+        public int[] pathUse;
     }
 
     /// <summary>D-147: presentation-side era naming — the D-146 finding was that the bus's Era slot

@@ -1,0 +1,4 @@
+world-8919-y30-full.json agents=12 villages=1 fires=0 era=6 The Age of Steam | leaders: Torvvik:Eira | gifts: NONE | topWealth: Eira=46.0, Ask=22.0, Liv=17.0 | sayActs: observe,love,teach,small
+world-8919-y55-full.json agents=20 villages=1 fires=0 era=6 The Age of Steam | leaders: Torvvik:Eira | gifts: NONE | topWealth: Eira=173.0, Sten=44.0, Liv=32.0 | sayActs: observe,love,teach,hungry,small
+world-8919-y85-full.json agents=48 villages=1 fires=0 era=6 The Age of Steam | leaders: Torvvik:Saga | gifts: NONE | topWealth: Saga=79.0, Vidar=50.0, Freja=42.0 | sayActs: submit,observe,love,hungry,teach,small
+world-8919-y120-full.json agents=111 villages=4 fires=0 era=6 The Age of Steam | leaders: NONE | gifts: NONE | topWealth: Maja=68.0, Otto=56.0, Kare II=55.0 | sayActs: love,small,observe,teach,hungry
