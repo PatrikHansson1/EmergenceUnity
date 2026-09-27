@@ -37,8 +37,21 @@ namespace Emergence.Editor
             return null;
         }
 
+        // D-878 (steg 5): the FLOOR — a scene born from the pack's own demo (RUN_SCENEBIRTH) carries the sun, sky, ambient
+        // and post as a versioned file. On the floor, DAY is inherited, not authored here: the rig only guarantees the
+        // camera shows the sky and keeps its hands off the light. Dusk/night keep the locked identity below.
+        public static bool IsFloor() => GameObject.Find("FLOOR:demoscene_village_day") != null;
+
         public static void Apply(string season, string phase)
         {
+            if (phase == "day" && IsFloor())
+            {
+                var camF = Camera.main; if (camF != null) camF.clearFlags = CameraClearFlags.Skybox;
+                var fillF = GameObject.Find("SunFill"); if (fillF != null) fillF.SetActive(false);
+                RenderSettings.fog = false; // one haze layer: FlatKit Fog on the renderer (EmergenceFog.asset), never built-in fog on top
+                Debug.Log("[LightRig] day = FLOOR inherited (demoscene_village_day sun/sky/ambient/post) — rig not applied");
+                return;
+            }
             var sunGo = GameObject.Find("Sun");
             if (sunGo == null) sunGo = new GameObject("Sun");
             // NEVER ?? on Unity objects (fake-null trap — GetComponent's miss is not caught by ??).

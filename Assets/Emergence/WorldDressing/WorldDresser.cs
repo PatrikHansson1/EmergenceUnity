@@ -25,6 +25,10 @@ namespace Emergence.Editor
     public static class WorldDresser
     {
         public const float TileSize = 8f;          // meters per sim tile (Producer knob)
+        public const string FloorScenePath = "Assets/Emergence/Scenes/EmergenceFloor_day.unity"; // D-878: born from demoscene_village_day
+        public const string NatureRoot = "Assets/Fantastic Nature Pack";   // D-875: L3 family = FANTASTIC; Dreamscape is out (magenta in URP 17.5)
+        public const string VillageRoot = "Assets/Fantastic Village Pack";
+        public const float GrassPerSqm = 0.2f;       // D-878: Nature grass as terrain TREE instances (pack table s.21: grass = Tree Objects)
         public const float GrassPerTile = 0.8f;    // TD-032: Dreamscape waving grass clumps per open-grass tile (the meadow look — EP: "gräset syns inte / vajar inte"). ~0.8×5725 g-tiles ≈ 4.6k clumps; tune up if the editor handles it
         public const float GrassScale = 1.3f;      // Dreamscape grass clumps read a touch small at 1 in our scale
         public const float TreesPerForestTile = 0.9f;  // density budgets (AD/Producer iterate)
@@ -62,9 +66,22 @@ namespace Emergence.Editor
         {
             var S = JsonUtility.FromJson<WorldState>(File.ReadAllText(jsonPath));
             Debug.Log($"[Dresser] {Path.GetFileName(jsonPath)}: engine {S.engineVersion}, {S.W}x{S.H}, {S.agents.Length} souls, {S.huts.Length} huts, {S.villages.Length} villages, season {S.season}");
-            var scene = UnityEditor.SceneManagement.EditorSceneManager.NewScene(
-                UnityEditor.SceneManagement.NewSceneSetup.EmptyScene,
-                UnityEditor.SceneManagement.NewSceneMode.Single);
+            // D-878 (DEMO-BYGGPLAN steg 5, VISUELL-TOTALPLAN L2 "demoscenen är golvet"): the world is dressed INTO the
+            // floor scene born from the pack's own demo (sun, sky, ambient, post — a versioned file, L4) when it exists;
+            // an empty scene only as fallback. The floor is made by RUN_SCENEBIRTH (AutoSceneBirth.cs).
+            UnityEngine.SceneManagement.Scene scene;
+            if (System.IO.File.Exists(FloorScenePath))
+            {
+                scene = UnityEditor.SceneManagement.EditorSceneManager.OpenScene(FloorScenePath, UnityEditor.SceneManagement.OpenSceneMode.Single);
+                Debug.Log("[Dresser] floor scene opened: " + FloorScenePath + " (light/sky/post inherited from the pack demo)");
+            }
+            else
+            {
+                scene = UnityEditor.SceneManagement.EditorSceneManager.NewScene(
+                    UnityEditor.SceneManagement.NewSceneSetup.EmptyScene,
+                    UnityEditor.SceneManagement.NewSceneMode.Single);
+                Debug.LogWarning("[Dresser] no floor scene at " + FloorScenePath + " — empty scene (run RUN_SCENEBIRTH)");
+            }
 
             var root = new GameObject($"World_{S.seed}_y{S.years}");
             // the documentary camera (P2 grows this into Cinemachine): start over the heartland
@@ -193,13 +210,18 @@ namespace Emergence.Editor
             // D-101: prefer DREAMSCAPE's own textured terrain layers (real diffuse+normal, the reference
             // look) — fall back to the project's earlier layers, then to a flat colour only if nothing loads.
             var layers = new List<TerrainLayer>();
-            int liGrass = AddLayer(layers, new[] { "Layer_Grass", "Layer_grass_01" }, new Color(0.35f, 0.5f, 0.22f));
-            int liField = AddLayer(layers, new[] { "Layer_farmfield", "Layer_Dirt" }, new Color(0.45f, 0.35f, 0.2f));
-            int liPath = AddLayer(layers, new[] { "Layer_Dirt" }, new Color(0.42f, 0.32f, 0.2f)); // worn desire-line ground (also sand/clay)
-            int liGravel = AddLayer(layers, new[] { "Layer_Rock", "Layer_gravel_01" }, new Color(0.5f, 0.48f, 0.45f));
+            // D-878: FANTASTIC Nature terrain layers first (2d/textures/terrain_layers — the pack's own splat set), Dreamscape names only as legacy fallback
+            int liGrass = AddLayer(layers, new[] { "Layer_grass_01", "Layer_Grass" }, new Color(0.35f, 0.5f, 0.22f));
+            // it.2 SEEN: Layer_sand on desire lines painted 8 m pale-yellow bands across the whole diorama — the Village pack's own
+            // gravel (its village paths) and farmfield (its tilled soil) are the right hands; Nature's dirt/stone only as fallback.
+            // it.3 MEASURED: the Village layers (farmfield/gravel_01) sit in the alphamap (12 % dominant) but do NOT render on the
+            // runtime TerrainData (TD-031 class) while the Nature layers do — Nature's own dirt/gravel until that is understood.
+            int liField = AddLayer(layers, new[] { "Layer_dirt", "Layer_farmfield", "Layer_Dirt" }, new Color(0.45f, 0.35f, 0.2f));
+            int liPath = AddLayer(layers, new[] { "Layer_gravel", "Layer_gravel_01", "Layer_Dirt" }, new Color(0.42f, 0.32f, 0.2f)); // worn desire-line ground
+            int liGravel = AddLayer(layers, new[] { "Layer_stone", "Layer_gravel", "Layer_Rock" }, new Color(0.5f, 0.48f, 0.45f));
             // D-120 roads v1.1: 5th layer = COBBLESTONE for the paved-street tier. >4 layers needs URP's 8-layer
             // path — we now enable the _TERRAIN_8_LAYERS keyword on the terrain material (below) so it renders.
-            int liCobble = AddLayer(layers, new[] { "Layer_Cobblestone", "Layer_pavingstone_01" }, new Color(0.55f, 0.53f, 0.5f));
+            int liCobble = AddLayer(layers, new[] { "Layer_pavingstone_01", "Layer_stone", "Layer_Cobblestone" }, new Color(0.55f, 0.53f, 0.5f));
             data.terrainLayers = layers.ToArray();
 
             data.alphamapResolution = 256;
@@ -237,9 +259,14 @@ namespace Emergence.Editor
                 }
             StampFields(S, am, liField, 256); // TD-031 v2.1b: tilled soil inside the field enclosures (was never stamped)
             PaintRoutes(S, am, 256, liPath, liCobble); // D-116/120 EMERGENT ROADS: tie-derived, wear→width, tech-gated COBBLE tier
+            // D-878 it.6 MEASURED: every OTHER birth came out with an all-grass alphamap (Editor.log runs 4 and 6: grass=65536,
+            // field/dirt/gravel=0) while the same code painted 55745/360/7850/1573 in runs 1–3 and 5. Only the reuse of the
+            // existing TerrainData_generated.asset differed between runs — so the old asset is deleted first and the alphamap
+            // is written AFTER the data has become a persistent asset.
+            const string TdPath = "Assets/Emergence/Scenes/TerrainData_generated.asset";
+            if (AssetDatabase.LoadAssetAtPath<TerrainData>(TdPath) != null) AssetDatabase.DeleteAsset(TdPath);
+            AssetDatabase.CreateAsset(data, TdPath);
             data.SetAlphamaps(0, 0, am);
-
-            AssetDatabase.CreateAsset(data, "Assets/Emergence/Scenes/TerrainData_generated.asset");
             var tgo = Terrain.CreateTerrainGameObject(data);
             tgo.name = "Terrain";
             tgo.transform.SetParent(root, true);
@@ -335,7 +362,9 @@ namespace Emergence.Editor
         static void MeadowDetailAndTrees(WorldState S, TerrainData data, Terrain terrain)
         {
             // -- detail grass + wildflowers (their reference detail set) --
-            string[] protoNames = { "Prefab_Grass_01_Detail", "Prefab_Grass_Group_01_Detail", "Prefab_Grass_03_Detail", "SM_Flower_01_Unity", "Prefab_Flower_02", "Prefab_Flower_04" };
+            // D-878: pack table (Nature doc s.21): flowers/leaves/bushes with vertex maps = "Detail Mesh – grass" (wind via terrain);
+            // GRASS itself = Tree Objects (custom shader kept) — placed below as terrain tree instances, never as detail.
+            string[] protoNames = { "P_ENV_PLANT_flower_v1_01", "P_ENV_PLANT_flower_v1_02", "P_ENV_PLANT_flower_v1_03", "P_ENV_PLANT_leaf_v1_01", "P_ENV_PLANT_leaf_v2_01" };
             // D-101c: per-layer green variation so the meadow isn't one flat tone — some cooler, some
             // warmer-lit; flowers keep a white tint so their own texture colour shows.
             Color[] grassGreens = { new Color(0.82f, 0.95f, 0.70f), new Color(0.68f, 0.86f, 0.55f), new Color(0.90f, 0.93f, 0.72f) };
@@ -344,7 +373,7 @@ namespace Emergence.Editor
             int gi = 0;
             foreach (var nm in protoNames)
             {
-                var pf = FindPrefabExact(nm);
+                var pf = FindPrefabIn(NatureRoot, nm) ?? FindPrefabExact(nm);
                 if (pf == null) continue;
                 bool flower = nm.ToLower().Contains("flower");
                 dps.Add(new DetailPrototype
@@ -352,7 +381,7 @@ namespace Emergence.Editor
                     prototype = pf,
                     usePrototypeMesh = true,
                     useInstancing = true,
-                    renderMode = DetailRenderMode.VertexLit,
+                    renderMode = DetailRenderMode.Grass,   // D-878: "Detail Mesh – grass" — the pack's wind-via-vertexmap path
                     minWidth = flower ? 0.8f : 0.9f, maxWidth = flower ? 1.3f : 1.7f,
                     minHeight = flower ? 0.8f : 1.0f, maxHeight = flower ? 1.3f : 1.9f, // lusher, taller grass
                     noiseSpread = flower ? 2.5f : 1.4f,
@@ -391,14 +420,54 @@ namespace Emergence.Editor
                 terrain.detailObjectDistance = 160f;
                 terrain.detailObjectDensity = 1.0f;
             }
-            else Debug.LogWarning("[Dresser] no Dreamscape detail-grass prefabs found — meadow detail skipped");
+            else Debug.LogWarning("[Dresser] no Nature detail plants found — meadow detail skipped");
+
+            // D-878: THE GRASS — FANTASTIC Nature P_GRASS_* as terrain TREE instances (pack table s.21: assets with custom
+            // shaders go in as Tree Objects, never as terrain grass — the built-in grass shader would override the wind
+            // shader). Hash-placed, RNG-neutral. Density GrassPerSqm over open 'g' tiles, clear of fields.
+            var grassPfs = FindPrefabsIn(NatureRoot, "P_GRASS_");
+            if (grassPfs.Length > 0)
+            {
+                var fieldSet2 = new HashSet<(int, int)>();
+                if (S.fields != null) foreach (var f in S.fields) fieldSet2.Add((Mathf.RoundToInt(f.x), Mathf.RoundToInt(f.y)));
+                var protos = new List<TreePrototype>();
+                foreach (var p in grassPfs) protos.Add(new TreePrototype { prefab = p, bendFactor = 0f });
+                var existing = data.treePrototypes ?? new TreePrototype[0];
+                int baseIdx = existing.Length;
+                data.treePrototypes = existing.Concat(protos).ToArray();
+                var inst = new List<TreeInstance>(data.treeInstances ?? new TreeInstance[0]);
+                int perTile = Mathf.Max(1, Mathf.RoundToInt(GrassPerSqm * TileSize * TileSize));
+                var tsize = data.size;
+                for (int y = 0; y < S.H; y++)
+                    for (int x = 0; x < S.W; x++)
+                    {
+                        if (Tile(S, x, y) != 'g' || fieldSet2.Contains((x, y))) continue;
+                        for (int i = 0; i < perTile; i++)
+                        {
+                            float jx = Hash01(x, y, 900 + i), jy = Hash01(x, y, 950 + i);
+                            var w = Ground(S, x + jx - 0.5f, y + jy - 0.5f);
+                            var local = w - terrain.transform.position;
+                            inst.Add(new TreeInstance
+                            {
+                                prototypeIndex = baseIdx + (int)(Hash(x, y, 1000 + i) % (uint)protos.Count),
+                                position = new Vector3(Mathf.Clamp01(local.x / tsize.x), 0f, Mathf.Clamp01(local.z / tsize.z)),
+                                widthScale = 0.9f + Hash01(x, y, 1050 + i) * 0.4f, heightScale = 0.9f + Hash01(x, y, 1100 + i) * 0.4f,
+                                rotation = Hash01(x, y, 1150 + i) * 6.2831853f, color = Color.white, lightmapColor = Color.white
+                            });
+                        }
+                    }
+                data.SetTreeInstances(inst.ToArray(), true);
+                terrain.treeDistance = 220f; terrain.treeBillboardDistance = 120f; terrain.treeCrossFadeLength = 20f; terrain.treeMaximumFullLODCount = 400;
+                Debug.Log($"[Dresser] D-878 grass: {inst.Count} Nature P_GRASS tree-instances over the open meadow ({grassPfs.Length} prototypes)");
+            }
+            else Debug.LogWarning("[Dresser] no Nature P_GRASS_ prefabs — meadow grass skipped");
 
             // -- trees as GAMEOBJECTS, not Unity terrain trees (D-101f). THE FIX: terrain trees render
             // through a separate path that ignores our fill light AND doesn't reflect material edits — that
             // was the "dark blob" (immune to 12 material/shader/reimport attempts). GameObjects light exactly
             // like the bushes that already read well. Sparse scatter over open meadow, clear of villages.
-            string[] treeNames = { "Prefab_Birch_01", "Prefab_Birch_02", "Prefab_Birch_03", "Prefab_TreeLarge_01", "Prefab_TreeLarge_02", "Prefab_TreeLarge_03" };
-            var treePfs = treeNames.Select(FindPrefabExact).Where(p => p != null).ToArray();
+            // D-878: meadow trees from FANTASTIC Nature (wood_01 colour variant; the other variants are the season/biome hook)
+            var treePfs = FindPrefabsIn(NatureRoot, "P_ENV_TREE_v1_", "_wood_01").ToArray();   // it.2 SEEN: v4 = large-leaf (tropical) trees — wrong biome
             if (treePfs.Length > 0)
             {
                 var tparent = new GameObject("MeadowTrees").transform; tparent.SetParent(terrain.transform.root, true);
@@ -415,7 +484,6 @@ namespace Emergence.Editor
                         go.transform.position = Ground(S, x + jx * 0.8f, y + jy * 0.8f);
                         go.transform.rotation = Quaternion.Euler(0, Hash(x, y, 765) % 360u, 0);
                         float sc = 0.8f + Hash01(x, y, 764) * 0.7f;
-                        if (pf.name.StartsWith("Prefab_TreeLarge")) sc *= 0.9f;
                         go.transform.localScale = Vector3.one * sc;
                         StripImpostorLods(go); // avoid the unlit billboard LOD (magenta/dark at distance)
                         nt++;
@@ -546,9 +614,9 @@ namespace Emergence.Editor
         static void PlaceAmbientFX(WorldState S, Transform root)
         {
             var parent = new GameObject("AmbientFX").transform; parent.SetParent(root, true);
-            var leaf = FindPrefab("Leaf_Particle_Wind") ?? FindPrefab("Leaf_Particle");
-            var dust = FindPrefab("Dust_Particle");
-            if (leaf == null && dust == null) { Debug.LogWarning("[Dresser] no Dreamscape ambient particles found"); return; }
+            var leaf = FindPrefabIn(NatureRoot, "P_FX_leaves_FNP");   // D-878: the pack's own drifting leaves
+            GameObject dust = null;                                     // no dust motes in the Nature pack — leaves only
+            if (leaf == null && dust == null) { Debug.LogWarning("[Dresser] no Nature ambient particles found"); return; }
             int placed = 0;
             for (int y = 6; y < S.H; y += 14)
                 for (int x = 6; x < S.W; x += 14)
@@ -560,7 +628,7 @@ namespace Emergence.Editor
                     go.transform.position = Ground(S, x + (Hash01(x, y, 7) - 0.5f) * 4f, y + (Hash01(x, y, 8) - 0.5f) * 4f, 2.5f);
                     placed++;
                 }
-            Debug.Log($"[Dresser] {placed} Dreamscape ambient FX (drifting leaves + dust motes)");
+            Debug.Log($"[Dresser] {placed} Nature ambient FX (drifting leaves)");
         }
 
         static void BuildWater(WorldState S, Transform root)
@@ -574,7 +642,7 @@ namespace Emergence.Editor
                         {
                             // D-115: use Dreamscape's OWN water PREFAB (Prefab_WaterLake / SM_WaterRiver — their
                             // showcase water mesh + shader + foam), scaled by its mesh bounds to one sim tile.
-                            var pf = FindPrefab("Prefab_WaterLake") ?? FindPrefab("SM_WaterRiver");
+                            var pf = FindPrefabIn(NatureRoot, "P_FX_water_FNP") ?? FindPrefab("Prefab_WaterLake") ?? FindPrefab("SM_WaterRiver"); // D-878: Nature water prefab rig first (TD-PLAYBOOK: pack water needs its prefab)
                             if (pf != null)
                             {
                                 var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, parent);
@@ -594,8 +662,7 @@ namespace Emergence.Editor
                                 plane.transform.position = Ground(S, x, y, 0.25f);
                                 plane.transform.rotation = Quaternion.Euler(90, 0, 0);
                                 plane.transform.localScale = new Vector3(TileSize * 1.02f, TileSize * 1.02f, 1);
-                                var wm = FindMaterial("MI_Water_MeadowsLake") ?? FindMaterial("M_Dreamscape_WaterRiver")
-                                         ?? FindMaterial("M_ENV_water") ?? FindMaterial("water");
+                                var wm = FindMaterial("M_ENV_water") ?? FindMaterial("water");
                                 if (wm != null) plane.GetComponent<MeshRenderer>().sharedMaterial = wm;
                                 else plane.GetComponent<MeshRenderer>().sharedMaterial.color = new Color(0.23f, 0.42f, 0.55f);
                             }
@@ -1243,10 +1310,12 @@ namespace Emergence.Editor
             // D-101e: the village pack ships ONE tree (P_ENV_TREE_village) and it renders as a flat dark
             // blob — drop it. Use DREAMSCAPE's real tree library for the woodland (their reference-quality
             // large trees + birches). Village pack = the built world; Dreamscape = the natural world.
-            var trees = FindPrefabs("Prefab_TreeLarge").Where(p => !p.name.Contains("Coverage")).Take(4)
-                .Concat(FindPrefabs("Prefab_Birch").Where(p => !p.name.Contains("Coverage") && !p.name.Contains("Red")).Take(4)).ToArray();
-            var rocks = FindPrefabs("Prefab_RockFormation").Take(4).Concat(new[] { FindPrefab("P_ENV_stone_01") }.Where(p => p != null)).ToArray(); // NOT RocksRound: uses the broken M_RoundedRocks_Coverage (pack-author leftover, VERDICT.md)
-            var bushes = FindPrefabs("Prefab_Bush").Where(p => !p.name.Contains("Flower")).Take(3).ToArray(); // berry tiles read as berries, not blossom (AD)
+            // D-878: the natural world = FANTASTIC Nature (L3 one family). Woodland = v2 (conifers) + v1/v4 (broadleaf), wood_01 variant;
+            // stones = the pack's 15 P_ENV_stone_* (Nature root — the Village pack has a same-named stone); bushes = P_ENV_PLANT_bush_v1_*.
+            var trees = FindPrefabsIn(NatureRoot, "P_ENV_TREE_v2_", "_wood_01").Concat(FindPrefabsIn(NatureRoot, "P_ENV_TREE_v1_", "_wood_01")).ToArray();   // v4 (large-leaf) out — it.2 SEEN
+            var rocks = FindPrefabsIn(NatureRoot, "P_ENV_stone_");
+            var bushes = FindPrefabsIn(NatureRoot, "P_ENV_PLANT_bush_v1_");
+            Debug.Log($"[Dresser] D-878 nature sets: trees={trees.Length} rocks={rocks.Length} bushes={bushes.Length} (Nature root)");
             // TD-031 v2.1: the woodland EDGE is managed (coppiced), the deep wood is not — edge tiles
             // get thinner trees + fallen trunks/stumps; interior forest stays dense (silhouette + §2 outfield).
             var trunks = new[] { "P_PROP_treetrunk_01", "P_PROP_treetrunk_02", "P_PROP_treetrunk_03", "P_PROP_treetrunk_04" }
@@ -1292,8 +1361,7 @@ namespace Emergence.Editor
                 go.transform.position = Ground(S, x + jx * 0.9f, y + jy * 0.9f);
                 go.transform.rotation = Quaternion.Euler(0, Hash(x, y, salt + 400 + i) % 360, 0);
                 float sc = 0.85f + Hash01(x, y, salt + 500 + i) * 0.4f;
-                if (prefab.name.StartsWith("Prefab_TreeLarge")) sc *= 0.72f; // D-101e: Dreamscape large trees are now the woodland baseline — proper tree size, not tiny landmarks
-                go.transform.localScale = Vector3.one * sc;
+                go.transform.localScale = Vector3.one * sc;   // D-878: Nature trees at authored size (measured in the birth report, L6 measuring stick)
                 StripImpostorLods(go); // Dreamscape impostor billboards lack baked textures in edit mode -> magenta at distance
             }
         }
@@ -1305,9 +1373,10 @@ namespace Emergence.Editor
         static void PlaceMeadowFoliage(WorldState S, Transform root)
         {
             var parent = new GameObject("MeadowFoliage").transform; parent.SetParent(root, true);
-            var flowers = new[] { "Prefab_Flower_01", "Prefab_Flower_03", "Prefab_Flower_04" }.Select(FindPrefabExact).Where(p => p != null).ToArray();
-            var tufts = new[] { "Prefab_Grass_Group_01", "Prefab_Grass_Group_02" }.Select(FindPrefabExact).Where(p => p != null).ToArray();
-            var smallBush = new[] { "Prefab_Bush_01", "Prefab_Bush_04_Flowers" }.Select(FindPrefabExact).Where(p => p != null).ToArray();
+            // D-878: Nature foliage accents (the base lushness is the terrain grass above)
+            var flowers = FindPrefabsIn(NatureRoot, "P_ENV_PLANT_flower_v1_");
+            var tufts = FindPrefabsIn(NatureRoot, "P_GRASS_");   // D-878 it.2: grass clumps as near-field accents (leaf_v3 read as 2 m leaves at eye level — seen)
+            var smallBush = FindPrefabsIn(NatureRoot, "P_ENV_PLANT_bush_v2_");
             if (flowers.Length == 0 && tufts.Length == 0 && smallBush.Length == 0) { Debug.LogWarning("[Dresser] no meadow foliage prefabs found — skipped"); return; }
             int placed = 0;
             for (int y = 0; y < S.H; y++)
@@ -1540,6 +1609,22 @@ namespace Emergence.Editor
                                            ?? AssetDatabase.LoadAssetAtPath<GameObject>(CharDir + name);
             return FindPrefab(name);
         }
+
+        // D-878: exact-name lookup restricted to a pack root (P_ENV_stone_01 exists in BOTH Village and Nature — "mät asseten, lita aldrig på namnet")
+        static GameObject FindPrefabIn(string root, string exact)
+        {
+            foreach (var g in AssetDatabase.FindAssets($"t:Prefab {exact}", new[] { root }))
+            {
+                var p = AssetDatabase.GUIDToAssetPath(g);
+                if (Path.GetFileNameWithoutExtension(p) == exact) return AssetDatabase.LoadAssetAtPath<GameObject>(p);
+            }
+            return null;
+        }
+        static GameObject[] FindPrefabsIn(string root, string prefix, string mustContain = null)
+            => AssetDatabase.FindAssets($"t:Prefab {prefix}", new[] { root })
+               .Select(g => AssetDatabase.GUIDToAssetPath(g)).OrderBy(p => p, StringComparer.Ordinal)
+               .Select(p => AssetDatabase.LoadAssetAtPath<GameObject>(p))
+               .Where(p => p != null && p.name.StartsWith(prefix, StringComparison.Ordinal) && (mustContain == null || p.name.Contains(mustContain))).ToArray();
 
         static GameObject FindPrefab(string name)
         {

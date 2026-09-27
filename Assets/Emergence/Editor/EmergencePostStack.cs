@@ -31,7 +31,27 @@ namespace Emergence.Editor
         {
             bool dim = phase == "dusk" || phase == "night";
 
-            // DAY/NATURE → adopt Dreamscape's own tuned profile as the base (the showcase look, EP directive).
+            // D-878 (steg 5): on the FLOOR the day grade is the pack demo's own profile (EmergenceLook_day.asset, LGG off per
+            // D-069) already sitting on the scene's global Volume — the stack only switches post + SMAA on and returns.
+            if (!dim && EmergenceLightRig.IsFloor())
+            {
+                var look = GameObject.Find("EmergenceLook");
+                if (look != null && look.TryGetComponent<Volume>(out var lv) && lv.profile != null)
+                {
+                    var camL = Camera.main;
+                    if (camL != null)
+                    {
+                        var dl = camL.GetUniversalAdditionalCameraData();
+                        dl.renderPostProcessing = true;
+                        dl.antialiasing = AntialiasingMode.SubpixelMorphologicalAntiAliasing;
+                        dl.antialiasingQuality = AntialiasingQuality.High;
+                    }
+                    Debug.Log("[PostStack] DAY = FLOOR grade (" + lv.profile.name + ") — inherited from demoscene_village_day");
+                    return;
+                }
+            }
+            // DAY/NATURE (legacy, no floor) → Dreamscape's tuned profile as the base. D-875: Dreamscape renders magenta in URP 17.5 —
+            // this branch only survives as a fallback until every probe scene is born from the floor.
             if (!dim)
             {
                 var dsp = AssetDatabase.LoadAssetAtPath<VolumeProfile>(DreamscapePP);

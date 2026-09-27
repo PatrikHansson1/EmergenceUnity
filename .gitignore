@@ -92,11 +92,18 @@ Assets/10 Fantasy Medieval Ambient Tracks.meta
 # på DISK, aldrig i repot (D-166-lagen; FlatKit-EULA förbjuder källkod i repo). Utils/ var redan committad (små).
 Assets/Fantastic Nature Pack/
 Assets/Fantastic Nature Pack.meta
-Assets/FlatKit/[Render Pipeline] URP/
-Assets/FlatKit/[Render Pipeline] URP.meta
+# D-878: [ ] är teckenklass i gitignore — måste escapas, annars matchar mönstret inte (236 filer läckte in i 678c59a)
+Assets/FlatKit/\[Render Pipeline\] URP/
+Assets/FlatKit/\[Render Pipeline\] URP.meta
+Assets/FlatKit/\[Render Pipeline\] Universal (URP).unitypackage
+Assets/FlatKit/\[Render Pipeline\] Universal (URP).unitypackage.meta
 Assets/FlatKit/Demos/
 Assets/FlatKit/Demos.meta
 Assets/FlatKit/PresetsShared/
 Assets/FlatKit/PresetsShared.meta
 Assets/FlatKit/Shaders/
 Assets/FlatKit/Shaders.meta
+
+# D-878: bridge shell cannot delete — parked files, never committed
+_to_delete/
+Reports/_to_delete/

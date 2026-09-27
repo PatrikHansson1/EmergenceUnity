@@ -1,12 +1,12 @@
-STEG0 start 2026-09-26T20:39:30.8952187Z
-MOVED  C:\Dev\EmergenceUnity\Assets\FANTASTIC - Village Pack -> C:\Dev\_Emergence_steg0_arkiv_2026-09-26\FANTASTIC - Village Pack
-MOVED  C:\Dev\EmergenceUnity\Assets\FANTASTIC - Village Pack.meta -> C:\Dev\_Emergence_steg0_arkiv_2026-09-26\FANTASTIC - Village Pack.meta
-MOVED  C:\Dev\EmergenceUnity\Assets\FANTASTIC - City Pack -> C:\Dev\_Emergence_steg0_arkiv_2026-09-26\FANTASTIC - City Pack
-MOVED  C:\Dev\EmergenceUnity\Assets\FANTASTIC - City Pack.meta -> C:\Dev\_Emergence_steg0_arkiv_2026-09-26\FANTASTIC - City Pack.meta
-MOVED  C:\Dev\EmergenceUnity\Assets\FANTASTIC - Nature Pack\Standard_FANTASTIC_Nature_Pack_U6.unitypackage -> C:\Dev\_Emergence_steg0_arkiv_2026-09-26\Standard_FANTASTIC_Nature_Pack_U6.unitypackage
-MOVED  C:\Dev\EmergenceUnity\Assets\FANTASTIC - Nature Pack\Standard_FANTASTIC_Nature_Pack_U6.unitypackage.meta -> C:\Dev\_Emergence_steg0_arkiv_2026-09-26\Standard_FANTASTIC_Nature_Pack_U6.unitypackage.meta
-MOVED  C:\Dev\EmergenceUnity\Assets\FlatKit\[Render Pipeline] Built-In.unitypackage -> C:\Dev\_Emergence_steg0_arkiv_2026-09-26\FlatKit [Render Pipeline] Built-In.unitypackage
-MOVED  C:\Dev\EmergenceUnity\Assets\FlatKit\[Render Pipeline] Built-In.unitypackage.meta -> C:\Dev\_Emergence_steg0_arkiv_2026-09-26\FlatKit [Render Pipeline] Built-In.unitypackage.meta
+STEG0 start 2026-09-27T09:58:28.1756062Z
+ABSENT C:\Dev\EmergenceUnity\Assets\FANTASTIC - Village Pack
+ABSENT C:\Dev\EmergenceUnity\Assets\FANTASTIC - Village Pack.meta
+ABSENT C:\Dev\EmergenceUnity\Assets\FANTASTIC - City Pack
+ABSENT C:\Dev\EmergenceUnity\Assets\FANTASTIC - City Pack.meta
+ABSENT C:\Dev\EmergenceUnity\Assets\FANTASTIC - Nature Pack\Standard_FANTASTIC_Nature_Pack_U6.unitypackage
+ABSENT C:\Dev\EmergenceUnity\Assets\FANTASTIC - Nature Pack\Standard_FANTASTIC_Nature_Pack_U6.unitypackage.meta
+ABSENT C:\Dev\EmergenceUnity\Assets\FlatKit\[Render Pipeline] Built-In.unitypackage
+ABSENT C:\Dev\EmergenceUnity\Assets\FlatKit\[Render Pipeline] Built-In.unitypackage.meta
 ARKIV C:\Dev\_Emergence_steg0_arkiv_2026-09-26  bytes=2782352740
-VAKT startad 2026-09-26T20:39:30.9907585Z
+VAKT startad 2026-09-27T09:58:28.3298307Z
 DONE
