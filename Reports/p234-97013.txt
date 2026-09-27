@@ -1,0 +1,27 @@
+ENGINE-SHA 5dd138375f613b27d4b3fab093f82d95904b90ad610f628df522cec53eca632d OK
+PRESENTATION-SHA 343775284b1c0ca35b8b5d87c3097d370c591bf6d2b0aee3e4e0f751a70f1035 OK
+presentation 0.9.0 seed 97013 years 100 secs 33 pop 89 events 1241
+P1 digest(100) 265f187afadd5524
+P2 eras [{"era":1,"name":"The Age of Hearths","fromYear":1},{"era":2,"name":"The Age of Bronze","fromYear":4},{"era":3,"name":"The Age of Iron","fromYear":14}]
+P2 density 43/2 20/3 34/3 18/3 26/3 22/3 38/3 54/3 82/3 74/3 4/3
+P2 bookmarks 3
+    1 dawn — Four humans wake in an untouched world: Eira, Ask, Embla, Torv.
+    21 firstVillage — Three huts have become more — Livholm has been founded!
+    33 firstRaid — Bjorn set upon Liv the Founder and seized goods — the gap was cheaper to close by force.
+P4 stops 1
+   y20 eraRises: The world enters The Age of Iron.
+P3 offered 13 journal {"hit":5,"miss":1,"open":7}
+   [made y20] They will reach glass before year 80. -> hit @y30
+   [made y20] They will reach iron smithing before year 80. -> hit @y30
+   [made y20] They will reach bronze before year 80. -> hit @y30
+   [made y20] The line of Ask will survive to year 80. -> miss @y80
+   [made y20] The line of Torv will survive to year 80. -> hit @y80
+   [made y20] The line of Eira will survive to year 80. -> hit @y80
+   [made y60] They will reach coal before year 120. -> open
+   [made y60] They will reach coinage before year 120. -> open
+   [made y60] They will reach law before year 120. -> open
+   [made y60] Livholm will still stand in year 120. -> open
+   [made y60] The line of Torv will survive to year 120. -> open
+   [made y60] The line of Liv will survive to year 120. -> open
+   [made y60] The line of Bjorn will survive to year 120. -> open
+P2 band sha dc4155db21359597

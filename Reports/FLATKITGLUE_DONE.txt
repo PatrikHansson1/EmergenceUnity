@@ -1,0 +1,12 @@
+DONE 22:36:52 OK fog+outline on PC_Renderer · settings Assets/Emergence/Rendering/EmergenceFog.asset / Assets/Emergence/Rendering/EmergenceOutline.asset
+types: FlatKitFog=True FlatKitOutline=True FogSettings=True OutlineSettings=True asm=Unity.RenderPipelines.Universal.Runtime
+created Assets/Emergence/Rendering
+created Assets/Emergence/Rendering/EmergenceFog.asset
+created Assets/Emergence/Rendering/EmergenceOutline.asset
+added Emergence FlatKit Fog (localId -2405322101925308190)
+added Emergence FlatKit Outline (localId -1026842205960954549)
+PC_RPAsset: opaqueTex=True depthTex=True msaa=1
+PC_Renderer features (3):
+  0: ScreenSpaceAmbientOcclusion <UnityEngine.Rendering.Universal.ScreenSpaceAmbientOcclusion>
+  1: Emergence FlatKit Fog <FlatKit.FlatKitFog>
+  2: Emergence FlatKit Outline <FlatKit.FlatKitOutline>

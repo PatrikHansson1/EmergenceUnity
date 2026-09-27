@@ -87,3 +87,16 @@ Assets/10 Fantasy Medieval Ambient Tracks/
 Assets/10 Fantasy Medieval Ambient Tracks.meta
 
 *.unitypackage
+
+# D-874/F13 (2026-09-26): P0-limmet importerat — Nature Pack (URP) + FlatKit (URP unpack). Köpta paket lever
+# på DISK, aldrig i repot (D-166-lagen; FlatKit-EULA förbjuder källkod i repo). Utils/ var redan committad (små).
+Assets/Fantastic Nature Pack/
+Assets/Fantastic Nature Pack.meta
+Assets/FlatKit/[Render Pipeline] URP/
+Assets/FlatKit/[Render Pipeline] URP.meta
+Assets/FlatKit/Demos/
+Assets/FlatKit/Demos.meta
+Assets/FlatKit/PresetsShared/
+Assets/FlatKit/PresetsShared.meta
+Assets/FlatKit/Shaders/
+Assets/FlatKit/Shaders.meta

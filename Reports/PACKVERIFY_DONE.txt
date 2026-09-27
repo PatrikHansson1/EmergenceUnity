@@ -1,0 +1,23 @@
+DONE 22:40:45 ZERO-PINK PASS · scenes captured=6
+PACK VERIFY — 2026-09-26T22:40:31
+RPGUARD start: ok (PC_RPAsset)
+Unity 6000.5.4f1 · RP asset: PC_RPAsset · colorSpace=Linear
+URP package: 17.5.0
+URP asset: opaqueTex=True depthTex=True msaa=1 cascades=1 shadowDist=35
+ZERO-PINK: materials=85 broken=0 roots=Assets/Fantastic Village Pack | Assets/Fantastic Nature Pack
+SCENES found=6
+  SCENE Assets/Fantastic Nature Pack/scenes/Demoscene_fantastic_nature_assets.unity -> Demoscene_fantastic_nature_assets_glue.png magentaPixels=0/3686400 meanLum=99 cam=Camera rp=PC_RPAsset
+RPGUARD after Demoscene_fantastic_nature_assets: ok (PC_RPAsset)
+  SCENE Assets/Fantastic Nature Pack/scenes/Demoscene_fantastic_nature_day.unity -> Demoscene_fantastic_nature_day_glue.png magentaPixels=0/3686400 meanLum=174 cam=Cam_03_mountain rp=PC_RPAsset
+RPGUARD after Demoscene_fantastic_nature_day: ok (PC_RPAsset)
+  SCENE Assets/Fantastic Nature Pack/scenes/Demoscene_fantastic_nature_night.unity -> Demoscene_fantastic_nature_night_glue.png magentaPixels=0/3686400 meanLum=76 cam=Cam_01_forest rp=PC_RPAsset
+RPGUARD after Demoscene_fantastic_nature_night: ok (PC_RPAsset)
+  SCENE Assets/Fantastic Village Pack/scenes/demoscene_village_assets.unity -> demoscene_village_assets_glue.png magentaPixels=0/3686400 meanLum=152 cam=auto rp=PC_RPAsset
+RPGUARD after demoscene_village_assets: ok (PC_RPAsset)
+  SCENE Assets/Fantastic Village Pack/scenes/demoscene_village_day.unity -> demoscene_village_day_glue.png magentaPixels=0/3686400 meanLum=90 cam=Camera_day rp=PC_RPAsset
+RPGUARD after demoscene_village_day: ok (PC_RPAsset)
+  SCENE Assets/Fantastic Village Pack/scenes/demoscene_village_night.unity -> demoscene_village_night_glue.png magentaPixels=0/3686400 meanLum=54 cam=Camera_night rp=PC_RPAsset
+RPGUARD after demoscene_village_night: ok (PC_RPAsset)
+TEXTURES: count=143 sourceMB=639 over2K=2 (native res as authored, VISUAL-QUALITY-BAR)
+RPGUARD end: ok (PC_RPAsset)
+VERDICT: ZERO-PINK PASS · scenes captured=6
