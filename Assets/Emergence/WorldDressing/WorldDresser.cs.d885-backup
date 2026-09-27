@@ -1385,14 +1385,6 @@ namespace Emergence.Editor
             MeasureFootprint(fence0, out float segLen, out bool lenAlongX);
             if (segLen < 0.5f) { segLen = 2f; lenAlongX = true; }
 
-            // D-886: wall_wood_post is a PALISADE post (structural, house-height) — at scale 1 it towered
-            // over the village in the D-885 eye-level shot. Measure both props and shrink the post to the
-            // fence's own height + 15 % so it reads as a corner post capping the line. Self-calibrating:
-            // no hardcoded metre value, so a different fence variant or pack re-import still lands right.
-            float fenceH = MeasureHeight(fence0);
-            float postH = MeasureHeight(post);
-            float postScale = (postH > 0.01f && fenceH > 0.01f) ? Mathf.Clamp(fenceH * 1.15f / postH, 0.05f, 1f) : 1f;
-
             var fieldSet = new HashSet<(int, int)>(S.fields.Select(f => (Mathf.RoundToInt(f.x), Mathf.RoundToInt(f.y))));
             var greens = VillageGreens(S);
             float half = TileSize * 0.5f;
@@ -1491,26 +1483,10 @@ namespace Emergence.Editor
                         var go = (GameObject)PrefabUtility.InstantiatePrefab(post, parent);
                         go.transform.position = GroundW(new Vector3(px, 0, pz));
                         go.transform.rotation = Quaternion.Euler(0, Hash01(px, pz, 62) * 90f, 0);
-                        go.transform.localScale = Vector3.one * postScale;
                         go.name = "fence_post"; postN++;
                     }
             }
-            Debug.Log($"[Dresser] FIELD FENCES (D-883): {fenceN} segments + {postN} corner posts + {gateN} gates, measured segLen {segLen:0.0} m, fenceH {fenceH:0.00} m, postH {postH:0.00} m -> post scale {postScale:0.00} (D-886), continuous runs (was 3-per-tile with corner gaps)");
-        }
-
-        // D-886: measure a prop's rendered height (y) so props from different pack families can be matched by eye-height.
-        static float MeasureHeight(GameObject prefab)
-        {
-            if (prefab == null) return 0f;
-            var probe = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
-            try
-            {
-                var rs = probe.GetComponentsInChildren<Renderer>(true);
-                if (rs.Length == 0) return 0f;
-                var b = rs[0].bounds; foreach (var r in rs) b.Encapsulate(r.bounds);
-                return b.size.y;
-            }
-            finally { UnityEngine.Object.DestroyImmediate(probe); }
+            Debug.Log($"[Dresser] FIELD FENCES (D-883): {fenceN} segments + {postN} corner posts + {gateN} gates, measured segLen {segLen:0.0} m, continuous runs (was 3-per-tile with corner gaps)");
         }
 
         // D-883: measure a prop's ground footprint (length along its longer horizontal axis) so fence tiling self-calibrates.

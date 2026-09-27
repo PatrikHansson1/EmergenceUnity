@@ -1,0 +1,141 @@
+        // D-883 (Patrik 2026-09-27: "staketen är lite random utsatta och ser konstigt ut ibland"): the old field fence laid
+        // 3 segments per 8 m tile-edge CENTRED — leaving a 1.3 m gap at every corner, a 6 m OPEN gap on the gate edge, and no
+        // corner posts, so the enclosures read as broken. AAA rebuild: trace each field cluster's boundary into continuous
+        // straight RUNS (merged colinear edges), tile each run with the fence at its MEASURED footprint (no gaps/overlaps),
+        // stand a wooden POST at every corner, and cut ONE clean gate on the run nearest the village. Presentation-only,
+        // hash-driven (same world ⇒ same fences), self-calibrating (never hardcodes the segment count).
+        static void PlaceFields(WorldState S, Transform root)
+        {
+            var parent = new GameObject("Fields").transform; parent.SetParent(root, true);
+            var variants = new[] { "P_PROP_fence_v01_01", "P_PROP_fence_v01_02", "P_PROP_fence_v01_03", "P_PROP_fence_v01_04", "P_PROP_fence_v01_05" }
+                .Select(FindPrefab).Where(p => p != null).ToArray();
+            if (variants.Length == 0 || S.fields == null || S.fields.Length == 0) return;
+            var fence0 = variants[0];
+            var gate = FindPrefab("P_PROP_fence_door_gate") ?? fence0;
+            var post = FindPrefab("P_PROP_wall_wood_post_01") ?? FindPrefab("P_PROP_wall_wood_post_02");
+
+            // self-calibrate: measure the fence footprint so tiling never gaps or overlaps
+            MeasureFootprint(fence0, out float segLen, out bool lenAlongX);
+            if (segLen < 0.5f) { segLen = 2f; lenAlongX = true; }
+
+            var fieldSet = new HashSet<(int, int)>(S.fields.Select(f => (Mathf.RoundToInt(f.x), Mathf.RoundToInt(f.y))));
+            var greens = VillageGreens(S);
+            float half = TileSize * 0.5f;
+            var seen = new HashSet<(int, int)>();
+            int fenceN = 0, postN = 0, gateN = 0;
+            foreach (var start in fieldSet)
+            {
+                if (seen.Contains(start)) continue;
+                var cluster = new List<(int, int)>();
+                var stack = new Stack<(int, int)>(); stack.Push(start); seen.Add(start);
+                while (stack.Count > 0)
+                {
+                    var c = stack.Pop(); cluster.Add(c);
+                    foreach (var n in new[] { (c.Item1 + 1, c.Item2), (c.Item1 - 1, c.Item2), (c.Item1, c.Item2 + 1), (c.Item1, c.Item2 - 1) })
+                        if (fieldSet.Contains(n) && seen.Add(n)) stack.Push(n);
+                }
+
+                // boundary → continuous runs in WORLD space (merge colinear tile edges)
+                var runs = new List<(Vector3 a, Vector3 b)>();
+                // horizontal edges: north (cy-1 missing → +z) and south (cy+1 missing → -z), grouped by row, merged over cx
+                for (int d = 0; d < 2; d++)
+                {
+                    int noff = d == 0 ? -1 : 1; float zsign = d == 0 ? 1f : -1f;
+                    var tiles = cluster.Where(t => !fieldSet.Contains((t.Item1, t.Item2 + noff))).OrderBy(t => t.Item2).ThenBy(t => t.Item1).ToList();
+                    int k = 0;
+                    while (k < tiles.Count)
+                    {
+                        int cy = tiles[k].Item2, x0 = tiles[k].Item1, x1 = x0; k++;
+                        while (k < tiles.Count && tiles[k].Item2 == cy && tiles[k].Item1 == x1 + 1) { x1 = tiles[k].Item1; k++; }
+                        Vector3 pa = Ground(S, x0, cy), pb = Ground(S, x1, cy);
+                        float z = pa.z + zsign * half;
+                        runs.Add((new Vector3(pa.x - half, 0, z), new Vector3(pb.x + half, 0, z)));
+                    }
+                }
+                // vertical edges: east (cx+1 missing → +x) and west (cx-1 missing → -x), grouped by col, merged over cy
+                for (int d = 0; d < 2; d++)
+                {
+                    int noff = d == 0 ? 1 : -1; float xsign = d == 0 ? 1f : -1f;
+                    var tiles = cluster.Where(t => !fieldSet.Contains((t.Item1 + noff, t.Item2))).OrderBy(t => t.Item1).ThenBy(t => t.Item2).ToList();
+                    int k = 0;
+                    while (k < tiles.Count)
+                    {
+                        int cx = tiles[k].Item1, y0 = tiles[k].Item2, y1 = y0; k++;
+                        while (k < tiles.Count && tiles[k].Item1 == cx && tiles[k].Item2 == y1 + 1) { y1 = tiles[k].Item2; k++; }
+                        Vector3 pa = Ground(S, cx, y0), pb = Ground(S, cx, y1);
+                        float x = pa.x + xsign * half;
+                        runs.Add((new Vector3(x, 0, pa.z - half), new Vector3(x, 0, pb.z + half)));
+                    }
+                }
+                if (runs.Count == 0) continue;
+
+                Vector3 access = new Vector3(1e9f, 0, 1e9f);
+                int vi = NearestVillageIdx(S, cluster[0].Item1, cluster[0].Item2);
+                if (vi >= 0 && greens != null && vi < greens.Length) access = Ground(S, greens[vi].x, greens[vi].y);
+
+                var segs = new List<GameObject>();
+                var corners = new HashSet<(int, int)>();
+                foreach (var (a, b) in runs)
+                {
+                    Vector3 diff = b - a; float L = diff.magnitude; if (L < 0.01f) continue;
+                    Vector3 dir = diff / L;
+                    bool horiz = Mathf.Abs(dir.x) >= Mathf.Abs(dir.z);
+                    float yaw = horiz ? (lenAlongX ? 0f : 90f) : (lenAlongX ? 90f : 0f);
+                    int n = Mathf.Max(1, Mathf.RoundToInt(L / segLen));
+                    float step = L / n;
+                    for (int i = 0; i < n; i++)
+                    {
+                        Vector3 c = a + dir * (step * (i + 0.5f));
+                        var prefab = variants[(int)(Hash(Mathf.RoundToInt(c.x), Mathf.RoundToInt(c.z), 61) % (uint)variants.Length)];
+                        var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, parent);
+                        go.transform.position = GroundW(c);
+                        go.transform.rotation = Quaternion.Euler(0, yaw, 0);
+                        go.name = "fence";
+                        segs.Add(go);
+                    }
+                    corners.Add((Mathf.RoundToInt(a.x), Mathf.RoundToInt(a.z)));
+                    corners.Add((Mathf.RoundToInt(b.x), Mathf.RoundToInt(b.z)));
+                }
+                fenceN += segs.Count;
+
+                // one clean gate: swap the segment nearest the village
+                if (segs.Count > 0 && gate != null && gate != fence0)
+                {
+                    int gi = 0; float best = float.MaxValue;
+                    for (int i = 0; i < segs.Count; i++) { float dd = (segs[i].transform.position - access).sqrMagnitude; if (dd < best) { best = dd; gi = i; } }
+                    var old = segs[gi]; var pos = old.transform.position; var rot = old.transform.rotation;
+                    UnityEngine.Object.DestroyImmediate(old);
+                    var g = (GameObject)PrefabUtility.InstantiatePrefab(gate, parent);
+                    g.transform.position = pos; g.transform.rotation = rot; g.name = "fence_gate"; gateN++;
+                }
+
+                // corner posts hide the run-to-run joints
+                if (post != null)
+                    foreach (var (px, pz) in corners)
+                    {
+                        var go = (GameObject)PrefabUtility.InstantiatePrefab(post, parent);
+                        go.transform.position = GroundW(new Vector3(px, 0, pz));
+                        go.transform.rotation = Quaternion.Euler(0, Hash01(px, pz, 62) * 90f, 0);
+                        go.name = "fence_post"; postN++;
+                    }
+            }
+            Debug.Log($"[Dresser] FIELD FENCES (D-883): {fenceN} segments + {postN} corner posts + {gateN} gates, measured segLen {segLen:0.0} m, continuous runs (was 3-per-tile with corner gaps)");
+        }
+
+        // D-883: measure a prop's ground footprint (length along its longer horizontal axis) so fence tiling self-calibrates.
+        static void MeasureFootprint(GameObject prefab, out float segLen, out bool lenAlongX)
+        {
+            segLen = 2f; lenAlongX = true;
+            var probe = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
+            try
+            {
+                var rs = probe.GetComponentsInChildren<Renderer>(true);
+                if (rs.Length > 0)
+                {
+                    var b = rs[0].bounds; foreach (var r in rs) b.Encapsulate(r.bounds);
+                    lenAlongX = b.size.x >= b.size.z;
+                    segLen = Mathf.Max(b.size.x, b.size.z);
+                }
+            }
+            finally { UnityEngine.Object.DestroyImmediate(probe); }
+        }

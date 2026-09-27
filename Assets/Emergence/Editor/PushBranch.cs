@@ -45,6 +45,8 @@ namespace Emergence.Editor
                     // WorldDresser.Build byproduct (no committed scene references it) that mutated
                     // silently in TD-089 — untrack once (idempotent), .gitignore keeps it out.
                     "git rm -r -q --cached --ignore-unmatch Assets\\Emergence\\Scenes\\TerrainData_generated.asset Assets\\Emergence\\Scenes\\TerrainData_generated.asset.meta & " +
+                    // D-883/#5 (EULA): untrack the FlatKit URP source that the .gitignore bracket bug leaked into 678c59a (stays on disk, --cached only)
+                    "git rm -r -q --cached --ignore-unmatch \"Assets\\FlatKit\\[Render Pipeline] URP\" & " +
                     "git add -A & git commit -F Logs\\commitmsg-current.txt & git push -u origin HEAD " +   // unconditional: push retries even when nothing new to commit
                     "> Logs\\git-commitpush.log 2>&1 & git log --oneline -1 >> Logs\\git-commitpush.log 2>&1")
                 { CreateNoWindow = true, UseShellExecute = false };

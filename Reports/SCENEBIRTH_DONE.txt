@@ -1,5 +1,5 @@
-DONE 13:36:17 OK floor born from demoscene_village_day → Assets/Emergence/Scenes/EmergenceFloor_day.unity
-SCENE BIRTH — 2026-09-27T13:36:09 (D-878, steg 5)
+DONE 18:02:01 OK floor born from demoscene_village_day → Assets/Emergence/Scenes/EmergenceFloor_day.unity
+SCENE BIRTH — 2026-09-27T18:01:54 (D-878, steg 5)
 RPGUARD: ok (PC_RPAsset)
 RPGUARD: ok (PC_RPAsset)
 DEMO sun 'Directional Light_day': rot=(62,3,32,2,28,3) color=(1,0,991,0,939) I=1,5 shadows=Soft strength=0,897 bias=1,6/0,07

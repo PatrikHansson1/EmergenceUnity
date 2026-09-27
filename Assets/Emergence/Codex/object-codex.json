@@ -575,7 +575,7 @@
   },
   {
    "id": "mill",
-   "prefab": "P_BLD_waterwheel",
+   "prefab": "P_BLD_house_13",
    "category": "craft",
    "requiresTech": "mill",
    "requiresCustom": "",
