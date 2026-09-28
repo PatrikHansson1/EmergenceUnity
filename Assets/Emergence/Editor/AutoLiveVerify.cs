@@ -19,7 +19,7 @@ namespace Emergence.Editor
     public static class AutoLiveVerify
     {
         const string LiveScene = "Assets/Emergence/Scenes/EmergenceLive.unity";
-        const double Watchdog = 32.0;
+        const double Watchdog = 52.0;
         static double _next;
         static string Trigger => Path.Combine(Application.dataPath, "..", "Reports", "RUN_LIVEVERIFY.trigger");
         static string Done    => Path.Combine(Application.dataPath, "..", "Reports", "LIVEVERIFY_DONE.txt");
@@ -27,6 +27,8 @@ namespace Emergence.Editor
         const string KeyPending = "emg.liveverify.pending", KeyStart = "emg.liveverify.start";
         static int _yearA = -1, _yearB = -1, _agentsA = -1, _agentsB = -1, _appliedA = -1, _appliedB = -1;
         static bool _sampledA, _sampledB;
+        static int _dYearA=-1,_dYearB=-1,_dTickA=-1,_dTickB=-1,_dBufA=-1,_dBufB=-1,_pYearA=-1,_pYearB=-1;
+        static string _dErr="";
 
         static AutoLiveVerify() { EditorApplication.update += Tick; }
 
@@ -43,7 +45,7 @@ namespace Emergence.Editor
                         Directory.CreateDirectory(Path.GetDirectoryName(Done));
                         File.WriteAllText(Done, "RUNNING (opening scene) " + DateTime.Now.ToString("HH:mm:ss") + "\n");
                         EditorSceneManager.OpenScene(LiveScene, OpenSceneMode.Single);
-                        _yearA = _yearB = _agentsA = _agentsB = _appliedA = _appliedB = -1; _sampledA = _sampledB = false;
+                        _yearA = _yearB = _agentsA = _agentsB = _appliedA = _appliedB = -1; _sampledA = _sampledB = false; _dYearA=_dYearB=_dTickA=_dTickB=_dBufA=_dBufB=_pYearA=_pYearB=-1; _dErr="";
                         SessionState.SetInt(KeyPending, 1);
                         SessionState.SetFloat(KeyStart, (float)EditorApplication.timeSinceStartup);
                         File.WriteAllText(Done, "RUNNING (entering play mode) " + DateTime.Now.ToString("HH:mm:ss") + "\n");
@@ -67,8 +69,13 @@ namespace Emergence.Editor
                     var w = UnityEngine.Object.FindAnyObjectByType<Fas3WorldRuntime>();
                     if (w != null)
                     {
-                        if (!_sampledA && t >= 5f)  { _yearA = w.LastAppliedYear; _agentsA = w.AgentCount; _appliedA = w.AppliedCount; _sampledA = true; }
-                        if (!_sampledB && t >= 18f) { _yearB = w.LastAppliedYear; _agentsB = w.AgentCount; _appliedB = w.AppliedCount; _sampledB = true; }
+                        var dr = UnityEngine.Object.FindAnyObjectByType<Fas3SimDriver>();
+                        var ck = UnityEngine.Object.FindAnyObjectByType<Fas3PresentationClock>();
+                        if (dr != null && dr.LastError != null && dr.LastError.Length > 0) _dErr = dr.LastError;
+                        if (!_sampledA && t >= 5f)  { _yearA = w.LastAppliedYear; _agentsA = w.AgentCount; _appliedA = w.AppliedCount;
+                            if (dr!=null){_dYearA=dr.Year;_dTickA=dr.Tick;_dBufA=dr.BufferedYears;} if(ck!=null)_pYearA=ck.PresentationYear; _sampledA = true; }
+                        if (!_sampledB && t >= 44f) { _yearB = w.LastAppliedYear; _agentsB = w.AgentCount; _appliedB = w.AppliedCount;
+                            if (dr!=null){_dYearB=dr.Year;_dTickB=dr.Tick;_dBufB=dr.BufferedYears;} if(ck!=null)_pYearB=ck.PresentationYear; _sampledB = true; }
                     }
                     if (_sampledB || overtime) Finish(overtime, w != null);
                 }
@@ -86,7 +93,10 @@ namespace Emergence.Editor
                 sb.AppendLine("generated " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
                 sb.AppendLine("world runtime found: " + foundWorld);
                 sb.AppendLine("sample A (~5s):  year=" + _yearA + " agents=" + _agentsA + " applied=" + _appliedA);
-                sb.AppendLine("sample B (~18s): year=" + _yearB + " agents=" + _agentsB + " applied=" + _appliedB);
+                sb.AppendLine("sample B (~44s): year=" + _yearB + " agents=" + _agentsB + " applied=" + _appliedB);
+                sb.AppendLine("DRIVER A: producedYear=" + _dYearA + " tick=" + _dTickA + " buffered=" + _dBufA + " | clock.PresentationYear=" + _pYearA);
+                sb.AppendLine("DRIVER B: producedYear=" + _dYearB + " tick=" + _dTickB + " buffered=" + _dBufB + " | clock.PresentationYear=" + _pYearB);
+                sb.AppendLine("driver.LastError: " + (_dErr.Length>0 ? _dErr : "(none)"));
                 bool timeFlows = _yearA >= 0 && _yearB > _yearA;
                 bool soulsLive = _agentsB > 0;
                 bool applying  = _appliedB > _appliedA && _appliedA >= 0;

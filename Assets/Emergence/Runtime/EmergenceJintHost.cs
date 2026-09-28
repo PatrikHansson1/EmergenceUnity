@@ -16,7 +16,7 @@ namespace Emergence.Runtime
 
         // P1 (D-605/D-610): the presentation layer is a SEPARATE file with its OWN sha — it never touches the engine sha above.
         // A pure read over S (writeIntervalReport); loaded after the engine when a host supplies it. Null = not loaded (golden/harness paths unchanged).
-        public const string ExpectedPresentationSha = "fb683b035df1025079c7e7c59feb8739672b841bee4dd1246949615785f6ac9d"; // P1 v0.8 (D-766/D-767, 2026-09-12): READ-weight death 60->25 — FS1 fix (an old-age death is chronicle background, not the turning point of every window); confirmed FS1/FS2/FS3 green on 8 fresh seeds; engine v24 untouched. Prior v0.7 c72a612136d23c1e7e7e3df8e5e299ea9f145bb8391828cc54d1c3b716b3357d
+        public const string ExpectedPresentationSha = "343775284b1c0ca35b8b5d87c3097d370c591bf6d2b0aee3e4e0f751a70f1035"; // P1 v0.9 (D-876, 2026-09-26): P2 epok-band + P4 sjalvstopp + P3 aning; P1-golden-NEUTRAL (reportDigest byte-identisk v0.8/v0.9 pa 97013/4242, moln-testad pa kanon 5dd13837). SHA-bump glomdes i 678c59a; rattad D-899/D-900. Prior v0.8 fb683b035df1025079c7e7c59feb8739672b841bee4dd1246949615785f6ac9d
 
         private readonly Jint.Engine _engine;
         public string EngineSha256 { get; }

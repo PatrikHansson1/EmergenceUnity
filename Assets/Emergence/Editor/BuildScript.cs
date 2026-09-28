@@ -27,9 +27,12 @@ namespace Emergence.Editor
             try
             {
                 SyncStreamingAssets();
-                // D-891: build the dressed diorama scene when it exists, else the golden-smoke Bootstrap
+                // D-900 (väg A): build the LIVING scene when it exists, else the dressed diorama (D-891), else Bootstrap
+                var live = "Assets/Emergence/Scenes/EmergenceLive.unity";
                 var diorama = "Assets/Emergence/Scenes/EmergenceDiorama.unity";
-                var scenes = File.Exists(Path.Combine(ProjectRoot, diorama)) ? new[] { diorama } : new[] { BootstrapScene };
+                var scenes = File.Exists(Path.Combine(ProjectRoot, live)) ? new[] { live }
+                           : File.Exists(Path.Combine(ProjectRoot, diorama)) ? new[] { diorama }
+                           : new[] { BootstrapScene };
                 var outDir = Path.Combine(ProjectRoot, "Builds", "EmergenceUnity");
                 Directory.CreateDirectory(outDir);
                 var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
