@@ -117,6 +117,12 @@ namespace Emergence.Editor
                 new GameObject("Fas6MusicDirector").AddComponent<Fas6MusicDirector>();
             rep.AppendLine("sound layers: Fas3AudioDirector + Fas6EraAmbience + Fas6StateAmbience + Fas6MusicDirector");
 
+            // 2d. the opening (D-905): a title + controls hint that fades — the build announces itself
+            // and teaches its own interactivity. Pure OnGUI overlay (Emergence.Runtime), disarms after the fade.
+            if (UnityEngine.Object.FindAnyObjectByType<EmergenceIntro>() == null)
+                new GameObject("EmergenceIntro").AddComponent<EmergenceIntro>();
+            rep.AppendLine("opening: EmergenceIntro (title + controls hint, fades)");
+
             // 3. camera the build boots on (reuse WorldDresser's DocCamera; Unity fake-null forbids ??)
             var cam = Camera.main;
             if (cam == null) cam = UnityEngine.Object.FindAnyObjectByType<Camera>();
