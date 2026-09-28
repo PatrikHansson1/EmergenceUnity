@@ -55,7 +55,7 @@ namespace Emergence.Runtime
             LastApplyWasFixture = FixtureInjection;   // I4: late readers ask the applied snapshot, not the flag
             PrevState = LastState; LastState = S;
             EnsureGround(S);                          // VÅG 1.1: the world needs ground before anything stands on it
-            EnsureLight();                            // VÅG 1.2: and light, or the pack's own look never shows
+            EnsureLight(S.season);                            // VÅG 1.2: and light, or the pack's own look never shows
             // D-247: the ground learns where people go. Terrain is built ONCE, before any village
             // exists, so the corridors cannot be part of that build -- they are worn in here, as the
             // settlements appear, and only when the set of connections actually changes. Dressing
@@ -95,15 +95,17 @@ namespace Emergence.Runtime
         /// <summary>VÅG 1.2: light the world with the studio's own rig. The law was tuned for weeks but
         /// lived behind #if UNITY_EDITOR, so the player got a bare scene's default light — no fog, no
         /// sky, no fill — which is why the living loop looked chalky beside the store shots. Applied
-        /// once; the phase is PRESENTATION time (the decoupled-clock law), never sim time.</summary>
+        /// on the first reconcile and again when the season changes; the phase is PRESENTATION time (the decoupled-clock law), never sim time.</summary>
         bool _lit;
+        string _lastLitSeason;
         public string LightNote { get; private set; } = "";
 
-        void EnsureLight()
+        void EnsureLight(string season)
         {
-            if (_lit) return;
-            _lit = true;
-            try { Fas3LightRig.Apply("spring", "day"); LightNote = Fas3LightRig.LastNote; Debug.Log("[Fas3WorldRuntime] " + LightNote); }
+            if (string.IsNullOrEmpty(season)) season = "spring";
+            if (_lit && season == _lastLitSeason) return;
+            _lit = true; _lastLitSeason = season;
+            try { Fas3LightRig.Apply(season, "day"); LightNote = Fas3LightRig.LastNote; Debug.Log("[Fas3WorldRuntime] " + LightNote); }
             catch (Exception e) { LightNote = "light FAILED: " + e.Message; Debug.LogWarning("[Fas3WorldRuntime] " + LightNote); }
         }
 
@@ -189,7 +191,7 @@ namespace Emergence.Runtime
             _agents.Clear(); _huts.Clear(); _codex.Clear(); _fires.Clear();
             AppliedCount = 0; LastAppliedYear = -1;
             LastState = null; PrevState = null;
-            GroundBuilt = false; GroundNote = ""; _lit = false; LightNote = ""; NatureNote = ""; NatureCount = 0;
+            GroundBuilt = false; GroundNote = ""; _lit = false; _lastLitSeason = null; LightNote = ""; NatureNote = ""; NatureCount = 0;
         }
     }
 }

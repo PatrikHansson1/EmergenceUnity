@@ -1,12 +1,12 @@
 EMERGENCE — LIVE VERIFY (D-897): does the built live scene actually live?
-generated 2026-09-29 00:39:00
+generated 2026-09-29 01:09:35
 world runtime found: True
 sample A (~5s):  year=0 agents=4 applied=1
 sample B (~44s): year=1 agents=4 applied=2
 chronicle entries: A=4 -> B=4 (the emergent story writing itself)
 music cue @B: "Darkwood Path" (the score engaged: era->ambient at genesis)
 gaze dives @B: 1 (the eye noticed life — 0 is fine in a 1-year window)
-DRIVER A: producedYear=0 tick=0 buffered=0 | clock.PresentationYear=0
+DRIVER A: producedYear=0 tick=0 buffered=1 | clock.PresentationYear=0
 DRIVER B: producedYear=1 tick=144 buffered=1 | clock.PresentationYear=1
 driver.LastError: (none)
 time flows: year 0 -> 1  => True
