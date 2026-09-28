@@ -1,0 +1,10 @@
+EMERGENCE — LIVE VERIFY (D-897): does the built live scene actually live?
+generated 2026-09-28 14:07:54
+world runtime found: True
+sample A (~5s):  year=0 agents=4 applied=1
+sample B (~18s): year=0 agents=4 applied=1
+time flows: year 0 -> 0  => False
+souls live: agents 4  => True
+snapshots consumed: applied 1 -> 1  => False
+
+verdict: CHECK — see numbers above

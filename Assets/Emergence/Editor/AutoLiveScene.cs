@@ -75,14 +75,14 @@ namespace Emergence.Editor
             // 2. assemble the PROVEN live rig (all in Emergence.Runtime)
             var driverGo = new GameObject("Fas3SimDriver");
             var driver = driverGo.AddComponent<Fas3SimDriver>();
-            driver.seed = Seed; driver.bufferMode = true; driver.targetYear = -1; driver.ticksPerSecond = Fas3TimeControls.MaxTps;
+            driver.seed = Seed; driver.bufferMode = true; driver.targetYear = 150; driver.lookaheadYears = 16; // D-897: EXACT Fas3BufferProbe config (the proven live rig)
             var worldGo = new GameObject("Fas3WorldRuntime");
             var world = worldGo.AddComponent<Fas3WorldRuntime>();
             var clockGo = new GameObject("Fas3PresentationClock");
-            var clock = clockGo.AddComponent<Fas3PresentationClock>(); clock.driver = driver; clock.world = world;
+            var clock = clockGo.AddComponent<Fas3PresentationClock>(); clock.driver = driver; clock.world = world; clock.ticksPerSecond = Fas3TimeControls.BaseTps;
             var tcGo = new GameObject("Fas3TimeControls");
-            tcGo.AddComponent<Fas3TimeControls>().driver = driver;
-            rep.AppendLine("rig: Fas3SimDriver(seed " + Seed + ", bufferMode, endless) + WorldRuntime + PresentationClock + TimeControls");
+            var tc = tcGo.AddComponent<Fas3TimeControls>(); tc.driver = driver; tc.clock = clock;
+            rep.AppendLine("rig: Fas3SimDriver(seed " + Seed + ", bufferMode, lookahead 16, targetYear 150) + WorldRuntime + PresentationClock(BaseTps) + TimeControls(driver+clock)");
 
             // 3. camera the build boots on (reuse WorldDresser's DocCamera; Unity fake-null forbids ??)
             var cam = Camera.main;

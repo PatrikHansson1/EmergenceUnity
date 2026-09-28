@@ -1,9 +1,9 @@
-DONE 13:24:41 OK live scene baked (rig present, environment dressed; run-mode movement verified next) renderers=6420
-LIVE SCENE BAKE — 2026-09-28T13:24:36
+DONE 14:06:03 OK live scene baked (rig present, environment dressed; run-mode movement verified next) renderers=6420
+LIVE SCENE BAKE — 2026-09-28T14:05:59
 dressed ENVIRONMENT-only: Assets/Emergence/Scenes/EmergenceFloor_day.unity world=Assets/Emergence/WorldStates/world-8919-y120-full.json
 terrain persisted: Assets/Emergence/Scenes/TerrainData_live.asset
 runtime splat: attached
-rig: Fas3SimDriver(seed 8919, bufferMode, endless) + WorldRuntime + PresentationClock + TimeControls
+rig: Fas3SimDriver(seed 8919, bufferMode, lookahead 16, targetYear 150) + WorldRuntime + PresentationClock(BaseTps) + TimeControls(driver+clock)
 camera: Main Camera + EmergenceDioramaCamera + post
 saved live scene: Assets/Emergence/Scenes/EmergenceLive.unity
 REOPENED Assets/Emergence/Scenes/EmergenceLive.unity renderers=6420 driver=True world=True clock=True
