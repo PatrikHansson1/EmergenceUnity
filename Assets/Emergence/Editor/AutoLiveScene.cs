@@ -101,6 +101,22 @@ namespace Emergence.Editor
             EmergenceUI.EnsureCursor();
             rep.AppendLine("story organs: Fas4ChronicleFeed + Fas4ChronicleView + Fas4LatestLine + Fas4ProseDirector(useProse OFF) + cursor");
 
+            // 2c. the sound (D-903, presentation-only, EXACT Fas3Onboarding pattern): the four audio
+            // layers — event stingers (Fas3AudioDirector, L3), era bed (Fas6EraAmbience, L1), state
+            // activity + fire point-sources (Fas6StateAmbience, L2), and the written score over them
+            // (Fas6MusicDirector, L4: era->ambient, drama->viking action, deterministic per-state cue,
+            // level-matched to -24 dBFS, crossfade 4s / action-hold 20s). Each disarms itself if its
+            // catalog/pack is missing (the ear never goes black). Reads applied state, never the sim.
+            if (UnityEngine.Object.FindAnyObjectByType<Fas3AudioDirector>() == null)
+                new GameObject("Fas3AudioDirector").AddComponent<Fas3AudioDirector>();
+            if (UnityEngine.Object.FindAnyObjectByType<Fas6EraAmbience>() == null)
+                new GameObject("Fas6EraAmbience").AddComponent<Fas6EraAmbience>();
+            if (UnityEngine.Object.FindAnyObjectByType<Fas6StateAmbience>() == null)
+                new GameObject("Fas6StateAmbience").AddComponent<Fas6StateAmbience>();
+            if (UnityEngine.Object.FindAnyObjectByType<Fas6MusicDirector>() == null)
+                new GameObject("Fas6MusicDirector").AddComponent<Fas6MusicDirector>();
+            rep.AppendLine("sound layers: Fas3AudioDirector + Fas6EraAmbience + Fas6StateAmbience + Fas6MusicDirector");
+
             // 3. camera the build boots on (reuse WorldDresser's DocCamera; Unity fake-null forbids ??)
             var cam = Camera.main;
             if (cam == null) cam = UnityEngine.Object.FindAnyObjectByType<Camera>();
@@ -125,8 +141,9 @@ namespace Emergence.Editor
             bool hasWorld  = UnityEngine.Object.FindAnyObjectByType<Fas3WorldRuntime>(FindObjectsInactive.Include) != null;
             bool hasClock  = UnityEngine.Object.FindAnyObjectByType<Fas3PresentationClock>(FindObjectsInactive.Include) != null;
             bool hasFeed   = UnityEngine.Object.FindAnyObjectByType<Fas4ChronicleFeed>(FindObjectsInactive.Include) != null;
-            rep.AppendLine("REOPENED " + reopened.path + " renderers=" + renderers + " driver=" + hasDriver + " world=" + hasWorld + " clock=" + hasClock + " feed=" + hasFeed);
-            bool ok = hasDriver && hasWorld && hasClock && hasFeed && renderers > 50;
+            bool hasMusic  = UnityEngine.Object.FindAnyObjectByType<Fas6MusicDirector>(FindObjectsInactive.Include) != null;
+            rep.AppendLine("REOPENED " + reopened.path + " renderers=" + renderers + " driver=" + hasDriver + " world=" + hasWorld + " clock=" + hasClock + " feed=" + hasFeed + " music=" + hasMusic);
+            bool ok = hasDriver && hasWorld && hasClock && hasFeed && hasMusic && renderers > 50;
             return (ok ? "OK live scene baked (rig + story organs present, environment dressed; run-mode movement + chronicle verified next)"
                        : "WARN rig=" + hasDriver + "/" + hasWorld + "/" + hasClock + " feed=" + hasFeed + " renderers=" + renderers);
         }
