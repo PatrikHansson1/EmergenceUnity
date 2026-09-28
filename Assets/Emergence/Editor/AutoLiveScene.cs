@@ -126,8 +126,13 @@ namespace Emergence.Editor
             var acd = camGo.GetComponent<UniversalAdditionalCameraData>(); if (acd == null) acd = camGo.AddComponent<UniversalAdditionalCameraData>();
             acd.renderPostProcessing = true;
             if (camGo.GetComponent<EmergenceDioramaCamera>() == null) camGo.AddComponent<EmergenceDioramaCamera>();
+            // the living gaze (D-904, D-134/D-139): the documentary eye that notices life — glides down
+            // to frame a hut being raised or a child born (PresentationEventBus), holds a beat, releases.
+            // No conflict with the diorama: it writes in LateUpdate (after the orbit's Update), so the
+            // gaze wins while it has a target and the orbit resumes when it lets go. Presentation-only.
+            if (camGo.GetComponent<Fas3GazeDirector>() == null) camGo.AddComponent<Fas3GazeDirector>();
             camGo.transform.position = new Vector3(400, 60, 150); camGo.transform.LookAt(new Vector3(430, 6, 300));
-            rep.AppendLine("camera: Main Camera + EmergenceDioramaCamera + post");
+            rep.AppendLine("camera: Main Camera + EmergenceDioramaCamera + Fas3GazeDirector (living gaze) + post");
 
             // 4. save the live scene (Save As -> keeps the floor template clean)
             EditorSceneManager.MarkSceneDirty(scene);
@@ -142,8 +147,9 @@ namespace Emergence.Editor
             bool hasClock  = UnityEngine.Object.FindAnyObjectByType<Fas3PresentationClock>(FindObjectsInactive.Include) != null;
             bool hasFeed   = UnityEngine.Object.FindAnyObjectByType<Fas4ChronicleFeed>(FindObjectsInactive.Include) != null;
             bool hasMusic  = UnityEngine.Object.FindAnyObjectByType<Fas6MusicDirector>(FindObjectsInactive.Include) != null;
-            rep.AppendLine("REOPENED " + reopened.path + " renderers=" + renderers + " driver=" + hasDriver + " world=" + hasWorld + " clock=" + hasClock + " feed=" + hasFeed + " music=" + hasMusic);
-            bool ok = hasDriver && hasWorld && hasClock && hasFeed && hasMusic && renderers > 50;
+            bool hasGaze   = UnityEngine.Object.FindAnyObjectByType<Fas3GazeDirector>(FindObjectsInactive.Include) != null;
+            rep.AppendLine("REOPENED " + reopened.path + " renderers=" + renderers + " driver=" + hasDriver + " world=" + hasWorld + " clock=" + hasClock + " feed=" + hasFeed + " music=" + hasMusic + " gaze=" + hasGaze);
+            bool ok = hasDriver && hasWorld && hasClock && hasFeed && hasMusic && hasGaze && renderers > 50;
             return (ok ? "OK live scene baked (rig + story organs present, environment dressed; run-mode movement + chronicle verified next)"
                        : "WARN rig=" + hasDriver + "/" + hasWorld + "/" + hasClock + " feed=" + hasFeed + " renderers=" + renderers);
         }

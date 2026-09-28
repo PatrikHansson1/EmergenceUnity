@@ -31,6 +31,7 @@ namespace Emergence.Editor
         static string _dErr="";
         static int _chronA=-1,_chronB=-1;
         static string _cueB="";
+        static int _gazeB=-1;
 
         static AutoLiveVerify() { EditorApplication.update += Tick; }
 
@@ -47,7 +48,7 @@ namespace Emergence.Editor
                         Directory.CreateDirectory(Path.GetDirectoryName(Done));
                         File.WriteAllText(Done, "RUNNING (opening scene) " + DateTime.Now.ToString("HH:mm:ss") + "\n");
                         EditorSceneManager.OpenScene(LiveScene, OpenSceneMode.Single);
-                        _yearA = _yearB = _agentsA = _agentsB = _appliedA = _appliedB = -1; _sampledA = _sampledB = false; _dYearA=_dYearB=_dTickA=_dTickB=_dBufA=_dBufB=_pYearA=_pYearB=-1; _dErr=""; _chronA=_chronB=-1; _cueB="";
+                        _yearA = _yearB = _agentsA = _agentsB = _appliedA = _appliedB = -1; _sampledA = _sampledB = false; _dYearA=_dYearB=_dTickA=_dTickB=_dBufA=_dBufB=_pYearA=_pYearB=-1; _dErr=""; _chronA=_chronB=-1; _cueB=""; _gazeB=-1;
                         SessionState.SetInt(KeyPending, 1);
                         SessionState.SetFloat(KeyStart, (float)EditorApplication.timeSinceStartup);
                         File.WriteAllText(Done, "RUNNING (entering play mode) " + DateTime.Now.ToString("HH:mm:ss") + "\n");
@@ -78,7 +79,7 @@ namespace Emergence.Editor
                         if (!_sampledA && t >= 5f)  { _yearA = w.LastAppliedYear; _agentsA = w.AgentCount; _appliedA = w.AppliedCount;
                             if (dr!=null){_dYearA=dr.Year;_dTickA=dr.Tick;_dBufA=dr.BufferedYears;} if(ck!=null)_pYearA=ck.PresentationYear; if(fd!=null)_chronA=fd.Entries.Count; _sampledA = true; }
                         if (!_sampledB && t >= 44f) { _yearB = w.LastAppliedYear; _agentsB = w.AgentCount; _appliedB = w.AppliedCount;
-                            if (dr!=null){_dYearB=dr.Year;_dTickB=dr.Tick;_dBufB=dr.BufferedYears;} if(ck!=null)_pYearB=ck.PresentationYear; if(fd!=null)_chronB=fd.Entries.Count; { var md=UnityEngine.Object.FindAnyObjectByType<Fas6MusicDirector>(); if(md!=null)_cueB=md.CurrentCue; } _sampledB = true; }
+                            if (dr!=null){_dYearB=dr.Year;_dTickB=dr.Tick;_dBufB=dr.BufferedYears;} if(ck!=null)_pYearB=ck.PresentationYear; if(fd!=null)_chronB=fd.Entries.Count; { var md=UnityEngine.Object.FindAnyObjectByType<Fas6MusicDirector>(); if(md!=null)_cueB=md.CurrentCue; var gz=UnityEngine.Object.FindAnyObjectByType<Fas3GazeDirector>(); if(gz!=null)_gazeB=gz.GazeCount; } _sampledB = true; }
                     }
                     if (_sampledB || overtime) Finish(overtime, w != null);
                 }
@@ -99,6 +100,7 @@ namespace Emergence.Editor
                 sb.AppendLine("sample B (~44s): year=" + _yearB + " agents=" + _agentsB + " applied=" + _appliedB);
                 sb.AppendLine("chronicle entries: A=" + _chronA + " -> B=" + _chronB + " (the emergent story writing itself)");
                 sb.AppendLine("music cue @B: \"" + _cueB + "\" (the score engaged: era->ambient at genesis)");
+                sb.AppendLine("gaze dives @B: " + _gazeB + " (the eye noticed life — 0 is fine in a 1-year window)");
                 sb.AppendLine("DRIVER A: producedYear=" + _dYearA + " tick=" + _dTickA + " buffered=" + _dBufA + " | clock.PresentationYear=" + _pYearA);
                 sb.AppendLine("DRIVER B: producedYear=" + _dYearB + " tick=" + _dTickB + " buffered=" + _dBufB + " | clock.PresentationYear=" + _pYearB);
                 sb.AppendLine("driver.LastError: " + (_dErr.Length>0 ? _dErr : "(none)"));
@@ -118,7 +120,7 @@ namespace Emergence.Editor
                 File.WriteAllText(Report, sb.ToString());
                 File.WriteAllText(Done, "DONE " + DateTime.Now.ToString("HH:mm:ss") + " verdict=" + (green ? "GREEN" : "CHECK")
                     + " yearA=" + _yearA + " yearB=" + _yearB + " agentsA=" + _agentsA + " agentsB=" + _agentsB
-                    + " applied=" + _appliedA + "->" + _appliedB + " chron=" + _chronA + "->" + _chronB + " cue=\"" + _cueB + "\"" + (overtime ? " WATCHDOG" : "") + "\nsee " + Report + "\n");
+                    + " applied=" + _appliedA + "->" + _appliedB + " chron=" + _chronA + "->" + _chronB + " cue=\"" + _cueB + "\" gaze=" + _gazeB + (overtime ? " WATCHDOG" : "") + "\nsee " + Report + "\n");
                 Debug.Log("[AutoLiveVerify] " + (green ? "GREEN" : "CHECK") + " y" + _yearA + "->" + _yearB + " agents" + _agentsB);
             }
             catch (Exception e) { try { File.WriteAllText(Done, "ERROR finish: " + e.Message + "\n"); } catch {} }
