@@ -1,5 +1,5 @@
 EMERGENCE — FAS 4 PROBE: prose director safe properties (no model, useProse OFF)
-generated 2026-09-26 19:43:45
+generated 2026-09-28 19:03:29
 scope: the properties every shipped build depends on. Live inference = order §5 (screen-driven).
 
 1. RULE-BASED DETERMINISM (the default path is a pure function)
@@ -79,7 +79,7 @@ scope: the properties every shipped build depends on. Live inference = order §5
   PASS  the causeless beat answers honestly: "No cause was set down beside it — and not all that happens leaves one to find."
   why (steal)     : It followed from Hunger owned the hand, and the long winter. Little else could have followed.
   why (milestone) : No cause was set down beside it — and not all that happens leaves one to find.
-  PASS  NO SIM MUTATION: applied state byte-identical before/after (30854 chars)
+  PASS  NO SIM MUTATION: applied state byte-identical before/after (30867 chars)
 
 VERDICT: GREEN  (59/59)
 declared limits: no model is loaded here by design — live inference (identical line twice + tone) is order §5.

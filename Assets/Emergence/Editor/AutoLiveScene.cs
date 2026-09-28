@@ -84,6 +84,23 @@ namespace Emergence.Editor
             var tc = tcGo.AddComponent<Fas3TimeControls>(); tc.driver = driver; tc.clock = clock;
             rep.AppendLine("rig: Fas3SimDriver(seed " + Seed + ", bufferMode, lookahead 16, targetYear 150) + WorldRuntime + PresentationClock(BaseTps) + TimeControls(driver+clock)");
 
+            // 2b. the story organs (D-902, presentation-only, EXACT Fas3Onboarding pattern lines 73-97):
+            // the chronicle feed (consumer #3 — self-subscribes to the PresentationEventBus in OnEnable,
+            // reads the live reconcile path), its native UI-Toolkit face (disarms to IMGUI if UI assets
+            // missing), the Latest Line (D-218: without it a 1x century-sim reads as MUTE — the whole
+            // point of the living world), and the why-service (useProse defaults OFF -> rule-based why;
+            // loading a model is Patriks screen-control step, never a headless bake).
+            if (UnityEngine.Object.FindAnyObjectByType<Fas4ChronicleFeed>() == null)
+                new GameObject("Fas4ChronicleFeed").AddComponent<Fas4ChronicleFeed>();
+            if (UnityEngine.Object.FindAnyObjectByType<Fas4ChronicleView>() == null)
+                new GameObject("Fas4ChronicleView").AddComponent<Fas4ChronicleView>();
+            if (UnityEngine.Object.FindAnyObjectByType<Fas4LatestLine>() == null)
+                new GameObject("Fas4LatestLine").AddComponent<Fas4LatestLine>();
+            if (UnityEngine.Object.FindAnyObjectByType<Emergence.Fas4.Fas4ProseDirector>() == null)
+                new GameObject("Fas4ProseDirector").AddComponent<Emergence.Fas4.Fas4ProseDirector>();
+            EmergenceUI.EnsureCursor();
+            rep.AppendLine("story organs: Fas4ChronicleFeed + Fas4ChronicleView + Fas4LatestLine + Fas4ProseDirector(useProse OFF) + cursor");
+
             // 3. camera the build boots on (reuse WorldDresser's DocCamera; Unity fake-null forbids ??)
             var cam = Camera.main;
             if (cam == null) cam = UnityEngine.Object.FindAnyObjectByType<Camera>();
@@ -107,10 +124,11 @@ namespace Emergence.Editor
             bool hasDriver = UnityEngine.Object.FindAnyObjectByType<Fas3SimDriver>(FindObjectsInactive.Include) != null;
             bool hasWorld  = UnityEngine.Object.FindAnyObjectByType<Fas3WorldRuntime>(FindObjectsInactive.Include) != null;
             bool hasClock  = UnityEngine.Object.FindAnyObjectByType<Fas3PresentationClock>(FindObjectsInactive.Include) != null;
-            rep.AppendLine("REOPENED " + reopened.path + " renderers=" + renderers + " driver=" + hasDriver + " world=" + hasWorld + " clock=" + hasClock);
-            bool ok = hasDriver && hasWorld && hasClock && renderers > 50;
-            return (ok ? "OK live scene baked (rig present, environment dressed; run-mode movement verified next)"
-                       : "WARN rig=" + hasDriver + "/" + hasWorld + "/" + hasClock + " renderers=" + renderers) + " renderers=" + renderers;
+            bool hasFeed   = UnityEngine.Object.FindAnyObjectByType<Fas4ChronicleFeed>(FindObjectsInactive.Include) != null;
+            rep.AppendLine("REOPENED " + reopened.path + " renderers=" + renderers + " driver=" + hasDriver + " world=" + hasWorld + " clock=" + hasClock + " feed=" + hasFeed);
+            bool ok = hasDriver && hasWorld && hasClock && hasFeed && renderers > 50;
+            return (ok ? "OK live scene baked (rig + story organs present, environment dressed; run-mode movement + chronicle verified next)"
+                       : "WARN rig=" + hasDriver + "/" + hasWorld + "/" + hasClock + " feed=" + hasFeed + " renderers=" + renderers);
         }
     }
 }

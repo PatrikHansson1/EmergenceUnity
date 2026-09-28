@@ -1,2 +1,2 @@
-DONE 15:03:55 verdict=GREEN yearA=0 yearB=1 agentsA=4 agentsB=4 applied=1->2
+DONE 21:33:09 verdict=GREEN yearA=0 yearB=1 agentsA=4 agentsB=4 applied=1->2 chron=4->4
 see Reports/live-verify.txt
