@@ -478,7 +478,7 @@ namespace Emergence.Editor
                 var fieldSet2 = new HashSet<(int, int)>();
                 if (S.fields != null) foreach (var f in S.fields) fieldSet2.Add((Mathf.RoundToInt(f.x), Mathf.RoundToInt(f.y)));
                 var protos = new List<TreePrototype>();
-                foreach (var p in grassPfs) protos.Add(new TreePrototype { prefab = p, bendFactor = 0f });
+                foreach (var p in grassPfs) { var gp = InstancedGrassPrefab(p); protos.Add(new TreePrototype { prefab = gp != null ? gp : p, bendFactor = 0f }); }
                 var existing = data.treePrototypes ?? new TreePrototype[0];
                 int baseIdx = existing.Length;
                 data.treePrototypes = existing.Concat(protos).ToArray();
@@ -537,6 +537,65 @@ namespace Emergence.Editor
                     }
                 Debug.Log($"[Dresser] meadow: {dps.Count} detail-grass layers + {nt} GameObject trees (D-101f, fill-lit like the bushes)");
             }
+        }
+
+        // D-892 (draw-call fix, D-888 path 2): the FNP foliage shader already declares
+        // multi_compile_instancing in all passes; only the pack MATERIAL has instancing off, so each of
+        // ~47k grass tree-instances costs its own draw call (D-888). We never touch the pack: build an
+        // instanced TWIN material + a grass prefab COPY under Assets/Emergence/Generated/GrassInstanced/
+        // (cached; pack is read-only), and use those as the tree prototypes. Rendering is identical (only
+        // the instancing flag differs) -> pure presentation/perf change, motor untouched (5dd13837).
+        static GameObject InstancedGrassPrefab(GameObject packPrefab)
+        {
+            if (packPrefab == null) return null;
+            const string genRoot = "Assets/Emergence/Generated";
+            const string dir = genRoot + "/GrassInstanced";
+            const string matDir = dir + "/Mats";
+            if (!AssetDatabase.IsValidFolder(genRoot)) AssetDatabase.CreateFolder("Assets/Emergence", "Generated");
+            if (!AssetDatabase.IsValidFolder(dir)) AssetDatabase.CreateFolder(genRoot, "GrassInstanced");
+            if (!AssetDatabase.IsValidFolder(matDir)) AssetDatabase.CreateFolder(dir, "Mats");
+            string variantPath = dir + "/" + packPrefab.name + "_inst.prefab";
+            var cached = AssetDatabase.LoadAssetAtPath<GameObject>(variantPath);
+            if (cached != null && cached.GetComponentInChildren<LODGroup>(true) == null) return cached; // D-892b: regen stale (LODGroup) caches
+
+            var tmp = (GameObject)PrefabUtility.InstantiatePrefab(packPrefab);
+            if (tmp == null) return null;
+            try
+            {
+                try { PrefabUtility.UnpackPrefabInstance(tmp, PrefabUnpackMode.Completely, InteractionMode.AutomatedAction); } catch { }
+                // D-892b: the grass prototype has a 1-level LODGroup; Unity renders LODGroup tree instances per-instance
+                // (the instanced-material path only engages for plain-mesh prototypes). One LOD level => stripping it is
+                // visually identical. Remove LODGroups so the tree instancer can GPU-instance the mesh.
+                foreach (var lg in tmp.GetComponentsInChildren<LODGroup>(true)) UnityEngine.Object.DestroyImmediate(lg);
+                foreach (var r in tmp.GetComponentsInChildren<Renderer>(true))
+                {
+                    var mats = r.sharedMaterials;
+                    bool changed = false;
+                    for (int i = 0; i < mats.Length; i++)
+                    {
+                        var m = mats[i];
+                        if (m == null || m.enableInstancing) continue;
+                        string twinPath = matDir + "/" + m.name + "_inst.mat";
+                        var twin = AssetDatabase.LoadAssetAtPath<Material>(twinPath);
+                        if (twin == null)
+                        {
+                            string src = AssetDatabase.GetAssetPath(m);
+                            if (!string.IsNullOrEmpty(src) && AssetDatabase.CopyAsset(src, twinPath))
+                                twin = AssetDatabase.LoadAssetAtPath<Material>(twinPath);
+                            if (twin == null) { twin = new Material(m); AssetDatabase.CreateAsset(twin, twinPath); }
+                            twin.enableInstancing = true;
+                            EditorUtility.SetDirty(twin);
+                        }
+                        mats[i] = twin; changed = true;
+                    }
+                    if (changed) r.sharedMaterials = mats;
+                }
+                var saved = PrefabUtility.SaveAsPrefabAsset(tmp, variantPath);
+                AssetDatabase.SaveAssets();
+                Debug.Log("[Dresser] D-892 instanced-grass twin saved: " + variantPath);
+                return saved != null ? saved : AssetDatabase.LoadAssetAtPath<GameObject>(variantPath);
+            }
+            finally { UnityEngine.Object.DestroyImmediate(tmp); }
         }
 
         // TD-031 v2.1b: stamp tilled soil (the field layer) at every sim field cell, so the enclosed

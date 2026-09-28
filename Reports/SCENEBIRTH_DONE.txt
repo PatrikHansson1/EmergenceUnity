@@ -1,5 +1,5 @@
-DONE 21:42:00 OK floor born from demoscene_village_day → Assets/Emergence/Scenes/EmergenceFloor_day.unity
-SCENE BIRTH — 2026-09-27T21:41:53 (D-878, steg 5)
+DONE 08:22:56 OK floor born from demoscene_village_day → Assets/Emergence/Scenes/EmergenceFloor_day.unity
+SCENE BIRTH — 2026-09-28T08:22:49 (D-878, steg 5)
 RPGUARD: ok (PC_RPAsset)
 RPGUARD: ok (PC_RPAsset)
 DEMO sun 'Directional Light_day': rot=(62,3,32,2,28,3) color=(1,0,991,0,939) I=1,5 shadows=Soft strength=0,897 bias=1,6/0,07
@@ -11,7 +11,7 @@ FOG: EmergenceFog.asset <- floor colour (0,76,0,94,0,98), range 120-700 intensit
   HAZE M_PLANT_atlas_anim_FNP.mat: distance fade was (0,76,0,94,0,98) 120-700 @0,55 -> fog colour 120-700 @0,55
   HAZE M_PLANT_atlas_anim_FNP_Unlit.mat: distance fade was (0,76,0,94,0,98) 120-700 @0,55 -> fog colour 120-700 @0,55
   HAZE M_PLANT_grass_anim_FNP.mat: distance fade was (0,76,0,94,0,98) 120-700 @0,55 -> fog colour 120-700 @0,55
-HAZE coordinated on 3 Nature materials (originals: C:\Users\patri\Dropbox\Emergence\45-UNITY\evidence\scene-birth\2026-09-27\haze-originals.json)
+HAZE coordinated on 3 Nature materials (originals: C:\Users\patri\Dropbox\Emergence\45-UNITY\evidence\scene-birth\2026-09-28\haze-originals.json)
 FLOOR saved: Assets/Emergence/Scenes/EmergenceFloor_day.unity (Sun + FLOOR:demoscene_village_day, RenderSettings inherited, fog off, Volume EmergenceLook)
 WORLD dressed: Assets/Emergence/WorldStates/world-8919-y120-full.json floor=True
   MEASURE P_ENV_PLANT_bush_v1_01: height 1,1 m at scale 1 (villager 1.75 m)
@@ -59,6 +59,6 @@ TERRAIN layers=5 alphaRes=1024 material=Universal Render Pipeline/Terrain/Lit tr
 WASH: switch off (Assets/Emergence/Materials/Washed/WASH-ON.txt absent) — pack shaders as authored
 CAPTURE birth-doc-gaze.png magenta=0/3686400 meanLum=121 cam=(400,55,190)
 eye-level bearing chosen: clear line 14,0 m of 14
-CAPTURE birth-eye-level.png magenta=0/3686400 meanLum=140 cam=(461,20,304)
+CAPTURE birth-eye-level.png magenta=0/3686400 meanLum=141 cam=(461,20,304)
 PINK materials in dressed scene: 0
 RPGUARD: ok (PC_RPAsset)
