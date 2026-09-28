@@ -33,7 +33,8 @@ namespace Emergence.Editor
         public static readonly string[] HouseTier0 = { "P_BLD_house_02", "P_BLD_house_06", "P_BLD_house_09", "P_BLD_house_10" };                    // cottages — a hamlet, the poor, the founders' first roofs
         public static readonly string[] HouseTier1 = { "P_BLD_house_03", "P_BLD_house_04", "P_BLD_house_08", "P_BLD_house_06", "P_BLD_house_09" }; // timber houses — a developing village
         public static readonly string[] HouseTier2 = { "P_BLD_house_05", "P_BLD_house_07", "P_BLD_house_11", "P_BLD_house_12", "P_BLD_house_04" }; // the big houses — a town's rich, the settled heart rebuilt
-        public const int   AlphaRes = 1024;        // D-879: terrain splat resolution (0,78 m/cell at W=100) — trails need it
+        public const int   AlphaRes = 1024;
+        public static string PersistTerrainPath = null; // D-891: when set, the TerrainData is saved as this asset using D-878's deterministic CreateAsset-BEFORE-SetAlphamaps (a build needs a persisted splat); null = in-memory (D-881, editor screenshots)        // D-879: terrain splat resolution (0,78 m/cell at W=100) — trails need it
         public const string FloorScenePath = "Assets/Emergence/Scenes/EmergenceFloor_day.unity"; // D-878: born from demoscene_village_day
         public const string NatureRoot = "Assets/Fantastic Nature Pack";   // D-875: L3 family = FANTASTIC; Dreamscape is out (magenta in URP 17.5)
         public const string VillageRoot = "Assets/Fantastic Village Pack";
@@ -282,10 +283,37 @@ namespace Emergence.Editor
             // not carried through the import (dresser diag right after SetAlphamaps: grass=969543 of 1048576; TerrainDiag a
             // few calls later: 1048576). The dressed world is rebuilt from S every time and never saved into the scene, so the
             // TerrainData now lives IN MEMORY only — no asset, nothing to reimport, nothing to go stale.
-            const string TdPath = "Assets/Emergence/Scenes/TerrainData_generated.asset";
-            if (AssetDatabase.LoadAssetAtPath<TerrainData>(TdPath) != null) AssetDatabase.DeleteAsset(TdPath); // retire the old asset
-            data.name = "TerrainData_generated (in-memory, D-881)";
-            data.SetAlphamaps(0, 0, am);
+            if (!string.IsNullOrEmpty(PersistTerrainPath))
+            {
+                // D-891 build path: D-878's PROVEN-deterministic order — DeleteAsset → CreateAsset (empty) → SetAlphamaps →
+                // Save. Creating the asset BEFORE SetAlphamaps makes the alphamap textures serialize as sub-assets, so the
+                // splat survives the scene save + the build's reimport (the in-memory path below loses it on serialize).
+                if (AssetDatabase.LoadAssetAtPath<TerrainData>(PersistTerrainPath) != null) AssetDatabase.DeleteAsset(PersistTerrainPath);
+                data.name = "TerrainData_diorama";
+                AssetDatabase.CreateAsset(data, PersistTerrainPath);
+                data.SetAlphamaps(0, 0, am);
+                // D-891: bake dominant-layer-per-cell to a .bytes TextAsset — this serializes into the build reliably
+                // (TerrainData alphamaps do not), and EmergenceTerrainSplat re-applies it at runtime.
+                int bw = data.alphamapWidth, bh = data.alphamapHeight, bl = am.GetLength(2);
+                var splatBytes = new byte[9 + bw * bh];
+                System.BitConverter.GetBytes(bw).CopyTo(splatBytes, 0);
+                System.BitConverter.GetBytes(bh).CopyTo(splatBytes, 4);
+                splatBytes[8] = (byte)bl;
+                for (int by = 0; by < bh; by++)
+                    for (int bx = 0; bx < bw; bx++)
+                    { int di = 0; float dv = -1f; for (int l = 0; l < bl; l++) if (am[by, bx, l] > dv) { dv = am[by, bx, l]; di = l; } splatBytes[9 + by * bw + bx] = (byte)di; }
+                var splatPath = System.IO.Path.ChangeExtension(PersistTerrainPath, null) + "_splat.bytes";
+                System.IO.File.WriteAllBytes(splatPath, splatBytes);
+                AssetDatabase.ImportAsset(splatPath);
+                Debug.Log("[Dresser] D-891 terrain persisted → " + PersistTerrainPath + " + splat.bytes " + (bw*bh) + " cells → " + splatPath);
+            }
+            else
+            {
+                const string TdPath = "Assets/Emergence/Scenes/TerrainData_generated.asset";
+                if (AssetDatabase.LoadAssetAtPath<TerrainData>(TdPath) != null) AssetDatabase.DeleteAsset(TdPath); // retire the old asset
+                data.name = "TerrainData_generated (in-memory, D-881)";
+                data.SetAlphamaps(0, 0, am);
+            }
             var tgo = Terrain.CreateTerrainGameObject(data);
             tgo.name = "Terrain";
             tgo.transform.SetParent(root, true);

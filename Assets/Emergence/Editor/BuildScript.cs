@@ -27,7 +27,9 @@ namespace Emergence.Editor
             try
             {
                 SyncStreamingAssets();
-                var scenes = new[] { BootstrapScene };
+                // D-891: build the dressed diorama scene when it exists, else the golden-smoke Bootstrap
+                var diorama = "Assets/Emergence/Scenes/EmergenceDiorama.unity";
+                var scenes = File.Exists(Path.Combine(ProjectRoot, diorama)) ? new[] { diorama } : new[] { BootstrapScene };
                 var outDir = Path.Combine(ProjectRoot, "Builds", "EmergenceUnity");
                 Directory.CreateDirectory(outDir);
                 var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
