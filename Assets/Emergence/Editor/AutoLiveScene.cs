@@ -122,6 +122,11 @@ namespace Emergence.Editor
             if (UnityEngine.Object.FindAnyObjectByType<EmergenceIntro>() == null)
                 new GameObject("EmergenceIntro").AddComponent<EmergenceIntro>();
             rep.AppendLine("opening: EmergenceIntro (title + controls hint, fades)");
+            // 2e. the epoch line (D-907): a quiet persistent "Year N · Era" at top — orientation for a
+            // century-scale world. Reads applied state (era) + clock (year); pure OnGUI overlay.
+            if (UnityEngine.Object.FindAnyObjectByType<EmergenceEraHud>() == null)
+                new GameObject("EmergenceEraHud").AddComponent<EmergenceEraHud>();
+            rep.AppendLine("epoch line: EmergenceEraHud (Year N · Era)");
 
             // 3. camera the build boots on (reuse WorldDresser's DocCamera; Unity fake-null forbids ??)
             var cam = Camera.main;

@@ -1,1 +1,1 @@
-DONE 23:43:03 OK 2026-09-28T23:43:03 [BuildScript] result=Succeeded errors=0 warnings=56 sizeMB=2067 secs=17 out=C:/Dev/EmergenceUnity/Builds/EmergenceUnity/EmergenceUnity.exe
+DONE 00:16:37 OK 2026-09-29T00:16:37 [BuildScript] result=Succeeded errors=0 warnings=73 sizeMB=2067 secs=25 out=C:/Dev/EmergenceUnity/Builds/EmergenceUnity/EmergenceUnity.exe
