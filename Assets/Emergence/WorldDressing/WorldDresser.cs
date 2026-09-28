@@ -34,7 +34,8 @@ namespace Emergence.Editor
         public static readonly string[] HouseTier1 = { "P_BLD_house_03", "P_BLD_house_04", "P_BLD_house_08", "P_BLD_house_06", "P_BLD_house_09" }; // timber houses — a developing village
         public static readonly string[] HouseTier2 = { "P_BLD_house_05", "P_BLD_house_07", "P_BLD_house_11", "P_BLD_house_12", "P_BLD_house_04" }; // the big houses — a town's rich, the settled heart rebuilt
         public const int   AlphaRes = 1024;
-        public static string PersistTerrainPath = null; // D-891: when set, the TerrainData is saved as this asset using D-878's deterministic CreateAsset-BEFORE-SetAlphamaps (a build needs a persisted splat); null = in-memory (D-881, editor screenshots)        // D-879: terrain splat resolution (0,78 m/cell at W=100) — trails need it
+        public static string PersistTerrainPath = null;
+        public static bool EnvironmentOnly = false; // D-896: live-scene mode — dress ENVIRONMENT only; the live layers (huts/fires/agents/codex) are owned by Fas3WorldRuntime reconcilers, so skip their static placement to avoid doubling. // D-891: when set, the TerrainData is saved as this asset using D-878's deterministic CreateAsset-BEFORE-SetAlphamaps (a build needs a persisted splat); null = in-memory (D-881, editor screenshots)        // D-879: terrain splat resolution (0,78 m/cell at W=100) — trails need it
         public const string FloorScenePath = "Assets/Emergence/Scenes/EmergenceFloor_day.unity"; // D-878: born from demoscene_village_day
         public const string NatureRoot = "Assets/Fantastic Nature Pack";   // D-875: L3 family = FANTASTIC; Dreamscape is out (magenta in URP 17.5)
         public const string VillageRoot = "Assets/Fantastic Village Pack";
@@ -113,20 +114,20 @@ namespace Emergence.Editor
             PlaceGroundFeatures(S, root.transform); // TD-031 terrain pass: field soil + desire-line paths as mesh decals (URP won't render the terrain splat)
             // PlaceGrass DISABLED — scatter stopgap was sparse + had a magenta sub-material; proper lush grass = terrain-detail P0 pass (audit). Method kept.
             // PlaceGrass(S, root.transform);
-            PlaceHuts(S, root.transform);         // TD-031 v2: houses face the green (scaled) + lived-in yards per house
-            PlaceFires(S, root.transform);
+            if (!EnvironmentOnly) PlaceHuts(S, root.transform);         // TD-031 v2: houses face the green (scaled) + lived-in yards per house
+            if (!EnvironmentOnly) PlaceFires(S, root.transform);
             PlaceFields(S, root.transform);
             PlaceNature(S, root.transform);
             PlaceMeadowFoliage(S, root.transform); // D-101d: fill the open meadow with real 3D foliage (flowers/tufts/bushes) — the near-field life that short detail-grass can't give
             PlaceAmbientFX(S, root.transform);     // D-115: Dreamscape's own drifting leaves + dust motes (atmosphere; visible in play mode)
             PlaceWorkMarks(S, root.transform);    // TD-031 v2.2b: quarry scars at depleted stone tiles (Materials layer)
-            PlaceAgents(S, root.transform);       // the studio's own rendered villagers (EP directive)
+            if (!EnvironmentOnly) PlaceAgents(S, root.transform);       // the studio's own rendered villagers (EP directive)
             // C7 (D-233): PlaceTechAnchors is GONE. It stood a well in EVERY village regardless of
             // whether anyone there knew how to dig one, and picked forge/mill/kiln by position hash
             // — a world that lied about what its people could do, which is the exact opposite of the
             // codex's premise. The codex now owns those four, gated on their real techs, using the
             // same GLBs (mill.glb / well.glb / kiln.glb / forge.glb). One placer, one truth.
-            PlaceCodexObjects(S, root.transform); // TD-033: discovery-driven objects (mill/tablets/star-banner/market by village development)
+            if (!EnvironmentOnly) PlaceCodexObjects(S, root.transform); // TD-033: discovery-driven objects (mill/tablets/star-banner/market by village development)
             PlaceAnimals(S, root.transform);      // the studio's own deer/wolf GLBs (animal upgrade)
             EmergenceLightRig.Apply(S.season, "day");
             StripImpostorsSceneWide();   // D-131: kill the distant-magenta class regardless of placement path
