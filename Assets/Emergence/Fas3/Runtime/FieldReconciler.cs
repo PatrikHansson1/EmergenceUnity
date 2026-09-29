@@ -5,8 +5,10 @@
 // not itself a field) get a fence, so interiors stay open and the outer perimeter forms itself; fields
 // appear and spread as the civilisation takes up farming. Presentation-only (D-078 r4): reads applied
 // state, deterministic (hash-based variant + placement, never sim-RNG, never Time), disarms on any
-// error. The tilled-soil SPLAT is intentionally dropped for this path (fences on grass) — the studio's
-// call under Patrik's delegation (reversible); the live-splat variant (path 2) was judged too costly.
+// error. D-920 (review D-919, SEEN at eye height): fences on bare grass read as EMPTY PENS — the D-914 call
+// is REVERSED. The tilled soil is now painted LIVE into the terrain alphamap under each field tile, by the
+// same GetAlphamaps/SetAlphamaps law Fas3RoadPainter already uses for the roads (path 2 was not costly
+// after all — the mechanism existed). Tiles that leave the set go back to meadow. Presentation-only.
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,6 +24,8 @@ namespace Emergence.Runtime
 
         Transform _root;
         long _sig = long.MinValue;
+        HashSet<(int, int)> _soil = new HashSet<(int, int)>();   // D-920: tiles currently carrying painted soil
+        public int SoilTexels { get; private set; }
         float _segLen = 2f; bool _lenAlongX = true; bool _measured;
 
         public int FenceCount { get; private set; }
@@ -32,7 +36,11 @@ namespace Emergence.Runtime
 
         public void Reconcile(WorldState S)
         {
-            try { ReconcileInner(S); LastNote = "fields=" + FenceCount; }
+            try
+            {
+                long before = _sig; ReconcileInner(S); LastNote = "fields=" + FenceCount + " soil=" + SoilTexels;
+                if (_sig != before) Debug.Log("[FieldReconciler] " + LastNote);   // D-920: durable evidence per rebuild (R2 lesson: green is not seen)
+            }
             catch (Exception e) { LastNote = "fields FAILED: " + e.Message; Debug.LogWarning("[FieldReconciler] " + e.Message); }
         }
 
@@ -51,6 +59,9 @@ namespace Emergence.Runtime
             if (_root == null) _root = new GameObject(LayerName).transform;
             for (int i = _root.childCount - 1; i >= 0; i--) UnityEngine.Object.DestroyImmediate(_root.GetChild(i).gameObject);
             FenceCount = 0;
+            var soilSet = new HashSet<(int, int)>();
+            if (fields != null) foreach (var f in fields) soilSet.Add((Mathf.RoundToInt(f.x), Mathf.RoundToInt(f.y)));
+            PaintSoil(S, soilSet);   // D-920: the soil follows the field-set exactly, fences ride its grass rim
             if (fields == null || fields.Length == 0) return;
 
             var cat = EmergenceAssetCatalog.Load();
@@ -74,6 +85,49 @@ namespace Emergence.Runtime
                 if (!set.Contains((tx, ty + 1))) EdgeFences(variants, terrain, cx - half, cz - half, cx + half, cz - half); // south (+ sim y), along X
                 if (!set.Contains((tx, ty - 1))) EdgeFences(variants, terrain, cx - half, cz + half, cx + half, cz + half); // north (- sim y), along X
             }
+        }
+
+        // D-920: paint tilled soil into the terrain alphamap under the current field tiles (inset so the fence
+        // stands on a grass rim), restore meadow under tiles that left the set. One read + one write over the
+        // union bounding box — the road painter's law. Alphamap y runs opposite the tile map's.
+        void PaintSoil(WorldState S, HashSet<(int, int)> cur)
+        {
+            var terrain = Terrain.activeTerrain; if (terrain == null || S == null) return;
+            var data = terrain.terrainData; if (data == null) return;
+            var L = Fas3TerrainBuilder.LastLayerIndex; int n = data.terrainLayers.Length;
+            if (n == 0 || L.field < 0 || L.field >= n || L.grass < 0 || L.grass >= n) { LastNote = "soil: no field layer"; return; }
+            if (cur.Count == 0 && _soil.Count == 0) return;
+            int A = data.alphamapResolution;
+            int minX = int.MaxValue, minY = int.MaxValue, maxX = int.MinValue, maxY = int.MinValue;
+            foreach (var t in cur) { minX = Mathf.Min(minX, t.Item1); maxX = Mathf.Max(maxX, t.Item1); minY = Mathf.Min(minY, t.Item2); maxY = Mathf.Max(maxY, t.Item2); }
+            foreach (var t in _soil) { minX = Mathf.Min(minX, t.Item1); maxX = Mathf.Max(maxX, t.Item1); minY = Mathf.Min(minY, t.Item2); maxY = Mathf.Max(maxY, t.Item2); }
+            float W1 = Mathf.Max(1, S.W - 1), H1 = Mathf.Max(1, S.H - 1);
+            int x0 = Mathf.Clamp(Mathf.FloorToInt((minX - 0.5f) / W1 * (A - 1)), 0, A - 1);
+            int x1 = Mathf.Clamp(Mathf.CeilToInt((maxX + 0.5f) / W1 * (A - 1)), 0, A - 1);
+            int y0 = Mathf.Clamp(Mathf.FloorToInt((1f - (maxY + 0.5f) / H1) * (A - 1)), 0, A - 1);
+            int y1 = Mathf.Clamp(Mathf.CeilToInt((1f - (minY - 0.5f) / H1) * (A - 1)), 0, A - 1);
+            int w = x1 - x0 + 1, h = y1 - y0 + 1; if (w <= 0 || h <= 0) return;
+            var am = data.GetAlphamaps(x0, y0, w, h);
+            int painted = 0;
+            for (int j = 0; j < h; j++)
+                for (int i = 0; i < w; i++)
+                {
+                    float ax = (x0 + i) / (float)(A - 1) * W1;             // texel centre in tile units
+                    float ay = (1f - (y0 + j) / (float)(A - 1)) * H1;
+                    int tx = Mathf.RoundToInt(ax), ty = Mathf.RoundToInt(ay);
+                    bool inCur = cur.Contains((tx, ty)), inOld = _soil.Contains((tx, ty));
+                    if (!inCur && !inOld) continue;
+                    if (inCur)
+                    {
+                        if (Mathf.Abs(ax - tx) > 0.44f || Mathf.Abs(ay - ty) > 0.44f) continue;   // grass rim for the fence
+                        for (int l = 0; l < n; l++) am[j, i, l] *= 0.15f;
+                        am[j, i, L.field] += 0.85f; painted++;
+                    }
+                    else { for (int l = 0; l < n; l++) am[j, i, l] = 0f; am[j, i, L.grass] = 1f; }   // abandoned: back to meadow
+                }
+            data.SetAlphamaps(x0, y0, am);
+            _soil = new HashSet<(int, int)>(cur);
+            SoilTexels = painted;
         }
 
         void EdgeFences(List<GameObject> variants, Terrain terrain, float ax, float az, float bx, float bz)

@@ -13,6 +13,7 @@ using System.IO;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using Emergence.Runtime;
 
@@ -27,6 +28,7 @@ namespace Emergence.Editor
         const string DefaultWorld = "Assets/Emergence/WorldStates/world-8919-y120-full.json";
         const string TdLivePath   = "Assets/Emergence/Scenes/TerrainData_live.asset";
         const string LiveScene    = "Assets/Emergence/Scenes/EmergenceLive.unity";
+        const string VolumePath   = "Assets/Emergence/Scenes/EmergenceLiveVolume.asset";   // D-920: the post volume the live scene boots with
         const long   Seed = 8919;
 
         static AutoLiveScene() { EditorApplication.update += Tick; }
@@ -156,6 +158,23 @@ namespace Emergence.Editor
             if (camGo.GetComponent<Fas3GazeDirector>() == null) camGo.AddComponent<Fas3GazeDirector>();
             camGo.transform.position = new Vector3(400, 60, 150); camGo.transform.LookAt(new Vector3(430, 6, 300));
             rep.AppendLine("camera: Main Camera + EmergenceDioramaCamera + Fas3GazeDirector (living gaze) + post");
+
+            // 3b. D-920 (review D-919): the live scene had NO Volume — renderPostProcessing was on, but nothing to
+            // process. VISUAL-BIBLE: ACES, bloom tuned to the ONE warm point (the fires), a light vignette. The
+            // profile is built here in code so the bake owns it; feel numbers are Patrik's eye pass.
+            var prof = AssetDatabase.LoadAssetAtPath<VolumeProfile>(VolumePath);
+            if (prof == null) { prof = ScriptableObject.CreateInstance<VolumeProfile>(); AssetDatabase.CreateAsset(prof, VolumePath); }
+            if (!prof.TryGet<Tonemapping>(out var tone)) tone = prof.Add<Tonemapping>(true);
+            tone.mode.Override(TonemappingMode.ACES);
+            if (!prof.TryGet<Bloom>(out var bloom)) bloom = prof.Add<Bloom>(true);
+            bloom.threshold.Override(0.95f); bloom.intensity.Override(0.5f); bloom.scatter.Override(0.65f);
+            if (!prof.TryGet<Vignette>(out var vig)) vig = prof.Add<Vignette>(true);
+            vig.intensity.Override(0.18f); vig.smoothness.Override(0.6f);
+            EditorUtility.SetDirty(prof);
+            var volGo = GameObject.Find("PostVolume") ?? new GameObject("PostVolume");
+            var vol = volGo.GetComponent<Volume>() ?? volGo.AddComponent<Volume>();
+            vol.isGlobal = true; vol.priority = 0; vol.sharedProfile = prof;
+            rep.AppendLine("post: global Volume (ACES + bloom thr 0.95/int 0.5 + vignette 0.18) -> " + VolumePath);
 
             // 4. save the live scene (Save As -> keeps the floor template clean)
             EditorSceneManager.MarkSceneDirty(scene);

@@ -103,7 +103,9 @@ namespace Emergence.Runtime
             {
                 case "dusk":  RenderSettings.fogColor = new Color(0.42f, 0.44f, 0.58f); RenderSettings.fogStartDistance = 160f; RenderSettings.fogEndDistance = 1200f; break;
                 case "night": RenderSettings.fogColor = new Color(0.16f, 0.20f, 0.32f); RenderSettings.fogStartDistance = 120f; RenderSettings.fogEndDistance = 950f; break;
-                default:      RenderSettings.fogColor = new Color(0.635f, 0.820f, 1.0f); RenderSettings.fogStartDistance = 240f; RenderSettings.fogEndDistance = 1500f; break;
+                // D-920 (review D-919): the documentary camera looks at 50–300 m, and 240 m of clear air gave it no depth.
+                // Haze from 70 m, cooler and a touch desaturated — the blue world — so the far village and treeline recede.
+                default:      RenderSettings.fogColor = new Color(0.62f, 0.72f, 0.86f); RenderSettings.fogStartDistance = 70f; RenderSettings.fogEndDistance = 800f; break;
             }
 
             LastNote = "light: " + season + "/" + phase + "  sky=" + (sky != null ? skyName : "NONE (grey horizon)")

@@ -524,13 +524,14 @@ namespace Emergence.Editor
                     for (int x = 0; x < S.W; x++)
                     {
                         if (Tile(S, x, y) != 'g') continue;
-                        if (Hash01(x, y, 760) > 0.05f) continue;      // sparse scatter (~5% of grass tiles)
+                        float clump = 0.25f + 1.5f * Mathf.PerlinNoise(x * 0.09f + 2.3f, y * 0.09f + 8.1f);   // A3: copses, not salt-and-pepper (mean 5% kept)
+                        if (Hash01(x, y, 760) > 0.05f * clump) continue;      // sparse scatter (~5% of grass tiles, clumped)
                         if (NearVillage(S, x, y, 3f)) continue;       // keep building pads & greens clear
                         var pf = treePfs[Hash(x, y, 761) % (uint)treePfs.Length];
                         var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, tparent);
                         float jx = Hash01(x, y, 762) - 0.5f, jy = Hash01(x, y, 763) - 0.5f;
                         go.transform.position = Ground(S, x + jx * 0.8f, y + jy * 0.8f);
-                        go.transform.rotation = Quaternion.Euler(0, Hash(x, y, 765) % 360u, 0);
+                        go.transform.rotation = Quaternion.Euler((Hash01(x, y, 766) - 0.5f) * 8f, Hash(x, y, 765) % 360u, (Hash01(x, y, 767) - 0.5f) * 8f);   // A3: ±4° lean
                         float sc = 0.8f + Hash01(x, y, 764) * 0.7f;
                         go.transform.localScale = Vector3.one * sc;
                         StripImpostorLods(go); // avoid the unlit billboard LOD (magenta/dark at distance)
@@ -1667,6 +1668,10 @@ namespace Emergence.Editor
 
         static void Scatter(WorldState S, Transform parent, GameObject[] set, int x, int y, float perTile, int salt)
         {
+            // A3 (D-920, review D-919): nature is BEDDED, not placed. Clump with slow noise (some tiles crowd into
+            // copses, others open into glades — mean density unchanged), vary size broadly around the measured
+            // authored mean (D-878 yardstick kept), lean a little. Same hash law, never sim-RNG.
+            perTile *= 0.35f + 1.40f * Mathf.PerlinNoise(x * 0.13f + salt * 0.37f, y * 0.13f + salt * 0.11f);
             int count = Mathf.FloorToInt(perTile) + (Hash01(x, y, salt) < perTile - Mathf.Floor(perTile) ? 1 : 0);
             for (int i = 0; i < count; i++)
             {
@@ -1674,9 +1679,11 @@ namespace Emergence.Editor
                 var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, parent);
                 float jx = Hash01(x, y, salt + 200 + i) - 0.5f, jy = Hash01(x, y, salt + 300 + i) - 0.5f;
                 go.transform.position = Ground(S, x + jx * 0.9f, y + jy * 0.9f);
-                go.transform.rotation = Quaternion.Euler(0, Hash(x, y, salt + 400 + i) % 360, 0);
-                float sc = 0.85f + Hash01(x, y, salt + 500 + i) * 0.4f;
-                go.transform.localScale = Vector3.one * sc;   // D-878: Nature trees at authored size (measured in the birth report, L6 measuring stick)
+                float tiltX = (Hash01(x, y, salt + 600 + i) - 0.5f) * 8f, tiltZ = (Hash01(x, y, salt + 700 + i) - 0.5f) * 8f;   // A3: ±4° lean
+                go.transform.rotation = Quaternion.Euler(tiltX, Hash(x, y, salt + 400 + i) % 360, tiltZ);
+                float sc = 0.6f + Hash01(x, y, salt + 500 + i) * 1.0f;   // A3: 0.6–1.6x around the authored mean (D-878 yardstick: mean ~1.1, was 0.85–1.25)
+                float sx = 0.92f + Hash01(x, y, salt + 800 + i) * 0.16f, sz = 0.92f + Hash01(x, y, salt + 900 + i) * 0.16f;
+                go.transform.localScale = new Vector3(sc * sx, sc, sc * sz);   // slight non-uniform: no two crowns identical
                 StripImpostorLods(go); // Dreamscape impostor billboards lack baked textures in edit mode -> magenta at distance
             }
         }
