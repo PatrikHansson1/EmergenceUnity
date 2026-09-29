@@ -10,6 +10,7 @@ namespace Emergence.Runtime
     {
         Fas4ChronicleView _book;
         Fas5AlmanacView _alm;
+        float _preMuteVol = -1f;
         Fas4ChronicleView Book() { if (_book == null) _book = FindAnyObjectByType<Fas4ChronicleView>(); return _book; }
         Fas5AlmanacView Alm()   { if (_alm  == null) _alm  = FindAnyObjectByType<Fas5AlmanacView>();  return _alm; }
 
@@ -33,6 +34,19 @@ namespace Emergence.Runtime
                 {
                     var b = Book(); if (b != null && b.BookOpen) b.CloseBook();
                     var a = Alm();  if (a != null && a.AlmanacOpen) a.CloseAlmanac();
+                }
+
+                // audio accessibility (Steam-review factor, audio-skill §7): master volume + mute.
+                // Master via AudioListener.volume (global, read every frame — robust). Music-separate
+                // control waits for a real settings UI (Patriks öga). Keys avoid the camera/speed keys.
+                if (Input.GetKeyDown(KeyCode.Equals) || Input.GetKeyDown(KeyCode.KeypadPlus))
+                    { _preMuteVol = -1f; AudioListener.volume = Mathf.Clamp01(AudioListener.volume + 0.1f); }
+                else if (Input.GetKeyDown(KeyCode.Minus) || Input.GetKeyDown(KeyCode.KeypadMinus))
+                    { _preMuteVol = -1f; AudioListener.volume = Mathf.Clamp01(AudioListener.volume - 0.1f); }
+                else if (Input.GetKeyDown(KeyCode.Backslash))
+                {
+                    if (_preMuteVol >= 0f) { AudioListener.volume = _preMuteVol; _preMuteVol = -1f; }
+                    else { _preMuteVol = AudioListener.volume; AudioListener.volume = 0f; }
                 }
             }
             catch { /* legacy Input disabled in some setups — disarm, never break the frame */ }
