@@ -1,5 +1,5 @@
-DONE 20:14:05 OK live scene baked (rig + story organs present, environment dressed; run-mode movement + chronicle verified next)
-LIVE SCENE BAKE — 2026-09-29T20:14:02
+DONE 22:12:28 OK live scene baked (rig + story organs present, environment dressed; run-mode movement + chronicle verified next)
+LIVE SCENE BAKE — 2026-09-29T22:12:24
 dressed ENVIRONMENT-only: Assets/Emergence/Scenes/EmergenceFloor_day.unity world=Assets/Emergence/WorldStates/world-8919-y120-full.json
 terrain persisted: Assets/Emergence/Scenes/TerrainData_live.asset
 runtime splat: attached

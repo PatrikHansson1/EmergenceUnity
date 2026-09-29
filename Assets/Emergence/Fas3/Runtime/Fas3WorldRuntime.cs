@@ -64,6 +64,7 @@ namespace Emergence.Runtime
             // tier: a failure must never cost agents or huts, the same clause as codex and fires.
             try { Fas3RoadPainter.Apply(S); RoadNote = Fas3RoadPainter.LastNote; }
             catch (Exception e) { RoadNote = "roads: " + e.Message; Debug.LogWarning("[Fas3WorldRuntime] roads: " + e.Message); }
+            Fas3TroddenPainter.Apply(S);   // D-921: the village heart wears to earth live from pathUse (self-guards, once per year)
             _agents.Reconcile(S, false);
             _huts.Reconcile(S);
             _fields.Reconcile(S);   // D-914: live fenced fields from S.fields (self-guards)

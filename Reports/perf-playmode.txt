@@ -1,14 +1,14 @@
 EMERGENCE — A6 PLAY-MODE PROBE (Fas 1, increment 3)
-generated 2026-09-29 19:26:42
+generated 2026-09-29 20:46:05
 real render stats in play mode (after frustum culling + SRP batching) on the open scene —
 the sharp A6 number vs the static census. Read-only (D-078 r4).
 samples=120  (warm-up 30 frames skipped)
 
 metric                 avg        max        budget    verdict
-draw calls             1084      1084       2500      OK
-set-pass calls         173       173        -         (info)
-triangles (millions)   0,3       -          8         OK
-frame ms / FPS         3,2       max 12,5   FPS 314   OK
+draw calls             1373      1373       2500      OK
+set-pass calls         193       193        -         (info)
+triangles (millions)   0,5       -          8         OK
+frame ms / FPS         2,8       max 3,8    FPS 354   OK
 
 NOTE: numbers reflect the editor Game view at its current resolution on the EP's GPU
 (4070 Ti SUPER reference; min-spec is GTX 1660-class). Use as the calibration anchor for A6;

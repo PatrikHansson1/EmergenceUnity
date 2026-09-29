@@ -1,17 +1,19 @@
 EMERGENCE — LIVE VERIFY (D-897): does the built live scene actually live?
-generated 2026-09-29 20:15:11
+generated 2026-09-29 22:13:23
 world runtime found: True
 sample A (~5s):  year=0 agents=4 applied=1
 sample B (~44s): year=1 agents=4 applied=2
 chronicle entries: A=4 -> B=4 (the emergent story writing itself)
 music cue @B: "Darkwood Path" (the score engaged: era->ambient at genesis)
 gaze dives @B: 1 (the eye noticed life — 0 is fine in a 1-year window)
-DRIVER A: producedYear=0 tick=0 buffered=1 | clock.PresentationYear=0
+DRIVER A: producedYear=0 tick=0 buffered=0 | clock.PresentationYear=0
 DRIVER B: producedYear=1 tick=144 buffered=1 | clock.PresentationYear=1
 driver.LastError: (none)
 time flows: year 0 -> 1  => True
 souls live: agents 4  => True
 snapshots consumed: applied 1 -> 2  => True
 chronicle lives: entries 4  => True
+no exceptions (R2): 0 from Emergence code in the play window  => True
+input backend (R2): activeInputHandler=2 (0 legacy, 1 NEW-ONLY = keys dead, 2 both)  => True
 
 verdict: GREEN — the built scene LIVES: time advances, souls exist, snapshots consumed

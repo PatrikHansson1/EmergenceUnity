@@ -271,10 +271,10 @@ namespace Emergence.Editor
                         am[ay, ax, liGravel] += wRock;
                     }
                 }
-            int trodden = PaintTrodden(S, am, AlphaRes, liPath, liGrass); // D-879: footfall wears the grass (states with pathUse)
+            int trodden = EnvironmentOnly ? 0 : PaintTrodden(S, am, AlphaRes, liPath, liGrass); // D-921: live scene wears its ground via Fas3TroddenPainter // D-879: footfall wears the grass (states with pathUse)
             Debug.Log($"[Dresser] TRODDEN GROUND: {trodden} cells worn from pathUse (max footfall {(S.pathUse != null && S.pathUse.Length > 0 ? S.pathUse.Max() : 0)})");
             if (!EnvironmentOnly) StampFields(S, am, liField, AlphaRes);   // D-914: no baked tilled-soil in the live scene // TD-031 v2.1b: tilled soil inside the field enclosures (was never stamped)
-            PaintRoutes(S, am, AlphaRes, liPath, liCobble); // D-116/120/879 EMERGENT ROADS: tie-derived, tech-tiered trail→path→paved
+            if (!EnvironmentOnly) PaintRoutes(S, am, AlphaRes, liPath, liCobble); // D-921: live scene grows its roads via Fas3RoadPainter // D-116/120/879 EMERGENT ROADS: tie-derived, tech-tiered trail→path→paved
             // D-878 it.6 MEASURED: every OTHER birth came out with an all-grass alphamap (Editor.log runs 4 and 6: grass=65536,
             // field/dirt/gravel=0) while the same code painted 55745/360/7850/1573 in runs 1–3 and 5. Only the reuse of the
             // existing TerrainData_generated.asset differed between runs — so the old asset is deleted first and the alphamap

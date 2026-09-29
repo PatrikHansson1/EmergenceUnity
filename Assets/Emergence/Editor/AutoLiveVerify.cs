@@ -32,6 +32,10 @@ namespace Emergence.Editor
         static int _chronA=-1,_chronB=-1;
         static string _cueB="";
         static int _gazeB=-1;
+        // R2 (D-921, review D-917): 110 964 InvalidOperationExceptions hid behind GREEN for weeks because no probe
+        // counted them. Now every Exception/Error the play window logs from Emergence code is a RED, and the input
+        // backend is asserted (legacy Input code + New-only setting = every key silently dead).
+        static int _exceptions = 0; static string _firstException = ""; static bool _logHooked;
 
         static AutoLiveVerify() { EditorApplication.update += Tick; }
 
@@ -48,7 +52,7 @@ namespace Emergence.Editor
                         Directory.CreateDirectory(Path.GetDirectoryName(Done));
                         File.WriteAllText(Done, "RUNNING (opening scene) " + DateTime.Now.ToString("HH:mm:ss") + "\n");
                         EditorSceneManager.OpenScene(LiveScene, OpenSceneMode.Single);
-                        _yearA = _yearB = _agentsA = _agentsB = _appliedA = _appliedB = -1; _sampledA = _sampledB = false; _dYearA=_dYearB=_dTickA=_dTickB=_dBufA=_dBufB=_pYearA=_pYearB=-1; _dErr=""; _chronA=_chronB=-1; _cueB=""; _gazeB=-1;
+                        _yearA = _yearB = _agentsA = _agentsB = _appliedA = _appliedB = -1; _sampledA = _sampledB = false; _dYearA=_dYearB=_dTickA=_dTickB=_dBufA=_dBufB=_pYearA=_pYearB=-1; _dErr=""; _chronA=_chronB=-1; _cueB=""; _gazeB=-1; _exceptions=0; _firstException=""; _logHooked=false;
                         SessionState.SetInt(KeyPending, 1);
                         SessionState.SetFloat(KeyStart, (float)EditorApplication.timeSinceStartup);
                         File.WriteAllText(Done, "RUNNING (entering play mode) " + DateTime.Now.ToString("HH:mm:ss") + "\n");
@@ -66,6 +70,7 @@ namespace Emergence.Editor
 
             if (EditorApplication.isPlaying)
             {
+                if (!_logHooked) { _logHooked = true; Application.logMessageReceived -= OnLog; Application.logMessageReceived += OnLog; }
                 try
                 {
                     Application.runInBackground = true; EditorApplication.isPaused = false; EditorApplication.QueuePlayerLoopUpdate();
@@ -88,6 +93,28 @@ namespace Emergence.Editor
             else if (overtime) SafeFail("play mode did not start within watchdog");
         }
 
+        static void OnLog(string condition, string stackTrace, LogType type)
+        {
+            if (type != LogType.Exception && type != LogType.Error) return;
+            string all = condition + "\n" + stackTrace;
+            if (all.IndexOf("Emergence", StringComparison.Ordinal) < 0 && all.IndexOf("InvalidOperationException", StringComparison.Ordinal) < 0) return;
+            if (all.IndexOf("Package Manager", StringComparison.Ordinal) >= 0) return;   // Unity ID / PM auth noise, not the game
+            _exceptions++;
+            if (_firstException.Length == 0) _firstException = condition.Length > 160 ? condition.Substring(0, 160) : condition;
+        }
+
+        /// <summary>0 = legacy, 1 = New-only, 2 = Both. New-only with legacy Input code in the project = dead keys (D-917).</summary>
+        static int InputHandler()
+        {
+            try
+            {
+                var txt = File.ReadAllText(Path.Combine(Application.dataPath, "..", "ProjectSettings", "ProjectSettings.asset"));
+                var m = System.Text.RegularExpressions.Regex.Match(txt, @"activeInputHandler:\s*(\d)");
+                return m.Success ? int.Parse(m.Groups[1].Value) : -1;
+            }
+            catch { return -1; }
+        }
+
         static void Finish(bool overtime, bool foundWorld)
         {
             try
@@ -108,11 +135,17 @@ namespace Emergence.Editor
                 bool soulsLive = _agentsB > 0;
                 bool applying  = _appliedB > _appliedA && _appliedA >= 0;
                 bool chronicleLives = _chronB > 0;
-                bool green = foundWorld && timeFlows && soulsLive && applying && chronicleLives && !overtime;
+                Application.logMessageReceived -= OnLog;
+                int ih = InputHandler();
+                bool noExceptions = _exceptions == 0;
+                bool inputOk = ih != 1;   // Both (2) or legacy (0) keep the keys alive; New-only (1) kills them silently
+                bool green = foundWorld && timeFlows && soulsLive && applying && chronicleLives && !overtime && noExceptions && inputOk;
                 sb.AppendLine("time flows: year " + _yearA + " -> " + _yearB + "  => " + timeFlows);
                 sb.AppendLine("souls live: agents " + _agentsB + "  => " + soulsLive);
                 sb.AppendLine("snapshots consumed: applied " + _appliedA + " -> " + _appliedB + "  => " + applying);
                 sb.AppendLine("chronicle lives: entries " + _chronB + "  => " + chronicleLives);
+                sb.AppendLine("no exceptions (R2): " + _exceptions + " from Emergence code in the play window  => " + noExceptions + (noExceptions ? "" : "   FIRST: " + _firstException));
+                sb.AppendLine("input backend (R2): activeInputHandler=" + ih + " (0 legacy, 1 NEW-ONLY = keys dead, 2 both)  => " + inputOk);
                 if (overtime) sb.AppendLine("WATCHDOG cut at " + Watchdog + "s");
                 sb.AppendLine();
                 sb.AppendLine("verdict: " + (green ? "GREEN — the built scene LIVES: time advances, souls exist, snapshots consumed"
@@ -120,7 +153,7 @@ namespace Emergence.Editor
                 File.WriteAllText(Report, sb.ToString());
                 File.WriteAllText(Done, "DONE " + DateTime.Now.ToString("HH:mm:ss") + " verdict=" + (green ? "GREEN" : "CHECK")
                     + " yearA=" + _yearA + " yearB=" + _yearB + " agentsA=" + _agentsA + " agentsB=" + _agentsB
-                    + " applied=" + _appliedA + "->" + _appliedB + " chron=" + _chronA + "->" + _chronB + " cue=\"" + _cueB + "\" gaze=" + _gazeB + (overtime ? " WATCHDOG" : "") + "\nsee " + Report + "\n");
+                    + " applied=" + _appliedA + "->" + _appliedB + " chron=" + _chronA + "->" + _chronB + " cue=\"" + _cueB + "\" gaze=" + _gazeB + " exc=" + _exceptions + " input=" + (inputOk ? "ok" : "NEW-ONLY") + (overtime ? " WATCHDOG" : "") + "\nsee " + Report + "\n");
                 Debug.Log("[AutoLiveVerify] " + (green ? "GREEN" : "CHECK") + " y" + _yearA + "->" + _yearB + " agents" + _agentsB);
             }
             catch (Exception e) { try { File.WriteAllText(Done, "ERROR finish: " + e.Message + "\n"); } catch {} }
