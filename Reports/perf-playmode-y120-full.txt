@@ -1,20 +1,16 @@
 EMERGENCE — A6 PLAY-MODE PROBE (Fas 1, increment 3)
-generated 2026-09-29 23:37:02
+generated 2026-09-29 23:20:30
 real render stats in play mode (after frustum culling + SRP batching) on the open scene —
 the sharp A6 number vs the static census. Read-only (D-078 r4).
 samples=120  (warm-up 30 frames skipped)
-maturity (D-923): jumped to year 120 at frame 6 (apply 235 ms, applied year now 120, source persistent checkpoint)
+maturity (D-923): jumped to year 120 at frame 6 (apply 276 ms, applied year now 120, source world-8919-y120-full.json)
 world: appliedYear=120 huts=33 agents=111 fences=606 soilTexels=7065 workMarks=21 codexPlaced=145 fires=0 nature=0 trodden="trodden: y120 max footfall 959, 6864 texels worn (region 776x714)"
-  LiveFields: renderers=606 meshFilters=606 distinctMeshes=5 combinedMeshes=0
-  Huts_Live: renderers=770 meshFilters=770 distinctMeshes=60 combinedMeshes=0
-  LiveWorkMarks: renderers=27 meshFilters=27 distinctMeshes=4 combinedMeshes=0
 
 metric                 avg        max        budget    verdict
-draw calls             3008      3425       2500      OVER
-set-pass calls         248       255        -         (info)
-triangles (millions)   2,0       -          8         OK
-frame ms / FPS         4,2       max 7,5    FPS 241   OK
-min-spec estimate      15,4      (x3.7)     FPS 65    OK (est.)
+draw calls             2886      2984       2500      OVER
+set-pass calls         246       252        -         (info)
+triangles (millions)   1,9       -          8         OK
+frame ms / FPS         4,1       max 5,6    FPS 242   OK
 
 NOTE: numbers reflect the editor Game view at its current resolution on the EP's GPU
 (4070 Ti SUPER reference; min-spec is GTX 1660-class). Use as the calibration anchor for A6;

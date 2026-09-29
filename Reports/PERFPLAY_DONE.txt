@@ -1,2 +1,6 @@
-DONE 20:46:05 samples=120 drawCallsAvg=1373 triAvgM=0,5 fps=354
+DONE 23:37:02 samples=120 drawCallsAvg=3008 dcMax=3425 triAvgM=2,0 fps=241 | jumped to year 120 at frame 6 (apply 235 ms, applied year now 120, source persistent checkpoint)
+world: appliedYear=120 huts=33 agents=111 fences=606 soilTexels=7065 workMarks=21 codexPlaced=145 fires=0 nature=0 trodden="trodden: y120 max footfall 959, 6864 texels worn (region 776x714)"
+  LiveFields: renderers=606 meshFilters=606 distinctMeshes=5 combinedMeshes=0
+  Huts_Live: renderers=770 meshFilters=770 distinctMeshes=60 combinedMeshes=0
+  LiveWorkMarks: renderers=27 meshFilters=27 distinctMeshes=4 combinedMeshes=0
 see Reports/perf-playmode.txt

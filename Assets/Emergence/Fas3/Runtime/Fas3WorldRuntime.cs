@@ -48,6 +48,9 @@ namespace Emergence.Runtime
         public int FireCount => _fires.Count;
         public int SmokeCount => _fires.SmokeCount;
         public int CodexPlacedCount => _codex.PlacedCount;
+        public int FenceCount => _fields.FenceCount;       // D-923: maturity census for RUN_PERFPLAY <year>
+        public int SoilTexels => _fields.SoilTexels;
+        public int WorkMarkCount => _workmarks.MarkCount;
         public string LastCodexNote { get; private set; } = "";
 
         /// <summary>Reconcile all live layers to this snapshot. Codex failures never break agents/huts.</summary>
