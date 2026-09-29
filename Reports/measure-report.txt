@@ -1,0 +1,25 @@
+EMERGENCE — MEASURE PREFABS (D-924): size, pivot, renderers, shaders — names lie, bounds do not
+generated 2026-09-30 00:33:09   18 names
+
+name                                 w x h x d (m)     pivot(y from base)  rend  verdict / shaders
+Prefab_Bush_01                         4,1 x  2,2 x  3,4       +0,77            1   ok: Polyart/Dreamscape/Foliage/Foliage   [catalog]
+Prefab_Bush_02                         5,2 x  2,6 x  4,8       +1,09            1   ok: Polyart/Dreamscape/Foliage/Foliage   [catalog]
+Prefab_Bush_03                         5,4 x  5,7 x  5,4       +1,05            1   ok: Polyart/Dreamscape/Foliage/Foliage   [catalog]
+P_ENV_ivy_city_01                      1,6 x  3,7 x  0,5       +3,02            1   ok: TidalFlask/Foliage Wind URP Advanced LODfade City U6-1   [catalog]
+P_ENV_ivy_city_02                      3,1 x  2,5 x  0,6       +2,01            1   ok: TidalFlask/Foliage Wind URP Advanced LODfade City U6-1   [catalog]
+P_ENV_bush_city_01                     1,8 x  1,6 x  1,9       +0,23            3   ok: TidalFlask/Foliage Wind URP Advanced LODfade City U6-1   [catalog]
+P_ENV_bush_city_02                     3,6 x  2,7 x  3,4       +0,42            3   ok: TidalFlask/Foliage Wind URP Advanced LODfade City U6-1   [catalog]
+P_ENV_PLANT_leaf_village               2,0 x  0,8 x  2,1       +0,04            2   ok: TidalFlask/Foliage Wind URP Simple Lit FVP U6-1   [catalog]
+P_FX_smoke_city                        0,0 x  0,0 x  0,0       +0,00            1   ok: Universal Render Pipeline/Particles/Unlit   [catalog]
+msVFX_Stylized_Smoke_1               MISSING
+Prefab_Campfire_Unlit                  1,4 x  0,5 x  1,6       +0,05            3   ok: Polyart/Dreamscape/Props   [catalog]
+COMP_PROP_campfire_city_01             1,1 x  0,3 x  1,2       +0,03            3   ok: Universal Render Pipeline/Lit | Universal Render Pipeline/Particles/Unlit   [catalog]
+P_PROP_campfire_city                   1,1 x  0,3 x  1,2       +0,03            1   ok: Universal Render Pipeline/Lit   [catalog]
+P_PROP_campfire                        1,5 x  0,8 x  1,7       +0,34            5   ok: Universal Render Pipeline/Lit | Universal Render Pipeline/Particles/Unlit   [catalog]
+P_FX_fire                              0,6 x  0,7 x  1,2       +0,34            3   ok: Universal Render Pipeline/Particles/Unlit   [catalog]
+Prefab_Flower_02                       0,4 x  0,7 x  0,3       +0,04            1   ok: Polyart/Dreamscape/Foliage/Foliage   [catalog]
+Prefab_Flower_04                       0,4 x  0,7 x  0,3       +0,04            1   ok: Polyart/Dreamscape/Foliage/Foliage   [catalog]
+VFX_Fire_01_Medium                     1,4 x  1,4 x 26,4       +0,71            8   ok: SH_Vefects_VFX_URP_Particles_Erosion_01 | SH_Vefects_VFX_URP_Heat_Haze_01   [catalog]
+
+pivot(y from base): how far the prefab's origin sits ABOVE its lowest point (0 = sits on its base, >0 = floats/needs sinking).
+PINK-UNDER-URP = built-in pipeline shader family (Standard / Legacy Shaders / Particles / Mobile / Nature): URP draws it magenta.

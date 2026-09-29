@@ -202,8 +202,8 @@ namespace Emergence.Editor
             for (int ry = 0; ry < res; ry++)
                 for (int rx = 0; rx < res; rx++)
                 {
-                    float sx = rx / (float)(res - 1) * (S.W - 1);
-                    float sy = (1f - ry / (float)(res - 1)) * (S.H - 1);
+                    float sx = Fas3TerrainBuilder.VertToTileX(rx, res, S.W);   // D-924: one map<->tile law (was a W/(W-1) stretch)
+                    float sy = Fas3TerrainBuilder.VertToTileY(ry, res, S.H);
                     int tx = Mathf.Clamp(Mathf.RoundToInt(sx), 0, S.W - 1), ty = Mathf.Clamp(Mathf.RoundToInt(sy), 0, S.H - 1);
                     float n1 = Mathf.PerlinNoise(sx * 0.018f + vseed, sy * 0.018f + 3.1f);   // broad hills
                     float n2 = Mathf.PerlinNoise(sx * 0.045f + 11.7f, sy * 0.045f + vseed2); // mid rolls
@@ -243,8 +243,8 @@ namespace Emergence.Editor
             for (int ay = 0; ay < AlphaRes; ay++)
                 for (int ax = 0; ax < AlphaRes; ax++)
                 {
-                    float sx = ax / (float)(AlphaRes - 1) * (S.W - 1);
-                    float sy = (1f - ay / (float)(AlphaRes - 1)) * (S.H - 1);
+                    float sx = Fas3TerrainBuilder.CellToTileX(ax, AlphaRes, S.W);   // D-924: one map<->tile law
+                    float sy = Fas3TerrainBuilder.CellToTileY(ay, AlphaRes, S.H);
                     int tx = Mathf.Clamp(Mathf.RoundToInt(sx), 0, S.W - 1), ty = Mathf.Clamp(Mathf.RoundToInt(sy), 0, S.H - 1);
                     char tt = Tile(S, tx, ty);
                     if (tt == 's' || tt == 'i')
@@ -318,7 +318,7 @@ namespace Emergence.Editor
             var tgo = Terrain.CreateTerrainGameObject(data);
             tgo.name = "Terrain";
             tgo.transform.SetParent(root, true);
-            tgo.transform.position = new Vector3(0, -3f, 0);
+            tgo.transform.position = Fas3TerrainBuilder.TerrainOrigin + new Vector3(0, -3f, 0);   // D-924: tile grid covers the terrain exactly
             var terrain = tgo.GetComponent<Terrain>();
             // TD-031 terrain pass: alphamap weights ARE stored (diag) but the shared TerrainLit material
             // renders only the base layer — force a FRESH material instance bound to this terrain so the
@@ -451,8 +451,8 @@ namespace Emergence.Editor
                     for (int dy = 0; dy < dres; dy++)
                         for (int dx = 0; dx < dres; dx++)
                         {
-                            float sx = dx / (float)(dres - 1) * (S.W - 1);
-                            float sy = (1f - dy / (float)(dres - 1)) * (S.H - 1);
+                            float sx = Fas3TerrainBuilder.CellToTileX(dx, dres, S.W);   // D-924
+                            float sy = Fas3TerrainBuilder.CellToTileY(dy, dres, S.H);
                             int tx = Mathf.Clamp(Mathf.RoundToInt(sx), 0, S.W - 1), ty = Mathf.Clamp(Mathf.RoundToInt(sy), 0, S.H - 1);
                             if (Tile(S, tx, ty) != 'g') continue;
                             float h = Hash01(dx, dy, 700 + p);
@@ -669,8 +669,8 @@ namespace Emergence.Editor
             for (int ay = 0; ay < res; ay++)
                 for (int ax = 0; ax < res; ax++)
                 {
-                    float sx = ax / (float)(res - 1) * (S.W - 1);
-                    float sy = (1f - ay / (float)(res - 1)) * (S.H - 1);
+                    float sx = Fas3TerrainBuilder.CellToTileX(ax, res, S.W);   // D-924
+                    float sy = Fas3TerrainBuilder.CellToTileY(ay, res, S.H);
                     int x0 = Mathf.Clamp((int)sx, 0, S.W - 2), y0 = Mathf.Clamp((int)sy, 0, S.H - 2);
                     float fx = Mathf.Clamp01(sx - x0), fy = Mathf.Clamp01(sy - y0);
                     float f = Mathf.Lerp(Mathf.Lerp(wear[y0, x0], wear[y0, x0 + 1], fx), Mathf.Lerp(wear[y0 + 1, x0], wear[y0 + 1, x0 + 1], fx), fy);
@@ -1041,7 +1041,10 @@ namespace Emergence.Editor
             // TD-031 v2.2: TIME made visible. Age each hut by its OWNER's generation (sim state) —
             // old huts (founder generations, the settled heart) grow overgrown/mossy; new huts (later
             // generations, the expanding edge) carry fresh raw timber. Expansion rings become legible.
-            var mossProps = FindPrefabs("Prefab_Bush").Where(p => p != null && !p.name.Contains("Flower")).Take(3).ToArray();
+            // D-924 (SEEN at year 55): the Dreamscape bushes (4-6 m, pink-flowering) read as magenta error blobs beside old
+            // huts. Overgrowth is now the pack's own green shrubs (measured 1.8/3.6 m, URP); the old query stays as fallback.
+            var mossProps = OvergrowthNames.Select(FindPrefab).Where(p => p != null).ToArray();
+            if (mossProps.Length == 0) mossProps = FindPrefabs("Prefab_Bush").Where(p => p != null && !p.name.Contains("Flower")).Take(3).ToArray();
             var freshProps = new[] { "P_PROP_foundation_wood_01", "P_PROP_foundation_wood_03", "P_PROP_board_01", "P_PROP_board_02", "P_PROP_cart_wheel_small" }
                 .Select(FindPrefab).Where(p => p != null).ToArray();
             var genOf = new Dictionary<string, int>(); int maxGen = 1;
@@ -1426,7 +1429,7 @@ namespace Emergence.Editor
             var parent = new GameObject("Fires").transform; parent.SetParent(root, true);
             var fx = FindPrefab("VFX_Fire_01_Medium") ?? FindPrefab("VFX_Fire_01_Big")
                      ?? FindPrefab("P_FX_fire") ?? FindPrefab("PF_FX_fire") ?? FindPrefab("fire");
-            var smoke = FindPrefab("msVFX_Stylized Smoke 1") ?? FindPrefab("msVFX_Stylized Smoke 2");
+            var smoke = FindPrefab("P_FX_smoke_city") ?? FindPrefab("msVFX_Stylized Smoke 1") ?? FindPrefab("msVFX_Stylized Smoke 2");   // D-924: pack plume first
             foreach (var f in S.fires)
             {
                 var pos = Ground(S, f.x, f.y, 0.1f);
@@ -1442,14 +1445,14 @@ namespace Emergence.Editor
                 light.transform.position = pos + Vector3.up * 1.2f;
                 light.type = LightType.Point; light.color = new Color(1f, 0.62f, 0.28f); light.intensity = 2.6f; light.range = 12f;
             }
-            // chimney smoke: a hut within SmokeNearFireTiles of a burning fire is "lived-in" at this hour
+            // chimney smoke: a lived-in hut (owned, not free — D-924 hearth rule) or one beside a burning fire
             if (smoke != null)
                 foreach (var h in S.huts)
                 {
-                    if (!S.fires.Any(f => Mathf.Abs(f.x - h.x) <= SmokeNearFireTiles && Mathf.Abs(f.y - h.y) <= SmokeNearFireTiles)) continue;
+                    if (!FireReconciler.IsLivedIn(h, S.fires)) continue;
                     var go = (GameObject)PrefabUtility.InstantiatePrefab(smoke, parent);
                     go.transform.position = Ground(S, h.x, h.y, SmokeRoofLift);
-                    go.transform.localScale = Vector3.one * SmokeScale;
+                    go.transform.localScale = Vector3.one * (smoke.name.StartsWith("P_FX") ? 1f : SmokeScale);
                     go.name = $"chimneysmoke_{h.owner}";
                 }
         }
@@ -1967,6 +1970,8 @@ namespace Emergence.Editor
             }
             return null;
         }
+        public static readonly string[] OvergrowthNames = { "P_ENV_bush_city_01", "P_ENV_bush_city_02", "P_ENV_PLANT_leaf_village" };   // D-924
+
         static IEnumerable<GameObject> FindPrefabs(string prefix)
             => AssetDatabase.FindAssets($"t:Prefab {prefix}").Select(g => AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(g))).Where(p => p != null && p.name.StartsWith(prefix, StringComparison.OrdinalIgnoreCase));
     }

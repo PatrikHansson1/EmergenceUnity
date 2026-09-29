@@ -12,7 +12,7 @@ namespace Emergence.Runtime
         public float holdSeconds = 3.5f;   // fully shown
         public float fadeSeconds = 2.5f;   // then eases out
         public string title = "EMERGENCE";
-        public string hint  = "Space pause  ·  1/2/3 speed  ·  WASD / drag / scroll  camera  ·  B book  ·  M almanac  ·  -/+ volume";
+        public string hint  = "Space pause  ·  1/2/3 speed  ·  WASD / drag / scroll  camera  ·  B book  ·  M almanac  ·  Esc settings";
 
         float _t0 = -1f;
         GUIStyle _titleStyle, _hintStyle;

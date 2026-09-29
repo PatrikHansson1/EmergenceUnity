@@ -1,5 +1,5 @@
-DONE 22:12:28 OK live scene baked (rig + story organs present, environment dressed; run-mode movement + chronicle verified next)
-LIVE SCENE BAKE — 2026-09-29T22:12:24
+DONE 01:11:02 OK live scene baked (rig + story organs present, environment dressed; run-mode movement + chronicle verified next)
+LIVE SCENE BAKE — 2026-09-30T01:10:57
 dressed ENVIRONMENT-only: Assets/Emergence/Scenes/EmergenceFloor_day.unity world=Assets/Emergence/WorldStates/world-8919-y120-full.json
 terrain persisted: Assets/Emergence/Scenes/TerrainData_live.asset
 runtime splat: attached
@@ -8,7 +8,7 @@ story organs: Fas4ChronicleFeed + Fas4ChronicleView + Fas4LatestLine + Fas4Prose
 sound layers: Fas3AudioDirector + Fas6EraAmbience + Fas6StateAmbience + Fas6MusicDirector
 opening: EmergenceIntro (title + controls hint, fades)
 epoch line: EmergenceEraHud (Year N · Era)
-patterns+keys: Fas5MetricsRecorder + Fas5AlmanacView + EmergenceHotkeys (B/M/Esc)
+patterns+keys: Fas5MetricsRecorder + Fas5AlmanacView + EmergenceHotkeys (B/M/Esc) + EmergenceSettings (Esc)
 camera: Main Camera + EmergenceDioramaCamera + Fas3GazeDirector (living gaze) + post
 post: global Volume (ACES + bloom thr 0.95/int 0.5 + vignette 0.18) -> Assets/Emergence/Scenes/EmergenceLiveVolume.asset
 saved live scene: Assets/Emergence/Scenes/EmergenceLive.unity

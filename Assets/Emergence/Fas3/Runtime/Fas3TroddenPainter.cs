@@ -36,7 +36,7 @@ namespace Emergence.Runtime
 
             var terrain = Terrain.activeTerrain; if (terrain == null) { LastNote = "trodden: no terrain"; return; }
             var data = terrain.terrainData;
-            var L = Fas3TerrainBuilder.LastLayerIndex; int n = data.terrainLayers.Length;
+            var L = Fas3TerrainBuilder.Layers(data); int n = data.terrainLayers.Length;   // D-924: adopt the dressed terrain's layer order
             if (n == 0 || L.path < 0 || L.path >= n || L.grass < 0 || L.grass >= n) { LastNote = "trodden: no path layer"; return; }
             int A = data.alphamapResolution;
 
@@ -55,11 +55,11 @@ namespace Emergence.Runtime
             if (minX == int.MaxValue) { LastNote = "trodden: footfall too light to show"; return; }
             minX = Mathf.Max(0, minX - 1); minY = Mathf.Max(0, minY - 1); maxX = Mathf.Min(S.W - 1, maxX + 1); maxY = Mathf.Min(S.H - 1, maxY + 1);
 
-            float W1 = Mathf.Max(1, S.W - 1), H1 = Mathf.Max(1, S.H - 1);
-            int x0 = Mathf.Clamp(Mathf.FloorToInt(minX / W1 * (A - 1)), 0, A - 1);
-            int x1 = Mathf.Clamp(Mathf.CeilToInt(maxX / W1 * (A - 1)), 0, A - 1);
-            int y0 = Mathf.Clamp(Mathf.FloorToInt((1f - maxY / H1) * (A - 1)), 0, A - 1);   // alphamap y runs opposite the tile map
-            int y1 = Mathf.Clamp(Mathf.CeilToInt((1f - minY / H1) * (A - 1)), 0, A - 1);
+            // D-924: one map<->tile law (Fas3TerrainBuilder); alphamap y runs opposite the tile map
+            int x0 = Mathf.Clamp(Mathf.FloorToInt(Fas3TerrainBuilder.TileToCellX(minX - 0.5f, A, S.W)), 0, A - 1);
+            int x1 = Mathf.Clamp(Mathf.CeilToInt(Fas3TerrainBuilder.TileToCellX(maxX + 0.5f, A, S.W)), 0, A - 1);
+            int y0 = Mathf.Clamp(Mathf.FloorToInt(Fas3TerrainBuilder.TileToCellY(maxY + 0.5f, A, S.H)), 0, A - 1);
+            int y1 = Mathf.Clamp(Mathf.CeilToInt(Fas3TerrainBuilder.TileToCellY(minY - 0.5f, A, S.H)), 0, A - 1);
             int w = x1 - x0 + 1, h = y1 - y0 + 1; if (w <= 0 || h <= 0) return;
 
             var am = data.GetAlphamaps(x0, y0, w, h);
@@ -67,8 +67,8 @@ namespace Emergence.Runtime
             for (int j = 0; j < h; j++)
                 for (int i = 0; i < w; i++)
                 {
-                    float sx = (x0 + i) / (float)(A - 1) * W1;
-                    float sy = (1f - (y0 + j) / (float)(A - 1)) * H1;
+                    float sx = Fas3TerrainBuilder.CellToTileX(x0 + i, A, S.W);   // D-924
+                    float sy = Fas3TerrainBuilder.CellToTileY(y0 + j, A, S.H);
                     int tx0 = Mathf.Clamp((int)sx, 0, S.W - 2), ty0 = Mathf.Clamp((int)sy, 0, S.H - 2);
                     float fx = Mathf.Clamp01(sx - tx0), fy = Mathf.Clamp01(sy - ty0);
                     float f = Mathf.Lerp(Mathf.Lerp(wear[ty0, tx0], wear[ty0, tx0 + 1], fx), Mathf.Lerp(wear[ty0 + 1, tx0], wear[ty0 + 1, tx0 + 1], fx), fy);

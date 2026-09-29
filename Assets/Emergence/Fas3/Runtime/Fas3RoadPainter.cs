@@ -189,7 +189,7 @@ namespace Emergence.Runtime
         // ---- wear the ground along them ----
         static void Paint(WorldState S, TerrainData data, List<Seg> segs)
         {
-            var L = Fas3TerrainBuilder.LastLayerIndex;
+            var L = Fas3TerrainBuilder.Layers(data);   // D-924: adopt the dressed terrain's layer order
             int n = data.terrainLayers.Length;
             if (n == 0 || L.path >= n || L.grass >= n) { LastNote = "roads: no layers to paint into"; return; }
             int A = data.alphamapResolution;
@@ -204,11 +204,11 @@ namespace Emergence.Runtime
                 minY = Mathf.Min(minY, Mathf.Min(s.a.y, s.b.y)); maxY = Mathf.Max(maxY, Mathf.Max(s.a.y, s.b.y));
             }
             float pad = TrackHalfWidth + 1f;
-            int x0 = Mathf.Clamp(Mathf.FloorToInt((minX - pad) / (S.W - 1) * (A - 1)), 0, A - 1);
-            int x1 = Mathf.Clamp(Mathf.CeilToInt((maxX + pad) / (S.W - 1) * (A - 1)), 0, A - 1);
+            int x0 = Mathf.Clamp(Mathf.FloorToInt(Fas3TerrainBuilder.TileToCellX(minX - pad, A, S.W)), 0, A - 1);   // D-924: one map<->tile law
+            int x1 = Mathf.Clamp(Mathf.CeilToInt(Fas3TerrainBuilder.TileToCellX(maxX + pad, A, S.W)), 0, A - 1);
             // the alphamap's y runs opposite the tile map's, exactly as BuildAlphamap reads it
-            int y0 = Mathf.Clamp(Mathf.FloorToInt((1f - (maxY + pad) / (S.H - 1)) * (A - 1)), 0, A - 1);
-            int y1 = Mathf.Clamp(Mathf.CeilToInt((1f - (minY - pad) / (S.H - 1)) * (A - 1)), 0, A - 1);
+            int y0 = Mathf.Clamp(Mathf.FloorToInt(Fas3TerrainBuilder.TileToCellY(maxY + pad, A, S.H)), 0, A - 1);
+            int y1 = Mathf.Clamp(Mathf.CeilToInt(Fas3TerrainBuilder.TileToCellY(minY - pad, A, S.H)), 0, A - 1);
             int w = x1 - x0 + 1, h = y1 - y0 + 1;
             if (w <= 0 || h <= 0) { LastNote = "roads: empty region"; return; }
 
@@ -251,10 +251,10 @@ namespace Emergence.Runtime
         static int Stamp(float[,,] am, WorldState S, int A, int x0, int y0, int w, int h,
                          Vector2 p, bool paved, Fas3TerrainBuilder.LayerIndex L, int n)
         {
-            float texPerTile = (A - 1) / (float)(S.W - 1);
+            float texPerTile = A / (float)S.W;   // D-924
             int rad = Mathf.CeilToInt(TrackHalfWidth * texPerTile);
-            int cxT = Mathf.RoundToInt(p.x / (S.W - 1) * (A - 1));
-            int cyT = Mathf.RoundToInt((1f - p.y / (S.H - 1)) * (A - 1));
+            int cxT = Mathf.RoundToInt(Fas3TerrainBuilder.TileToCellX(p.x, A, S.W));   // D-924
+            int cyT = Mathf.RoundToInt(Fas3TerrainBuilder.TileToCellY(p.y, A, S.H));
             int hits = 0;
             for (int dy = -rad; dy <= rad; dy++)
                 for (int dx = -rad; dx <= rad; dx++)

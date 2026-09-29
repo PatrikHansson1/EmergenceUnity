@@ -39,6 +39,7 @@ namespace Emergence.Editor
         const string KeyStart   = "emg.perfplay.start";
         const string KeyYear    = "emg.perfplay.year";    // D-923: target year from the trigger body (0 = none)
         const string KeyHide    = "emg.perfplay.hide";    // D-923: "hide=A,B" — roots to deactivate after the jump (draw-call attribution)
+        const string KeyStay    = "emg.perfplay.stay";    // D-924: "stay" — remain in play mode after sampling (eye-pass at a mature year via screen control)
 
         // sampling accumulators (fresh statics after the single enter-playmode reload; valid until we exit)
         static int _frames, _samples, _dcMax, _spMax;
@@ -62,13 +63,14 @@ namespace Emergence.Editor
                     if (SessionState.GetInt(KeyPending, 0) == 0 && !EditorApplication.isPlayingOrWillChangePlaymode
                         && File.Exists(Trigger))
                     {
-                        int year = 0; string hide = "";
+                        int year = 0; string hide = ""; bool stay = false;
                         try
                         {
                             // body: "<year> [hide=Root1,Root2]" — e.g. "120 hide=LiveFields" measures year 120 without the fence layer
                             foreach (var tok in File.ReadAllText(Trigger).Split(new[] { ' ', '\n', '\r', '\t' }, StringSplitOptions.RemoveEmptyEntries))
                             {
                                 if (tok.StartsWith("hide=")) hide = tok.Substring(5);
+                                else if (tok == "stay") stay = true;
                                 else if (int.TryParse(tok, out int y)) year = y;
                             }
                         }
@@ -76,6 +78,7 @@ namespace Emergence.Editor
                         File.Delete(Trigger);
                         SessionState.SetInt(KeyYear, Mathf.Max(0, year));
                         SessionState.SetString(KeyHide, hide);
+                        SessionState.SetInt(KeyStay, stay ? 1 : 0);
                         _frames = _samples = _dcMax = _spMax = 0;
                         _dcSum = _spSum = _triSum = 0; _msSum = _msMax = 0f; _jumpFrame = -1; _jumpMs = 0f; _jumpNote = "";
                         SessionState.SetInt(KeyPending, 1);
@@ -168,8 +171,70 @@ namespace Emergence.Editor
             var w = UnityEngine.Object.FindAnyObjectByType<Fas3WorldRuntime>();
             if (w == null) return "world: (no Fas3WorldRuntime in scene)";
             return $"world: appliedYear={w.LastAppliedYear} huts={w.HutCount} agents={w.AgentCount} fences={w.FenceCount} soilTexels={w.SoilTexels} " +
-                   $"workMarks={w.WorkMarkCount} codexPlaced={w.CodexPlacedCount} fires={w.FireCount} nature={w.NatureCount} " +
-                   $"trodden=\"{Fas3TroddenPainter.LastNote}\"" + RootStats("LiveFields") + RootStats("Huts_Live") + RootStats("LiveWorkMarks");
+                   $"workMarks={w.WorkMarkCount} codexPlaced={w.CodexPlacedCount} fires={w.FireCount} smoke={w.SmokeCount} nature={w.NatureCount} " +
+                   $"trodden=\"{Fas3TroddenPainter.LastNote}\"" + RootStats("LiveFields") + RootStats("Huts_Live") + RootStats("LiveWorkMarks") + MagentaScan() + GroundCheck(w);
+        }
+
+        // D-924: what the ground painters actually wrote — terrain layer order, the index table they used, and the
+        // dominant layer under each field tile's centre (independent math: world position -> alphamap cell)
+        static string GroundCheck(Fas3WorldRuntime w)
+        {
+            var t = Terrain.activeTerrain; if (t == null || t.terrainData == null) return "\n  ground: no terrain";
+            var d = t.terrainData; var L = Fas3TerrainBuilder.LastLayerIndex;
+            var sb = new StringBuilder();
+            sb.Append("\n  ground: layers=[");
+            for (int i = 0; i < d.terrainLayers.Length; i++) sb.Append(i > 0 ? ", " : "").Append(i).Append(':').Append(d.terrainLayers[i] != null ? d.terrainLayers[i].name : "null");
+            sb.Append($"] LastLayerIndex grass={L.grass} grass2={L.grass2} field={L.field} path={L.path} gravel={L.gravel} cobble={L.cobble} alphaRes={d.alphamapResolution}");
+            var S = w != null ? w.LastState : null;
+            if (S == null || S.fields == null || S.fields.Length == 0) return sb.ToString();
+            int A = d.alphamapResolution; var hist = new int[d.alphamapLayers]; var hist2 = new int[d.alphamapLayers]; int n = 0;
+            foreach (var f in S.fields)
+            {
+                int tx = Mathf.RoundToInt(f.x), ty = Mathf.RoundToInt(f.y);
+                float wx = tx * 8f, wz = (S.H - 1 - ty) * 8f;   // WorldDresser.P parity: where the fence/hut/agent stands
+                var local = new Vector3(wx, 0, wz) - t.transform.position;
+                int ax = Mathf.Clamp(Mathf.RoundToInt(local.x / d.size.x * (A - 1)), 0, A - 1), az = Mathf.Clamp(Mathf.RoundToInt(local.z / d.size.z * (A - 1)), 0, A - 1);
+                var am = d.GetAlphamaps(ax, az, 1, 1); int best = 0;
+                for (int l = 1; l < d.alphamapLayers; l++) if (am[0, 0, l] > am[0, 0, best]) best = l;
+                hist[best]++; n++;
+                // the painters' own (W-1) convention: where THEY think the tile centre is
+                int bx = Mathf.Clamp(Mathf.RoundToInt(tx / (float)(S.W - 1) * (A - 1)), 0, A - 1), bz = Mathf.Clamp(Mathf.RoundToInt((1f - ty / (float)(S.H - 1)) * (A - 1)), 0, A - 1);
+                var am2 = d.GetAlphamaps(bx, bz, 1, 1); int best2 = 0;
+                for (int l = 1; l < d.alphamapLayers; l++) if (am2[0, 0, l] > am2[0, 0, best2]) best2 = l;
+                hist2[best2]++;
+                if (n == 1) sb.Append($"\n  first field tile ({tx},{ty}): world-centre texel ({ax},{az}) vs painter's (W-1) texel ({bx},{bz}) = {(bx - ax) * d.size.x / A:0.0} m drift");
+            }
+            sb.Append($"\n  field tiles ({n}) dominant layer at world centre:");
+            for (int l = 0; l < hist.Length; l++) if (hist[l] > 0) sb.Append($" {l}:{hist[l]}");
+            sb.Append($"   at painter's (W-1) centre:");
+            for (int l = 0; l < hist2.Length; l++) if (hist2[l] > 0) sb.Append($" {l}:{hist2[l]}");
+            return sb.ToString();
+        }
+
+        // D-924: every renderer in the scene whose material fell back to the error shader — the pink that only an eye
+        // used to catch (the msVFX smoke material carried a built-in particle shader that URP has no fallback for).
+        static string MagentaScan()
+        {
+            int bad = 0; var names = new StringBuilder();
+            foreach (var r in UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
+            {
+                var mats = r.sharedMaterials; bool hit = false;
+                string why = null;
+                foreach (var m in mats)
+                {
+                    if (m == null || m.shader == null) { why = "null"; break; }
+                    string sn = m.shader.name;
+                    if (sn == "Hidden/InternalErrorShader") { why = "error"; break; }
+                    // a built-in-pipeline shader draws pink under URP while keeping its own name — the scan must know the families
+                    if (sn == "Standard" || sn == "Standard (Specular setup)" || sn.StartsWith("Legacy Shaders/") || sn.StartsWith("Particles/")
+                        || sn.StartsWith("Mobile/") || sn.StartsWith("Nature/") || sn.StartsWith("Autodesk"))
+                    { why = sn; break; }
+                }
+                if (why == null) continue;
+                bad++;
+                if (bad <= 8) names.Append(' ').Append(r.transform.parent != null ? r.transform.parent.name + "/" : "").Append(r.name).Append('[').Append(why).Append(']');
+            }
+            return $"\n  magenta: renderers={bad}{(bad > 0 ? " e.g." + names : "")}";
         }
 
         // renderers / distinct meshes / combined (static-batched) meshes under a live root — shows whether batching took
@@ -223,7 +288,9 @@ namespace Emergence.Editor
             finally
             {
                 SessionState.SetInt(KeyPending, 0);
-                if (EditorApplication.isPlaying) EditorApplication.ExitPlaymode();
+                bool stay = SessionState.GetInt(KeyStay, 0) == 1; SessionState.SetInt(KeyStay, 0);
+                if (stay) Debug.Log("[PerfPlayProbe] stay: play mode left running for the eye-pass — stop it by hand");
+                else if (EditorApplication.isPlaying) EditorApplication.ExitPlaymode();
             }
         }
 

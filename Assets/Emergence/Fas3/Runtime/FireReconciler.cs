@@ -34,7 +34,9 @@ namespace Emergence.Runtime
         public int SmokeCount { get; private set; }
 
         static readonly string[] FireNames = { "VFX_Fire_01_Medium", "VFX_Fire_01_Big", "P_FX_fire", "PF_FX_fire", "fire" };
-        static readonly string[] SmokeNames = { "msVFX_Stylized Smoke 1", "msVFX_Stylized Smoke 2" };
+        // D-924 (SEEN at year 55): the msVFX plume renders as an opaque white slab in URP; the Fantastic City pack's own
+        // chimney smoke (URP particle material, same production class as the roofs) leads the chain now.
+        static readonly string[] SmokeNames = { "P_FX_smoke_city", "msVFX_Stylized Smoke 1", "msVFX_Stylized Smoke 2" };
 
         readonly Dictionary<string, GameObject> _fires = new();
         readonly Dictionary<string, GameObject> _smokes = new();
@@ -86,14 +88,14 @@ namespace Emergence.Runtime
             if (smokePf != null)
                 foreach (var h in huts)
                 {
-                    if (!NearAnyFire(fires, h.x, h.y)) continue;
+                    if (!IsLivedIn(h, fires)) continue;   // D-924: the hearth is the hut's own fire
                     string key = Key(h.x, h.y);
                     wantSmoke.Add(key);
                     if (_smokes.ContainsKey(key)) continue;
                     var go = Object.Instantiate(smokePf, _layer, true);
                     go.name = "chimneysmoke_" + (h.owner ?? key);
                     go.transform.position = GroundW(P(S, h.x, h.y), SmokeRoofLift);
-                    go.transform.localScale = Vector3.one * SmokeScale;
+                    go.transform.localScale = Vector3.one * (smokePf.name.StartsWith("P_FX") ? 1f : SmokeScale);   // the pack plume is sized for its own chimneys
                     _smokes[key] = go;
                 }
             Remove(_smokes, wantSmoke);
@@ -108,6 +110,18 @@ namespace Emergence.Runtime
             foreach (var go in _smokes.Values) if (go != null) Object.Destroy(go);
             _fires.Clear(); _smokes.Clear();
             Count = 0; SmokeCount = 0;
+        }
+
+        /// <summary>D-924 (measured at year 120: 33 owned huts, 0 open fires → 0 smoke, a village that read as dead).
+        /// The engine lights open fires only for the hutless and cold (emergence-engine.js: night && warmth low &&
+        /// no hut within 25) — so once a village has roofs the fire list empties for good. A hut with an owner that
+        /// is not free is LIVED-IN and its hearth burns; an open fire beside a hut still counts (the era-0 camp).
+        /// Read-only on applied state, no clock, no RNG (D-078 r4). The dresser applies the same rule.</summary>
+        public static bool IsLivedIn(WorldHut h, WorldFire[] fires)
+        {
+            if (h == null) return false;
+            if (!h.free && !string.IsNullOrEmpty(h.owner)) return true;
+            return NearAnyFire(fires, h.x, h.y);
         }
 
         /// <summary>The dresser's rule, verbatim: Chebyshev distance in tile space.</summary>

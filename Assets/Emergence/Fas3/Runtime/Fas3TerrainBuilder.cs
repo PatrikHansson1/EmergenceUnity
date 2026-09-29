@@ -22,6 +22,7 @@
 // player's world are built by the same code and cannot drift. Presentation-only (D-078 r4): reads
 // the applied snapshot, writes nothing back, consumes no sim RNG — all variation is Perlin/hash.
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Emergence.Runtime
@@ -31,6 +32,27 @@ namespace Emergence.Runtime
         public const float TileSize = 8f;        // metres per sim tile — must match WorldDresser.TileSize
         public const float TerrainHeight = 72f;  // vertical extent of the TerrainData
         public const float TerrainDropY = -3f;   // the dresser's ground offset
+
+        // D-924 — THE GROUND AND THE THINGS ON IT DISAGREED BY HALF A TILE IN THE MIDDLE OF THE MAP.
+        // Everything that STANDS (huts, fences, agents, codex objects, water planes) is placed at world x*8, tile
+        // centres 0..(W-1)*8. Everything PAINTED or RAISED (heights, tile textures, details, roads, trodden ground,
+        // field soil) mapped tile x to normalized u = x/(W-1) over a terrain W*8 m wide — a stretch of W/(W-1) that
+        // drifts 0 m at the west edge to a full tile (8 m) at the east edge, half a tile where villages live.
+        // Measured at year 55: 18 of 18 field tiles soil-dominant where the painter thought the centre was, 3 of 18
+        // under the real fences (drift 2,3 m east, 5,5 m south). Fixed by ONE law: the terrain's origin sits half a
+        // tile before tile 0 (TerrainOrigin), so tile x covers local [x*8, (x+1)*8) exactly, and every map<->tile
+        // conversion goes through the helpers below. Both builders (this one and the editor dresser) use them.
+        public static readonly Vector3 TerrainOrigin = new Vector3(-TileSize * 0.5f, 0f, -TileSize * 0.5f);
+        /// <summary>Cell-centred map (alphamap / detail map): texel i of N over W tiles -> continuous tile coordinate (integer = tile centre).</summary>
+        public static float CellToTileX(int i, int N, int W) => (i + 0.5f) * W / (float)N - 0.5f;
+        /// <summary>Alphamap row j runs SOUTH->NORTH (world +z) while sim y runs the other way: row 0 = the south edge of tile H-1.</summary>
+        public static float CellToTileY(int j, int N, int H) => H - 0.5f - (j + 0.5f) * H / (float)N;
+        /// <summary>Vertex-based map (heightmap): vertex r of res -> continuous tile coordinate.</summary>
+        public static float VertToTileX(int r, int res, int W) => r / (float)(res - 1) * W - 0.5f;
+        public static float VertToTileY(int r, int res, int H) => H - 0.5f - r / (float)(res - 1) * H;
+        /// <summary>Continuous tile coordinate -> continuous cell index (Round for the centre, Floor/Ceil for bounds).</summary>
+        public static float TileToCellX(float sx, int N, int W) => (sx + 0.5f) * N / (float)W - 0.5f;
+        public static float TileToCellY(float sy, int N, int H) => (H - 0.5f - sy) * N / (float)H - 0.5f;
 
         /// <summary>Diagnostics from the last build, so a probe can assert on the ground instead of guessing.</summary>
         public static string LastDiag = "";
@@ -60,7 +82,7 @@ namespace Emergence.Runtime
             var tgo = Terrain.CreateTerrainGameObject(data);
             tgo.name = "Terrain";
             if (parent != null) tgo.transform.SetParent(parent, true);
-            tgo.transform.position = new Vector3(0f, TerrainDropY, 0f);
+            tgo.transform.position = TerrainOrigin + new Vector3(0f, TerrainDropY, 0f);   // D-924: tile grid covers the terrain exactly
 
             var terrain = tgo.GetComponent<Terrain>();
             // D-120: a fresh material instance so the splat keywords rebind to THIS terrain; >4 layers
@@ -243,8 +265,8 @@ namespace Emergence.Runtime
             for (int ry = 0; ry < res; ry++)
                 for (int rx = 0; rx < res; rx++)
                 {
-                    float sx = rx / (float)(res - 1) * (S.W - 1);
-                    float sy = (1f - ry / (float)(res - 1)) * (S.H - 1);
+                    float sx = VertToTileX(rx, res, S.W);   // D-924: one map<->tile law
+                    float sy = VertToTileY(ry, res, S.H);
                     float h = NoiseH(sx, sy, vseed, vseed2);
                     h = VillagePad(S, sx, sy, vseed, vseed2, h);
                     h += 0.030f * Sample(stone, S.W, S.H, sx, sy);   // stone ground stands a touch proud
@@ -281,6 +303,45 @@ namespace Emergence.Runtime
         /// <summary>The layer indices the last build produced. The road painter needs them and the
         /// terrain is built exactly once per session, so handing them over beats guessing at 0..4.</summary>
         public static LayerIndex LastLayerIndex;
+        public static bool LayerIndexResolved { get; private set; }
+
+        // D-924 — THE LIVE GROUND WAS PAINTED INTO THE GRASS LAYER FOR THREE INCREMENTS. The live scene ships a
+        // terrain the DRESSER built (a different layer order: grass, dirt, gravel, stone, paving), so Build() never
+        // runs in play mode and LastLayerIndex stayed at its default — every index 0 = grass. Roads (D-247), trodden
+        // ground (D-921) and field soil (D-920) all counted their texels honestly and wrote them where nobody could
+        // see them (measured: 15 of 18 field tiles grass-dominant at year 55). Every painter now goes through
+        // Layers(data), which adopts an existing terrain by its layer NAMES the first time it is asked.
+        public static LayerIndex Layers(TerrainData data)
+        {
+            if (LayerIndexResolved || data == null) return LastLayerIndex;
+            AdoptExisting(data);
+            return LastLayerIndex;
+        }
+
+        public static void AdoptExisting(TerrainData data)
+        {
+            if (data == null) return;
+            var names = data.terrainLayers.Select(l => l != null ? l.name : "").ToArray();
+            int Find(params string[] cands) { foreach (var c in cands) { int i = System.Array.IndexOf(names, c); if (i >= 0) return i; } return -1; }
+            int grass = Find("Layer_grass_01", "Layer_Grass"); if (grass < 0) grass = 0;
+            var idx = new LayerIndex
+            {
+                grass  = grass,
+                field  = Find("Layer_farmfield", "Layer_dirt", "Layer_Dirt"),
+                path   = Find("Layer_gravel", "Layer_gravel_01", "Layer_dirt", "Layer_Dirt"),
+                gravel = Find("Layer_stone", "Layer_gravel_01", "Layer_Rock", "Layer_Stone"),
+                cobble = Find("Layer_pavingstone_01", "Layer_walkway_city_01", "Layer_walkway_city_02", "Layer_pavingstone_02", "Layer_Cobblestone"),
+            };
+            int g2 = Find(names[grass] == "Layer_grass_01" ? "Layer_Grass" : "Layer_grass_01");
+            idx.grass2 = g2 >= 0 ? g2 : grass;
+            if (idx.field < 0) idx.field = idx.path >= 0 ? idx.path : grass;
+            if (idx.path < 0) idx.path = idx.field;
+            if (idx.gravel < 0) idx.gravel = idx.path;
+            if (idx.cobble < 0) idx.cobble = idx.gravel;
+            LastLayerIndex = idx; LayerIndexResolved = true;
+            LastDiag = (LastDiag ?? "") + $"\n[terrain-adopt] layers=[{string.Join(", ", names)}] grass={idx.grass} grass2={idx.grass2} field={idx.field} path={idx.path} gravel={idx.gravel} cobble={idx.cobble}";
+            Debug.Log("[Fas3TerrainBuilder] adopted existing terrain: " + $"grass={idx.grass} field={idx.field} path={idx.path} gravel={idx.gravel} cobble={idx.cobble}");
+        }
 
         static LayerIndex BuildLayers(TerrainData data)
         {
@@ -318,7 +379,7 @@ namespace Emergence.Runtime
                 idx.grass2 = layers.Count - 1;
             }
             data.terrainLayers = layers.ToArray();
-            LastLayerIndex = idx;
+            LastLayerIndex = idx; LayerIndexResolved = true;
             return idx;
         }
 
@@ -350,8 +411,8 @@ namespace Emergence.Runtime
             for (int ay = 0; ay < A; ay++)
                 for (int ax = 0; ax < A; ax++)
                 {
-                    float sx = ax / (float)(A - 1) * (S.W - 1);
-                    float sy = (1f - ay / (float)(A - 1)) * (S.H - 1);
+                    float sx = CellToTileX(ax, A, S.W);   // D-924: one map<->tile law
+                    float sy = CellToTileY(ay, A, S.H);
                     // DOMAIN WARP: read the tile map at a wandering offset instead of straight.
                     // The map is a grid; ground is not. Displacing the lookup by ~2 tiles of Perlin
                     // makes the edge of a field or a stone patch meander the way a real one does,
@@ -517,8 +578,8 @@ namespace Emergence.Runtime
                 for (int dy = 0; dy < D; dy++)
                     for (int dx = 0; dx < D; dx++)
                     {
-                        float sx = dx / (float)(D - 1) * (S.W - 1);
-                        float sy = (1f - dy / (float)(D - 1)) * (S.H - 1);
+                        float sx = CellToTileX(dx, D, S.W);   // D-924
+                        float sy = CellToTileY(dy, D, S.H);
                         int tx = Mathf.Clamp(Mathf.RoundToInt(sx), 0, S.W - 1), ty = Mathf.Clamp(Mathf.RoundToInt(sy), 0, S.H - 1);
                         char tt = Tile(S, tx, ty);
                         if (tt != 'g' && tt != 'f') continue;      // meadow and forest floor only

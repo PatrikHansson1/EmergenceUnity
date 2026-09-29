@@ -1,5 +1,5 @@
 EMERGENCE — CODEX REALITY CHECK (D-252): what each row's asset MEASURES, not what it is called
-generated 2026-09-29 22:44:06   (115 rows, yardstick = a 1,75 m villager)
+generated 2026-09-30 00:23:00   (115 rows, yardstick = a 1,75 m villager)
 
   row                  tier       placed size      x person  parts  drawn by
   ------------------------------------------------------------------------------------------------
@@ -75,9 +75,9 @@ generated 2026-09-29 22:44:06   (115 rows, yardstick = a 1,75 m villager)
        meshes: coffin
   coin-scales          milestone    0,0x0,1   m     0,0x      1   Lit
        meshes: coin
-  commons-fire         dressing     0,5x1,6   m     0,3x      3   Props
-       meshes: firewood, plane, smallrock
-       note: row says 'commons', geometry says 'firewood' — read once, then leave it alone if it is right
+  commons-fire         dressing     0,3x1,2   m     0,2x      3   Lit,Unlit
+       meshes: campfire
+       note: row says 'commons', geometry says 'campfire' — read once, then leave it alone if it is right
   cooking-pot          milestone    0,8x1,6   m     0,5x      1   Lit
        meshes: cookingpot
   copper-stock         dressing     0,1x0,3   m     0,1x      1   Lit
@@ -317,8 +317,6 @@ generated 2026-09-29 22:44:06   (115 rows, yardstick = a 1,75 m villager)
   ✗ bronze-tools: variant 'P_PROP_knife_city_03' is 0,0 m against the row's 0,1 m (4,9x) — same word, different thing?
   ✗ cloth-sacks: variant 'P_PROP_sack_city_02' is 0,2 m against the row's 0,5 m (2,7x) — same word, different thing?
   ✗ coin-scales: tier 'milestone' but the asset places at 0,01 m — invisible at eye level
-  ✗ commons-fire: variant 'COMP_PROP_campfire_city_02' is 1,2 m against the row's 0,5 m (2,6x) — same word, different thing?
-  ✗ commons-fire: variant 'P_PROP_campfire_poles' is 1,2 m against the row's 0,5 m (2,7x) — same word, different thing?
   ✗ cooking-pot: variant 'P_PROP_cookingpot_city_01' is 0,2 m against the row's 0,8 m (3,4x) — same word, different thing?
   ✗ cooking-pot: variant 'COMP_PROP_cookingpot_city_01' is 0,3 m against the row's 0,8 m (2,7x) — same word, different thing?
   ✗ crates: variant 'Prefab_Crate_01' is 1,7 m against the row's 0,5 m (3,7x) — same word, different thing?

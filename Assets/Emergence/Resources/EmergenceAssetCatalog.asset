@@ -17,12 +17,12 @@ MonoBehaviour:
     prefab: {fileID: 8295591563862043295, guid: 98c5ce036f68d8941922e7541fb70887, type: 3}
   - name: VFX_Fire_01_Big
     prefab: {fileID: 8829451551789304542, guid: e91fa0fac941e714e8c4d5709097019f, type: 3}
-  - name: P_FX_fire
-    prefab: {fileID: 9002380880433531131, guid: 30676f232a1876f40a16219b65af703f, type: 3}
   - name: PF_FX_fire
     prefab: {fileID: 0}
   - name: fire
     prefab: {fileID: 9002380880433531131, guid: 2aba9f0b2bf220c48916633329d4dc07, type: 3}
+  - name: P_FX_smoke_city
+    prefab: {fileID: 7738093601837714384, guid: a5d4405dfd2afeb4fa716161315df10d, type: 3}
   - name: msVFX_Stylized Smoke 1
     prefab: {fileID: 104829970813648393, guid: d3015b7eea383f64d8b81f965cc466e7, type: 3}
   - name: msVFX_Stylized Smoke 2
@@ -64,7 +64,7 @@ MonoBehaviour:
   - name: Prefab_RockFormation_04
     prefab: {fileID: 2921132140309449108, guid: ca21edac250d713449ce116707447d89, type: 3}
   - name: P_ENV_stone_01
-    prefab: {fileID: 0}
+    prefab: {fileID: 4132412883002452737, guid: 00812b83b771e714d959b511d4b91621, type: 3}
   - name: P_ENV_PLANT_grass_village
     prefab: {fileID: 1106708480259925815, guid: 164734044aef0a946be0b27e20c63321, type: 3}
   - name: P_ENV_grass_city_01
@@ -342,7 +342,7 @@ MonoBehaviour:
   - name: P_PROP_bottle_04
     prefab: {fileID: 2041679349197019933, guid: 5c7cb65fdec6a0140a2f04a921b9c0dd, type: 3}
   - name: P_PROP_bottle_01
-    prefab: {fileID: 2720622057549455491, guid: 6847eb46affb403428b3318ca1c16b7f, type: 3}
+    prefab: {fileID: 8737094841695700286, guid: bc1b6f60f5b7c5347b431a80974b5fe4, type: 3}
   - name: P_PROP_bottle_02
     prefab: {fileID: 654544485776084747, guid: 757c9ef934ea29e4cae13cd8554da777, type: 3}
   - name: P_PROP_bottle_03
@@ -417,8 +417,8 @@ MonoBehaviour:
     prefab: {fileID: 5543536211634374282, guid: 230e8f3d0a14efc4db8a8586aa481b5f, type: 3}
   - name: P_PROP_cart_wheel_small
     prefab: {fileID: 7452869415572602400, guid: bfe6ec9d46d9d074095689bcd94fe9c0, type: 3}
-  - name: P_BLD_waterwheel
-    prefab: {fileID: 3380353190463003160, guid: f1040fb6033c0ca44ad0d578788a5df0, type: 3}
+  - name: P_BLD_house_13
+    prefab: {fileID: 8681033655019677861, guid: c0cacda008ac5324598ff77198b809b2, type: 3}
   - name: P_PROP_watchtower_wood_02_small
     prefab: {fileID: 5976175354287838475, guid: 77c84fd2956591a4ea015fb36fae0ee1, type: 3}
   - name: P_PROP_watchtower_wood_01
@@ -861,22 +861,14 @@ MonoBehaviour:
     prefab: {fileID: 1567476485989535473, guid: 562dcfb468c7bb84f9ed2312d5b9eff0, type: 3}
   - name: P_PROP_forge_city
     prefab: {fileID: 5663365183671349530, guid: fc522f7d253b0194c993d1907c90c9bd, type: 3}
-  - name: Prefab_Campfire_Unlit
-    prefab: {fileID: 9046428374051729307, guid: 97a710fea04bf0b4ab7b7c36ee526700, type: 3}
   - name: COMP_PROP_campfire_city_01
     prefab: {fileID: 66674225826929623, guid: 2b1f39a05f294034ea38a869f2d14372, type: 3}
-  - name: COMP_PROP_campfire_city_02
-    prefab: {fileID: 3141420835733146315, guid: 650abdb331874824083322ba7f793c26, type: 3}
   - name: P_PROP_campfire_city
     prefab: {fileID: 2228906891217885262, guid: 96d82d1a8a8bfb848ae321846e77f03d, type: 3}
-  - name: P_PROP_campfire_poles_city
-    prefab: {fileID: 2289800191215475915, guid: cf018f6b715d7044b872ff089f42433a, type: 3}
   - name: P_PROP_campfire
-    prefab: {fileID: 6263036474275010733, guid: 50b9e5061742dc04abc5b1f0bd8104d9, type: 3}
-  - name: P_PROP_campfire_poles
-    prefab: {fileID: 662833090346014821, guid: d00eb4cd5f9da0c45b2817510dd80300, type: 3}
-  - name: Campfire
-    prefab: {fileID: 7150841258172674693, guid: a9c199292ca4a8249abe0489e19c3a8f, type: 3}
+    prefab: {fileID: 4064394425576871609, guid: c010832a3146f5a4c863ed62be622f4f, type: 3}
+  - name: P_FX_fire
+    prefab: {fileID: 9002380880433531131, guid: 30676f232a1876f40a16219b65af703f, type: 3}
   - name: COMP_PROP_shelf_city_01
     prefab: {fileID: 4059758348326241768, guid: bca2c914f9832ca4885200be0f7629cc, type: 3}
   - name: COMP_PROP_shelf_city_02
@@ -1407,8 +1399,6 @@ MonoBehaviour:
     prefab: {fileID: 3626879538450379820, guid: 3eb0fbed7af3f4f4c985580455ed3d39, type: 3}
   - name: P_BLD_house_12
     prefab: {fileID: 7197837000303595854, guid: 7a439fd9b3adf9142b5a4384bd84442f, type: 3}
-  - name: P_BLD_house_13
-    prefab: {fileID: 8681033655019677861, guid: c0cacda008ac5324598ff77198b809b2, type: 3}
   - name: P_PROP_board_01
     prefab: {fileID: 8904886276359077443, guid: 55f6825c08382af4990cfda6343bd768, type: 3}
   - name: P_PROP_board_02
@@ -1454,7 +1444,7 @@ MonoBehaviour:
   - name: Layer_Grass
     layer: {fileID: 8574412962073106934, guid: a52c1ccfba5ea9648acb65bb5108524e, type: 2}
   - name: Layer_grass_01
-    layer: {fileID: 8574412962073106934, guid: 1a80a17506b849a419d27e4950b2d726, type: 2}
+    layer: {fileID: 8574412962073106934, guid: baaf459d3b3f7bd4790763e876659041, type: 2}
   - name: Layer_grass_city
     layer: {fileID: 8574412962073106934, guid: 05deeacffa023e346932b3cc511904f6, type: 2}
   - name: Layer_farmfield
@@ -1486,6 +1476,6 @@ MonoBehaviour:
   - name: Layer_Sand
     layer: {fileID: 8574412962073106934, guid: 6b3db07afdde30b46b9143e7ae511100, type: 2}
   mossPrefabs:
-  - {fileID: 4974463672623675875, guid: 33ecd0ef342d8ee4188c82a8b5761ab5, type: 3}
-  - {fileID: 5648544150296794767, guid: f1acfe97b07f9f54ca6dc5555723aba1, type: 3}
-  - {fileID: 1051078274315369266, guid: ed60867ab2e84f944925106afee949be, type: 3}
+  - {fileID: 3166877199665758655, guid: 43b084cbd957d4647b1a51220e6bbd7c, type: 3}
+  - {fileID: 8556568416906183575, guid: 8835234ad4860b54bbd46465b091e9ea, type: 3}
+  - {fileID: 2574681585619496249, guid: 7d30c4b5ff9ac564e99367e461a6c5b9, type: 3}

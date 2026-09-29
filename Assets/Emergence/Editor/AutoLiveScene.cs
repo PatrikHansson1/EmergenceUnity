@@ -140,7 +140,9 @@ namespace Emergence.Editor
                 new GameObject("Fas5AlmanacView").AddComponent<Fas5AlmanacView>();
             if (UnityEngine.Object.FindAnyObjectByType<EmergenceHotkeys>() == null)
                 new GameObject("EmergenceHotkeys").AddComponent<EmergenceHotkeys>();
-            rep.AppendLine("patterns+keys: Fas5MetricsRecorder + Fas5AlmanacView + EmergenceHotkeys (B/M/Esc)");
+            if (UnityEngine.Object.FindAnyObjectByType<EmergenceSettings>() == null)
+                new GameObject("EmergenceSettings").AddComponent<EmergenceSettings>();   // D-925: volume's on-screen path
+            rep.AppendLine("patterns+keys: Fas5MetricsRecorder + Fas5AlmanacView + EmergenceHotkeys (B/M/Esc) + EmergenceSettings (Esc)");
 
             // 3. camera the build boots on (reuse WorldDresser's DocCamera; Unity fake-null forbids ??)
             var cam = Camera.main;

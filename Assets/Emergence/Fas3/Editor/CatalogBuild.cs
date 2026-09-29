@@ -123,7 +123,7 @@ namespace Emergence.Editor
             // them with an editor prefab query, so the living loop never had a meadow. Optional by the
             // same rule as the fire chain: an absent variant is not a defect.
             var optional = new[] { "VFX_Fire_01_Medium", "VFX_Fire_01_Big", "P_FX_fire", "PF_FX_fire", "fire",
-                                   "msVFX_Stylized Smoke 1", "msVFX_Stylized Smoke 2",
+                                   "P_FX_smoke_city", "msVFX_Stylized Smoke 1", "msVFX_Stylized Smoke 2",   // D-924: pack chimney plume first
                                    "Prefab_Grass_01_Detail", "Prefab_Grass_Group_01_Detail", "Prefab_Grass_03_Detail",
                                    "SM_Flower_01_Unity", "Prefab_Flower_02", "Prefab_Flower_04",
                                    // VÅG 1.1 (rest): the natural world — the dresser found these with an editor
@@ -164,9 +164,12 @@ namespace Emergence.Editor
             }
 
             // 4) age-mark moss — capture PlaceHutAge's exact query result IN ORDER (parity with WorldDresser)
-            foreach (var pf in FindPrefabs("Prefab_Bush").Where(p => p != null && !p.name.Contains("Flower")).Take(3))
-                cat.mossPrefabs.Add(pf);
-            sb.AppendLine($"moss (Prefab_Bush query, order preserved): [{string.Join(", ", cat.mossPrefabs.Select(m => m.name))}]");
+            // D-924: overgrowth = the pack's green shrubs (WorldDresser.OvergrowthNames), the Prefab_Bush query only as fallback
+            foreach (var nm in WorldDresser.OvergrowthNames) { var pf = Resolve(nm); if (pf != null) cat.mossPrefabs.Add(pf); }
+            if (cat.mossPrefabs.Count == 0)
+                foreach (var pf in FindPrefabs("Prefab_Bush").Where(p => p != null && !p.name.Contains("Flower")).Take(3))
+                    cat.mossPrefabs.Add(pf);
+            sb.AppendLine($"moss/overgrowth (D-924 names, order preserved): [{string.Join(", ", cat.mossPrefabs.Select(m => m.name))}]");
 
             // 5) villager animator controllers by band key
             foreach (var key in new[] { "adult", "adult-f", "child", "child-f", "elder", "elder-f" })

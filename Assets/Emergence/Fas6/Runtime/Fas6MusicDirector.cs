@@ -63,6 +63,15 @@ namespace Emergence.Runtime
         Fas3WorldRuntime _world; Fas3PresentationClock _clock;
         AudioSource Active => _aActive ? _a : _b;
 
+        /// <summary>D-925 (settings panel): set the score level live. Outside a crossfade the active source is
+        /// re-levelled at once; inside one the fade math picks the new value up on its next step.</summary>
+        public void SetVolume(float v)
+        {
+            volume = Mathf.Clamp01(v);
+            var to = Active;
+            if (to != null && _fadeT >= 1f && CurrentCue.Length > 0) to.volume = volume * _gain;
+        }
+
         Fas3WorldRuntime World() { if (_world == null) _world = FindAnyObjectByType<Fas3WorldRuntime>(); return _world; }
         Fas3PresentationClock Clock() { if (_clock == null) _clock = FindAnyObjectByType<Fas3PresentationClock>(); return _clock; }
 

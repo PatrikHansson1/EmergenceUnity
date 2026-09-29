@@ -1452,7 +1452,9 @@
   {
    "id": "grave-cairns",
    "prefab": "P_PROP_wall_stone_small_01",
-   "variants": ["P_PROP_wall_stone_small_02"],
+   "variants": [
+    "P_PROP_wall_stone_small_02"
+   ],
    "category": "faith",
    "requiresTech": "",
    "requiresCustom": "",
@@ -1891,11 +1893,11 @@
   },
   {
    "id": "commons-fire",
-   "prefab": "Prefab_Campfire_Unlit",
+   "prefab": "COMP_PROP_campfire_city_01",
    "category": "culture",
    "requiresTech": "",
    "requiresCustom": "",
-   "desc": "a common fire ring at the heart of the green — where the village gathers when the dark comes",
+   "desc": "a common fire ring at the heart of the green, its flame kept — where the village gathers when the dark comes",
    "placement": "green",
    "tier": "dressing",
    "statMeaning": "everyday life: the commons",
@@ -1909,13 +1911,17 @@
    "ruinPrefab": "",
    "ruinScale": 0.0,
    "variants": [
-    "COMP_PROP_campfire_city_01",
-    "COMP_PROP_campfire_city_02",
     "P_PROP_campfire_city",
-    "P_PROP_campfire_poles_city",
-    "P_PROP_campfire",
-    "P_PROP_campfire_poles",
-    "Campfire"
+    "P_PROP_campfire"
+   ],
+   "arrangement": [
+    {
+     "prefab": "P_FX_fire",
+     "dx": 0.0,
+     "dz": 0.0,
+     "yaw": 0,
+     "scale": 1.0
+    }
    ]
   },
   {
