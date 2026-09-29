@@ -2,6 +2,8 @@
 // slow auto-orbit around the village centroid, left-drag to look, scroll to zoom, WASD/arrows to pan the
 // pivot, space to pause the orbit. Presentation-only runtime behaviour; touches no sim state. When no target
 // is set it auto-frames the scene bounds at Awake so a bare build still shows the world.
+// D-918 (sprint review D-917): yields to Fas3GazeDirector while it holds, adopts its framing on release; orbit
+// toggle moved Space->O (Space is pause). Deliberately UNGUARDED: a dead input backend must be loud, not silent.
 using UnityEngine;
 
 namespace Emergence.Runtime
@@ -19,6 +21,8 @@ namespace Emergence.Runtime
         float _yaw, _pitch = 24f;
         bool _autoOrbit = true;
         Vector3 _pivotPos;
+        Fas3GazeDirector _gaze;   // D-918: the living gaze on the same camera; the orbit yields while it holds
+        bool _wasGazing;
 
         void Awake()
         {
@@ -39,7 +43,15 @@ namespace Emergence.Runtime
 
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Space)) _autoOrbit = !_autoOrbit;
+            // D-918: yield to the living gaze (Fas3GazeDirector writes in LateUpdate). While it holds a target the
+            // orbit neither reads input nor writes the transform; on release it ADOPTS the gaze's framing (pivot =
+            // the thing the gaze showed, exact inverse of Apply) so it resumes with no snap and orbits what mattered.
+            // Before this the gaze only worked because this Update threw on line 1 every frame (review D-917).
+            if (_gaze == null) _gaze = GetComponent<Fas3GazeDirector>();
+            if (_gaze != null && _gaze.HasTarget) { _wasGazing = true; return; }
+            if (_wasGazing) { _wasGazing = false; AdoptGazeFraming(); }
+
+            if (Input.GetKeyDown(KeyCode.O)) _autoOrbit = !_autoOrbit;   // D-918: was Space — clashed with TimeControls' pause
             if (_autoOrbit) _yaw += autoOrbitDegPerSec * Time.deltaTime;
 
             if (Input.GetMouseButton(0))
@@ -61,6 +73,19 @@ namespace Emergence.Runtime
             if (h != 0 || v != 0) _pivotPos += (right * h + fwd * v) * panSpeed * Time.deltaTime;
 
             Apply();
+        }
+
+        // D-918: re-derive the orbit state from where the gaze left the camera. Point of interest = what the gaze
+        // looked at (its Target + the 0.8 m it aims above ground); distance = how far we are from it now (may sit
+        // under minDistance until the next scroll — that is the gaze's own close framing, kept on purpose).
+        void AdoptGazeFraming()
+        {
+            var look = _gaze.Target + Vector3.up * 0.8f;
+            var e = transform.rotation.eulerAngles;
+            float pitch = e.x > 180f ? e.x - 360f : e.x;
+            _pitch = Mathf.Clamp(pitch, 5f, 80f); _yaw = e.y;
+            distance = Mathf.Max(1f, Vector3.Distance(look, transform.position));
+            _pivotPos = look - Vector3.up * height;
         }
 
         void Apply()
