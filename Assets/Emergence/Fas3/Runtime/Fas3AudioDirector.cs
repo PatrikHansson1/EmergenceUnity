@@ -30,7 +30,7 @@ namespace Emergence.Runtime
         public int ArrivalTonesPlayed { get; private set; }   // "a soul arrives" (genesis) — same clip, separate truth
 
         AudioSource _amb, _voice;
-        AudioClip _wind, _chime, _soft;
+        AudioClip _wind, _chime, _soft, _click;
         float _lastStinger = -99f;
 
         void Awake()
@@ -39,6 +39,7 @@ namespace Emergence.Runtime
             _wind = BrownNoise("emg_wind", sr, 4.0f);
             _chime = Struck("emg_chime", sr, 0.9f, new[] { 660f, 990f, 1320f }, 4f);
             _soft = Struck("emg_soft", sr, 0.6f, new[] { 440f, 550f }, 5f);
+            _click = Struck("emg_click", sr, 0.014f, new[] { 1800f }, 55f); // UI-klick (audio-skill §6): en partial, brant decay
 
             _amb = gameObject.AddComponent<AudioSource>();
             _amb.clip = _wind; _amb.loop = true; _amb.volume = ambienceVolume; _amb.spatialBlend = 0f;
@@ -49,6 +50,9 @@ namespace Emergence.Runtime
 
         void OnEnable() { PresentationEventBus.OnEvent += OnBus; }
         void OnDisable() { PresentationEventBus.OnEvent -= OnBus; }
+
+        /// <summary>A short deterministic UI click for panel open/close (D-913). Presentation-only.</summary>
+        public void PlayUIClick() { if (_voice != null && _click != null) _voice.PlayOneShot(_click, stingerVolume * 0.5f); }
 
         void OnBus(PresentationEvent e)
         {

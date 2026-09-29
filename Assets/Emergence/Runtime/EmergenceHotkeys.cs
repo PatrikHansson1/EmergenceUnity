@@ -10,7 +10,9 @@ namespace Emergence.Runtime
     {
         Fas4ChronicleView _book;
         Fas5AlmanacView _alm;
+        Fas3AudioDirector _audio;
         float _preMuteVol = -1f;
+        void Click() { if (_audio == null) _audio = FindAnyObjectByType<Fas3AudioDirector>(); if (_audio != null) _audio.PlayUIClick(); }
         Fas4ChronicleView Book() { if (_book == null) _book = FindAnyObjectByType<Fas4ChronicleView>(); return _book; }
         Fas5AlmanacView Alm()   { if (_alm  == null) _alm  = FindAnyObjectByType<Fas5AlmanacView>();  return _alm; }
 
@@ -23,17 +25,20 @@ namespace Emergence.Runtime
                     var b = Book(); if (b == null) return;
                     if (b.BookOpen) b.CloseBook();
                     else { var a = Alm(); if (a != null && a.AlmanacOpen) a.CloseAlmanac(); b.OpenBook(); }
+                    Click();
                 }
                 else if (Input.GetKeyDown(KeyCode.M))
                 {
                     var a = Alm(); if (a == null) return;
                     if (a.AlmanacOpen) a.CloseAlmanac();
                     else { var b = Book(); if (b != null && b.BookOpen) b.CloseBook(); a.OpenAlmanac(); }
+                    Click();
                 }
                 else if (Input.GetKeyDown(KeyCode.Escape))
                 {
                     var b = Book(); if (b != null && b.BookOpen) b.CloseBook();
                     var a = Alm();  if (a != null && a.AlmanacOpen) a.CloseAlmanac();
+                    Click();
                 }
 
                 // audio accessibility (Steam-review factor, audio-skill §7): master volume + mute.
