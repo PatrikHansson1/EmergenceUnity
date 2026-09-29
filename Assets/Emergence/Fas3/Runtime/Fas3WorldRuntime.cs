@@ -18,7 +18,8 @@ namespace Emergence.Runtime
         readonly AgentReconciler _agents = new AgentReconciler();
         readonly HutReconciler _huts = new HutReconciler();
         readonly LiveReconciler _codex = new LiveReconciler();
-        readonly FireReconciler _fires = new FireReconciler();   // Fas 6 ink. 3 (D-158): the living fire layer
+        readonly FireReconciler _fires = new FireReconciler();
+        readonly FieldReconciler _fields = new FieldReconciler();   // D-914: farmland grows live (D-906 path 1)   // Fas 6 ink. 3 (D-158): the living fire layer
 
         public int AppliedCount { get; private set; }
         public int LastAppliedYear { get; private set; } = -1;
@@ -64,6 +65,7 @@ namespace Emergence.Runtime
             catch (Exception e) { RoadNote = "roads: " + e.Message; Debug.LogWarning("[Fas3WorldRuntime] roads: " + e.Message); }
             _agents.Reconcile(S, false);
             _huts.Reconcile(S);
+            _fields.Reconcile(S);   // D-914: live fenced fields from S.fields (self-guards)
             try { _codex.Reconcile(S); LastCodexNote = "ok"; }
             catch (Exception e) { LastCodexNote = e.Message; Debug.LogWarning("[Fas3WorldRuntime] codex: " + e.Message); }
             // fires are dressing-tier: a failure here must never break agents/huts (same clause as codex)

@@ -1,2 +1,2 @@
-DONE 12:39:25 verdict=GREEN yearA=0 yearB=1 agentsA=4 agentsB=4 applied=1->2 chron=4->4 cue="Darkwood Path" gaze=1
+DONE 13:54:48 verdict=GREEN yearA=0 yearB=1 agentsA=4 agentsB=4 applied=1->2 chron=4->4 cue="Darkwood Path" gaze=1
 see Reports/live-verify.txt

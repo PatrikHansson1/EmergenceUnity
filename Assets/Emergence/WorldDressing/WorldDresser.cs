@@ -116,7 +116,7 @@ namespace Emergence.Editor
             // PlaceGrass(S, root.transform);
             if (!EnvironmentOnly) PlaceHuts(S, root.transform);         // TD-031 v2: houses face the green (scaled) + lived-in yards per house
             if (!EnvironmentOnly) PlaceFires(S, root.transform);
-            PlaceFields(S, root.transform);
+            if (!EnvironmentOnly) PlaceFields(S, root.transform);   // D-914: live scene grows fields via FieldReconciler
             PlaceNature(S, root.transform);
             PlaceMeadowFoliage(S, root.transform); // D-101d: fill the open meadow with real 3D foliage (flowers/tufts/bushes) — the near-field life that short detail-grass can't give
             PlaceAmbientFX(S, root.transform);     // D-115: Dreamscape's own drifting leaves + dust motes (atmosphere; visible in play mode)
@@ -273,7 +273,7 @@ namespace Emergence.Editor
                 }
             int trodden = PaintTrodden(S, am, AlphaRes, liPath, liGrass); // D-879: footfall wears the grass (states with pathUse)
             Debug.Log($"[Dresser] TRODDEN GROUND: {trodden} cells worn from pathUse (max footfall {(S.pathUse != null && S.pathUse.Length > 0 ? S.pathUse.Max() : 0)})");
-            StampFields(S, am, liField, AlphaRes); // TD-031 v2.1b: tilled soil inside the field enclosures (was never stamped)
+            if (!EnvironmentOnly) StampFields(S, am, liField, AlphaRes);   // D-914: no baked tilled-soil in the live scene // TD-031 v2.1b: tilled soil inside the field enclosures (was never stamped)
             PaintRoutes(S, am, AlphaRes, liPath, liCobble); // D-116/120/879 EMERGENT ROADS: tie-derived, tech-tiered trail→path→paved
             // D-878 it.6 MEASURED: every OTHER birth came out with an all-grass alphamap (Editor.log runs 4 and 6: grass=65536,
             // field/dirt/gravel=0) while the same code painted 55745/360/7850/1573 in runs 1–3 and 5. Only the reuse of the
