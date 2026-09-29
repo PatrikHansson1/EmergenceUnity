@@ -1,5 +1,5 @@
 EMERGENCE — CODEX REALITY CHECK (D-252): what each row's asset MEASURES, not what it is called
-generated 2026-08-15 11:57:11   (108 rows, yardstick = a 1,75 m villager)
+generated 2026-09-29 22:44:06   (115 rows, yardstick = a 1,75 m villager)
 
   row                  tier       placed size      x person  parts  drawn by
   ------------------------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ generated 2026-08-15 11:57:11   (108 rows, yardstick = a 1,75 m villager)
        meshes: rowboat
   books                dressing     0,1x0,4   m     0,0x      1   Lit
        meshes: book
-  brazier              dressing     0,7x1,2   m     0,4x      2   Lit,Unlit
+  brazier              dressing     0,7x1,2   m     0,4x      4   Lit,Unlit
        meshes: brazier
   brickwork            milestone    1,1x3,0   m     0,6x      1   Lit
        meshes: wall
@@ -109,12 +109,17 @@ generated 2026-08-15 11:57:11   (108 rows, yardstick = a 1,75 m villager)
        meshes: foundation
   gallows              milestone    5,4x3,9   m     3,1x      1   Lit
        meshes: gallows
+  gift-post            milestone    4,4x2,4   m     2,5x      1   Lit
+       meshes: signpost
+       note: row says 'gift', geometry says 'signpost' — read once, then leave it alone if it is right
   glass-vessels        dressing     0,3x0,1   m     0,2x      1   Lit
        meshes: bottle
        note: row says 'vessels', geometry says 'bottle' — read once, then leave it alone if it is right
   granary-store        dressing     0,8x0,8   m     0,5x      1   Lit
        meshes: barrel
        note: row says 'granary', geometry says 'barrel' — read once, then leave it alone if it is right
+  grave-cairns         milestone    1,1x3,0   m     0,6x      1   Lit
+       meshes: wall
   green-bench          dressing     0,4x1,8   m     0,3x      1   Lit
        meshes: bench
        note: row says 'green', geometry says 'bench' — read once, then leave it alone if it is right
@@ -129,6 +134,8 @@ generated 2026-08-15 11:57:11   (108 rows, yardstick = a 1,75 m villager)
   herb-store           dressing     0,2x0,5   m     0,1x      1   Foliage Wind URP Advanced LODfade City U6-1
        meshes: herbs
        note: row says 'store', geometry says 'herbs' — read once, then leave it alone if it is right
+  idle-works           dressing     1,2x3,0   m     0,7x      1   Lit
+       meshes: wall
   instruments          milestone    1,0x3,2   m     0,6x      1   Lit
        meshes: market
        note: row says 'instruments', geometry says 'market' — read once, then leave it alone if it is right
@@ -146,9 +153,15 @@ generated 2026-08-15 11:57:11   (108 rows, yardstick = a 1,75 m villager)
   law-stone            milestone    2,5x2,2   m     1,4x      1   Props
        meshes: runerock
        note: row says 'stone', geometry says 'runerock' — read once, then leave it alone if it is right
+  leaders-seat         milestone    1,1x1,9   m     0,6x      1   Lit
+       meshes: bench
+       note: row says 'leaders', geometry says 'bench' — read once, then leave it alone if it is right
   lenses               dressing     0,3x0,2   m     0,2x      1   Lit
        meshes: bottle
        note: row says 'lenses', geometry says 'bottle' — read once, then leave it alone if it is right
+  long-memory          milestone    0,1x0,8   m     0,1x      1   Lit
+       meshes: stone
+       note: row says 'memory', geometry says 'stone' — read once, then leave it alone if it is right
   manor                milestone   21,4x20,1  m    12,2x    148   Lit
        meshes: mod
   market               milestone    3,5x4,2   m     2,0x      1   Lit
@@ -157,12 +170,15 @@ generated 2026-08-15 11:57:11   (108 rows, yardstick = a 1,75 m villager)
        meshes: market
   mason-stones         dressing     1,2x3,0   m     0,7x      1   Lit
        meshes: wall
+  memory-stone         milestone    2,5x2,2   m     1,4x      1   Props
+       meshes: runerock
+       note: row says 'memory', geometry says 'runerock' — read once, then leave it alone if it is right
   metal-bars           milestone    0,1x0,3   m     0,1x      1   Lit
        meshes: ingot
        note: row says 'metal', geometry says 'ingot' — read once, then leave it alone if it is right
-  mill                 milestone    7,4x6,2   m     4,2x      2   Lit
-       meshes: waterwheel
-       note: row says 'mill', geometry says 'waterwheel' — read once, then leave it alone if it is right
+  mill                 milestone   12,8x10,8  m     7,3x     18   Lit,Unlit
+       meshes: base, beam, body, chimney, door, lantern
+       note: row says 'mill', geometry says 'chimney' — read once, then leave it alone if it is right
   notices              dressing     0,5x0,4   m     0,3x      1   Lit
        meshes: poster
        note: row says 'notices', geometry says 'poster' — read once, then leave it alone if it is right
@@ -209,6 +225,8 @@ generated 2026-08-15 11:57:11   (108 rows, yardstick = a 1,75 m villager)
        note: row says 'spear', geometry says 'spikes' — read once, then leave it alone if it is right
   stable               milestone    5,3x8,5   m     3,0x     22   Lit
        meshes: barrel, basket, crate, food, hay, horsestable
+  standard             milestone    6,6x0,8   m     3,8x      1   Flag Wind URP U6-1,Lit
+       meshes: flag
   star-banner          milestone    5,9x3,8   m     3,4x      1   Flag Wind URP U6-1,Lit
        meshes: flag
   statue               dressing     5,0x2,2   m     2,8x      1   Lit
@@ -300,6 +318,7 @@ generated 2026-08-15 11:57:11   (108 rows, yardstick = a 1,75 m villager)
   ✗ cloth-sacks: variant 'P_PROP_sack_city_02' is 0,2 m against the row's 0,5 m (2,7x) — same word, different thing?
   ✗ coin-scales: tier 'milestone' but the asset places at 0,01 m — invisible at eye level
   ✗ commons-fire: variant 'COMP_PROP_campfire_city_02' is 1,2 m against the row's 0,5 m (2,6x) — same word, different thing?
+  ✗ commons-fire: variant 'P_PROP_campfire_poles' is 1,2 m against the row's 0,5 m (2,7x) — same word, different thing?
   ✗ cooking-pot: variant 'P_PROP_cookingpot_city_01' is 0,2 m against the row's 0,8 m (3,4x) — same word, different thing?
   ✗ cooking-pot: variant 'COMP_PROP_cookingpot_city_01' is 0,3 m against the row's 0,8 m (2,7x) — same word, different thing?
   ✗ crates: variant 'Prefab_Crate_01' is 1,7 m against the row's 0,5 m (3,7x) — same word, different thing?
@@ -307,6 +326,7 @@ generated 2026-08-15 11:57:11   (108 rows, yardstick = a 1,75 m villager)
   ✗ green-bench: variant 'P_PROP_bench_city_01' is 1,3 m against the row's 0,4 m (2,9x) — same word, different thing?
   ✗ hearth: tier 'milestone' but the asset places at 0,23 m — invisible at eye level
   ✗ iron-tools: tier 'milestone' but the asset places at 0,17 m — invisible at eye level
+  ✗ long-memory: tier 'milestone' but the asset places at 0,15 m — invisible at eye level
   ✗ metal-bars: tier 'milestone' but the asset places at 0,11 m — invisible at eye level
   ✗ ore-store: tier 'milestone' but the asset places at 0,10 m — invisible at eye level
   ✗ painted-mark: variant 'P_PROP_sign_city_06' is 0,6 m against the row's 3,4 m (5,5x) — same word, different thing?

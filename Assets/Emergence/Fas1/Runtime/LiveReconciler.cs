@@ -194,7 +194,7 @@ namespace Emergence.Runtime
                 // water. If this world has no crossing yet, the object is NOT placed somewhere else
                 // as a consolation -- a bridge on dry grass is a lie, and spec 5b.1 already says the
                 // codex tells what it cannot show.
-                if (!TryCodexPosition(v, e, k, cnt, out var pos)) continue;
+                if (!TryCodexPosition(S, v, e, k, cnt, out var pos)) continue;
                 // ask WHERE before making the thing: an object that cannot be placed should never
                 // have been instantiated, and the old order made one and then set it on a ring.
                 var go = UnityEngine.Object.Instantiate(pf, overlay);
@@ -330,8 +330,10 @@ namespace Emergence.Runtime
 
         /// <summary>Where this instance stands, and whether it may stand at all. False means the
         /// world does not contain the place this object needs.</summary>
-        static bool TryCodexPosition(WorldVillage v, CodexEntry e, int k, int cnt, out Vector2 pos)
+        static bool TryCodexPosition(WorldState S, WorldVillage v, CodexEntry e, int k, int cnt, out Vector2 pos)
         {
+            // D-922: water / road / hill / field ask the world for a place (CodexPlacements, shared with the dresser)
+            if (CodexPlacements.IsWorldPlacement(e.placement)) return CodexPlacements.TryWorldPlacement(S, v, e, k, cnt, out pos);
             if (e.placement == "crossing")
             {
                 pos = Vector2.zero;

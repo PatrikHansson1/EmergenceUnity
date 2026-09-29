@@ -49,6 +49,8 @@ namespace Emergence.Runtime
         /// at a crossing, and until this existed the only place the codex could put anything was on a
         /// ring around the village centre, which is why eleven of twelve bridge models were unused.</summary>
         public static readonly List<Vector2> Crossings = new List<Vector2>();
+        /// <summary>D-922: the living links (a,b in tile space) as last built — the `road` codex placement stands beside them.</summary>
+        public static readonly List<(Vector2 a, Vector2 b)> Links = new List<(Vector2 a, Vector2 b)>();
 
         static string _signature = "";
 
@@ -62,6 +64,7 @@ namespace Emergence.Runtime
             if (S.W <= 0 || S.H <= 0) return;
 
             var segs = Build(S, out string sig);
+            Links.Clear(); foreach (var sg in segs) Links.Add((sg.a, sg.b));   // D-922: always current, even when unchanged
             // The counts go in the note ALWAYS, even when nothing is drawn. The first version of this
             // returned silently on an empty signature and the probe printed a blank line next to
             // "0 links", which says nothing about WHY. A measurement that cannot fail out loud is a

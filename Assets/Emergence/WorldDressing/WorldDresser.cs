@@ -1836,6 +1836,7 @@ namespace Emergence.Editor
         // civilization has discovered. The dresser no longer hard-codes what a village gets — it asks the codex.
         static void PlaceCodexObjects(WorldState S, Transform root)
         {
+            _dressS = S;   // D-922
             const string codexPath = "Assets/Emergence/Codex/object-codex.json";
             if (!File.Exists(codexPath)) return;
             Codex codex;
@@ -1918,11 +1919,12 @@ namespace Emergence.Editor
 
         static Vector2 CodexPlacement(WorldVillage v, CodexEntry e, int k, int cnt)
         {
-            float baseAng = (Hash(Mathf.RoundToInt(v.x), Mathf.RoundToInt(v.y), e.id.Length * 7) % 360u) * Mathf.Deg2Rad;
-            float ang = baseAng + (cnt > 1 ? k * (6.2832f / cnt) : 0f);
-            float r = e.placement == "edge" ? 5.0f : e.placement == "green" ? 2.4f : 3.5f;
-            return new Vector2(v.x + Mathf.Cos(ang) * r, v.y + Mathf.Sin(ang) * r);
+            // D-922: one placement law shared with LiveReconciler. The showcase dresser has no honest 'do not place'
+            // path, so a world placement the y120 world cannot offer falls back to the edge ring here (live does not).
+            if (CodexPlacements.IsWorldPlacement(e.placement) && _dressS != null && CodexPlacements.TryWorldPlacement(_dressS, v, e, k, cnt, out var wp)) return wp;
+            return CodexPlacements.Ring(v, e, k, cnt, CodexPlacements.RingRadius(e.placement));
         }
+        static WorldState _dressS;   // D-922: the state being dressed, for world placements
 
         static GameObject LoadCodexPrefab(string name)
         {
