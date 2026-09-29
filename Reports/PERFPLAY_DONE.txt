@@ -1,2 +1,2 @@
-DONE 09:26:42 samples=120 drawCallsAvg=5773 triAvgM=3,1 fps=0
+DONE 01:32:29 samples=120 drawCallsAvg=1342 triAvgM=0,3 fps=0
 see Reports/perf-playmode.txt

@@ -105,7 +105,7 @@ namespace Emergence.Runtime
             if (string.IsNullOrEmpty(season)) season = "spring";
             if (_lit && season == _lastLitSeason) return;
             _lit = true; _lastLitSeason = season;
-            try { Fas3LightRig.Apply(season, "day"); LightNote = Fas3LightRig.LastNote; Debug.Log("[Fas3WorldRuntime] " + LightNote); }
+            try { var sl = FindAnyObjectByType<EmergenceSeasonLight>(); if (sl == null) sl = new GameObject("EmergenceSeasonLight").AddComponent<EmergenceSeasonLight>(); sl.ApplySeason(season); LightNote = Fas3LightRig.LastNote; Debug.Log("[Fas3WorldRuntime] " + LightNote); }
             catch (Exception e) { LightNote = "light FAILED: " + e.Message; Debug.LogWarning("[Fas3WorldRuntime] " + LightNote); }
         }
 
