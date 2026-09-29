@@ -128,6 +128,18 @@ namespace Emergence.Editor
                 new GameObject("EmergenceEraHud").AddComponent<EmergenceEraHud>();
             rep.AppendLine("epoch line: EmergenceEraHud (Year N · Era)");
 
+            // 2f. the patterns + panel keys (D-911): the Fas 5 almanac (metrics recorder + native
+            // overview) was raised by Fas3Onboarding but never by this manual rig, so the built game
+            // had no almanac. Add it (self-wires, disarms to nothing if UI assets missing) plus the
+            // reading-panel hotkeys (B book, M almanac, Esc close). Presentation-only.
+            if (UnityEngine.Object.FindAnyObjectByType<Fas5MetricsRecorder>() == null)
+                new GameObject("Fas5MetricsRecorder").AddComponent<Fas5MetricsRecorder>();
+            if (UnityEngine.Object.FindAnyObjectByType<Fas5AlmanacView>() == null)
+                new GameObject("Fas5AlmanacView").AddComponent<Fas5AlmanacView>();
+            if (UnityEngine.Object.FindAnyObjectByType<EmergenceHotkeys>() == null)
+                new GameObject("EmergenceHotkeys").AddComponent<EmergenceHotkeys>();
+            rep.AppendLine("patterns+keys: Fas5MetricsRecorder + Fas5AlmanacView + EmergenceHotkeys (B/M/Esc)");
+
             // 3. camera the build boots on (reuse WorldDresser's DocCamera; Unity fake-null forbids ??)
             var cam = Camera.main;
             if (cam == null) cam = UnityEngine.Object.FindAnyObjectByType<Camera>();
