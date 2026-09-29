@@ -120,7 +120,7 @@ namespace Emergence.Editor
             PlaceNature(S, root.transform);
             PlaceMeadowFoliage(S, root.transform); // D-101d: fill the open meadow with real 3D foliage (flowers/tufts/bushes) — the near-field life that short detail-grass can't give
             PlaceAmbientFX(S, root.transform);     // D-115: Dreamscape's own drifting leaves + dust motes (atmosphere; visible in play mode)
-            PlaceWorkMarks(S, root.transform);    // TD-031 v2.2b: quarry scars at depleted stone tiles (Materials layer)
+            if (!EnvironmentOnly) PlaceWorkMarks(S, root.transform);    // D-916: live scene grows work-marks via WorkMarkReconciler (no baked y120 scars at genesis) // TD-031 v2.2b: quarry scars at depleted stone tiles
             if (!EnvironmentOnly) PlaceAgents(S, root.transform);       // the studio's own rendered villagers (EP directive)
             // C7 (D-233): PlaceTechAnchors is GONE. It stood a well in EVERY village regardless of
             // whether anyone there knew how to dig one, and picked forge/mill/kiln by position hash

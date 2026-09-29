@@ -20,6 +20,7 @@ namespace Emergence.Runtime
         readonly LiveReconciler _codex = new LiveReconciler();
         readonly FireReconciler _fires = new FireReconciler();
         readonly FieldReconciler _fields = new FieldReconciler();   // D-914: farmland grows live (D-906 path 1)   // Fas 6 ink. 3 (D-158): the living fire layer
+        readonly WorkMarkReconciler _workmarks = new WorkMarkReconciler();   // D-916: quarry work-marks grow live (sibling of D-914)
 
         public int AppliedCount { get; private set; }
         public int LastAppliedYear { get; private set; } = -1;
@@ -66,6 +67,7 @@ namespace Emergence.Runtime
             _agents.Reconcile(S, false);
             _huts.Reconcile(S);
             _fields.Reconcile(S);   // D-914: live fenced fields from S.fields (self-guards)
+            _workmarks.Reconcile(S);   // D-916: live quarry work-marks from applied state (self-guards, D-140 honesty)
             try { _codex.Reconcile(S); LastCodexNote = "ok"; }
             catch (Exception e) { LastCodexNote = e.Message; Debug.LogWarning("[Fas3WorldRuntime] codex: " + e.Message); }
             // fires are dressing-tier: a failure here must never break agents/huts (same clause as codex)
