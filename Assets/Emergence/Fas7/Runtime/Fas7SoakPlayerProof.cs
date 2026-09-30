@@ -33,7 +33,8 @@ namespace Emergence.Runtime
         public float watchdogSecs = 600f;
         public float softLockSecs = 90f;
 
-        struct Sample { public int year; public float t; public int bus, feed, feedDropped, metrics, buffered; public float gcMB, maxHitch; }
+        static int CountNotable(Fas4ChronicleFeed feed) { int n = 0; foreach (var e in feed.Entries) if (e.salience >= 2) n++; return n; }
+        struct Sample { public int year; public float t; public int bus, feed, feedDropped, metrics, buffered; public float gcMB, maxHitch; public int notable; }   // D-930: notable = salience>=2 lines (the "first-times per wall-minute" row)
 
         int _phase; int _waitFrames; float _waitAnchor;
         Fas3Onboarding _onb;
@@ -86,6 +87,7 @@ namespace Emergence.Runtime
                         bus = PresentationEventBus.Count,
                         feed = feed != null ? feed.Entries.Count : -1,
                         feedDropped = feed != null ? feed.DroppedOldest : -1,
+                        notable = feed != null ? CountNotable(feed) : -1,
                         metrics = rec != null ? rec.RecordCount : -1,
                         buffered = d.BufferedYears,
                         gcMB = GC.GetTotalMemory(false) / 1048576f,
@@ -156,11 +158,11 @@ namespace Emergence.Runtime
             {
                 var sb = new StringBuilder();
                 sb.AppendLine("# FAS 7 SOAK trend — one row per applied year (R1: stamped at measurement)");
-                sb.AppendLine("# year secs bus feed feedDropped metrics buffered gcMB maxHitchSecs");
+                sb.AppendLine("# year secs bus feed feedDropped metrics buffered gcMB maxHitchSecs notable");
                 foreach (var s in _trend)
                     sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
-                        "{0,4} {1,6:F1} {2,5} {3,5} {4,3} {5,4} {6,2} {7,7:F1} {8,5:F2}",
-                        s.year, s.t, s.bus, s.feed, s.feedDropped, s.metrics, s.buffered, s.gcMB, s.maxHitch));
+                        "{0,4} {1,6:F1} {2,5} {3,5} {4,3} {5,4} {6,2} {7,7:F1} {8,5:F2} {9,4}",
+                        s.year, s.t, s.bus, s.feed, s.feedDropped, s.metrics, s.buffered, s.gcMB, s.maxHitch, s.notable));
                 File.WriteAllText(TrendPath, sb.ToString());
             }
             catch { }

@@ -65,8 +65,7 @@
    "variants": [
     "P_PROP_brazier_02",
     "P_PROP_brazier_03",
-    "P_PROP_brazier_04",
-    "P_PROP_brazier_05"
+    "P_PROP_brazier_04"
    ]
   },
   {
@@ -208,7 +207,6 @@
    "ruinScale": 0.0,
    "variants": [
     "P_PROP_planks_02",
-    "P_PROP_planks_03",
     "P_PROP_logpile_city_01",
     "P_PROP_logpile_city_03",
     "P_PROP_plank_city_02",
@@ -265,16 +263,7 @@
     "P_PROP_plant_pot_city_08",
     "P_PROP_plant_pot_city_11",
     "P_PROP_plant_pot_city_12",
-    "Prefab_Pot_01",
-    "P_PROP_PLANT_pot_v3_01",
-    "P_PROP_PLANT_pot_v3_02",
-    "P_PROP_PLANT_pot_v3_03",
-    "P_PROP_PLANT_pot_v3_04",
-    "P_PROP_plant_pot_city_05",
-    "P_PROP_plant_pot_city_06",
-    "P_PROP_plant_pot_city_07",
-    "P_PROP_plant_pot_city_09",
-    "P_PROP_plant_pot_city_10"
+    "Prefab_Pot_01"
    ]
   },
   {
@@ -297,10 +286,8 @@
    "ruinPrefab": "",
    "ruinScale": 0.0,
    "variants": [
-    "P_PROP_cookingpot_city_01",
     "P_PROP_cookingpot_city_02",
-    "P_PROP_cookingpot_small",
-    "COMP_PROP_cookingpot_city_01"
+    "P_PROP_cookingpot_small"
    ]
   },
   {
@@ -588,7 +575,7 @@
    "minCrafts": 0,
    "minGen": 0,
    "count": 1,
-   "scale": 0.0,
+   "scale": 0.65,
    "ruinOnLoss": 1,
    "ruinPrefab": "",
    "ruinScale": 0.0
@@ -898,7 +885,6 @@
     "P_PROP_sack_10",
     "P_PROP_sack_11",
     "P_PROP_sack_city_01",
-    "P_PROP_sack_city_02",
     "Prefab_Sack_01"
    ]
   },
@@ -987,8 +973,7 @@
    "ruinScale": 0.0,
    "variants": [
     "P_PROP_knife_city_01",
-    "P_PROP_knife_city_02",
-    "P_PROP_knife_city_03"
+    "P_PROP_knife_city_02"
    ]
   },
   {
@@ -1091,7 +1076,7 @@
    "minCrafts": 6,
    "minGen": 3,
    "count": 1,
-   "scale": 0.0,
+   "scale": 0.45,
    "ruinOnLoss": 1,
    "ruinPrefab": "",
    "ruinScale": 0.0
@@ -1181,7 +1166,7 @@
    "minCrafts": 0,
    "minGen": 0,
    "count": 1,
-   "scale": 0.0,
+   "scale": 0.6,
    "ruinOnLoss": 1,
    "ruinPrefab": "",
    "ruinScale": 0.0
@@ -1354,16 +1339,7 @@
     "P_PROP_sign_city_02",
     "P_PROP_sign_city_03",
     "P_PROP_sign_city_04",
-    "P_PROP_sign_city_05",
-    "P_PROP_sign_city_06",
-    "P_PROP_sign_city_07",
-    "P_PROP_sign_city_08",
-    "P_PROP_sign_city_09",
-    "P_PROP_sign_city_10",
-    "P_PROP_sign_city_11",
-    "P_PROP_sign_city_12",
-    "P_PROP_sign_city_13",
-    "P_PROP_sign_city_14"
+    "P_PROP_sign_city_05"
    ]
   },
   {
@@ -1532,7 +1508,7 @@
    "minCrafts": 3,
    "minGen": 2,
    "count": 1,
-   "scale": 0.0,
+   "scale": 0.8,
    "ruinOnLoss": 1,
    "ruinPrefab": "",
    "ruinScale": 0.0
@@ -1646,7 +1622,6 @@
     "P_PROP_table_04",
     "COMP_PROP_table_city_01",
     "COMP_PROP_table_city_02",
-    "P_PROP_bench_city_01",
     "P_PROP_table_city_02",
     "P_PROP_table_city_03",
     "P_PROP_table_city_04",
@@ -1768,8 +1743,7 @@
     "P_PROP_crate_city_02",
     "P_PROP_crate_city_03",
     "P_PROP_crate_city_04",
-    "P_PROP_crate_city_05",
-    "Prefab_Crate_01"
+    "P_PROP_crate_city_05"
    ]
   },
   {
@@ -2092,7 +2066,7 @@
   },
   {
    "id": "archive",
-   "prefab": "COMP_PROP_shelf_city_01",
+   "prefab": "COMP_PROP_shelf_city_06",
    "category": "knowledge",
    "requiresTech": "",
    "requiresCustom": "",
@@ -2120,19 +2094,11 @@
     ]
    },
    "variants": [
-    "COMP_PROP_shelf_city_02",
-    "COMP_PROP_shelf_city_03",
-    "COMP_PROP_shelf_city_04",
-    "COMP_PROP_shelf_city_05",
-    "COMP_PROP_shelf_city_06",
     "COMP_PROP_shelf_city_07",
-    "COMP_PROP_shelf_city_08",
     "COMP_PROP_shelf_city_09",
     "COMP_PROP_shelf_city_10",
-    "P_PROP_shelf_city_01",
     "P_PROP_shelf_city_02",
-    "P_PROP_shelf_city_03",
-    "P_PROP_shelf_city_04"
+    "P_PROP_shelf_city_03"
    ]
   },
   {
@@ -2574,10 +2540,7 @@
    "ruinPrefab": "",
    "ruinScale": 0.0,
    "variants": [
-    "P_PROP_waypoint_city_02",
-    "P_PROP_waypoint_city_03",
-    "COMP_PROP_waypoint_city_01",
-    "COMP_PROP_waypoint_city_02"
+    "COMP_PROP_waypoint_city_01"
    ]
   },
   {
@@ -2780,7 +2743,7 @@
   },
   {
    "id": "books",
-   "prefab": "P_PROP_book_city_01",
+   "prefab": "P_PROP_book_city_02",
    "category": "knowledge",
    "requiresTech": "writing",
    "requiresCustom": "",
@@ -2805,7 +2768,6 @@
     ]
    },
    "variants": [
-    "P_PROP_book_city_02",
     "P_PROP_book_city_03",
     "P_PROP_book_city_04"
    ]
@@ -2900,7 +2862,7 @@
    "minCrafts": 0,
    "minGen": 2,
    "count": 3,
-   "scale": 0.0,
+   "scale": 0.45,
    "ruinOnLoss": 1,
    "ruinPrefab": "",
    "ruinScale": 0.0,
@@ -2933,19 +2895,12 @@
     "BLD_03_L_Ext_07",
     "BLD_03_T_Ext_01",
     "BLD_03_T_Ext_02",
-    "BLD_03_T_Ext_03",
-    "BLD_03_16x8_Int_01",
-    "BLD_03_16x8_Int_02",
-    "BLD_03_16x8_Int_03",
-    "BLD_03_16x8_Int_04",
-    "BLD_03_L_Int_01",
-    "BLD_03_L_Int_02",
-    "BLD_03_T_Int_01"
+    "BLD_03_T_Ext_03"
    ]
   },
   {
    "id": "smithy-house",
-   "prefab": "BLD_03_L_Int_Blacksmith",
+   "prefab": "BLD_03_L_Ext_02",
    "category": "craft",
    "requiresTech": "smithing",
    "requiresCustom": "",
@@ -2958,7 +2913,7 @@
    "minCrafts": 0,
    "minGen": 0,
    "count": 1,
-   "scale": 0.0,
+   "scale": 0.42,
    "ruinOnLoss": 1,
    "ruinPrefab": "",
    "ruinScale": 0.0,
@@ -2972,7 +2927,7 @@
   },
   {
    "id": "bakehouse",
-   "prefab": "BLD_03_16x8_Int_Bakery_01",
+   "prefab": "BLD_03_16x8_Ext_02",
    "category": "farm",
    "requiresTech": "mill",
    "requiresCustom": "",
@@ -2985,7 +2940,7 @@
    "minCrafts": 0,
    "minGen": 0,
    "count": 1,
-   "scale": 0.0,
+   "scale": 0.42,
    "ruinOnLoss": 1,
    "ruinPrefab": "",
    "ruinScale": 0.0

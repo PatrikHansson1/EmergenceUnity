@@ -1,7 +1,5 @@
-DONE 09:13:50 samples=120 drawCallsAvg=3480 dcMax=3672 triAvgM=1,9 fps=206 | jumped to year 120 at frame 6 (apply 341 ms, applied year now 120, source persistent checkpoint)
+DONE 09:57:24 samples=120 drawCallsAvg=350 dcMax=497 triAvgM=1,6 fps=250 | jumped to year 120 at frame 6 (apply 316 ms, applied year now 120, source persistent checkpoint) | hidden: Nature MeadowTrees MeadowFoliage Huts_Live CodexOverlay_Live LiveFields Water
 world: appliedYear=120 huts=33 agents=111 fences=606 soilTexels=6996 workMarks=21 codexPlaced=145 fires=0 smoke=30 nature=0 trodden="trodden: y120 max footfall 959, 109575 texels worn (region 780x718)"
-  LiveFields: renderers=606 meshFilters=606 distinctMeshes=5 combinedMeshes=0
-  Huts_Live: renderers=770 meshFilters=770 distinctMeshes=60 combinedMeshes=0
   LiveWorkMarks: renderers=27 meshFilters=27 distinctMeshes=4 combinedMeshes=0
   magenta: renderers=0
   ground: layers=[0:Layer_grass_01, 1:Layer_dirt, 2:Layer_gravel, 3:Layer_stone, 4:Layer_pavingstone_01] LastLayerIndex grass=0 grass2=0 field=1 path=2 gravel=3 cobble=4 alphaRes=1024

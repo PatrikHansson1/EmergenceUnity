@@ -91,7 +91,7 @@ namespace Emergence.Editor
             if (cam.GetComponent<Fas3GazeDirector>() == null) cam.gameObject.AddComponent<Fas3GazeDirector>();
             var proof = new GameObject("Fas7SoakPlayerProof").AddComponent<Fas7SoakPlayerProof>();
             proof.seed = Seed; proof.soakYears = SoakYears;
-            proof.watchdogSecs = 1000f;   // first run cut at y36/600s — deep years cost ~14-16 s/year
+            proof.watchdogSecs = 2400f;   // D-930: 1000 s cut at y23 — Engine 2.4.1 costs ~43 s/year in Jint (was 18 in Aug)
             sb.AppendLine("proof scene: genesis wilderness + camera + Fas7SoakPlayerProof (observer composes the boot)");
 
             var scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
@@ -130,7 +130,7 @@ namespace Emergence.Editor
         static void Poll()
         {
             float start = SessionState.GetFloat(KeyStart, (float)EditorApplication.timeSinceStartup);
-            bool overtime = EditorApplication.timeSinceStartup - start > 1400.0;
+            bool overtime = EditorApplication.timeSinceStartup - start > 2700.0;   // D-930
             if (!File.Exists(PlayerTxt)) { if (overtime) Fail("player produced no soak-player.txt within 1400s"); return; }
 
             try

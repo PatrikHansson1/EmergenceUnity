@@ -1,5 +1,5 @@
 EMERGENCE — CODEX REALITY CHECK (D-252): what each row's asset MEASURES, not what it is called
-generated 2026-09-30 00:23:00   (115 rows, yardstick = a 1,75 m villager)
+generated 2026-09-30 10:34:12   (115 rows, yardstick = a 1,75 m villager)
 
   row                  tier       placed size      x person  parts  drawn by
   ------------------------------------------------------------------------------------------------
@@ -17,12 +17,11 @@ generated 2026-09-30 00:23:00   (115 rows, yardstick = a 1,75 m villager)
   aqueduct             milestone    3,2x9,3   m     1,8x      1   Lit
        meshes: bridge
        note: row says 'aqueduct', geometry says 'bridge' — read once, then leave it alone if it is right
-  archive              milestone    1,0x1,8   m     0,5x      8   Lit
-       meshes: book, bottle, candle, coinpouch, jug, rope
-       note: row says 'archive', geometry says 'bottle' — read once, then leave it alone if it is right
-  bakehouse            milestone   21,0x20,1  m    12,0x    869   Foliage Wind URP Advanced LODfade City U6-1,Lit
-       meshes: alchemy, barrel, basket, blossoms, book, bookshelf
-       note: row says 'bakehouse', geometry says 'alchemy' — read once, then leave it alone if it is right
+  archive              milestone    2,9x1,6   m     1,6x     24   Foliage Wind URP Advanced LODfade City U6-1,Lit
+       meshes: alchemy, blossoms, book, bookshelf, bottle, candle
+       note: row says 'archive', geometry says 'alchemy' — read once, then leave it alone if it is right
+  bakehouse            milestone    8,1x8,0   m     4,6x     93   Lit
+       meshes: mod
   blade                milestone    0,1x0,7   m     0,0x      1   Lit
        meshes: knife
        note: row says 'blade', geometry says 'knife' — read once, then leave it alone if it is right
@@ -34,7 +33,7 @@ generated 2026-09-30 00:23:00   (115 rows, yardstick = a 1,75 m villager)
        note: row says 'board', geometry says 'checkers' — read once, then leave it alone if it is right
   boat                 milestone    2,2x4,1   m     1,3x      6   Lit
        meshes: rowboat
-  books                dressing     0,1x0,4   m     0,0x      1   Lit
+  books                dressing     0,4x0,2   m     0,2x      1   Lit
        meshes: book
   brazier              dressing     0,7x1,2   m     0,4x      4   Lit,Unlit
        meshes: brazier
@@ -162,7 +161,7 @@ generated 2026-09-30 00:23:00   (115 rows, yardstick = a 1,75 m villager)
   long-memory          milestone    0,1x0,8   m     0,1x      1   Lit
        meshes: stone
        note: row says 'memory', geometry says 'stone' — read once, then leave it alone if it is right
-  manor                milestone   21,4x20,1  m    12,2x    148   Lit
+  manor                milestone    9,6x9,1   m     5,5x    148   Lit
        meshes: mod
   market               milestone    3,5x4,2   m     2,0x      1   Lit
        meshes: market
@@ -176,7 +175,7 @@ generated 2026-09-30 00:23:00   (115 rows, yardstick = a 1,75 m villager)
   metal-bars           milestone    0,1x0,3   m     0,1x      1   Lit
        meshes: ingot
        note: row says 'metal', geometry says 'ingot' — read once, then leave it alone if it is right
-  mill                 milestone   12,8x10,8  m     7,3x     18   Lit,Unlit
+  mill                 milestone    8,3x7,0   m     4,7x     18   Lit,Unlit
        meshes: base, beam, body, chimney, door, lantern
        note: row says 'mill', geometry says 'chimney' — read once, then leave it alone if it is right
   notices              dressing     0,5x0,4   m     0,3x      1   Lit
@@ -210,9 +209,8 @@ generated 2026-09-30 00:23:00   (115 rows, yardstick = a 1,75 m villager)
   school-bench         milestone    1,1x1,9   m     0,6x      1   Lit
        meshes: bench
        note: row says 'school', geometry says 'bench' — read once, then leave it alone if it is right
-  smithy-house         milestone   21,0x17,6  m    12,0x    170   Lit,Unlit,Water URP U6-1
-       meshes: anvil, axe, barrel, basket, blacksmith, bucket
-       note: row says 'smithy', geometry says 'anvil' — read once, then leave it alone if it is right
+  smithy-house         milestone    7,4x8,1   m     4,2x    163   Lit
+       meshes: mod
   smithy-yard          milestone    2,7x4,0   m     1,5x     39   Lit,Unlit,Water URP U6-1
        meshes: anvil, axe, basket, blacksmith, bucket, chisel
        note: row says 'smithy', geometry says 'anvil' — read once, then leave it alone if it is right
@@ -256,7 +254,7 @@ generated 2026-09-30 00:23:00   (115 rows, yardstick = a 1,75 m villager)
        note: row says 'tally', geometry says 'stone' — read once, then leave it alone if it is right
   tanning-rack         dressing     2,2x2,0   m     1,3x      1   Lit
        meshes: tanningrack
-  temple               milestone   15,0x17,5  m     8,6x     49   Lit
+  temple               milestone   12,0x14,0  m     6,9x     49   Lit
        meshes: mod
   thinking-seat        milestone    0,3x0,6   m     0,2x      1   Lit
        meshes: stool
@@ -264,7 +262,7 @@ generated 2026-09-30 00:23:00   (115 rows, yardstick = a 1,75 m villager)
        note: row says 'thinking', geometry says 'stool' — read once, then leave it alone if it is right
   tin-stock            dressing     0,1x0,3   m     0,1x      1   Lit
        meshes: bowl
-  town-house           milestone   18,8x19,1  m    10,8x    112   Lit
+  town-house           milestone    8,5x8,6   m     4,8x    112   Lit
        meshes: mod
   trough               dressing     0,9x2,6   m     0,5x      1   Lit
        meshes: trough
@@ -284,7 +282,7 @@ generated 2026-09-30 00:23:00   (115 rows, yardstick = a 1,75 m villager)
        note: row says 'weaving', geometry says 'clothesline' — read once, then leave it alone if it is right
   well                 milestone    4,2x4,8   m     2,4x      2   Lit
        meshes: well
-  windmill             milestone   20,7x17,1  m    11,8x     13   Lit
+  windmill             milestone   12,4x10,2  m     7,1x     13   Lit
        meshes: beam, body, chimney, door, plant, windmill
   woodpile             dressing     0,3x0,7   m     0,2x      1   Lit
        meshes: firepit
@@ -302,56 +300,17 @@ generated 2026-09-30 00:23:00   (115 rows, yardstick = a 1,75 m villager)
        note: row says 'written', geometry says 'paper' — read once, then leave it alone if it is right
 
 ## CONTRADICTIONS — where the asset does not do what the row claims
-  ✗ archive: variant 'COMP_PROP_shelf_city_06' is 2,9 m against the row's 1,0 m (3,0x) — same word, different thing?
-  ✗ archive: variant 'COMP_PROP_shelf_city_07' is 2,9 m against the row's 1,0 m (3,0x) — same word, different thing?
-  ✗ archive: variant 'COMP_PROP_shelf_city_09' is 2,7 m against the row's 1,0 m (2,8x) — same word, different thing?
-  ✗ archive: variant 'COMP_PROP_shelf_city_10' is 2,7 m against the row's 1,0 m (2,8x) — same word, different thing?
-  ✗ archive: variant 'P_PROP_shelf_city_01' is 0,4 m against the row's 1,0 m (2,5x) — same word, different thing?
-  ✗ archive: variant 'P_PROP_shelf_city_02' is 2,9 m against the row's 1,0 m (3,0x) — same word, different thing?
-  ✗ archive: variant 'P_PROP_shelf_city_03' is 2,7 m against the row's 1,0 m (2,8x) — same word, different thing?
   ✗ blade: tier 'milestone' but the asset places at 0,05 m — invisible at eye level
-  ✗ books: variant 'P_PROP_book_city_02' is 0,4 m against the row's 0,1 m (6,5x) — same word, different thing?
-  ✗ books: variant 'P_PROP_book_city_03' is 0,4 m against the row's 0,1 m (7,1x) — same word, different thing?
-  ✗ books: variant 'P_PROP_book_city_04' is 0,3 m against the row's 0,1 m (5,3x) — same word, different thing?
-  ✗ brazier: variant 'P_PROP_brazier_05' is 2,2 m against the row's 0,7 m (2,9x) — same word, different thing?
-  ✗ bronze-tools: variant 'P_PROP_knife_city_03' is 0,0 m against the row's 0,1 m (4,9x) — same word, different thing?
-  ✗ cloth-sacks: variant 'P_PROP_sack_city_02' is 0,2 m against the row's 0,5 m (2,7x) — same word, different thing?
   ✗ coin-scales: tier 'milestone' but the asset places at 0,01 m — invisible at eye level
-  ✗ cooking-pot: variant 'P_PROP_cookingpot_city_01' is 0,2 m against the row's 0,8 m (3,4x) — same word, different thing?
-  ✗ cooking-pot: variant 'COMP_PROP_cookingpot_city_01' is 0,3 m against the row's 0,8 m (2,7x) — same word, different thing?
-  ✗ crates: variant 'Prefab_Crate_01' is 1,7 m against the row's 0,5 m (3,7x) — same word, different thing?
-  ✗ cut-timber: variant 'P_PROP_planks_03' is 0,1 m against the row's 0,4 m (3,1x) — same word, different thing?
-  ✗ green-bench: variant 'P_PROP_bench_city_01' is 1,3 m against the row's 0,4 m (2,9x) — same word, different thing?
   ✗ hearth: tier 'milestone' but the asset places at 0,23 m — invisible at eye level
   ✗ iron-tools: tier 'milestone' but the asset places at 0,17 m — invisible at eye level
   ✗ long-memory: tier 'milestone' but the asset places at 0,15 m — invisible at eye level
   ✗ metal-bars: tier 'milestone' but the asset places at 0,11 m — invisible at eye level
   ✗ ore-store: tier 'milestone' but the asset places at 0,10 m — invisible at eye level
-  ✗ painted-mark: variant 'P_PROP_sign_city_06' is 0,6 m against the row's 3,4 m (5,5x) — same word, different thing?
-  ✗ painted-mark: variant 'P_PROP_sign_city_07' is 0,6 m against the row's 3,4 m (5,5x) — same word, different thing?
-  ✗ painted-mark: variant 'P_PROP_sign_city_08' is 0,6 m against the row's 3,4 m (5,5x) — same word, different thing?
-  ✗ painted-mark: variant 'P_PROP_sign_city_09' is 0,6 m against the row's 3,4 m (5,5x) — same word, different thing?
-  ✗ painted-mark: variant 'P_PROP_sign_city_10' is 0,6 m against the row's 3,4 m (5,5x) — same word, different thing?
-  ✗ painted-mark: variant 'P_PROP_sign_city_11' is 0,6 m against the row's 3,4 m (5,6x) — same word, different thing?
-  ✗ painted-mark: variant 'P_PROP_sign_city_12' is 0,6 m against the row's 3,4 m (5,6x) — same word, different thing?
-  ✗ painted-mark: variant 'P_PROP_sign_city_13' is 0,6 m against the row's 3,4 m (5,6x) — same word, different thing?
-  ✗ painted-mark: variant 'P_PROP_sign_city_14' is 0,7 m against the row's 3,4 m (4,6x) — same word, different thing?
-  ✗ pottery: variant 'P_PROP_PLANT_pot_v3_01' is 1,3 m against the row's 0,4 m (3,2x) — same word, different thing?
-  ✗ pottery: variant 'P_PROP_PLANT_pot_v3_02' is 1,3 m against the row's 0,4 m (3,2x) — same word, different thing?
-  ✗ pottery: variant 'P_PROP_PLANT_pot_v3_03' is 1,3 m against the row's 0,4 m (3,2x) — same word, different thing?
-  ✗ pottery: variant 'P_PROP_PLANT_pot_v3_04' is 1,3 m against the row's 0,4 m (3,2x) — same word, different thing?
-  ✗ pottery: variant 'P_PROP_plant_pot_city_05' is 2,5 m against the row's 0,4 m (6,1x) — same word, different thing?
-  ✗ pottery: variant 'P_PROP_plant_pot_city_06' is 2,0 m against the row's 0,4 m (5,0x) — same word, different thing?
-  ✗ pottery: variant 'P_PROP_plant_pot_city_07' is 1,3 m against the row's 0,4 m (3,2x) — same word, different thing?
-  ✗ pottery: variant 'P_PROP_plant_pot_city_09' is 1,3 m against the row's 0,4 m (3,3x) — same word, different thing?
-  ✗ pottery: variant 'P_PROP_plant_pot_city_10' is 1,1 m against the row's 0,4 m (2,8x) — same word, different thing?
   ✗ scholar-scroll: tier 'milestone' but the asset places at 0,15 m — invisible at eye level
   ✗ song-post: tier 'dressing' but the asset stands 3,4x a person (5,9 x 3,8 m) — that is a building
   ✗ steel-tools: tier 'milestone' but the asset places at 0,05 m — invisible at eye level
   ✗ tally-stone: tier 'milestone' but the asset places at 0,15 m — invisible at eye level
-  ✗ way-post: variant 'P_PROP_waypoint_city_02' is 0,7 m against the row's 5,0 m (7,4x) — same word, different thing?
-  ✗ way-post: variant 'P_PROP_waypoint_city_03' is 0,1 m against the row's 5,0 m (33,7x) — same word, different thing?
-  ✗ way-post: variant 'COMP_PROP_waypoint_city_02' is 0,7 m against the row's 5,0 m (7,4x) — same word, different thing?
 
 Reading: the size and the tier are ASSERTED and can go red. The mesh-family note is a
 prompt for a human, not a rule — a name is evidence, and evidence is read, not trusted.

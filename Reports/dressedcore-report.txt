@@ -1,5 +1,5 @@
 EMERGENCE — DRESSED-CORE RECONCILE (Fas 1, increment 3)
-generated 2026-09-30 09:05:46
+generated 2026-09-30 10:02:23
 the live codex overlay + onLoss:toRuin, running on the FULL dressed core world
 (real terrain + huts + nature) — objects sit among the huts, ruins replace lost structures.
 

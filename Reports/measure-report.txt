@@ -1,9 +1,9 @@
 EMERGENCE — MEASURE PREFABS (D-924): size, pivot, renderers, shaders — names lie, bounds do not
-generated 2026-09-30 07:49:15   2 names
+generated 2026-09-30 10:33:48   2 names
 
 name                                 w x h x d (m)     pivot(y from base)  rend  verdict / shaders
-P_FX_water_FNP                        18,3 x  0,0 x 18,3       +0,00            1   ok: TidalFlask/Water URP U6-1   [assetdb]
-Prefab_WaterLake                      20,0 x  0,0 x 20,0       +0,00            1   ok: M_Water_Lake_Amp   [catalog]
+BLD_03_16x8_Ext_02                    19,1 x 19,4 x  9,6       +0,02           93   ok: Universal Render Pipeline/Lit   [catalog]
+BLD_03_L_Ext_02                       19,3 x 17,6 x 14,6       +0,03          163   ok: Universal Render Pipeline/Lit   [catalog]
 
 pivot(y from base): how far the prefab's origin sits ABOVE its lowest point (0 = sits on its base, >0 = floats/needs sinking).
 PINK-UNDER-URP = built-in pipeline shader family (Standard / Legacy Shaders / Particles / Mobile / Nature): URP draws it magenta.
