@@ -1,2 +1,2 @@
-DONE 22:44:37 magentaWorst=0 placed=139 ruins=0 events=286 (headless)
+DONE 09:05:56 magentaWorst=0 placed=163 ruins=0 events=370 (headless)
 see Reports/dressedcore-report.txt

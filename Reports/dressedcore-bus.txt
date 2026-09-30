@@ -1,4 +1,4 @@
-# PresentationEventBus log — 370 events
+# PresentationEventBus log — 343 events
 t1 y120 dawn AssetSpawned id=star-banner v0 {placement=green}
 t1 y120 dawn Milestone id=star-banner v0 {a sign of who these people are}
 t1 y120 dawn AssetSpawned id=weaving-line v0 {placement=green}
@@ -342,30 +342,3 @@ t2 y120 dawn AssetSpawned id=produce v2 {placement=green}
 t2 y120 dawn Milestone id=produce v2 {food set out where people pass — a people that grows more than it eats that day has something to put on a board}
 t2 y120 dawn AssetSpawned id=produce v2 {placement=green}
 t2 y120 dawn Milestone id=produce v2 {food set out where people pass — a people that grows more than it eats that day has something to put on a board}
-t3 y120 dawn Milestone id=mill v2 {rediscovered — the ruin is raised again}
-t3 y120 dawn AssetSpawned id=mill v2 {placement=edge}
-t3 y120 dawn Milestone id=mill v2 {grain ground by something other than hands}
-t3 y120 dawn Milestone id=temple v2 {rediscovered — the ruin is raised again}
-t3 y120 dawn AssetSpawned id=temple v2 {placement=edge}
-t3 y120 dawn Milestone id=temple v2 {a building for something that cannot be seen}
-t3 y120 dawn Milestone id=bakehouse v2 {rediscovered — the ruin is raised again}
-t3 y120 dawn AssetSpawned id=bakehouse v2 {placement=edge}
-t3 y120 dawn Milestone id=bakehouse v2 {grain becomes bread in a room built for nothing else}
-t3 y120 dawn Milestone id=smithy-house v2 {rediscovered — the ruin is raised again}
-t3 y120 dawn AssetSpawned id=smithy-house v2 {placement=edge}
-t3 y120 dawn Milestone id=smithy-house v2 {the smith works indoors now, and the fire has a house of its own}
-t3 y120 dawn AssetSpawned id=star-banner v2 {placement=green}
-t3 y120 dawn Milestone id=star-banner v2 {a sign of who these people are}
-t3 y120 dawn Milestone id=writing-post v2 {rediscovered — the ruin is raised again}
-t3 y120 dawn AssetSpawned id=writing-post v2 {placement=green}
-t3 y120 dawn Milestone id=writing-post v2 {a thing set down so it need not be remembered}
-t3 y120 dawn Milestone id=forge v2 {rediscovered — the ruin is raised again}
-t3 y120 dawn AssetSpawned id=forge v2 {placement=edge}
-t3 y120 dawn Milestone id=forge v2 {the forge — where this people learned to work metal, the smith's fire never fully dies}
-t3 y120 dawn AssetSpawned id=notices v2 {placement=edge}
-t3 y120 dawn Milestone id=notices v2 {words meant for whoever passes}
-t3 y120 dawn AssetSpawned id=notices v2 {placement=edge}
-t3 y120 dawn Milestone id=notices v2 {words meant for whoever passes}
-t3 y120 dawn Milestone id=smithy-yard v2 {rediscovered — the ruin is raised again}
-t3 y120 dawn AssetSpawned id=smithy-yard v2 {placement=edge}
-t3 y120 dawn Milestone id=smithy-yard v2 {a smith's yard — anvil, bellows and quench no longer scattered but standing as one working place beside the forge door}

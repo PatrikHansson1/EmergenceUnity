@@ -1,16 +1,16 @@
 EMERGENCE — DRESSED-CORE RECONCILE (Fas 1, increment 3)
-generated 2026-09-29 22:44:27
+generated 2026-09-30 09:05:46
 the live codex overlay + onLoss:toRuin, running on the FULL dressed core world
 (real terrain + huts + nature) — objects sit among the huts, ruins replace lost structures.
 
-spawn        villages=5  diff=+137 -0 =0  placed=137 ruins=0  magenta=0
-loss         Falkheim: -writing/smithing/mill/temple -cosmos  diff=+2 -2 =135 ruin+1  placed=137 ruins=1  magenta=0  <-- onLoss:toRuin on dressed terrain
-rediscover   diff=+2 -0 =137  placed=139 ruins=0  magenta=0  <-- ruins rebuilt on rediscovery
+spawn        villages=5  diff=+150 -0 =0  placed=150 ruins=0  magenta=0
+loss         Falkheim: -writing/smithing/mill/temple -cosmos  diff=+13 -10 =140 ruin+7  placed=153 ruins=7  magenta=0  <-- onLoss:toRuin on dressed terrain
+rediscover   diff=+10 -0 =153  placed=163 ruins=0  magenta=0  <-- ruins rebuilt on rediscovery
 look day+post   season=spring  magenta=0  (graded lush locked meadow)
 look dusk+post  season=spring  magenta=0  (signature: blue world, one warm point)
 locked look: applied (light rig + ACES post stack — the real shipping look, A6 measured WITH it)
 
-event bus: 286 events (Reports/dressedcore-events.txt)
+event bus: 370 events (Reports/dressedcore-events.txt)
 A6 perf: static census on dressed+graded core scene (Reports/perf-report.txt)
 live-scene magenta (worst of 3 passes): 0  => GREEN
 

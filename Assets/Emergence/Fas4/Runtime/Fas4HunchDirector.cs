@@ -213,7 +213,7 @@ namespace Emergence.Runtime
             if (Asked > 0 && !JournalOpen)
             {
                 string tally = $"HUNCHES  {Right} right · {Wrong} wrong" + (Passed > 0 ? $" · {Passed} passed" : "");
-                if (GUI.Button(new Rect(left, markY - 24f, 250f, 18f), tally, EmergenceUI.Button)) ToggleJournal();   // its own row above SETTINGS
+                if (GUI.Button(new Rect(left, markY - 24f, 320f, 18f), tally, EmergenceUI.Button)) ToggleJournal();   // its own row above SETTINGS
             }
 
             // the card

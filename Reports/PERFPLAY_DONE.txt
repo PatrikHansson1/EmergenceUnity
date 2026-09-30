@@ -1,10 +1,10 @@
-DONE 07:56:06 samples=120 drawCallsAvg=2737 dcMax=2790 triAvgM=0,9 fps=313 | jumped to year 55 at frame 6 (apply 113 ms, applied year now 55, source persistent checkpoint)
-world: appliedYear=55 huts=7 agents=20 fences=204 soilTexels=2088 workMarks=24 codexPlaced=26 fires=0 smoke=6 nature=0 trodden="trodden: y55 max footfall 276, 61238 texels worn (region 708x645)"
-  LiveFields: renderers=204 meshFilters=204 distinctMeshes=5 combinedMeshes=0
-  Huts_Live: renderers=136 meshFilters=136 distinctMeshes=42 combinedMeshes=0
-  LiveWorkMarks: renderers=32 meshFilters=32 distinctMeshes=4 combinedMeshes=0
+DONE 09:13:50 samples=120 drawCallsAvg=3480 dcMax=3672 triAvgM=1,9 fps=206 | jumped to year 120 at frame 6 (apply 341 ms, applied year now 120, source persistent checkpoint)
+world: appliedYear=120 huts=33 agents=111 fences=606 soilTexels=6996 workMarks=21 codexPlaced=145 fires=0 smoke=30 nature=0 trodden="trodden: y120 max footfall 959, 109575 texels worn (region 780x718)"
+  LiveFields: renderers=606 meshFilters=606 distinctMeshes=5 combinedMeshes=0
+  Huts_Live: renderers=770 meshFilters=770 distinctMeshes=60 combinedMeshes=0
+  LiveWorkMarks: renderers=27 meshFilters=27 distinctMeshes=4 combinedMeshes=0
   magenta: renderers=0
   ground: layers=[0:Layer_grass_01, 1:Layer_dirt, 2:Layer_gravel, 3:Layer_stone, 4:Layer_pavingstone_01] LastLayerIndex grass=0 grass2=0 field=1 path=2 gravel=3 cobble=4 alphaRes=1024
   first field tile (33,20): world-centre texel (343,723) vs painter's (W-1) texel (341,726) = -1,6 m drift
-  field tiles (18) dominant layer at world centre: 1:18   at painter's (W-1) centre: 1:18
+  field tiles (60) dominant layer at world centre: 1:60   at painter's (W-1) centre: 1:60
 see Reports/perf-playmode.txt

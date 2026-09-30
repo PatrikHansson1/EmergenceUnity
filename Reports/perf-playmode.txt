@@ -1,24 +1,24 @@
 EMERGENCE — A6 PLAY-MODE PROBE (Fas 1, increment 3)
-generated 2026-09-30 07:56:06
+generated 2026-09-30 09:13:50
 real render stats in play mode (after frustum culling + SRP batching) on the open scene —
 the sharp A6 number vs the static census. Read-only (D-078 r4).
 samples=120  (warm-up 30 frames skipped)
-maturity (D-923): jumped to year 55 at frame 6 (apply 113 ms, applied year now 55, source persistent checkpoint)
-world: appliedYear=55 huts=7 agents=20 fences=204 soilTexels=2088 workMarks=24 codexPlaced=26 fires=0 smoke=6 nature=0 trodden="trodden: y55 max footfall 276, 61238 texels worn (region 708x645)"
-  LiveFields: renderers=204 meshFilters=204 distinctMeshes=5 combinedMeshes=0
-  Huts_Live: renderers=136 meshFilters=136 distinctMeshes=42 combinedMeshes=0
-  LiveWorkMarks: renderers=32 meshFilters=32 distinctMeshes=4 combinedMeshes=0
+maturity (D-923): jumped to year 120 at frame 6 (apply 341 ms, applied year now 120, source persistent checkpoint)
+world: appliedYear=120 huts=33 agents=111 fences=606 soilTexels=6996 workMarks=21 codexPlaced=145 fires=0 smoke=30 nature=0 trodden="trodden: y120 max footfall 959, 109575 texels worn (region 780x718)"
+  LiveFields: renderers=606 meshFilters=606 distinctMeshes=5 combinedMeshes=0
+  Huts_Live: renderers=770 meshFilters=770 distinctMeshes=60 combinedMeshes=0
+  LiveWorkMarks: renderers=27 meshFilters=27 distinctMeshes=4 combinedMeshes=0
   magenta: renderers=0
   ground: layers=[0:Layer_grass_01, 1:Layer_dirt, 2:Layer_gravel, 3:Layer_stone, 4:Layer_pavingstone_01] LastLayerIndex grass=0 grass2=0 field=1 path=2 gravel=3 cobble=4 alphaRes=1024
   first field tile (33,20): world-centre texel (343,723) vs painter's (W-1) texel (341,726) = -1,6 m drift
-  field tiles (18) dominant layer at world centre: 1:18   at painter's (W-1) centre: 1:18
+  field tiles (60) dominant layer at world centre: 1:60   at painter's (W-1) centre: 1:60
 
 metric                 avg        max        budget    verdict
-draw calls             2737      2790       2500      OVER
-set-pass calls         296       303        -         (info)
-triangles (millions)   0,9       -          8         OK
-frame ms / FPS         3,2       max 7,0    FPS 313   OK
-min-spec estimate      11,8      (x3.7)     FPS 85    OK (est.)
+draw calls             3480      3672       2500      OVER
+set-pass calls         286       293        -         (info)
+triangles (millions)   1,9       -          8         OK
+frame ms / FPS         4,8       max 14,5   FPS 206   OK
+min-spec estimate      17,9      (x3.7)     FPS 56    UNDER (est.)
 
 NOTE: numbers reflect the editor Game view at its current resolution on the EP's GPU
 (4070 Ti SUPER reference; min-spec is GTX 1660-class). Use as the calibration anchor for A6;

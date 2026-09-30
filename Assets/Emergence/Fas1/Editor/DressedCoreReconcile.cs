@@ -75,6 +75,7 @@ namespace Emergence.Editor
             var S2 = JsonUtility.FromJson<WorldState>(File.ReadAllText(World));
             string lost = LoseKnowledge(S2, LoseVillage, LoseTechs);
             var d2 = recon.Reconcile(S2);
+            PresentationEventBus.DumpLog(Path.Combine(Application.dataPath, "..", "Reports", "dressedcore-bus.txt"));   // D-929: the per-object truth behind the diff counts
             int m2 = CaptureMagenta("dressedcore-2-loss"); magentaWorst = Mathf.Max(magentaWorst, m2);
             sb.AppendLine($"loss         {lost}  diff={d2}  placed={recon.PlacedCount} ruins={recon.RuinCount}  magenta={m2}  <-- onLoss:toRuin on dressed terrain");
 

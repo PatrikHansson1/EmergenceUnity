@@ -42,6 +42,22 @@ namespace Emergence.Runtime
             return Holds(v, e.requires);
         }
 
+        /// <summary>D-929: the gate for what may keep STANDING — knowledge (tech, crafts count, custom, requires),
+        /// never the headcount (minPop) and never the generations (monotone anyway). The dressed-core probe keeps its
+        /// loss->ruin proof because a lost craft still counts as lost here.</summary>
+        public static bool Stands(WorldVillage v, CodexEntry e)
+        {
+            if (v == null || e == null) return false;
+            if (v.crafts < e.minCrafts) return false;
+            if (!string.IsNullOrEmpty(e.requiresTech) && (v.knows == null || Array.IndexOf(v.knows, e.requiresTech) < 0)) return false;
+            if (!string.IsNullOrEmpty(e.requiresCustom))
+            {
+                if (e.requiresCustom == "cosmos") { if (string.IsNullOrEmpty(v.cosmos)) return false; }
+                else if (v.beliefs == null || Array.IndexOf(v.beliefs, e.requiresCustom) < 0) return false;
+            }
+            return Holds(v, e.requires);
+        }
+
         // C3 (D-232): the predicate a single requiresTech could never express. allOf/anyOf/noneOf over
         // the same facts, AND-ed with the flat shorthand above so nothing already authored changes.
         // Empty or absent = no requirement, which is why old entries pass unchanged.
@@ -159,9 +175,14 @@ namespace Emergence.Runtime
             return outp;
         }
 
+        // D-929 (MEASURED on the y120 fixture): Falkheim, 37 souls, qualifies for 52 milestone rows; its cap is 20 (1 +
+        // pop/3 + maxGen), and "oldest first" filled all 20 with era 0-2 rows — the forge, the mill, the temple, the
+        // writing-post, the archive (14 era-3 + 14 era-4 + 4 era-5 rows) could NEVER be raised in a mature village. The
+        // hands still pace (the cap is unchanged); what they reach for first is what is NEW. Everything raised earlier
+        // keeps standing (Standing/Stands), so a village accumulates its history instead of trading it away.
         static int Order(CodexEntry a, CodexEntry b)
         {
-            int c = a.era.CompareTo(b.era);          if (c != 0) return c;
+            int c = b.era.CompareTo(a.era);          if (c != 0) return c;   // newest era first
             c = a.minPop.CompareTo(b.minPop);        if (c != 0) return c;
             return string.CompareOrdinal(a.id, b.id);
         }
@@ -177,8 +198,12 @@ namespace Emergence.Runtime
             Allowed(v, objects, prefabExists, out absorbed);
             var standing = new HashSet<string>();
             if (v == null || objects == null) return standing;
+            // D-929 (SEEN live, seed 8919, Stenhaven y26-y29): the story-circle "takes its place" and "is gone" in
+            // alternate years while the village breathes between 4 and 5 souls. D-239 said it for the CAP; it holds for
+            // the headcount gate: population governs what may be RAISED, never what may STAND. Only what can actually be
+            // LOST — a knowledge, a craft, a custom — pulls a standing thing down (generations never fall).
             foreach (var e in objects)
-                if (Qualifies(v, e) && !absorbed.Contains(e.id)) standing.Add(e.id);
+                if (Stands(v, e) && !absorbed.Contains(e.id)) standing.Add(e.id);
             return standing;
         }
     }
