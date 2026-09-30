@@ -89,7 +89,7 @@ namespace Emergence.Runtime
             {
                 // scrim + the panel, centred, pricked corner (D-220: no closed rectangle)
                 EmergenceUI.Wash(new Rect(0, 0, W, H), EmergenceUI.Surface0, 0.55f);
-                const float w = 460f, h = 336f;
+                const float w = 460f, h = 352f;
                 var r = new Rect((W - w) * 0.5f, (H - h) * 0.5f, w, h);
                 var body = new Rect(r.x, r.y, r.width - 12f, r.height - 12f);
                 var fill = EmergenceUI.Surface1; fill.a = EmergenceUI.PanelAlpha;
@@ -133,12 +133,13 @@ namespace Emergence.Runtime
                 if (GUI.Button(new Rect(x + cw - 96, y, 96, 22), "RESUME", EmergenceUI.ButtonOn)) { Close(); Click(); }
                 y += 30f;
                 EmergenceUI.RuleH(x, y, cw, EmergenceUI.Hairline); y += EmergenceUI.Sp2;
-                GUI.Label(new Rect(x, y, cw, 110),
+                GUI.Label(new Rect(x, y, cw, 124),
                     "KEYS\n" +
                     "Space  pause     1 / 2 / 3  speed     Esc  settings / close\n" +
                     "W A S D  move     Q / E  turn     O  orbit\n" +
                     "drag  look     scroll  zoom\n" +
-                    "B  the book     M  the almanac     − / +  volume     \\  mute",
+                    "B  the book     M  the almanac     H  hunches  (Y / N answer)\n" +
+                    "− / +  volume     \\  mute",
                     _key);
             }
             EmergenceUI.End();

@@ -65,7 +65,7 @@ namespace Emergence.Runtime
             _sig = sig;
 
             if (_root == null) _root = new GameObject(LayerName).transform;
-            for (int i = _root.childCount - 1; i >= 0; i--) UnityEngine.Object.DestroyImmediate(_root.GetChild(i).gameObject);
+            for (int i = _root.childCount - 1; i >= 0; i--) UnityEngine.Object.Destroy(_root.GetChild(i).gameObject);   // R5 (D-927)
             MarkCount = 0;
 
             // D-140 genesis honesty: no settlement -> no work-marks. The wilderness carries no lies about labor.

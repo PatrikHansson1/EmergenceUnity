@@ -57,7 +57,7 @@ namespace Emergence.Runtime
             _sig = sig;
 
             if (_root == null) _root = new GameObject(LayerName).transform;
-            for (int i = _root.childCount - 1; i >= 0; i--) UnityEngine.Object.DestroyImmediate(_root.GetChild(i).gameObject);
+            for (int i = _root.childCount - 1; i >= 0; i--) UnityEngine.Object.Destroy(_root.GetChild(i).gameObject);   // R5 (D-927): the play-mode-safe form
             FenceCount = 0;
             var soilSet = new HashSet<(int, int)>();
             if (fields != null) foreach (var f in fields) soilSet.Add((Mathf.RoundToInt(f.x), Mathf.RoundToInt(f.y)));
@@ -163,7 +163,7 @@ namespace Emergence.Runtime
                     _lenAlongX = b.size.x >= b.size.z;
                     _segLen = Mathf.Max(0.5f, Mathf.Max(b.size.x, b.size.z));
                 }
-                UnityEngine.Object.DestroyImmediate(probe);
+                probe.SetActive(false); UnityEngine.Object.Destroy(probe);   // R5 (D-927): never a ghost frame, never DestroyImmediate in play
             }
             catch { }
         }

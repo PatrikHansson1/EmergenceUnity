@@ -12,6 +12,8 @@ namespace Emergence.Runtime
         Fas5AlmanacView _alm;
         Fas3AudioDirector _audio;
         EmergenceSettings _settings;
+        Fas4HunchDirector _hunch;
+        Fas4HunchDirector Hunch() { if (_hunch == null) _hunch = FindAnyObjectByType<Fas4HunchDirector>(); return _hunch; }
         EmergenceSettings Settings() { if (_settings == null) _settings = FindAnyObjectByType<EmergenceSettings>(); return _settings; }
         void Click() { if (_audio == null) _audio = FindAnyObjectByType<Fas3AudioDirector>(); if (_audio != null) _audio.PlayUIClick(); }
         Fas4ChronicleView Book() { if (_book == null) _book = FindAnyObjectByType<Fas4ChronicleView>(); return _book; }
@@ -35,14 +37,22 @@ namespace Emergence.Runtime
                     else { var b = Book(); if (b != null && b.BookOpen) b.CloseBook(); a.OpenAlmanac(); }
                     Click();
                 }
+                else if (Input.GetKeyDown(KeyCode.H))
+                {
+                    // D-926: H opens the journal of hunches (Y / N answer the open question while the card shows)
+                    var hj = Hunch(); if (hj != null) hj.ToggleJournal();
+                }
+                else if (Input.GetKeyDown(KeyCode.Y)) { var hj = Hunch(); if (hj != null && hj.Pending != null && hj.Pending.answer < 0) hj.Answer(1); }
+                else if (Input.GetKeyDown(KeyCode.N)) { var hj = Hunch(); if (hj != null && hj.Pending != null && hj.Pending.answer < 0) hj.Answer(0); }
                 else if (Input.GetKeyDown(KeyCode.Escape))
                 {
                     // D-925: Esc closes what is open; with nothing open it opens SETTINGS (the volume's on-screen path)
-                    var b = Book(); var a = Alm(); var s = Settings();
+                    var b = Book(); var a = Alm(); var s = Settings(); var hj = Hunch();
                     bool closed = false;
                     if (b != null && b.BookOpen) { b.CloseBook(); closed = true; }
                     if (a != null && a.AlmanacOpen) { a.CloseAlmanac(); closed = true; }
                     if (s != null && s.Open) { s.Close(); closed = true; }
+                    if (hj != null && hj.JournalOpen) { hj.CloseJournal(); closed = true; }
                     if (!closed && s != null) s.Toggle();
                     Click();
                 }

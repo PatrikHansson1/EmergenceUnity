@@ -1,8 +1,8 @@
-DONE 19:43:47 OK diorama baked (props + runtime splat; terrain alphamap re-applied at play) renderers=7688
-DIORAMA BAKE — 2026-09-29T19:43:41
+DONE 01:23:12 OK diorama baked (props + runtime splat; terrain alphamap re-applied at play) renderers=7431
+DIORAMA BAKE — 2026-09-30T01:23:03
 dressed: Assets/Emergence/Scenes/EmergenceFloor_day.unity world=Assets/Emergence/WorldStates/world-8919-y120-full.json
-terrain persisted by WorldDresser: Assets/Emergence/Scenes/TerrainData_diorama.asset alphamap: res=1024 dominant[969882,6649,30901,40311,833]
+terrain persisted by WorldDresser: Assets/Emergence/Scenes/TerrainData_diorama.asset alphamap: res=1024 dominant[971310,6649,30578,39206,833]
 camera: Main Camera + EmergenceDioramaCamera + post
 runtime splat: Assets/Emergence/Scenes/TerrainData_diorama_splat.bytes attached
 saved dressed scene: Assets/Emergence/Scenes/EmergenceDiorama.unity
-REOPENED Assets/Emergence/Scenes/EmergenceDiorama.unity renderers=7688 alphamap=res=1024 dominant[969882,6649,30901,40311,833]
+REOPENED Assets/Emergence/Scenes/EmergenceDiorama.unity renderers=7431 alphamap=res=1024 dominant[971310,6649,30578,39206,833]

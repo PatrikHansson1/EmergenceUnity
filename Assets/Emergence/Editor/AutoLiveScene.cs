@@ -142,6 +142,8 @@ namespace Emergence.Editor
                 new GameObject("EmergenceHotkeys").AddComponent<EmergenceHotkeys>();
             if (UnityEngine.Object.FindAnyObjectByType<EmergenceSettings>() == null)
                 new GameObject("EmergenceSettings").AddComponent<EmergenceSettings>();   // D-925: volume's on-screen path
+            if (UnityEngine.Object.FindAnyObjectByType<Fas4HunchDirector>() == null)
+                new GameObject("Fas4HunchDirector").AddComponent<Fas4HunchDirector>();   // D-926: ANING — the hunch
             rep.AppendLine("patterns+keys: Fas5MetricsRecorder + Fas5AlmanacView + EmergenceHotkeys (B/M/Esc) + EmergenceSettings (Esc)");
 
             // 3. camera the build boots on (reuse WorldDresser's DocCamera; Unity fake-null forbids ??)

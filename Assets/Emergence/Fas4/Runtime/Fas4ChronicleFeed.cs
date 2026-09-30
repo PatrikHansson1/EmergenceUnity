@@ -157,6 +157,9 @@ namespace Emergence.Runtime
                     { salience = 2; kind = "leader"; text = e.Data.Substring(13) + "'s voice is gone — no one yet speaks for all"; }
                     else if (e.Data.StartsWith("giftway: "))
                     { salience = 2; kind = "giftway"; text = "the giving has become a way with a name — " + e.Data.Substring(9); }
+                    // D-926 (ANING): the world answers a hunch — notable, so the reader finds it in the book
+                    else if (e.Data.StartsWith("hunch: "))
+                    { salience = 2; kind = "hunch"; text = e.Data.Substring(7); }
                     else return;
                     break;
 
