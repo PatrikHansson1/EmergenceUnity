@@ -1,5 +1,5 @@
 EMERGENCE — LIVE VERIFY (D-897): does the built live scene actually live?
-generated 2026-09-30 22:36:48
+generated 2026-10-01 00:35:16
 world runtime found: True
 sample A (~5s):  year=0 agents=4 applied=1
 sample B (~44s): year=1 agents=4 applied=2

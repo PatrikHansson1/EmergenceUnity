@@ -145,6 +145,20 @@ namespace Emergence.Runtime
                 foreach (var a in S.agents)
                     if (a.age < 1f && a.gen >= 1 && !string.IsNullOrEmpty(a.name))
                     { cands.Add(new Hunch { kind = "life", subject = a.id.ToString(), target = a.id, dueYear = year + 40, question = $"{a.name} was born this year. Will they see year {year + 40}?" }); break; }
+            // D-935d: an elder - will they see ten more years? The oldest soul who has no open question. The soak's silence
+            // (years 14-25) had every kind open; a life at its far end is a different question from a life at its start.
+            if (S.agents != null)
+            {
+                WorldAgent old = null;
+                foreach (var a in S.agents)
+                    if (a.age > 55f && !string.IsNullOrEmpty(a.name) && (old == null || a.age > old.age))
+                    {
+                        bool open = false; foreach (var j in Journal) if (!j.resolved && j.kind == "elder" && j.target == a.id) { open = true; break; }
+                        if (!open) old = a;
+                    }
+                if (old != null)
+                    cands.Add(new Hunch { kind = "elder", subject = old.name, target = old.id, dueYear = year + 10, question = $"{old.name} is {Mathf.RoundToInt(old.age)}. Will they see year {year + 10}?" });
+            }
             // the people — will they double?
             if (pop >= 6)
                 cands.Add(new Hunch { kind = "people", target = pop * 2, dueYear = year + 30, question = $"They are {pop}. Will they be {pop * 2} by year {year + 30}?" });
@@ -166,7 +180,7 @@ namespace Emergence.Runtime
             // open ("3 roofs stand. Will there be 6" in y13 and y16). One open question per kind - variety, not an echo.
             // ...except a life: two different children are two different questions (MEASURED, soak 5: kind-only dedupe left
             // years 14-25 without any question at all, because every open kind was still open and no village was named yet).
-            cands.RemoveAll(c => { foreach (var j in Journal) if (!j.resolved && j.kind == c.kind && (c.kind != "life" || j.subject == c.subject)) return true; return false; });
+            cands.RemoveAll(c => { foreach (var j in Journal) if (!j.resolved && j.kind == c.kind && ((c.kind != "life" && c.kind != "elder") || j.subject == c.subject)) return true; return false; });
             if (cands.Count == 0) return;
             var h = cands[(int)(Hash(S.seed, year, 926) % (uint)cands.Count)];
             h.askedYear = year;
@@ -204,6 +218,7 @@ namespace Emergence.Runtime
             {
                 case "village": if (S.villages != null) foreach (var v in S.villages) if (v.name == h.subject) return true; return false;
                 case "life":    if (S.agents != null) foreach (var a in S.agents) if (a.id == h.target) return true; return false;
+                case "elder":   if (S.agents != null) foreach (var a in S.agents) if (a.id == h.target) return true; return false;
                 case "people":  return S.agents != null && S.agents.Length >= h.target;
                 case "roofs":   return S.huts != null && S.huts.Length >= h.target;
                 case "crafts":  if (S.villages != null) foreach (var v in S.villages) if (v.name == h.subject) return v.crafts >= h.target; return false;
@@ -218,6 +233,7 @@ namespace Emergence.Runtime
             {
                 case "village": return o ? $"{h.subject} stands in year {S.years}" : $"{h.subject} is gone by year {S.years}";
                 case "life":    return o ? $"the child of year {h.askedYear} lives to see year {S.years}" : $"the child of year {h.askedYear} did not see year {S.years}";
+                case "elder":   return o ? $"{h.subject} lives to see year {S.years}" : $"{h.subject} did not see year {S.years}";
                 case "people":  return $"the people number {(S.agents != null ? S.agents.Length : 0)} in year {S.years} (asked: {h.target})";
                 case "roofs":   return $"{(S.huts != null ? S.huts.Length : 0)} roofs stand in year {S.years} (asked: {h.target})";
                 case "crafts":  { int c = 0; if (S.villages != null) foreach (var v in S.villages) if (v.name == h.subject) c = v.crafts; return $"{h.subject} holds {c} crafts in year {S.years} (asked: {h.target})"; }
