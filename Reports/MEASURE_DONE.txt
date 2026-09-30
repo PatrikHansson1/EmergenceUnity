@@ -1,2 +1,2 @@
-DONE 00:33:15 names=18 missing=1 pinkUnderUrp=0
+DONE 07:49:15 names=2 missing=0 pinkUnderUrp=0
 see Reports/measure-report.txt

@@ -116,19 +116,19 @@ namespace Emergence.Runtime
             if (S.agents != null)
                 foreach (var a in S.agents)
                     if (a.age < 1f && a.gen >= 1 && !string.IsNullOrEmpty(a.name))
-                    { cands.Add(new Hunch { kind = "life", subject = a.id.ToString(), target = a.id, dueYear = year + 40, question = $"Will {a.name}, born this year, live to see year {year + 40}?" }); break; }
+                    { cands.Add(new Hunch { kind = "life", subject = a.id.ToString(), target = a.id, dueYear = year + 40, question = $"{a.name} was born this year. Will they see year {year + 40}?" }); break; }
             // the people — will they double?
             if (pop >= 6)
-                cands.Add(new Hunch { kind = "people", target = pop * 2, dueYear = year + 30, question = $"Will the people number {pop * 2} by year {year + 30}? ({pop} today)" });
+                cands.Add(new Hunch { kind = "people", target = pop * 2, dueYear = year + 30, question = $"They are {pop}. Will they be {pop * 2} by year {year + 30}?" });
             // roofs — will they double?
             if (huts >= 2)
-                cands.Add(new Hunch { kind = "roofs", target = huts * 2, dueYear = year + 20, question = $"Will {huts * 2} roofs stand by year {year + 20}? ({huts} today)" });
+                cands.Add(new Hunch { kind = "roofs", target = huts * 2, dueYear = year + 20, question = $"{huts} roofs stand. Will there be {huts * 2} by year {year + 20}?" });
             // crafts — will the most learned village hold three more?
             if (S.villages != null)
             {
                 WorldVillage best = null; foreach (var v in S.villages) if (!string.IsNullOrEmpty(v.name) && (best == null || v.crafts > best.crafts)) best = v;
                 if (best != null && best.crafts >= 2)
-                    cands.Add(new Hunch { kind = "crafts", subject = best.name, target = best.crafts + 3, dueYear = year + 20, question = $"Will {best.name} hold {best.crafts + 3} crafts by year {year + 20}? ({best.crafts} today)" });
+                    cands.Add(new Hunch { kind = "crafts", subject = best.name, target = best.crafts + 3, dueYear = year + 20, question = $"{best.name} holds {best.crafts} crafts. Three more by year {year + 20}?" });
                 // a leaderless village — will a voice rise?
                 foreach (var v in S.villages)
                     if (!string.IsNullOrEmpty(v.name) && string.IsNullOrEmpty(v.leader) && v.pop >= 8)
@@ -238,7 +238,7 @@ namespace Emergence.Runtime
                     EmergenceUI.Bracket(new Rect(body.x + 3, body.y + 3, body.width, body.height), EmergenceUI.Corner.TopLeft, EmergenceUI.GoldLeaf);
                     float x = r.x + EmergenceUI.Sp4, y = r.y + EmergenceUI.Sp2;
                     GUI.Label(new Rect(x, y, 200, 16), answered ? "NOTED" : "A HUNCH  ·  year " + p.askedYear, _head);
-                    GUI.Label(new Rect(x, y + 16f, w - EmergenceUI.Sp5 - 12f, 56f), answered ? $"You said {(p.answer == 1 ? "YES" : "NO")}. The world will answer by year {p.dueYear}." : p.question, _q);
+                    GUI.Label(new Rect(x, y + 16f, w - EmergenceUI.Sp5 - 12f, 56f), answered ? $"You said {(p.answer == 1 ? "YES" : "NO")}. The world answers in year {p.dueYear}." : p.question, _q);
                     if (!answered)
                     {
                         float by = r.y + h - 12f - 26f;

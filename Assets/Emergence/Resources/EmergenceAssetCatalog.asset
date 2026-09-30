@@ -83,6 +83,8 @@ MonoBehaviour:
     prefab: {fileID: 987989193244980787, guid: ca8d30c67ce48494bbfe4e7234fa81f3, type: 3}
   - name: P_PROP_treetrunk_04
     prefab: {fileID: 8749945001493306586, guid: accd3985c8454a54199ab2589ec45c56, type: 3}
+  - name: P_FX_water_FNP
+    prefab: {fileID: 8963451304304168127, guid: 6facbe37cd0029d4e9c26b3123fc9e5c, type: 3}
   - name: Prefab_WaterLake
     prefab: {fileID: 3593693710694803282, guid: 9e07e81fe6664ed44a479288857d4fc0, type: 3}
   - name: SM_WaterRiver

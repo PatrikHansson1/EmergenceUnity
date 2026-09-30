@@ -144,7 +144,7 @@ namespace Emergence.Editor
                                    "P_PROP_treetrunk_01", "P_PROP_treetrunk_02", "P_PROP_treetrunk_03", "P_PROP_treetrunk_04",
                                    // VAG 1.5: the water. 4% of the map is lake and none of it was ever
                                    // rendered in the living loop — the dresser's water law was editor-only.
-                                   "Prefab_WaterLake", "SM_WaterRiver" };
+                                   "P_FX_water_FNP", "Prefab_WaterLake", "SM_WaterRiver" };   // D-928: pack water first
             int optOk = 0;
             foreach (var name in optional.Where(n => !wanted.Contains(n, StringComparer.OrdinalIgnoreCase)))
             {

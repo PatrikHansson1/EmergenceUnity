@@ -805,7 +805,17 @@ namespace Emergence.Editor
 
         static void BuildWater(WorldState S, Transform root)
         {
-            // D-101d: Dreamscape lake/river material on a basin-fitted quad per water tile.
+            // D-928 (SEEN at year 55: the lake read as a frosted ice sheet of 8 m squares): the live scene ships THIS
+            // bake's water, and this was still the per-tile staircase that Fas3WaterBuilder (D-216) replaced for the
+            // runtime path the player never got. One law now — the runtime builder runs here too: one surface per body,
+            // one level (rim − 0.55 m), the blurred outline. The old per-tile law stays below only as a fallback.
+            var terrainNow = Terrain.activeTerrain ?? UnityEngine.Object.FindAnyObjectByType<Terrain>();
+            if (terrainNow != null)
+            {
+                var built = Fas3WaterBuilder.Build(S, root, terrainNow);
+                Debug.Log("[Dresser] " + Fas3WaterBuilder.LastNote);
+                if (built != null) return;
+            }
             var parent = new GameObject("Water").transform; parent.SetParent(root, true);
             for (int y = 0; y < S.H; y++)
                 for (int x = 0; x < S.W; x++)

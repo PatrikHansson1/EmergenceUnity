@@ -41,7 +41,12 @@ namespace Emergence.Runtime
             int A = data.alphamapResolution;
 
             // wear per tile, and the box of tiles that will actually paint (f >= 0.45 after bilinear can reach one tile out)
-            float lmax = Mathf.Log(1f + max);
+            // D-928: wear is measured against a MATURE village's footfall, not against whatever the busiest tile is this
+            // year. Relative to the current max, year 1 (max 10) already wore 426 texels and year 55 (max 276) 3,9 ha — the
+            // same three footsteps read as bare earth at genesis and as nothing at year 120. Anchored at 300 (a mature
+            // village heart; y120 measured 959, unchanged by this) the ground wears in as the people do.
+            const int MatureFootfall = 300;
+            float lmax = Mathf.Log(1f + Mathf.Max(max, MatureFootfall));
             var wear = new float[S.H, S.W];
             int minX = int.MaxValue, minY = int.MaxValue, maxX = int.MinValue, maxY = int.MinValue;
             for (int y = 0; y < S.H; y++)

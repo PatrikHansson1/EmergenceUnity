@@ -44,7 +44,8 @@ namespace Emergence.Runtime
             if (parent != null) root.transform.SetParent(parent, true);
 
             var cat = EmergenceAssetCatalog.Load();
-            var lakePf = cat != null ? (cat.Prefab("Prefab_WaterLake") ?? cat.Prefab("SM_WaterRiver")) : null;
+            // D-928: the Nature pack's own water (ripples, normals, foam 0.2 m, URP) leads; Dreamscape lake/river as fallback
+            var lakePf = cat != null ? (cat.Prefab("P_FX_water_FNP") ?? cat.Prefab("Prefab_WaterLake") ?? cat.Prefab("SM_WaterRiver")) : null;
 
             int W = S.W, H = S.H;
             var seen = new bool[W * H];
@@ -84,7 +85,7 @@ namespace Emergence.Runtime
                     foreach (int i in body)
                     {
                         int x = i % W, y = i / W;
-                        var w = World(x, y);
+                        var w = World(S, x, y);
                         float h = terrain.SampleHeight(w) + terrain.transform.position.y;
                         if (h > rim) rim = h;
                         if (h < floor) floor = h;
@@ -157,7 +158,8 @@ namespace Emergence.Runtime
             // vanish. A rounding law must never be able to delete the thing it is rounding.
             System.Func<int, int, bool> wet = (gx, gy) =>
             {
-                float sx = minTx - 1 + gx + 0.5f, sy = minTy - 1 + gy + 0.5f;
+                // D-928: a cell IS a tile (tile k spans world [8k-4, 8k+4], D-924 law) — its centre is the integer coordinate
+                float sx = minTx - 1 + gx, sy = minTy - 1 + gy;
                 if (Fas3TerrainBuilder.WaterAt(S, sx, sy) > 0.20f) return true;
                 int tx = Mathf.Clamp(Mathf.RoundToInt(sx), 0, S.W - 1);
                 int ty = Mathf.Clamp(Mathf.RoundToInt(sy), 0, S.H - 1);
@@ -167,7 +169,8 @@ namespace Emergence.Runtime
             {
                 int k = gy * w + gx;
                 if (index[k] >= 0) return index[k];
-                float wx = (minTx - 1 + gx) * T, wz = (minTy - 1 + gy) * T;
+                // D-928: cell corners at tile edges, sim y flipped to world -z (tile ty spans z in [(H-1-ty)*T - T/2, +T/2])
+                float wx = (minTx - 1 + gx - 0.5f) * T, wz = (S.H - 1 - (minTy - 1 + gy) + 0.5f) * T;
                 index[k] = verts.Count;
                 verts.Add(new Vector3(wx, 0f, wz));
                 uvs.Add(new Vector2(wx / (T * 8f), wz / (T * 8f)));
@@ -179,8 +182,8 @@ namespace Emergence.Runtime
                 {
                     if (!wet(gx, gy)) continue;
                     int a = vert(gx, gy), b = vert(gx + 1, gy), c = vert(gx + 1, gy + 1), d = vert(gx, gy + 1);
-                    tris.Add(a); tris.Add(d); tris.Add(c);
-                    tris.Add(a); tris.Add(c); tris.Add(b);
+                    tris.Add(a); tris.Add(c); tris.Add(d);   // D-928: z runs the other way now — winding flipped so the face looks up
+                    tris.Add(a); tris.Add(b); tris.Add(c);
                 }
 
             if (tris.Count == 0) { Object.DestroyImmediate(go); return null; }
@@ -216,10 +219,13 @@ namespace Emergence.Runtime
             return m;
         }
 
-        static Vector3 World(int x, int y)
+        // D-928: the builder carried a THIRD coordinate law — z = (y+0.5)*8, sim y unflipped, x shifted half a tile — so
+        // every body it built stood mirrored across the map from its basin. It never showed: the live scene took the
+        // dresser's per-tile water and this path never ran. Now the one law everything stands by (WorldDresser.P).
+        static Vector3 World(WorldState S, int x, int y)
         {
             float T = Fas3TerrainBuilder.TileSize;
-            return new Vector3((x + 0.5f) * T, 0f, (y + 0.5f) * T);
+            return new Vector3(x * T, 0f, (S.H - 1 - y) * T);
         }
     }
 }
