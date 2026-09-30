@@ -76,7 +76,7 @@ namespace Emergence.Runtime
         // without inventing hundreds of gates, and it ends the world where every crate in every village is
         // the identical crate. The pick is hash(position, id, index) — deterministic, never sim RNG.
         public string[] variants; }
-    [Serializable] public class CodexPart { public string prefab; public float dx, dz, yaw, scale; }
+    [Serializable] public class CodexPart { public string prefab; public float dx, dz, yaw, scale; public float dy; }   // D-931: dy = lift above the ground (a thing ON a table); absent in old rows -> 0
     [Serializable] public class Codex { public CodexEntry[] objects; }
     // FAS 4 PROSE WIRING (2026-08-13, FAS4-PROSE-DIRECTOR-ORDER §1): the engine has carried
     // causes[] on every event since R2 ink. 1 (D-172), but nothing crossed into the body — the live

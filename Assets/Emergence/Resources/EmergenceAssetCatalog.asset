@@ -103,6 +103,8 @@ MonoBehaviour:
     prefab: {fileID: 8700213420381108265, guid: e4b8145a1454f6b4c9af2a29cebbc689, type: 3}
   - name: P_PROP_brazier_04
     prefab: {fileID: 4361424653252234233, guid: 453bb9a0353f55942ba8dfbd6f215a84, type: 3}
+  - name: P_PROP_table_03
+    prefab: {fileID: 8160955722134693241, guid: 7b0c3460f2a2bbb42b7d51df4fab003c, type: 3}
   - name: P_PROP_knife_01
     prefab: {fileID: 1687252694807861145, guid: f418ef320797acc4a8df7557bb2b5730, type: 3}
   - name: P_PROP_stone_01
@@ -313,6 +315,8 @@ MonoBehaviour:
     prefab: {fileID: 713152796555164845, guid: 3f1e2fa06edcdcc408c8eba21a04c75d, type: 3}
   - name: P_PROP_bucket_city_03
     prefab: {fileID: 2142736380227009680, guid: 3806296806f407d40b5ffd10373ecb91, type: 3}
+  - name: P_PROP_table_02
+    prefab: {fileID: 5607069915461252539, guid: c15731fb485fda144b87e8d20157dbe8, type: 3}
   - name: P_PROP_pitchfork
     prefab: {fileID: 8302794244689776398, guid: e1719a52489dec540ae3a05134822497, type: 3}
   - name: P_PROP_bottle_04
@@ -541,6 +545,8 @@ MonoBehaviour:
     prefab: {fileID: 2662416705430196660, guid: a5757caba5d0b2441bee13288cb09d5e, type: 3}
   - name: Prefab_Docks
     prefab: {fileID: 4651159602645118614, guid: 6f9ab3fd6f6bcfe4eaa41b1536e0ef1c, type: 3}
+  - name: P_PROP_table_city_02
+    prefab: {fileID: 1170506845935902707, guid: dfbf7b53626333147877148ae1d825f0, type: 3}
   - name: P_PROP_wall_stone_small_02
     prefab: {fileID: 5750198853607023804, guid: d18f1adad3bc433448799703bdb56ee5, type: 3}
   - name: P_PROP_wall_stone_small_03
@@ -591,12 +597,6 @@ MonoBehaviour:
     prefab: {fileID: 7570389208097689640, guid: 023d3304c20349e41aca5551ab004cb3, type: 3}
   - name: P_PROP_coin_city_01
     prefab: {fileID: 2235951402428654160, guid: d48de63f6c296734b9cac952388acd39, type: 3}
-  - name: P_PROP_coin_city_02
-    prefab: {fileID: 8153047718757902299, guid: 6e9a9667d6bddb944a7eadec63432625, type: 3}
-  - name: P_PROP_coinpouch_city_01
-    prefab: {fileID: 3416423731829286838, guid: 2fdba85460e555d4ca97f5c2b35febc1, type: 3}
-  - name: P_PROP_coinpouch_city_02
-    prefab: {fileID: 3187819625376783143, guid: 1fa346990a9a2844b952a9661c2e59cc, type: 3}
   - name: P_PROP_bench_02
     prefab: {fileID: 3632152987673254678, guid: 1e282c887e6979f4d90e2047cc572442, type: 3}
   - name: BLD_03_16x8_Ext_Arch_01
@@ -613,18 +613,12 @@ MonoBehaviour:
     prefab: {fileID: 6266264304791691307, guid: ea15d2ca35ff8ba41a5ec5e9f81af611, type: 3}
   - name: P_PROP_table_01
     prefab: {fileID: 7058783731519798887, guid: 8819a1032981b1a43932629879ba59a4, type: 3}
-  - name: P_PROP_table_02
-    prefab: {fileID: 5607069915461252539, guid: c15731fb485fda144b87e8d20157dbe8, type: 3}
-  - name: P_PROP_table_03
-    prefab: {fileID: 8160955722134693241, guid: 7b0c3460f2a2bbb42b7d51df4fab003c, type: 3}
   - name: P_PROP_table_04
     prefab: {fileID: 5422938237576740499, guid: 66913d5ce47fbde47880b8625c60a811, type: 3}
   - name: COMP_PROP_table_city_01
     prefab: {fileID: 6777940722181048400, guid: f5359b592f1384c45b45e958e63fd30c, type: 3}
   - name: COMP_PROP_table_city_02
     prefab: {fileID: 1435828669556268495, guid: 14e2496b0a0c832448e8287cda2f4b80, type: 3}
-  - name: P_PROP_table_city_02
-    prefab: {fileID: 1170506845935902707, guid: dfbf7b53626333147877148ae1d825f0, type: 3}
   - name: P_PROP_table_city_03
     prefab: {fileID: 4813418275019834297, guid: 8c316f8c2557b7a4e9ba485f7e3859cb, type: 3}
   - name: P_PROP_table_city_04
@@ -1049,12 +1043,6 @@ MonoBehaviour:
     prefab: {fileID: 3339790566395060410, guid: 80ce41945de06814891faa9e03d91cf7, type: 3}
   - name: P_PROP_ingot_copper_city
     prefab: {fileID: 3647479682031752200, guid: b83d2857c2b7b9b40a18052cc7a2465e, type: 3}
-  - name: P_PROP_ingot_iron_city
-    prefab: {fileID: 875434070099818264, guid: fd868909acd13ba4faf55dc1f15e0310, type: 3}
-  - name: P_PROP_ingot_steel_city
-    prefab: {fileID: 8038003981925209028, guid: 128a58f573b35fe48a5da51d12d06abf, type: 3}
-  - name: P_PROP_ingot_gold_city
-    prefab: {fileID: 9213710734976337332, guid: c52c67dbf53d47545812fd33a1ba04d0, type: 3}
   - name: P_PROP_hammer_city_01
     prefab: {fileID: 4650976412802073475, guid: f59704f62f87dab40a5460210ea8356a, type: 3}
   - name: P_PROP_hammer_city_02

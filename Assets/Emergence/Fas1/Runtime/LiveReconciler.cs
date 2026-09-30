@@ -306,7 +306,7 @@ namespace Emergence.Runtime
                 if (pf == null) continue;
                 var go = UnityEngine.Object.Instantiate(pf, anchor.transform);
                 var world = anchor.transform.position + rot * new Vector3(part.dx, 0f, part.dz);
-                go.transform.position = GroundW(world);
+                go.transform.position = GroundW(world) + Vector3.up * part.dy;   // D-931: the plinth law — a first edge lies ON the table
                 go.transform.rotation = rot * Quaternion.Euler(0f, part.yaw, 0f);
                 go.transform.localScale = Vector3.one * (part.scale <= 0f ? 1f : part.scale);
                 go.name = $"part_{e.id}_{i}";

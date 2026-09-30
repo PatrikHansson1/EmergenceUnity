@@ -1,2 +1,2 @@
-DONE 10:34:19 verdict=CHECK rows=115 contradictions=11
+DONE 12:21:48 verdict=CHECK rows=115 contradictions=2
 see Reports/codex-audit.txt

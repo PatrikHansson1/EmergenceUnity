@@ -1,14 +1,14 @@
 EMERGENCE — PERF HARNESS census (Fas 0, A6)
-generated 2026-09-30 10:02:31
+generated 2026-09-30 12:24:11
 scene: EmergenceFloor_day
 NOTE: static editor census (no play-mode draw-call counts). Budget is PROVISIONAL — Fas 1 calibrates.
 
 metric                     measured     budget     verdict
-active renderers (DC proxy) 12986        2500       OVER
+active renderers (DC proxy) 10815        2500       OVER
 skinned meshes (agents)    146          150        OK
-unique materials           94           300        OK
-triangles (millions)       5,45         8          OK
-unique meshes              581          -          (info)
+unique materials           88           300        OK
+triangles (millions)       5,14         8          OK
+unique meshes              509          -          (info)
 LODGroups                  2002         -          (info — want heavy meshes LOD'd)
 
 target FPS 60 (min-spec GTX 1660-class; 4070 Ti SUPER reference).

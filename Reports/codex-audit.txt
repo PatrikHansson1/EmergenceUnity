@@ -1,5 +1,5 @@
 EMERGENCE — CODEX REALITY CHECK (D-252): what each row's asset MEASURES, not what it is called
-generated 2026-09-30 10:34:12   (115 rows, yardstick = a 1,75 m villager)
+generated 2026-09-30 12:21:44   (115 rows, yardstick = a 1,75 m villager)
 
   row                  tier       placed size      x person  parts  drawn by
   ------------------------------------------------------------------------------------------------
@@ -22,9 +22,9 @@ generated 2026-09-30 10:34:12   (115 rows, yardstick = a 1,75 m villager)
        note: row says 'archive', geometry says 'alchemy' — read once, then leave it alone if it is right
   bakehouse            milestone    8,1x8,0   m     4,6x     93   Lit
        meshes: mod
-  blade                milestone    0,1x0,7   m     0,0x      1   Lit
-       meshes: knife
-       note: row says 'blade', geometry says 'knife' — read once, then leave it alone if it is right
+  blade                milestone    0,7x1,2   m     0,4x      1   Lit
+       meshes: table
+       note: row says 'blade', geometry says 'table' — read once, then leave it alone if it is right
   blown-glass          dressing     0,3x0,2   m     0,2x      1   Lit
        meshes: bottle
        note: row says 'blown', geometry says 'bottle' — read once, then leave it alone if it is right
@@ -72,8 +72,9 @@ generated 2026-09-30 10:34:12   (115 rows, yardstick = a 1,75 m villager)
        meshes: sack
   coffin               dressing     0,8x2,7   m     0,5x      2   Lit
        meshes: coffin
-  coin-scales          milestone    0,0x0,1   m     0,0x      1   Lit
-       meshes: coin
+  coin-scales          milestone    0,9x1,0   m     0,5x      1   Lit
+       meshes: table
+       note: row says 'scales', geometry says 'table' — read once, then leave it alone if it is right
   commons-fire         dressing     0,3x1,2   m     0,2x      3   Lit,Unlit
        meshes: campfire
        note: row says 'commons', geometry says 'campfire' — read once, then leave it alone if it is right
@@ -138,9 +139,9 @@ generated 2026-09-30 10:34:12   (115 rows, yardstick = a 1,75 m villager)
   instruments          milestone    1,0x3,2   m     0,6x      1   Lit
        meshes: market
        note: row says 'instruments', geometry says 'market' — read once, then leave it alone if it is right
-  iron-tools           milestone    0,2x1,7   m     0,1x      1   Lit
-       meshes: pitchfork
-       note: row says 'tools', geometry says 'pitchfork' — read once, then leave it alone if it is right
+  iron-tools           milestone    0,8x2,4   m     0,4x      1   Lit
+       meshes: table
+       note: row says 'tools', geometry says 'table' — read once, then leave it alone if it is right
   joinery              milestone   22,0x17,7  m    12,6x    285   Foliage Wind URP Advanced LODfade City U6-1,Lit
        meshes: alchemy, awl, axe, basket, book, bottle
        note: row says 'joinery', geometry says 'alchemy' — read once, then leave it alone if it is right
@@ -158,9 +159,10 @@ generated 2026-09-30 10:34:12   (115 rows, yardstick = a 1,75 m villager)
   lenses               dressing     0,3x0,2   m     0,2x      1   Lit
        meshes: bottle
        note: row says 'lenses', geometry says 'bottle' — read once, then leave it alone if it is right
-  long-memory          milestone    0,1x0,8   m     0,1x      1   Lit
-       meshes: stone
-       note: row says 'memory', geometry says 'stone' — read once, then leave it alone if it is right
+  long-memory          milestone    0,4x0,6   m     0,3x      1   Lit
+       meshes: table
+       note: a milestone at 0,44 m is a prop on the ground — worth a pedestal, a rack or an arrangement
+       note: row says 'memory', geometry says 'table' — read once, then leave it alone if it is right
   manor                milestone    9,6x9,1   m     5,5x    148   Lit
        meshes: mod
   market               milestone    3,5x4,2   m     2,0x      1   Lit
@@ -172,9 +174,9 @@ generated 2026-09-30 10:34:12   (115 rows, yardstick = a 1,75 m villager)
   memory-stone         milestone    2,5x2,2   m     1,4x      1   Props
        meshes: runerock
        note: row says 'memory', geometry says 'runerock' — read once, then leave it alone if it is right
-  metal-bars           milestone    0,1x0,3   m     0,1x      1   Lit
-       meshes: ingot
-       note: row says 'metal', geometry says 'ingot' — read once, then leave it alone if it is right
+  metal-bars           milestone    0,7x1,2   m     0,4x      1   Lit
+       meshes: table
+       note: row says 'metal', geometry says 'table' — read once, then leave it alone if it is right
   mill                 milestone    8,3x7,0   m     4,7x     18   Lit,Unlit
        meshes: base, beam, body, chimney, door, lantern
        note: row says 'mill', geometry says 'chimney' — read once, then leave it alone if it is right
@@ -183,8 +185,9 @@ generated 2026-09-30 10:34:12   (115 rows, yardstick = a 1,75 m villager)
        note: row says 'notices', geometry says 'poster' — read once, then leave it alone if it is right
   old-growth           dressing     3,7x1,6   m     2,1x      1   Foliage Wind URP Advanced LODfade City U6-1
        meshes: ivy
-  ore-store            milestone    0,1x0,3   m     0,1x      1   Lit
-       meshes: bowl
+  ore-store            milestone    0,7x1,2   m     0,4x      1   Lit
+       meshes: table
+       note: row says 'store', geometry says 'table' — read once, then leave it alone if it is right
   outhouse             dressing     2,7x1,9   m     1,6x      2   Lit
        meshes: outhouse
   painted-mark         dressing     3,4x1,8   m     1,9x      1   Lit
@@ -203,9 +206,9 @@ generated 2026-09-30 10:34:12   (115 rows, yardstick = a 1,75 m villager)
   quench-barrel        dressing     0,4x0,6   m     0,2x      1   Lit
        meshes: bucket
        note: row says 'quench', geometry says 'bucket' — read once, then leave it alone if it is right
-  scholar-scroll       milestone    0,1x0,4   m     0,1x      1   Lit
-       meshes: scroll
-       note: row says 'scholar', geometry says 'scroll' — read once, then leave it alone if it is right
+  scholar-scroll       milestone    0,7x1,2   m     0,4x      1   Lit
+       meshes: table
+       note: row says 'scholar', geometry says 'table' — read once, then leave it alone if it is right
   school-bench         milestone    1,1x1,9   m     0,6x      1   Lit
        meshes: bench
        note: row says 'school', geometry says 'bench' — read once, then leave it alone if it is right
@@ -233,9 +236,9 @@ generated 2026-09-30 10:34:12   (115 rows, yardstick = a 1,75 m villager)
        meshes: blacksmith
        note: a milestone at 0,54 m is a prop on the ground — worth a pedestal, a rack or an arrangement
        note: row says 'steam', geometry says 'blacksmith' — read once, then leave it alone if it is right
-  steel-tools          milestone    0,1x0,7   m     0,0x      1   Lit
-       meshes: knife
-       note: row says 'steel', geometry says 'knife' — read once, then leave it alone if it is right
+  steel-tools          milestone    0,9x1,0   m     0,5x      1   Lit
+       meshes: table
+       note: row says 'steel', geometry says 'table' — read once, then leave it alone if it is right
   story-circle         milestone    0,4x1,8   m     0,3x      1   Lit
        meshes: bench
        note: a milestone at 0,44 m is a prop on the ground — worth a pedestal, a rack or an arrangement
@@ -249,9 +252,9 @@ generated 2026-09-30 10:34:12   (115 rows, yardstick = a 1,75 m villager)
   tailor-house         milestone   17,5x17,6  m    10,0x    442   Foliage Wind URP Advanced LODfade City U6-1,Lit,Unlit
        meshes: alchemy, basket, blossoms, book, bookshelf, bottle
        note: row says 'tailor', geometry says 'alchemy' — read once, then leave it alone if it is right
-  tally-stone          milestone    0,1x0,8   m     0,1x      1   Lit
-       meshes: stone
-       note: row says 'tally', geometry says 'stone' — read once, then leave it alone if it is right
+  tally-stone          milestone    0,7x1,2   m     0,4x      1   Lit
+       meshes: table
+       note: row says 'tally', geometry says 'table' — read once, then leave it alone if it is right
   tanning-rack         dressing     2,2x2,0   m     1,3x      1   Lit
        meshes: tanningrack
   temple               milestone   12,0x14,0  m     6,9x     49   Lit
@@ -300,17 +303,8 @@ generated 2026-09-30 10:34:12   (115 rows, yardstick = a 1,75 m villager)
        note: row says 'written', geometry says 'paper' — read once, then leave it alone if it is right
 
 ## CONTRADICTIONS — where the asset does not do what the row claims
-  ✗ blade: tier 'milestone' but the asset places at 0,05 m — invisible at eye level
-  ✗ coin-scales: tier 'milestone' but the asset places at 0,01 m — invisible at eye level
   ✗ hearth: tier 'milestone' but the asset places at 0,23 m — invisible at eye level
-  ✗ iron-tools: tier 'milestone' but the asset places at 0,17 m — invisible at eye level
-  ✗ long-memory: tier 'milestone' but the asset places at 0,15 m — invisible at eye level
-  ✗ metal-bars: tier 'milestone' but the asset places at 0,11 m — invisible at eye level
-  ✗ ore-store: tier 'milestone' but the asset places at 0,10 m — invisible at eye level
-  ✗ scholar-scroll: tier 'milestone' but the asset places at 0,15 m — invisible at eye level
   ✗ song-post: tier 'dressing' but the asset stands 3,4x a person (5,9 x 3,8 m) — that is a building
-  ✗ steel-tools: tier 'milestone' but the asset places at 0,05 m — invisible at eye level
-  ✗ tally-stone: tier 'milestone' but the asset places at 0,15 m — invisible at eye level
 
 Reading: the size and the tier are ASSERTED and can go red. The mesh-family note is a
 prompt for a human, not a rule — a name is evidence, and evidence is read, not trusted.

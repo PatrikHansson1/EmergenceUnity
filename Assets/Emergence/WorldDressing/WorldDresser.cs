@@ -1904,7 +1904,7 @@ namespace Emergence.Editor
                 var pf = LoadCodexPrefab(part.prefab);
                 if (pf == null) continue;
                 var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, anchor.transform);
-                go.transform.position = GroundW(anchor.transform.position + rot * new Vector3(part.dx, 0f, part.dz));
+                go.transform.position = GroundW(anchor.transform.position + rot * new Vector3(part.dx, 0f, part.dz)) + Vector3.up * part.dy;   // D-931: the plinth law
                 go.transform.rotation = rot * Quaternion.Euler(0f, part.yaw, 0f);
                 go.transform.localScale = Vector3.one * (part.scale <= 0f ? 1f : part.scale);
                 go.name = $"part_{e.id}_{i}";

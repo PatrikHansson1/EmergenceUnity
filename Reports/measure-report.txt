@@ -1,9 +1,20 @@
 EMERGENCE — MEASURE PREFABS (D-924): size, pivot, renderers, shaders — names lie, bounds do not
-generated 2026-09-30 10:33:48   2 names
+generated 2026-09-30 12:19:55   13 names
 
 name                                 w x h x d (m)     pivot(y from base)  rend  verdict / shaders
-BLD_03_16x8_Ext_02                    19,1 x 19,4 x  9,6       +0,02           93   ok: Universal Render Pipeline/Lit   [catalog]
-BLD_03_L_Ext_02                       19,3 x 17,6 x 14,6       +0,03          163   ok: Universal Render Pipeline/Lit   [catalog]
+P_PROP_table_01                        1,8 x  0,8 x  1,1       +0,02            1   ok: Universal Render Pipeline/Lit   [catalog]
+P_PROP_table_02                        2,4 x  0,8 x  1,4       +0,00            1   ok: Universal Render Pipeline/Lit   [catalog]
+P_PROP_table_03                        1,2 x  0,7 x  1,1       +0,02            1   ok: Universal Render Pipeline/Lit   [catalog]
+P_PROP_table_04                        0,6 x  0,4 x  0,6       +0,00            1   ok: Universal Render Pipeline/Lit   [catalog]
+P_PROP_table_city_02                   1,0 x  0,9 x  1,0       +0,00            1   ok: Universal Render Pipeline/Lit   [catalog]
+P_PROP_stone_03                        0,8 x  0,1 x  0,7       +0,09            1   ok: Universal Render Pipeline/Lit   [catalog]
+P_PROP_knife_01                        0,7 x  0,1 x  0,3       +0,00            1   ok: Universal Render Pipeline/Lit   [catalog]
+P_PROP_scroll                          0,4 x  0,1 x  0,1       +0,00            1   ok: Universal Render Pipeline/Lit   [catalog]
+P_PROP_coin_city_01                    0,1 x  0,0 x  0,1       +0,00            1   ok: Universal Render Pipeline/Lit   [catalog]
+P_PROP_ingot_copper_city               0,2 x  0,1 x  0,3       +0,00            1   ok: Universal Render Pipeline/Lit   [catalog]
+P_PROP_bowl_wood_03                    0,3 x  0,1 x  0,3       +0,00            1   ok: Universal Render Pipeline/Lit   [catalog]
+P_PROP_pitchfork                       0,4 x  0,2 x  1,7       +0,11            1   ok: Universal Render Pipeline/Lit   [catalog]
+P_PROP_firepit                         1,4 x  0,2 x  1,4       +0,01            1   ok: Universal Render Pipeline/Lit   [catalog]
 
 pivot(y from base): how far the prefab's origin sits ABOVE its lowest point (0 = sits on its base, >0 = floats/needs sinking).
 PINK-UNDER-URP = built-in pipeline shader family (Standard / Legacy Shaders / Particles / Mobile / Nature): URP draws it magenta.
