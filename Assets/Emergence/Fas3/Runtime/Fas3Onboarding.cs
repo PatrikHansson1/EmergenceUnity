@@ -82,6 +82,10 @@ namespace Emergence.Runtime
             // happens, and they are not wrong to, because nothing has told them otherwise.
             if (FindAnyObjectByType<Fas4LatestLine>() == null)
                 new GameObject("Fas4LatestLine").AddComponent<Fas4LatestLine>();
+            // D-935: ANING (D-926) is an organ of the boot, not only of the baked live scene — a composed boot (soak,
+            // diorama, probes) had no hunch director, so the soak could not count the questions it measures.
+            if (FindAnyObjectByType<Fas4HunchDirector>() == null)
+                new GameObject("Fas4HunchDirector").AddComponent<Fas4HunchDirector>();
             // D-223: Windows' white arrow in a dusk world is a seam, and it is in every screenshot
             // we will ever take. Drawn in code — no asset, no licence, cannot drift from the palette.
             EmergenceUI.EnsureCursor();

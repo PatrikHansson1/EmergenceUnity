@@ -34,7 +34,7 @@ namespace Emergence.Runtime
         public float softLockSecs = 90f;
 
         static int CountNotable(Fas4ChronicleFeed feed) { int n = 0; foreach (var e in feed.Entries) if (e.salience >= 2) n++; return n; }
-        struct Sample { public int year; public float t; public int bus, feed, feedDropped, metrics, buffered; public float gcMB, maxHitch; public int notable; }   // D-930: notable = salience>=2 lines (the "first-times per wall-minute" row)
+        struct Sample { public int year; public float t; public int bus, feed, feedDropped, metrics, buffered; public float gcMB, maxHitch; public int notable; public int hunches, quietAsks; }   // D-935: hunches asked so far / by the quiet rule   // D-930: notable = salience>=2 lines (the "first-times per wall-minute" row)
 
         int _phase; int _waitFrames; float _waitAnchor;
         Fas3Onboarding _onb;
@@ -81,6 +81,7 @@ namespace Emergence.Runtime
                     if (y != _lastYear + 1 && !(_lastYear == -1 && y == 0)) _orderBreaks++;
                     var feed = FindAnyObjectByType<Fas4ChronicleFeed>();
                     var rec = FindAnyObjectByType<Fas5MetricsRecorder>();
+                    var hd = FindAnyObjectByType<Fas4HunchDirector>();
                     var s = new Sample
                     {
                         year = y, t = now - _t0,
@@ -88,6 +89,7 @@ namespace Emergence.Runtime
                         feed = feed != null ? feed.Entries.Count : -1,
                         feedDropped = feed != null ? feed.DroppedOldest : -1,
                         notable = feed != null ? CountNotable(feed) : -1,
+                        hunches = hd != null ? hd.Asked : -1, quietAsks = hd != null ? hd.QuietAsks : -1,
                         metrics = rec != null ? rec.RecordCount : -1,
                         buffered = d.BufferedYears,
                         gcMB = GC.GetTotalMemory(false) / 1048576f,
@@ -97,6 +99,10 @@ namespace Emergence.Runtime
                     _busMax = Mathf.Max(_busMax, s.bus); _feedMax = Mathf.Max(_feedMax, s.feed);
                     _metricsMax = Mathf.Max(_metricsMax, s.metrics); _bufferedMax = Mathf.Max(_bufferedMax, s.buffered);
                     _lastYear = y; _lastYearAt = now; _maxHitchThisYear = 0f;
+                    // D-935: the soak plays the part of a player who answers every hunch (always YES, deterministic) — an
+                    // unanswered question blocks the next one for PassAfterYears, so an answering player is the case
+                    // the quiet rule is measured on. Verdict lines then reach the chronicle like they would for a player.
+                    if (hd != null && hd.Pending != null && hd.Pending.answer < 0) hd.Answer(1);
                 }
                 else if (now - _lastYearAt > softLockSecs && !d.Finished)
                 { _nLock = $"softlock=FAIL(no year for {(now - _lastYearAt):F0}s at y{_lastYear})"; Finish(""); return; }
@@ -158,11 +164,11 @@ namespace Emergence.Runtime
             {
                 var sb = new StringBuilder();
                 sb.AppendLine("# FAS 7 SOAK trend — one row per applied year (R1: stamped at measurement)");
-                sb.AppendLine("# year secs bus feed feedDropped metrics buffered gcMB maxHitchSecs notable");
+                sb.AppendLine("# year secs bus feed feedDropped metrics buffered gcMB maxHitchSecs notable hunches quietAsks");
                 foreach (var s in _trend)
                     sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
-                        "{0,4} {1,6:F1} {2,5} {3,5} {4,3} {5,4} {6,2} {7,7:F1} {8,5:F2} {9,4}",
-                        s.year, s.t, s.bus, s.feed, s.feedDropped, s.metrics, s.buffered, s.gcMB, s.maxHitch, s.notable));
+                        "{0,4} {1,6:F1} {2,5} {3,5} {4,3} {5,4} {6,2} {7,7:F1} {8,5:F2} {9,4} {10,4} {11,4}",
+                        s.year, s.t, s.bus, s.feed, s.feedDropped, s.metrics, s.buffered, s.gcMB, s.maxHitch, s.notable, s.hunches, s.quietAsks));
                 File.WriteAllText(TrendPath, sb.ToString());
             }
             catch { }
@@ -214,6 +220,7 @@ namespace Emergence.Runtime
                 "soak {0} {1} {2} {3} {4} {5} {6} magenta={7}/{8} {9}\n",
                 N(_nSpan), N(_nOrder), N(_nPace), N(_nBounds), N(_nLock), N(_nTrend), N(_nEvid),
                 _magenta, _magentaTone, error.Length > 0 ? "ERROR=" + error : "COMPLETE"));
+            try { var hd = FindAnyObjectByType<Fas4HunchDirector>(); if (hd != null) sb.Append(hd.Dump()); } catch { }   // D-935: the journal as evidence
             try { File.WriteAllText(OutPath, sb.ToString()); } catch { }
             Application.Quit();
         }

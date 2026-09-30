@@ -31,6 +31,13 @@ namespace Emergence.Runtime
 
         public const int CooldownYears = 6;   // at most one question per ~six years — expectation needs room
         public const int PassAfterYears = 4;  // an unanswered question lets itself pass
+        // D-935: the first hour measured (D-930) has fifteen minutes (years 10-25) with ONE notable line. The producer
+        // sets that pace, not us - but a question is the one thing the presentation can put into a silence. When the
+        // chronicle has had no notable world line (salience >= 2, hunch verdicts excluded) for QuietYears, the next
+        // question may come QuietCooldownYears after the last instead of CooldownYears. Pure over the feed + year.
+        public const int QuietYears = 3;
+        public const int QuietCooldownYears = 3;
+        public int QuietAsks { get; private set; }   // proof: questions that came by the quiet rule
 
         public readonly List<Hunch> Journal = new List<Hunch>();
         public Hunch Pending { get; private set; }
@@ -41,12 +48,23 @@ namespace Emergence.Runtime
         public bool JournalOpen { get; private set; }
         public string LastNote { get; private set; } = "";
 
-        Fas3WorldRuntime _world; Fas3PresentationClock _clock; Fas3AudioDirector _audio;
-        int _lastYear = -1, _cooldownUntil = 0;
+        Fas3WorldRuntime _world; Fas3PresentationClock _clock; Fas3AudioDirector _audio; Fas4ChronicleFeed _feed;
+        int _lastYear = -1, _cooldownUntil = 0, _lastAskYear = -100;
+        Hunch _noted;   // D-935b: the answered card, kept only for its short NOTED fade — the journal owns the question
         GUIStyle _head, _q, _row;
 
         Fas3WorldRuntime World() { if (_world == null) _world = FindAnyObjectByType<Fas3WorldRuntime>(); return _world; }
         Fas3PresentationClock Clock() { if (_clock == null) _clock = FindAnyObjectByType<Fas3PresentationClock>(); return _clock; }
+        Fas4ChronicleFeed Feed() { if (_feed == null) _feed = FindAnyObjectByType<Fas4ChronicleFeed>(); return _feed; }
+
+        /// <summary>Years since the chronicle's last notable WORLD line at or before this year (hunch verdicts do not count).</summary>
+        public int QuietSince(int year)
+        {
+            var f = Feed(); if (f == null) return 0;
+            int last = -1;
+            foreach (var e in f.Entries) if (e.salience >= 2 && e.kind != "hunch" && e.year <= year && e.year > last) last = e.year;
+            return last < 0 ? year : year - last;
+        }
         void Click() { if (_audio == null) _audio = FindAnyObjectByType<Fas3AudioDirector>(); if (_audio != null) _audio.PlayUIClick(); }
 
         public void Answer(int yes)
@@ -54,6 +72,10 @@ namespace Emergence.Runtime
             if (Pending == null || Pending.answer >= 0) return;
             Pending.answer = yes; Pending.answeredAt = Time.unscaledTime;
             LastNote = "answered " + (yes == 1 ? "YES" : "NO") + " to \"" + Pending.question + "\"";
+            // D-935b (measured in the soak): an answered question stayed Pending until its due year — up to 40 years —
+            // and Pending blocks every new offer, so an answering player got ONE hunch and then silence. The journal
+            // keeps the open question and resolves it; the card only lingers for its fade. Pending is free again.
+            _noted = Pending; Pending = null;
             Click();
         }
         public void LetPass()
@@ -77,15 +99,21 @@ namespace Emergence.Runtime
                 // a scrub backwards: the timeline has not lived those years — forget what was asked in them
                 Journal.RemoveAll(h => h.askedYear > year);
                 if (Pending != null && Pending.askedYear > year) Pending = null;
+                if (_noted != null && _noted.askedYear > year) _noted = null;
                 Recount();
                 _cooldownUntil = Mathf.Min(_cooldownUntil, year);
+                if (_lastAskYear > year) _lastAskYear = -100;
             }
             _lastYear = year;
             if (Fas3WorldRuntime.FixtureInjection) return;   // a probe's injected fixture is not witnessed time
 
             Resolve(S, year);
             if (Pending != null && Pending.answer < 0 && year >= Pending.askedYear + PassAfterYears) LetPassSilently();
-            if (Pending == null && year >= _cooldownUntil && year >= 2 && !jump) Offer(S, w.PrevState, year);
+            if (Pending == null && year >= 2 && !jump)
+            {
+                bool quiet = year < _cooldownUntil && year >= _lastAskYear + QuietCooldownYears && QuietSince(year) >= QuietYears;
+                if (year >= _cooldownUntil || quiet) Offer(S, w.PrevState, year, quiet);
+            }
         }
 
         void LetPassSilently() { Pending.resolved = true; Pending.resolution = "let pass"; Passed++; Pending = null; }
@@ -98,7 +126,7 @@ namespace Emergence.Runtime
 
         // ---------------- the questions (pure over applied state) ----------------
 
-        void Offer(WorldState S, WorldState prev, int year)
+        void Offer(WorldState S, WorldState prev, int year, bool quiet)
         {
             var cands = new List<Hunch>();
             int pop = S.agents != null ? S.agents.Length : 0;
@@ -134,12 +162,18 @@ namespace Emergence.Runtime
                     if (!string.IsNullOrEmpty(v.name) && string.IsNullOrEmpty(v.leader) && v.pop >= 8)
                     { cands.Add(new Hunch { kind = "leader", subject = v.name, dueYear = year + 15, question = $"Will anyone speak for all of {v.name} by year {year + 15}?" }); break; }
             }
+            // D-935c (SEEN in the soak journal): with the card freed, the same question came twice while the first was still
+            // open ("3 roofs stand. Will there be 6" in y13 and y16). One open question per kind - variety, not an echo.
+            // ...except a life: two different children are two different questions (MEASURED, soak 5: kind-only dedupe left
+            // years 14-25 without any question at all, because every open kind was still open and no village was named yet).
+            cands.RemoveAll(c => { foreach (var j in Journal) if (!j.resolved && j.kind == c.kind && (c.kind != "life" || j.subject == c.subject)) return true; return false; });
             if (cands.Count == 0) return;
             var h = cands[(int)(Hash(S.seed, year, 926) % (uint)cands.Count)];
             h.askedYear = year;
             Pending = h; Journal.Add(h);
-            _cooldownUntil = year + CooldownYears;
-            LastNote = $"y{year} asked: {h.question}";
+            _cooldownUntil = year + CooldownYears; _lastAskYear = year;
+            if (quiet) QuietAsks++;
+            LastNote = $"y{year} asked{(quiet ? " (quiet stretch, " + QuietSince(year) + " y without a notable line)" : "")}: {h.question}";
         }
 
         void Resolve(WorldState S, int year)
@@ -216,13 +250,13 @@ namespace Emergence.Runtime
                 if (GUI.Button(new Rect(left, markY - 24f, 320f, 18f), tally, EmergenceUI.Button)) ToggleJournal();   // its own row above SETTINGS
             }
 
-            // the card
-            var p = Pending;
+            // the card (the open question, or the just-answered one while its NOTED fade lasts)
+            var p = Pending ?? _noted;
             if (p != null && !JournalOpen)
             {
                 bool answered = p.answer >= 0;
                 float fade = answered ? Mathf.Clamp01(1f - (Time.unscaledTime - p.answeredAt - 2.5f) / 1.5f) : 1f;
-                if (answered && fade <= 0f) { /* card gone; the journal keeps it */ }
+                if (answered && fade <= 0f) { _noted = null; /* card gone; the journal keeps it */ }
                 else
                 {
                     const float w = 360f, h = 118f;
@@ -292,7 +326,7 @@ namespace Emergence.Runtime
         public string Dump()
         {
             var sb = new StringBuilder();
-            sb.AppendLine($"hunches asked={Asked} right={Right} wrong={Wrong} passed={Passed} pending={(Pending != null ? Pending.question : "-")}");
+            sb.AppendLine($"hunches asked={Asked} quietAsks={QuietAsks} right={Right} wrong={Wrong} passed={Passed} pending={(Pending != null ? Pending.question : "-")}");
             foreach (var h in Journal) sb.AppendLine($"  y{h.askedYear} due {h.dueYear} [{h.kind}] {h.question} answer={h.answer} resolved={h.resolved} {h.resolution}");
             return sb.ToString();
         }

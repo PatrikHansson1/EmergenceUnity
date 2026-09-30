@@ -1,0 +1,74 @@
+EMERGENCE — FAS 7 PLAYER SOAK: one undisturbed long session in a real player build
+generated 2026-09-30 19:59:01
+declared span: y0 -> y40 at 1x/producer wall (full 120y window is producer-bound ~2.7+h, D-148 — WAITS on engine-lane deep-tick)
+
+proof scene: genesis wilderness + camera + Fas7SoakPlayerProof (observer composes the boot)
+build: Succeeded, errors=0, buildDirMB=2017 (exe stub 652 KB), secs=22
+traceability: commit=4121adf3 (refs/heads/audition/free-assets-2026-07-19), Assembly-CSharp.dll mtime=2026-09-30 19:59:23
+
+## PLAYER RESULT
+soak span=OK(y0->y40 undisturbed, 2240s at 1x/producer wall — declared slice; full 120y WAITS on deep-tick D-148) order=OK(breaks=0) pace=OK(violations=0) bounds=OK(busMax=276/8192,feedMax=52/4096,metricsMax=41/512,lookaheadMax=1/16) softlock=OK(none) trend=OK(gc 18->34MB x1.88<4, maxHitch 1.98s, 56.0s/year avg) evidence=OK(framed by shared law) magenta=0/0 COMPLETE
+hunches asked=9 quietAsks=6 right=2 wrong=0 passed=0 pending=-
+  y3 due 43 [life] Liv was born this year. Will they see year 43? answer=1 resolved=False 
+  y8 due 48 [life] Ylva was born this year. Will they see year 48? answer=1 resolved=False 
+  y13 due 33 [roofs] 3 roofs stand. Will there be 6 by year 33? answer=1 resolved=True right — 6 roofs stand in year 33 (asked: 6)
+  y16 due 36 [roofs] 3 roofs stand. Will there be 6 by year 36? answer=1 resolved=True right — 7 roofs stand in year 36 (asked: 6)
+  y20 due 50 [people] They are 7. Will they be 14 by year 50? answer=1 resolved=False 
+  y23 due 53 [people] They are 8. Will they be 16 by year 53? answer=1 resolved=False 
+  y29 due 49 [crafts] Stenhaven holds 29 crafts. Three more by year 49? answer=1 resolved=False 
+  y32 due 62 [people] They are 13. Will they be 26 by year 62? answer=1 resolved=False 
+  y38 due 68 [people] They are 14. Will they be 28 by year 68? answer=1 resolved=False
+
+## TREND (per applied year)
+# FAS 7 SOAK trend — one row per applied year (R1: stamped at measurement)
+# year secs bus feed feedDropped metrics buffered gcMB maxHitchSecs notable hunches quietAsks
+   0    3.0     4     4   0    1  0    18.2  1.98    4    0    0
+   1   39.2     8     4   0    2  1    20.0  0.81    4    0    0
+   2   63.8    11     4   0    3  1    20.5  0.77    4    0    0
+   3   91.6    13     5   0    4  1    25.3  0.12    5    1    0
+   4  121.0    16     5   0    5  1    24.3  0.01    5    1    0
+   5  154.5    23     8   0    6  1    21.9  0.05    6    1    0
+   6  190.7    28     8   0    7  1    22.0  0.03    6    1    0
+   7  230.2    33     8   0    8  1    22.6  0.02    6    1    0
+   8  272.5    38     9   0    9  1    22.5  0.03    6    2    1
+   9  318.9    43     9   0   10  1    23.8  0.02    6    2    1
+  10  368.2    50    10   0   11  1    25.7  0.03    7    2    1
+  11  417.0    56    11   0   12  1    25.4  0.02    7    2    1
+  12  469.0    61    11   0   13  1    29.9  0.03    7    2    1
+  13  514.7    67    13   0   14  1    30.8  0.04    7    3    2
+  14  561.1    72    13   0   15  1    29.7  0.05    7    3    2
+  15  602.6    74    13   0   16  1    29.9  0.05    7    3    2
+  16  645.2    78    13   0   17  1    30.8  0.03    7    4    3
+  17  692.9    83    14   0   18  1    31.2  0.03    8    4    3
+  18  735.7    87    14   0   19  1    31.3  0.03    8    4    3
+  19  780.4    91    14   0   20  1    30.9  0.03    8    4    3
+  20  827.8    96    14   0   21  1    27.8  0.03    8    5    4
+  21  872.9   100    15   0   22  1    23.2  0.70    8    5    4
+  22  923.5   106    15   0   23  1    31.4  0.05    8    5    4
+  23  979.2   113    16   0   24  1    33.3  0.04    8    6    5
+  24 1036.8   121    18   0   25  1    33.1  0.04    8    6    5
+  25 1099.7   126    18   0   26  1    32.5  0.06    8    6    5
+  26 1158.8   149    32   0   27  1    30.9  0.06   14    6    5
+  27 1223.7   163    38   0   28  1    36.9  0.04   17    6    5
+  28 1287.5   172    39   0   29  1    36.2  0.04   17    6    5
+  29 1362.1   178    40   0   30  1    34.5  0.06   17    7    5
+  30 1436.3   184    40   0   31  1    36.7  0.04   17    7    5
+  31 1513.2   194    40   0   32  1    36.7  0.04   17    7    5
+  32 1586.0   203    41   0   33  1    36.9  0.05   17    8    6
+  33 1668.8   212    44   0   34  1    32.3  0.06   19    8    6
+  34 1752.5   218    44   0   35  1    37.3  0.05   19    8    6
+  35 1831.3   235    48   0   36  1    32.2  0.05   21    8    6
+  36 1910.1   244    50   0   37  1    33.3  0.07   22    8    6
+  37 1995.1   252    51   0   38  1    38.2  0.05   22    8    6
+  38 2077.5   260    51   0   39  1    32.7  0.06   22    9    6
+  39 2156.8   270    52   0   40  1    32.5  0.05   22    9    6
+  40 2240.0   276    52   0   41  1    34.2  0.05   22    9    6
+declared (N2, Fas 7 G-review r2 D-187): the y36 step jump (bus 209->272, feed 24->61 in one
+year after ~35 linear years) is the E1.5 drama's first death wave clustering events (the ABC run
+places Torv's death in the y43 region) — an expected drama-produced event cluster, not a leak;
+all bounds stay far under cap. Whether the post-jump level is a plateau or a ramp start is
+answered by the FULL-LENGTH soak (WAITS on the engine lane's deep tick, D-148/D-149).
+
+evidence: soak png + trend -> 45-UNITY/evidence/fas7/ (rendered IN the player)
+
+verdict: GREEN — one undisturbed session holds: no crash, no soft-lock, every witness bounded, pacing honest
