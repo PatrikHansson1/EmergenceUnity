@@ -1,7 +1,7 @@
 EMERGENCE — STORE CAPTURE RIG (three Signature Moments, real worlds, dusk look)
-generated 2026-08-09 19:09:19
+generated 2026-09-30 13:25:30
 
-[first-fire] particle systems simulated: 35
+[first-fire] particle systems simulated: 38
 [first-fire-00] dir=(1,1) r=9 magenta=0
 [first-fire-01] dir=(1,1) r=14 magenta=0
 [first-fire-02] dir=(1,-1) r=9 magenta=0
@@ -20,7 +20,7 @@ generated 2026-08-09 19:09:19
 [first-fire-15] dir=(0,-1) r=14 magenta=0
 [first-fire] world tick=2880 y(label)=21 season=spring agents=7 fires=1 — 16 candidates
 
-[flame-chain] particle systems simulated: 29
+[flame-chain] particle systems simulated: 50
 [flame-chain-00] dir=(1,1) r=9 magenta=0
 [flame-chain-01] dir=(1,1) r=14 magenta=0
 [flame-chain-02] dir=(1,-1) r=9 magenta=0
@@ -39,7 +39,7 @@ generated 2026-08-09 19:09:19
 [flame-chain-15] dir=(0,-1) r=14 magenta=0
 [flame-chain] world tick=12892 y(label)=90 season=summer agents=24 fires=0 — 16 candidates
 
-[rekindler] particle systems simulated: 32
+[rekindler] particle systems simulated: 35
 [rekindler-00] dir=(1,1) r=9 magenta=0
 [rekindler-01] dir=(1,1) r=14 magenta=0
 [rekindler-02] dir=(1,-1) r=9 magenta=0

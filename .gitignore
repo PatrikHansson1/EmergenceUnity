@@ -75,6 +75,9 @@ RUN_COMPILE.trigger.stale
 # LLMUnity native backend — large, regenerable by LLMUnity setup (D-167 pack-limit protection)
 Assets/StreamingAssets/LlamaLib-*/
 Assets/StreamingAssets/LlamaLib-*.meta
+# D-933: LLMUnity copies its native backend to LLMUnityBuild/ at the repo root during BuildPlayer (the Fas7 soak build
+# put 3,5 GB into commit 4b7159b and every push died with HTTP 408). Regenerable, never in git.
+LLMUnityBuild/
 
 # --- OWNED MUSIC PACKS (2026-08-13, same law as D-167) ---
 # 903 MB of uncompressed WAV between the two packs. The GitHub pack limit is what forced the
