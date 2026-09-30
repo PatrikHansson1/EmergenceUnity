@@ -108,6 +108,7 @@ namespace Emergence.Editor
                 bool pair = shot.warm.HasValue || shot.second.HasValue;
                 if (pair) aim = Vector3.Lerp(subj, other, 0.5f) + Vector3.up * 1.0f;
 
+                _allRenderers = null;   // D-934: fresh renderer census per dressed world
                 var cam = Camera.main;
                 if (cam == null) { var g = new GameObject("DocCamera") { tag = "MainCamera" }; cam = g.AddComponent<Camera>(); }
                 cam.fieldOfView = 45f;
@@ -123,11 +124,17 @@ namespace Emergence.Editor
                         var pos = aim + d.normalized * r;
                         var t = Terrain.activeTerrain;
                         if (t != null) pos.y = t.SampleHeight(pos) + t.transform.position.y + 1.7f;
+                        // D-934 (SEEN: first-fire-01 was shot from inside a bush): a candidate whose line of sight to the
+                        // aim is blocked by a renderer steps in toward the aim, 1,5 m at a time, until it can see —
+                        // bounds-tested against every renderer (pack foliage has no colliders), terrain excluded.
+                        int blocked = 0, steps = 0; float rr = r;
+                        while ((blocked = Occluders(pos, aim)) > 0 && steps < 4 && rr > 4f)
+                        { rr -= 1.5f; pos = aim + d.normalized * rr; if (t != null) pos.y = t.SampleHeight(pos) + t.transform.position.y + 1.7f; steps++; }
                         cam.transform.position = pos;
                         cam.transform.LookAt(aim);
                         int magenta = Capture(cam, Path.Combine(OutDir, $"{shot.name}-{n:00}.png"));
                         worstMagenta = Mathf.Max(worstMagenta, magenta); totalPng++;
-                        sb.AppendLine($"[{shot.name}-{n:00}] dir=({d.x:0},{d.z:0}) r={r} magenta={magenta}");
+                        sb.AppendLine($"[{shot.name}-{n:00}] dir=({d.x:0},{d.z:0}) r={rr}{(steps > 0 ? " (stepped in " + steps + "x)" : "")} occluders={blocked} magenta={magenta}");
                         n++;
                     }
                 }
@@ -140,6 +147,23 @@ namespace Emergence.Editor
             File.WriteAllText("Reports/store-cap-report.txt", sb.ToString());
             File.WriteAllText(Done, $"DONE {DateTime.Now:HH:mm:ss} pngs={totalPng} worstMagenta={worstMagenta}\nsee Reports/store-cap-report.txt\n");
             Debug.Log($"[StoreCapture] done pngs={totalPng} worstMagenta={worstMagenta}");
+        }
+
+        // renderers whose bounds cut the sight line between the camera and the aim (a 1 m margin at the aim end,
+        // so the subject itself never counts). Terrain is not a Renderer and is left to the height law above.
+        static Renderer[] _allRenderers;
+        static int Occluders(Vector3 from, Vector3 aim)
+        {
+            if (_allRenderers == null) _allRenderers = UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsSortMode.None);
+            var dir = aim - from; float len = dir.magnitude; if (len < 0.5f) return 0;
+            var ray = new Ray(from, dir / len); int hits = 0;
+            foreach (var r in _allRenderers)
+            {
+                if (r == null || !r.enabled || r is ParticleSystemRenderer) continue;
+                if (r.bounds.Contains(from)) { hits++; continue; }   // the camera stands INSIDE this thing (a bush) — IntersectRay reports 0 there
+                if (r.bounds.IntersectRay(ray, out float dist) && dist > 0.3f && dist < len - 1.0f) hits++;
+            }
+            return hits;
         }
 
         static int Capture(Camera cam, string path)

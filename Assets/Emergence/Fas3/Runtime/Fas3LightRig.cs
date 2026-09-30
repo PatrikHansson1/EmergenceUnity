@@ -15,6 +15,7 @@
 // law) — the world does not get darker because the simulation says so.
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 namespace Emergence.Runtime
 {
@@ -108,8 +109,31 @@ namespace Emergence.Runtime
                 default:      RenderSettings.fogColor = new Color(0.62f, 0.72f, 0.86f); RenderSettings.fogStartDistance = 70f; RenderSettings.fogEndDistance = 800f; break;
             }
 
+            PhaseGrade(phase);
+
             LastNote = "light: " + season + "/" + phase + "  sky=" + (sky != null ? skyName : "NONE (grey horizon)")
                      + "  sun=" + sun.intensity.ToString("F2") + "  fill=" + fill.intensity.ToString("F2") + "  fog=on";
+        }
+
+        // D-934: the FLOOR's day grade (EmergenceLook_day — the pack's own, D-878) carries a ChannelMixer: blue x0.72,
+        // green += 0.13*red. That is their teal daylight. It sits on a GLOBAL volume, so it kept running under dusk and
+        // night too, and the locked identity ("a blue world, one warm point", D-114/115b) had been quietly de-blued since
+        // the floor: in the store stills the dusk sky measured hue 124 (green) and the fire 63 (yellow-green), not orange.
+        // Dusk/night raise a higher-priority volume that overrides ONLY the mixer back to identity; the rest of their
+        // grade (exposure, contrast, SMH, bloom) stays. Day: weight 0 - the day look is theirs, untouched.
+        public static void PhaseGrade(string phase)
+        {
+            bool dim = phase == "dusk" || phase == "night";
+            var go = GameObject.Find("EmergencePhaseGrade");
+            if (go == null) { if (!dim) return; go = new GameObject("EmergencePhaseGrade"); }
+            if (!go.TryGetComponent<Volume>(out var vol)) vol = go.AddComponent<Volume>();
+            vol.isGlobal = true; vol.priority = 5f;
+            var prof = vol.profile; // the instance, never the shared asset
+            if (!prof.TryGet<ChannelMixer>(out var mix)) mix = prof.Add<ChannelMixer>(true);
+            mix.redOutRedIn.Override(100f);  mix.redOutGreenIn.Override(0f);    mix.redOutBlueIn.Override(0f);
+            mix.greenOutRedIn.Override(0f);  mix.greenOutGreenIn.Override(100f); mix.greenOutBlueIn.Override(0f);
+            mix.blueOutRedIn.Override(0f);   mix.blueOutGreenIn.Override(0f);    mix.blueOutBlueIn.Override(100f);
+            vol.weight = dim ? 1f : 0f;
         }
 
         /// <summary>Is the world lit by us, or by whatever a bare scene happened to carry?</summary>

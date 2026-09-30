@@ -49,6 +49,7 @@ namespace Emergence.Editor
                 var camF = Camera.main; if (camF != null) camF.clearFlags = CameraClearFlags.Skybox;
                 var fillF = GameObject.Find("SunFill"); if (fillF != null) fillF.SetActive(false);
                 RenderSettings.fog = false; // one haze layer: FlatKit Fog on the renderer (EmergenceFog.asset), never built-in fog on top
+                Emergence.Runtime.Fas3LightRig.PhaseGrade("day"); // D-934: the mixer override sleeps by day
                 Debug.Log("[LightRig] day = FLOOR inherited (demoscene_village_day sun/sky/ambient/post) — rig not applied");
                 return;
             }
@@ -130,6 +131,7 @@ namespace Emergence.Editor
                 case "night": RenderSettings.fogColor = new Color(0.16f, 0.20f, 0.32f); RenderSettings.fogStartDistance = 120f; RenderSettings.fogEndDistance = 950f; break;
                 default: RenderSettings.fogColor = new Color(0.635f, 0.820f, 1.0f); RenderSettings.fogStartDistance = 240f; RenderSettings.fogEndDistance = 1500f; break;
             }
+            Emergence.Runtime.Fas3LightRig.PhaseGrade(phase); // D-934: dusk/night undo the day grade's blue x0.72 mixer
             Debug.Log($"[LightRig] {season}/{phase} applied (flat ambient; sky={(sky ? skyName : "none")}; decoupled-clock law: presentation time, never sim time)");
         }
     }
