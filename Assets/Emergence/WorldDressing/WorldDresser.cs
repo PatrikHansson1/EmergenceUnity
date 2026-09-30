@@ -1287,6 +1287,10 @@ namespace Emergence.Editor
                 var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, parent);
                 go.transform.position = Ground(S, a.x, a.y, 0f);
                 go.transform.localScale = Vector3.one * VillagerScale;
+                // D-934b: the GLB ships emissiveFactor 1,1,1 + specularColorFactor 2 — "a lamp in a tunic" (D-215). The live
+                // loop repairs it in AgentReconciler; the edit-mode dressing never did, so every store still, diorama and
+                // dressed-core frame showed pale, self-lit souls the player never sees. Same repair, same hash dye.
+                Emergence.Runtime.GlbMaterialSanity.Apply(go, Emergence.Runtime.GlbMaterialSanity.TintFor(a.id));
                 // POSE the model to a hash-varied frame of its clip (static, edit-mode)
                 var clip = LoadClip(CharDir + nm + ".glb");
                 if (clip != null && clip.length > 0f) clip.SampleAnimation(go, Hash01((int)a.x, (int)a.y, a.id + 11) * clip.length);

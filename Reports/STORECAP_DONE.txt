@@ -1,2 +1,2 @@
-DONE 14:19:07 pngs=48 worstMagenta=0
+DONE 14:55:15 pngs=48 worstMagenta=0
 see Reports/store-cap-report.txt

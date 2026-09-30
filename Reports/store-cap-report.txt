@@ -1,5 +1,5 @@
 EMERGENCE — STORE CAPTURE RIG (three Signature Moments, real worlds, dusk look)
-generated 2026-09-30 14:18:50
+generated 2026-09-30 14:54:52
 
 [first-fire] particle systems simulated: 38
 [first-fire-00] dir=(1,1) r=6 (stepped in 2x) occluders=0 magenta=0
