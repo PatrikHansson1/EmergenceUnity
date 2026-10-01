@@ -432,6 +432,7 @@ namespace Emergence.Runtime
             {
                 var prefab = set[(int)(Hash(x, y, salt + 100 + i) % (uint)set.Count)];
                 float jx = Hash01(x, y, salt + 200 + i) - 0.5f, jy = Hash01(x, y, salt + 300 + i) - 0.5f;
+                if (Fas3TerrainBuilder.WaterAt(S, x + jx, y + jy) > 0.30f) continue;   // D-936: nothing grows in the lake
                 float sc = 0.85f + Hash01(x, y, salt + 500 + i) * 0.4f;
                 // MEASURED CORRECTIONS (D-215). With the human yardstick finally right — a villager
                 // stands 1.75 m — the pack's own proportions can be judged instead of guessed:

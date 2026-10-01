@@ -28,7 +28,9 @@ namespace Emergence.Runtime
 {
     public static class Fas3WaterBuilder
     {
-        public const float RimDrop = 0.55f;   // metres below the shoreline rim — the beach's width
+        public const float RimDrop = 0.55f;   // metres below the shoreline rim — the beach's width (fallback law)
+        public const float ShoreDrop = 0.35f; // D-936: metres below the lowest cell of the SHORE BAND (field 0.20..0.32, the mesh edge)
+        public static string Detail { get; private set; } = "";   // D-936: per-body numbers, for the bake report
         public const int MinBodyTiles = 2;    // a single stray tile is a puddle, not a lake
 
         public static string LastNote = "";
@@ -42,6 +44,7 @@ namespace Emergence.Runtime
 
             var root = new GameObject("Water");
             if (parent != null) root.transform.SetParent(parent, true);
+            Detail = "";
 
             var cat = EmergenceAssetCatalog.Load();
             // D-928: the Nature pack's own water (ripples, normals, foam 0.2 m, URP) leads; Dreamscape lake/river as fallback
@@ -92,8 +95,6 @@ namespace Emergence.Runtime
                         if (w.x < minX) minX = w.x; if (w.x > maxX) maxX = w.x;
                         if (w.z < minZ) minZ = w.z; if (w.z > maxZ) maxZ = w.z;
                     }
-                    float level = Mathf.Max(floor + 0.25f, rim - RimDrop);
-
                     int minTx = int.MaxValue, maxTx = int.MinValue, minTy = int.MaxValue, maxTy = int.MinValue;
                     foreach (int i in body)
                     {
@@ -101,6 +102,29 @@ namespace Emergence.Runtime
                         if (x < minTx) minTx = x; if (x > maxTx) maxTx = x;
                         if (y < minTy) minTy = y; if (y > maxTy) maxTy = y;
                     }
+
+                    // D-936 (Patrik: "ravin, ingen beach"): the old law read the HIGHEST WATER TILE as the rim. On the
+                    // big lake that tile is 1.6 m under the meadow (field 0.30 — MÄTT offline on seq-8919 genesis) and
+                    // the plane went 0.55 m under THAT, while the surface mesh reaches out to field 0.20 where the ground
+                    // is only 1.1 m down: the water stood a metre or more below its own shore, everywhere. The shore is
+                    // the mesh edge, so read the ground THERE: land cells with field 0.20..0.32 around the body; the
+                    // plane sits ShoreDrop under the lowest of them (never above ground at the edge), floor+0.25 at least.
+                    float bandMin = float.PositiveInfinity, bandMax = float.NegativeInfinity; int bandN = 0;
+                    for (int y = Mathf.Max(0, minTy - 4); y <= Mathf.Min(H - 1, maxTy + 4); y++)
+                        for (int x = Mathf.Max(0, minTx - 4); x <= Mathf.Min(W - 1, maxTx + 4); x++)
+                        {
+                            if (Fas3TerrainBuilder.Tile(S, x, y) == 'w') continue;
+                            float f = Fas3TerrainBuilder.WaterAt(S, x, y);
+                            if (f < 0.20f || f > 0.32f) continue;
+                            var w = World(S, x, y);
+                            float h = terrain.SampleHeight(w) + terrain.transform.position.y;
+                            if (h < bandMin) bandMin = h; if (h > bandMax) bandMax = h; bandN++;
+                        }
+                    float level = bandN > 0 ? Mathf.Max(floor + 0.25f, bandMin - ShoreDrop)
+                                            : Mathf.Max(floor + 0.25f, rim - RimDrop);   // tiny pond with no band: old law
+                    Detail += "body" + Bodies + " " + body.Count + "t level=" + level.ToString("F2") + " floor=" + floor.ToString("F2")
+                            + " rimTile=" + rim.ToString("F2") + " shoreBand=" + (bandN > 0 ? bandMin.ToString("F2") + ".." + bandMax.ToString("F2") + " n=" + bandN : "none")
+                            + " depth=" + (level - floor).ToString("F2") + "m; ";
 
                     var go = MakeSurface(S, lakePf, root.transform, level, minTx, maxTx, minTy, maxTy);
                     if (go == null) continue;

@@ -29,10 +29,22 @@ namespace Emergence.Runtime
             try
             {
                 if (PlayerPrefs.HasKey(KeyMaster)) AudioListener.volume = Mathf.Clamp01(PlayerPrefs.GetFloat(KeyMaster));
+                // D-936: a persisted master of ~0 (an old MUTE that was saved as 0) would open every later session silent
+                // with no hint why. A level under 5 % is not a preference anyone meant — come back at full.
+                if (AudioListener.volume < 0.05f) { AudioListener.volume = 1f; try { PlayerPrefs.SetFloat(KeyMaster, 1f); } catch { } }
                 var m = Music();
                 if (m != null && PlayerPrefs.HasKey(KeyMusic)) m.SetVolume(Mathf.Clamp01(PlayerPrefs.GetFloat(KeyMusic)));
             }
             catch { }
+            // D-936 (Patrik: "Inget ljud"): no AudioListener = Unity renders no sound at all. The live bake adds one to
+            // the camera now; this is the belt to that brace, for any composed boot (proof scenes, old bakes).
+            if (FindAnyObjectByType<AudioListener>() == null)
+            {
+                var cam = Camera.main; var host = cam != null ? cam.gameObject : gameObject;
+                host.AddComponent<AudioListener>();
+                Debug.Log("[EmergenceSettings] D-936: no AudioListener in the scene — added one to " + host.name);
+            }
+            Debug.Log("[EmergenceSettings] audio: master=" + AudioListener.volume.ToString("F2") + " listeners=" + FindObjectsByType<AudioListener>().Length + " music=" + (Music() != null ? Music().volume.ToString("F2") : "none"));
         }
 
         public void Toggle() { Open = !Open; Click(); }
@@ -54,8 +66,9 @@ namespace Emergence.Runtime
 
         public void ToggleMute()
         {
-            if (_preMute >= 0f) { SetMaster(_preMute); _preMute = -1f; }
-            else { _preMute = AudioListener.volume; SetMaster(0f); }
+            // D-936: MUTE is for THIS session — it never persists (a saved 0 made every later session open silent)
+            if (_preMute >= 0f) { AudioListener.volume = _preMute; _preMute = -1f; }
+            else { _preMute = AudioListener.volume; AudioListener.volume = 0f; }
         }
         public bool Muted => _preMute >= 0f;
 

@@ -57,6 +57,7 @@ namespace Emergence.Runtime
         /// <summary>Diagnostics from the last build, so a probe can assert on the ground instead of guessing.</summary>
         public static string LastDiag = "";
         public static float LastMinH, LastMaxH;   // metres, world space — the relief actually built
+        public static string LastLakeNote = "";    // D-936: per-body base-noise spread the lake pad ironed out (metres)
         public static int LastLayerCount;
 
         /// <summary>Build the world's terrain from an applied snapshot. Returns the Terrain GameObject.
@@ -231,6 +232,58 @@ namespace Emergence.Runtime
             return Mathf.Lerp(h, bh, bw);
         }
 
+        /// <summary>D-936: per-tile field of "the level this basin's base should be" — each body's mean NoiseH,
+        /// spread by the same blur as the water field and normalised by it, so a cell between two bodies reads a
+        /// weighted mix and a cell in one body reads that body's own level.</summary>
+        static float[] LakeBase(WorldState S, float[] waterBlurred, float vseed, float vseed2)
+        {
+            int W = S.W, H = S.H;
+            var raw = new float[W * H];                 // body mean on the body's own tiles, 0 elsewhere
+            var seen = new bool[W * H];
+            var q = new Queue<int>(); var body = new List<int>();
+            var note = new System.Text.StringBuilder();
+            for (int i0 = 0; i0 < W * H; i0++)
+            {
+                if (seen[i0] || Tile(S, i0 % W, i0 / W) != 'w') continue;
+                body.Clear(); seen[i0] = true; q.Enqueue(i0);
+                float sum = 0f, lo = float.MaxValue, hi = float.MinValue;
+                while (q.Count > 0)
+                {
+                    int i = q.Dequeue(); body.Add(i);
+                    int x = i % W, y = i / W;
+                    float n = NoiseH(x, y, vseed, vseed2); sum += n; if (n < lo) lo = n; if (n > hi) hi = n;
+                    for (int d = 0; d < 4; d++)
+                    {
+                        int nx = x + (d == 0 ? 1 : d == 1 ? -1 : 0), ny = y + (d == 2 ? 1 : d == 3 ? -1 : 0);
+                        if (nx < 0 || ny < 0 || nx >= W || ny >= H) continue;
+                        int ni = ny * W + nx;
+                        if (seen[ni] || Tile(S, nx, ny) != 'w') continue;
+                        seen[ni] = true; q.Enqueue(ni);
+                    }
+                }
+                float mean = sum / body.Count;
+                foreach (int i in body) raw[i] = mean;
+                if (body.Count >= 2) note.Append(body.Count).Append("t:").Append(((hi - lo) * TerrainHeight).ToString("F1")).Append("m ");
+            }
+            LastLakeNote = note.Length > 0 ? "lake pad ironed base spread " + note.ToString().TrimEnd() : "no lakes";
+            Blur(raw, W, H, 3, 2);                       // the SAME blur the water field got
+            for (int i = 0; i < raw.Length; i++) raw[i] = waterBlurred[i] > 1e-4f ? raw[i] / waterBlurred[i] : 0f;
+            return raw;
+        }
+
+        /// <summary>D-936: blend the height toward the basin's level. Fully level from field 0.25 up (the whole
+        /// bowl AND the shore band the water level is read from), easing out to untouched ground at field 0.05 —
+        /// a lake on a terrace with a beach, the hillside taking the slope outside it. (First cut ramped to 0.55:
+        /// MEASURED shore band 10,1..17,5 m on the 211-tile lake — 7 m of slope left in the band, level fell to the floor.)</summary>
+        static float LakePad(float h, float[] water, float[] lakeBase, int W, int H, float sx, float sy)
+        {
+            float f = Sample(water, W, H, sx, sy);
+            if (f <= 0.05f) return h;
+            float t = Mathf.Clamp01((f - 0.05f) / 0.20f);
+            float w = t * t * (3f - 2f * t);
+            return Mathf.Lerp(h, Sample(lakeBase, W, H, sx, sy), w);
+        }
+
         static void SmoothHeights(float[,] h, int res)
         {
             var t = new float[res, res];
@@ -246,7 +299,9 @@ namespace Emergence.Runtime
             for (int y = 0; y < res; y++) for (int x = 0; x < res; x++) h[y, x] = t[y, x];
         }
 
-        static void BuildHeights(WorldState S, TerrainData data)
+        /// <summary>D-936: PUBLIC — the dresser's bake (the live scene, the store rigs) builds its heights here too.
+        /// Before this it had its own loop: a hard 5,8 m step on every water tile and no blur — the ravine Patrik saw.</summary>
+        public static void BuildHeights(WorldState S, TerrainData data)
         {
             int res = data.heightmapResolution;
             float vseed = S.seed % 991 * 0.137f, vseed2 = S.seed % 733 * 0.171f;
@@ -260,6 +315,13 @@ namespace Emergence.Runtime
             // there would be a second law that could drift from this one; handing the array over
             // keeps the shore and the basin derived from ONE field.
             LastWater = water;
+            // D-936 (Patrik 2026-10-01: "vattnet låg lågt djupt ner i förhållande till mark — ravin, ingen beach"):
+            // A LAKE LIES LEVEL. The basin was carved out of the ROLLING base noise, so one flat water plane met
+            // the bank on the body's high side and stood metres under it on the low side — and the level law,
+            // reading the highest water tile, chose the ravine. Iron the base under each body toward that
+            // body's own mean noise height (the VillagePad law, applied to water), weighted by the same blurred
+            // field that carves and paints, THEN carve. One field, four consumers.
+            var lakeBase = LakeBase(S, water, vseed, vseed2);
 
             var heights = new float[res, res];
             for (int ry = 0; ry < res; ry++)
@@ -269,6 +331,7 @@ namespace Emergence.Runtime
                     float sy = VertToTileY(ry, res, S.H);
                     float h = NoiseH(sx, sy, vseed, vseed2);
                     h = VillagePad(S, sx, sy, vseed, vseed2, h);
+                    h = LakePad(h, water, lakeBase, S.W, S.H, sx, sy);   // D-936
                     h += 0.030f * Sample(stone, S.W, S.H, sx, sy);   // stone ground stands a touch proud
                     h -= 0.075f * Sample(water, S.W, S.H, sx, sy);   // ponds and rivers lie in a basin
                     heights[ry, rx] = Mathf.Clamp01(h);

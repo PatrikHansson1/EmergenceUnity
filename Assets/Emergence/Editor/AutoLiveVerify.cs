@@ -82,8 +82,10 @@ namespace Emergence.Editor
                         var fd = UnityEngine.Object.FindAnyObjectByType<Fas4ChronicleFeed>();
                         if (dr != null && dr.LastError != null && dr.LastError.Length > 0) _dErr = dr.LastError;
                         if (!_sampledA && t >= 5f)  { _yearA = w.LastAppliedYear; _agentsA = w.AgentCount; _appliedA = w.AppliedCount;
-                            if (dr!=null){_dYearA=dr.Year;_dTickA=dr.Tick;_dBufA=dr.BufferedYears;} if(ck!=null)_pYearA=ck.PresentationYear; if(fd!=null)_chronA=fd.Entries.Count; _sampledA = true; }
+                            if (dr!=null){_dYearA=dr.Year;_dTickA=dr.Tick;_dBufA=dr.BufferedYears;} if(ck!=null)_pYearA=ck.PresentationYear; if(fd!=null)_chronA=fd.Entries.Count; _sampledA = true;
+                            CaptureRaw("live-verify-opening"); }   // D-936: what the player SEES at ~5 s (the founders frame) — evidence, not a claim
                         if (!_sampledB && t >= 44f) { _yearB = w.LastAppliedYear; _agentsB = w.AgentCount; _appliedB = w.AppliedCount;
+                            CaptureRaw("live-verify-end");
                             if (dr!=null){_dYearB=dr.Year;_dTickB=dr.Tick;_dBufB=dr.BufferedYears;} if(ck!=null)_pYearB=ck.PresentationYear; if(fd!=null)_chronB=fd.Entries.Count; { var md=UnityEngine.Object.FindAnyObjectByType<Fas6MusicDirector>(); if(md!=null)_cueB=md.CurrentCue; var gz=UnityEngine.Object.FindAnyObjectByType<Fas3GazeDirector>(); if(gz!=null)_gazeB=gz.GazeCount; } _sampledB = true; }
                     }
                     if (_sampledB || overtime) Finish(overtime, w != null);
@@ -113,6 +115,25 @@ namespace Emergence.Editor
                 return m.Success ? int.Parse(m.Groups[1].Value) : -1;
             }
             catch { return -1; }
+        }
+
+        /// <summary>D-936: render the main camera to Reports/NAME.png (1280x720), the GroundCaptureProbe way.</summary>
+        static void CaptureRaw(string name)
+        {
+            try
+            {
+                var cam = Camera.main; if (cam == null) return;
+                const int w = 1280, h = 720;
+                var rt = new RenderTexture(w, h, 24);
+                cam.targetTexture = rt; cam.Render();
+                RenderTexture.active = rt;
+                var tex = new Texture2D(w, h, TextureFormat.RGB24, false);
+                tex.ReadPixels(new Rect(0, 0, w, h), 0, 0); tex.Apply();
+                cam.targetTexture = null; RenderTexture.active = null;
+                File.WriteAllBytes(Path.Combine(Application.dataPath, "..", "Reports", name + ".png"), tex.EncodeToPNG());
+                UnityEngine.Object.Destroy(tex); UnityEngine.Object.Destroy(rt);
+            }
+            catch (Exception e) { Debug.LogWarning("[AutoLiveVerify] capture " + name + " failed: " + e.Message); }
         }
 
         static void Finish(bool overtime, bool foundWorld)

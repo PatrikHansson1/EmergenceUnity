@@ -184,6 +184,9 @@ namespace Emergence.Runtime
             to.clip = clip; to.volume = CurrentCue.Length == 0 ? volume * _gain : 0f; to.Play();
             _fadeT = CurrentCue.Length == 0 ? 1f : 0f;    // the opening snaps; every later change fades
             CurrentCue = cue; CueChanges++;
+            // D-936: one line per cue change so a silent build can be read from its player.log
+            LastNote = "cue '" + cue + "' -> " + clip.name + " (" + clip.length.ToString("F0") + " s, gain " + _gain.ToString("F2") + ", master " + AudioListener.volume.ToString("F2") + ")";
+            Debug.Log("[Fas6MusicDirector] " + LastNote + " playing=" + to.isPlaying);
         }
 
         /// <summary>Probe seam: apply the law to a state without a scene or a clock.</summary>

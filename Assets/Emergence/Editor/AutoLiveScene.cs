@@ -25,7 +25,7 @@ namespace Emergence.Editor
         static double _next;
         static string Trigger => Path.Combine(Application.dataPath, "..", "Reports", "RUN_LIVESCENE.trigger");
         static string Done    => Path.Combine(Application.dataPath, "..", "Reports", "LIVESCENE_DONE.txt");
-        const string DefaultWorld = "Assets/Emergence/WorldStates/world-8919-y120-full.json";
+        const string DefaultWorld = "Assets/Emergence/WorldStates/seq-8919-y000-genesis.json";   // D-936: the build BOOTS at genesis — bake the wilderness it boots into, not y120's managed forest
         const string TdLivePath   = "Assets/Emergence/Scenes/TerrainData_live.asset";
         const string LiveScene    = "Assets/Emergence/Scenes/EmergenceLive.unity";
         const string VolumePath   = "Assets/Emergence/Scenes/EmergenceLiveVolume.asset";   // D-920: the post volume the live scene boots with
@@ -60,6 +60,8 @@ namespace Emergence.Editor
             finally { WorldDresser.PersistTerrainPath = null; WorldDresser.EnvironmentOnly = false; }
             var scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
             rep.AppendLine("dressed ENVIRONMENT-only: " + scene.path + " world=" + worldJson);
+            rep.AppendLine("D-936 water: " + Fas3WaterBuilder.LastNote + " | " + Fas3WaterBuilder.Detail);
+            rep.AppendLine("D-936 terrain: " + Fas3TerrainBuilder.LastLakeNote + " | relief " + Fas3TerrainBuilder.LastMinH.ToString("F1") + ".." + Fas3TerrainBuilder.LastMaxH.ToString("F1") + " m");
 
             var terrain = Terrain.activeTerrain;
             if (terrain == null) terrain = UnityEngine.Object.FindAnyObjectByType<Terrain>(FindObjectsInactive.Include);
@@ -155,13 +157,16 @@ namespace Emergence.Editor
             var acd = camGo.GetComponent<UniversalAdditionalCameraData>(); if (acd == null) acd = camGo.AddComponent<UniversalAdditionalCameraData>();
             acd.renderPostProcessing = true;
             if (camGo.GetComponent<EmergenceDioramaCamera>() == null) camGo.AddComponent<EmergenceDioramaCamera>();
+            // D-936 (Patrik 2026-10-01: "Inget ljud"): the build ships ONLY this scene and it had NO AudioListener — Unity
+            // then plays nothing at all, whatever the four sound layers do. Bootstrap.unity had one; this bake never did.
+            if (camGo.GetComponent<AudioListener>() == null) camGo.AddComponent<AudioListener>();
             // the living gaze (D-904, D-134/D-139): the documentary eye that notices life — glides down
             // to frame a hut being raised or a child born (PresentationEventBus), holds a beat, releases.
             // No conflict with the diorama: it writes in LateUpdate (after the orbit's Update), so the
             // gaze wins while it has a target and the orbit resumes when it lets go. Presentation-only.
             if (camGo.GetComponent<Fas3GazeDirector>() == null) camGo.AddComponent<Fas3GazeDirector>();
             camGo.transform.position = new Vector3(400, 60, 150); camGo.transform.LookAt(new Vector3(430, 6, 300));
-            rep.AppendLine("camera: Main Camera + EmergenceDioramaCamera + Fas3GazeDirector (living gaze) + post");
+            rep.AppendLine("camera: Main Camera + EmergenceDioramaCamera + Fas3GazeDirector (living gaze) + post + AudioListener (D-936: " + UnityEngine.Object.FindObjectsByType<AudioListener>().Length + " listener(s) in scene)");
 
             // 3b. D-920 (review D-919): the live scene had NO Volume — renderPostProcessing was on, but nothing to
             // process. VISUAL-BIBLE: ACES, bloom tuned to the ONE warm point (the fires), a light vignette. The

@@ -197,26 +197,13 @@ namespace Emergence.Editor
             // ONCE-AND-FOR-ALL (D-101b): real rolling relief that READS from the map camera (the 8m
             // version was a 1% grade — invisible from 55m up). Multi-octave noise → ~25m rolling hills,
             // water carved below, village centres settled flat so houses sit level. Seed-varied.
-            float vseed = S.seed % 991 * 0.137f, vseed2 = S.seed % 733 * 0.171f;
-            var heights = new float[res, res];
-            for (int ry = 0; ry < res; ry++)
-                for (int rx = 0; rx < res; rx++)
-                {
-                    float sx = Fas3TerrainBuilder.VertToTileX(rx, res, S.W);   // D-924: one map<->tile law (was a W/(W-1) stretch)
-                    float sy = Fas3TerrainBuilder.VertToTileY(ry, res, S.H);
-                    int tx = Mathf.Clamp(Mathf.RoundToInt(sx), 0, S.W - 1), ty = Mathf.Clamp(Mathf.RoundToInt(sy), 0, S.H - 1);
-                    float n1 = Mathf.PerlinNoise(sx * 0.018f + vseed, sy * 0.018f + 3.1f);   // broad hills
-                    float n2 = Mathf.PerlinNoise(sx * 0.045f + 11.7f, sy * 0.045f + vseed2); // mid rolls
-                    float n3 = Mathf.PerlinNoise(sx * 0.11f + 7.3f, sy * 0.11f + 5.9f);      // fine undulation
-                    float baseH = 0.13f + 0.24f * n1 + 0.10f * n2 + 0.03f * n3;
-                    // settle the ground toward the local mean near village centres (flat building pads)
-                    float flat = VillageFlatten(S, sx, sy);
-                    baseH = Mathf.Lerp(baseH, 0.22f, flat);
-                    if (Tile(S, tx, ty) == 'w') baseH -= 0.08f;       // ponds/rivers sit below the meadow
-                    else if (Tile(S, tx, ty) == 's') baseH += 0.04f;  // stone ground stands a touch proud
-                    heights[ry, rx] = baseH;
-                }
-            data.SetHeights(0, 0, heights);
+            // D-936 (Patrik 2026-10-01: "vattnet låg lågt djupt ner ... ravin, ingen beach"): MEASURED in the bake report —
+            // this loop was a SECOND height law. It dropped every water tile a hard 0.08 (5,8 m) with no blur and no
+            // smoothing, so each lake was a vertical-walled pit, and Fas3WaterBuilder (D-223: blurred basin, painted
+            // shore, surface shaped by the field) ran on top of it with no field at all (LastWater null → outline = the
+            // raw 8 m tiles, shore band empty). The runtime law is the one law now: Fas3TerrainBuilder.BuildHeights —
+            // the blurred carve (D-223), VillagePad toward the land's OWN height, and the D-936 lake pad.
+            Fas3TerrainBuilder.BuildHeights(S, data);
 
             // D-101: prefer DREAMSCAPE's own textured terrain layers (real diffuse+normal, the reference
             // look) — fall back to the project's earlier layers, then to a flat colour only if nothing loads.
@@ -269,6 +256,17 @@ namespace Emergence.Editor
                         am[ay, ax, liGrass] = wGrass;
                         am[ay, ax, liPath] += wDirt;
                         am[ay, ax, liGravel] += wRock;
+                    }
+                    // D-936: THE SHORE (the runtime painter's D-223 law, which this bake never had — its lake sat in grass).
+                    // The band where the water HAS BEEN: bare shingle and worn earth, from the first wetness (field 0.12)
+                    // to fully bare at 0.35, which is just under the water line the D-936 level law sets.
+                    float wet = Fas3TerrainBuilder.WaterAt(S, sx, sy);
+                    if (wet > 0.12f)
+                    {
+                        float shore = Mathf.Clamp01((wet - 0.12f) / 0.23f);
+                        for (int l = 0; l < layers.Count; l++) am[ay, ax, l] *= 1f - shore;
+                        am[ay, ax, liGravel] += shore * 0.55f;
+                        am[ay, ax, liPath] += shore * 0.45f;
                     }
                 }
             int trodden = EnvironmentOnly ? 0 : PaintTrodden(S, am, AlphaRes, liPath, liGrass); // D-921: live scene wears its ground via Fas3TroddenPainter // D-879: footfall wears the grass (states with pathUse)
@@ -813,7 +811,7 @@ namespace Emergence.Editor
             if (terrainNow != null)
             {
                 var built = Fas3WaterBuilder.Build(S, root, terrainNow);
-                Debug.Log("[Dresser] " + Fas3WaterBuilder.LastNote);
+                Debug.Log("[Dresser] " + Fas3WaterBuilder.LastNote + " | " + Fas3WaterBuilder.Detail + " | " + Fas3TerrainBuilder.LastLakeNote);
                 if (built != null) return;
             }
             var parent = new GameObject("Water").transform; parent.SetParent(root, true);
@@ -1661,7 +1659,9 @@ namespace Emergence.Editor
                     {
                         bool edge = ForestEdge(S, x, y);
                         Scatter(S, parent, trees, x, y, edge ? TreesPerForestTile * 0.45f : TreesPerForestTile, 41);
-                        if (edge && trunks.Length > 0 && Hash01(x, y, 51) < 0.45f) // coppice marks at the treeline
+                        // D-936 (Patrik: "stockar utplacerade från start"): coppice marks are the MANAGED edge of a lived-in
+                        // wood (TD-031). The live bake is the genesis wilderness — nobody has cut anything yet — so none there.
+                        if (edge && !EnvironmentOnly && trunks.Length > 0 && Hash01(x, y, 51) < 0.45f) // coppice marks at the treeline
                         {
                             var pf = trunks[Hash(x, y, 52) % (uint)trunks.Length];
                             var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, parent);
@@ -1693,8 +1693,11 @@ namespace Emergence.Editor
             for (int i = 0; i < count; i++)
             {
                 var prefab = set[Hash(x, y, salt + 100 + i) % (uint)set.Length];
-                var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, parent);
                 float jx = Hash01(x, y, salt + 200 + i) - 0.5f, jy = Hash01(x, y, salt + 300 + i) - 0.5f;
+                // D-936 (SEEN eye-at-the-water.png: a tree standing in the lake): the water now fills its basin to the
+                // shore band, so a forest tile whose edge lies inside the basin (blurred field > 0.30) is wet ground.
+                if (Fas3TerrainBuilder.WaterAt(S, x + jx * 0.9f, y + jy * 0.9f) > 0.30f) continue;
+                var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, parent);
                 go.transform.position = Ground(S, x + jx * 0.9f, y + jy * 0.9f);
                 float tiltX = (Hash01(x, y, salt + 600 + i) - 0.5f) * 8f, tiltZ = (Hash01(x, y, salt + 700 + i) - 0.5f) * 8f;   // A3: ±4° lean
                 go.transform.rotation = Quaternion.Euler(tiltX, Hash(x, y, salt + 400 + i) % 360, tiltZ);

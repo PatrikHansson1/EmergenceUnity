@@ -1,5 +1,5 @@
-DONE 12:18:53 OK live scene baked (rig + story organs present, environment dressed; run-mode movement + chronicle verified next)
-LIVE SCENE BAKE — 2026-10-01T12:18:48
+DONE 12:06:45 OK live scene baked (rig + story organs present, environment dressed; run-mode movement + chronicle verified next)
+LIVE SCENE BAKE — 2026-10-01T12:06:40
 dressed ENVIRONMENT-only: Assets/Emergence/Scenes/EmergenceFloor_day.unity world=Assets/Emergence/WorldStates/seq-8919-y000-genesis.json
 D-936 water: water: 4 bodies over 249 tiles (1,59 ha) | body0 8t level=28,92 floor=27,40 rimTile=29,47 shoreBand=none depth=1,52m; body1 13t level=23,93 floor=23,48 rimTile=24,48 shoreBand=none depth=0,44m; body2 211t level=12,56 floor=9,75 rimTile=13,78 shoreBand=12,91..14,71 n=81 depth=2,81m; body3 17t level=29,17 floor=28,92 rimTile=29,41 shoreBand=29,18..29,46 n=2 depth=0,25m; 
 D-936 terrain: lake pad ironed base spread 8t:2,8m 13t:4,0m 211t:8,1m 17t:2,8m | relief 12,6..40,1 m
@@ -14,4 +14,4 @@ patterns+keys: Fas5MetricsRecorder + Fas5AlmanacView + EmergenceHotkeys (B/M/Esc
 camera: Main Camera + EmergenceDioramaCamera + Fas3GazeDirector (living gaze) + post + AudioListener (D-936: 1 listener(s) in scene)
 post: global Volume (ACES + bloom thr 0.95/int 0.5 + vignette 0.18) -> Assets/Emergence/Scenes/EmergenceLiveVolume.asset
 saved live scene: Assets/Emergence/Scenes/EmergenceLive.unity
-REOPENED Assets/Emergence/Scenes/EmergenceLive.unity renderers=5109 driver=True world=True clock=True feed=True music=True gaze=True
+REOPENED Assets/Emergence/Scenes/EmergenceLive.unity renderers=5133 driver=True world=True clock=True feed=True music=True gaze=True
