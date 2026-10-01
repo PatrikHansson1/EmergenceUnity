@@ -19,7 +19,7 @@ namespace Emergence.Editor
     public static class AutoLiveVerify
     {
         const string LiveScene = "Assets/Emergence/Scenes/EmergenceLive.unity";
-        const double Watchdog = 52.0;
+        const double Watchdog = 75.0;   // D-936c: window 64 s + slack
         static double _next;
         static string Trigger => Path.Combine(Application.dataPath, "..", "Reports", "RUN_LIVEVERIFY.trigger");
         static string Done    => Path.Combine(Application.dataPath, "..", "Reports", "LIVEVERIFY_DONE.txt");
@@ -84,8 +84,10 @@ namespace Emergence.Editor
                         if (!_sampledA && t >= 5f)  { _yearA = w.LastAppliedYear; _agentsA = w.AgentCount; _appliedA = w.AppliedCount;
                             if (dr!=null){_dYearA=dr.Year;_dTickA=dr.Tick;_dBufA=dr.BufferedYears;} if(ck!=null)_pYearA=ck.PresentationYear; if(fd!=null)_chronA=fd.Entries.Count; _sampledA = true;
                             CaptureRaw("live-verify-opening"); }   // D-936: what the player SEES at ~5 s (the founders frame) — evidence, not a claim
-                        if (!_sampledB && t >= 44f) { _yearB = w.LastAppliedYear; _agentsB = w.AgentCount; _appliedB = w.AppliedCount;
+                        // D-936c: was 44 s — MEASURED a race with editor production (year 1 lands ~40 s cold; CHECK 2 of 3 runs 13:18–13:21), one year needs 6 s to play
+                        if (!_sampledB && t >= 64f) { _yearB = w.LastAppliedYear; _agentsB = w.AgentCount; _appliedB = w.AppliedCount;
                             CaptureRaw("live-verify-end");
+                            CaptureLakeShore("live-verify-lake");   // D-936c: the lake from its own shore, eye height — the ravine test in the BUILD scene
                             if (dr!=null){_dYearB=dr.Year;_dTickB=dr.Tick;_dBufB=dr.BufferedYears;} if(ck!=null)_pYearB=ck.PresentationYear; if(fd!=null)_chronB=fd.Entries.Count; { var md=UnityEngine.Object.FindAnyObjectByType<Fas6MusicDirector>(); if(md!=null)_cueB=md.CurrentCue; var gz=UnityEngine.Object.FindAnyObjectByType<Fas3GazeDirector>(); if(gz!=null)_gazeB=gz.GazeCount; } _sampledB = true; }
                     }
                     if (_sampledB || overtime) Finish(overtime, w != null);
@@ -136,6 +138,37 @@ namespace Emergence.Editor
             catch (Exception e) { Debug.LogWarning("[AutoLiveVerify] capture " + name + " failed: " + e.Message); }
         }
 
+        /// <summary>D-936c: a temporary camera on the biggest water body's shore, 1.7 m up, looking across — the same
+        /// framing as GroundCaptureProbe's eye-at-the-water.png, but in the LIVE scene the build ships.</summary>
+        static void CaptureLakeShore(string name)
+        {
+            try
+            {
+                var wroot = GameObject.Find("Water"); if (wroot == null) return;
+                Renderer big = null; float bigA = 0f;
+                foreach (var r in wroot.GetComponentsInChildren<Renderer>())
+                { float a = r.bounds.size.x * r.bounds.size.z; if (a > bigA) { bigA = a; big = r; } }
+                if (big == null) return;
+                var wb = big.bounds; var terrain = Terrain.activeTerrain;
+                float reach = Mathf.Max(wb.extents.x, wb.extents.z) + 22f;
+                var eye = new Vector3(wb.center.x - reach, 0f, wb.center.z - reach * 0.35f);
+                eye.y = (terrain != null ? terrain.SampleHeight(eye) + terrain.transform.position.y : wb.center.y) + 1.7f;
+                var go = new GameObject("TMP_lakeCam"); var cam = go.AddComponent<Camera>();
+                cam.CopyFrom(Camera.main); cam.targetTexture = null; cam.fieldOfView = 55f;
+                go.transform.position = eye; go.transform.LookAt(new Vector3(wb.center.x, wb.center.y + 0.5f, wb.center.z));
+                const int w = 1280, h = 720;
+                var rt = new RenderTexture(w, h, 24);
+                cam.targetTexture = rt; cam.Render();
+                RenderTexture.active = rt;
+                var tex = new Texture2D(w, h, TextureFormat.RGB24, false);
+                tex.ReadPixels(new Rect(0, 0, w, h), 0, 0); tex.Apply();
+                cam.targetTexture = null; RenderTexture.active = null;
+                File.WriteAllBytes(Path.Combine(Application.dataPath, "..", "Reports", name + ".png"), tex.EncodeToPNG());
+                UnityEngine.Object.Destroy(tex); UnityEngine.Object.Destroy(rt); UnityEngine.Object.Destroy(go);
+            }
+            catch (Exception e) { Debug.LogWarning("[AutoLiveVerify] lake capture failed: " + e.Message); }
+        }
+
         static void Finish(bool overtime, bool foundWorld)
         {
             try
@@ -145,7 +178,7 @@ namespace Emergence.Editor
                 sb.AppendLine("generated " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
                 sb.AppendLine("world runtime found: " + foundWorld);
                 sb.AppendLine("sample A (~5s):  year=" + _yearA + " agents=" + _agentsA + " applied=" + _appliedA);
-                sb.AppendLine("sample B (~44s): year=" + _yearB + " agents=" + _agentsB + " applied=" + _appliedB);
+                sb.AppendLine("sample B (~64s): year=" + _yearB + " agents=" + _agentsB + " applied=" + _appliedB);
                 sb.AppendLine("chronicle entries: A=" + _chronA + " -> B=" + _chronB + " (the emergent story writing itself)");
                 sb.AppendLine("music cue @B: \"" + _cueB + "\" (the score engaged: era->ambient at genesis)");
                 sb.AppendLine("gaze dives @B: " + _gazeB + " (the eye noticed life — 0 is fine in a 1-year window)");

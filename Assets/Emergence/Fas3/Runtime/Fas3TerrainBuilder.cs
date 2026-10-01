@@ -326,6 +326,7 @@ namespace Emergence.Runtime
             var water = TileField(S, 'w');
             Blur(stone, S.W, S.H, 2, 2);
             Blur(water, S.W, S.H, 3, 2);
+            LastStone = stone;   // D-936c: the paint reads the same blurred stone the height stood proud on
             // D-223: the paint needs the same blurred water field the height used. Recomputing it
             // there would be a second law that could drift from this one; handing the array over
             // keeps the shore and the basin derived from ONE field.
@@ -374,6 +375,10 @@ namespace Emergence.Runtime
         /// <summary>D-936b: per-tile PEAK of the blurred field for the nearest body — a pond's own "1.0". The pad, the
         /// shore paint and the scatter read wetness RELATIVE to it, so a pond is treated like a lake at its own scale.</summary>
         public static float[] LastLakePeak { get; private set; }
+        /// <summary>D-936c: the blurred stone field (s/i tiles, r=2 x2) from the last height build.</summary>
+        public static float[] LastStone { get; private set; }
+        public static float StoneAt(WorldState S, float sx, float sy)
+            => LastStone == null ? 0f : Sample(LastStone, S.W, S.H, sx, sy);
         /// <summary>D-936b: wetness relative to the local body's peak (0..1): 1 at the body's deepest, ~0 on dry ground.</summary>
         public static float WaterRelAt(WorldState S, float sx, float sy)
         {

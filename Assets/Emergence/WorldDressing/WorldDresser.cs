@@ -234,14 +234,22 @@ namespace Emergence.Editor
                     float sy = Fas3TerrainBuilder.CellToTileY(ay, AlphaRes, S.H);
                     int tx = Mathf.Clamp(Mathf.RoundToInt(sx), 0, S.W - 1), ty = Mathf.Clamp(Mathf.RoundToInt(sy), 0, S.H - 1);
                     char tt = Tile(S, tx, ty);
-                    if (tt == 's' || tt == 'i')
+                    // D-936c (SEEN live-verify-end.png: the village stood on a CHECKERBOARD of 8 m gravel squares): the
+                    // stone paint was per tile, hard-edged. It now reads the blurred stone field the height law already
+                    // stands proud on (r=2, two passes) — the same "one field, every consumer" rule as the water.
+                    float stoneF = Fas3TerrainBuilder.StoneAt(S, sx, sy);
+                    if (stoneF > 0.10f || tt == 's' || tt == 'i')
                     {
                         // D-115: stony ground, but blend with grass + a little worn dirt (was pure grey rock =
                         // a hard checkerboard at the village). Noise keeps it mottled, not a flat grey square.
                         float f = Mathf.PerlinNoise(sx * 0.3f + 5f, sy * 0.3f + 11f);
-                        am[ay, ax, liGravel] = 0.55f + f * 0.25f;
-                        am[ay, ax, liGrass] = 0.25f;
-                        am[ay, ax, liPath] = 0.20f - f * 0.10f;
+                        // SEEN live-verify-end.png 13:26 (first cut, k from the field alone): the stone tiles went to grass with
+                        // boulders standing on a lawn. A stone TILE is stone — full paint on it; the blurred field only HEMS it
+                        // outward so the edge is a fringe, not an 8 m kerb.
+                        float k = (tt == 's' || tt == 'i') ? 1f : Mathf.Clamp01((stoneF - 0.10f) / 0.30f);
+                        am[ay, ax, liGravel] = (0.55f + f * 0.25f) * k;
+                        am[ay, ax, liGrass] = 1f - 0.75f * k;
+                        am[ay, ax, liPath] = (0.20f - f * 0.10f) * k;
                     }
                     else if (tt == 'a' || tt == 'c') { am[ay, ax, liPath] = 1f; }
                     else
