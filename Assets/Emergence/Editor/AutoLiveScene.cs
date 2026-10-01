@@ -179,11 +179,15 @@ namespace Emergence.Editor
             bloom.threshold.Override(0.95f); bloom.intensity.Override(0.5f); bloom.scatter.Override(0.65f);
             if (!prof.TryGet<Vignette>(out var vig)) vig = prof.Add<Vignette>(true);
             vig.intensity.Override(0.18f); vig.smoothness.Override(0.6f);
+            // D-937 (Patrik: "ser inte alls ut som demoscenen"): the floor already carries the pack's own grade (bloom 1,37 +
+            // colour); this volume stacked ACES + a second bloom + a vignette on top — neither demo has a tonemapper. The
+            // floor is inherited (D-873 L2): the extras stay in the asset, DISARMED, for a later eye pass.
+            tone.active = false; bloom.active = false; vig.active = false;
             EditorUtility.SetDirty(prof);
             var volGo = GameObject.Find("PostVolume") ?? new GameObject("PostVolume");
             var vol = volGo.GetComponent<Volume>() ?? volGo.AddComponent<Volume>();
             vol.isGlobal = true; vol.priority = 0; vol.sharedProfile = prof;
-            rep.AppendLine("post: global Volume (ACES + bloom thr 0.95/int 0.5 + vignette 0.18) -> " + VolumePath);
+            rep.AppendLine("post: floor grade inherited; EmergenceLiveVolume extras DISARMED (D-937: ACES/bloom/vignette inactive) -> " + VolumePath);
 
             // 4. save the live scene (Save As -> keeps the floor template clean)
             EditorSceneManager.MarkSceneDirty(scene);

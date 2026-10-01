@@ -1,4 +1,4 @@
-DONE 14:27:02 samples=120 drawCallsAvg=6505 dcMax=6514 triAvgM=1,2 fps=93 | jumped to year 55 at frame 6 (apply 402 ms, applied year now 55, source persistent checkpoint)
+DONE 14:25:46 samples=120 drawCallsAvg=6537 dcMax=6624 triAvgM=1,2 fps=114 | jumped to year 55 at frame 6 (apply 165 ms, applied year now 55, source persistent checkpoint)
 world: appliedYear=55 huts=7 agents=20 fences=204 soilTexels=2088 workMarks=24 codexPlaced=24 fires=0 smoke=6 nature=0 trodden="trodden: y55 max footfall 276, 62511 texels worn (region 708x645)"
   LiveFields: renderers=204 meshFilters=204 distinctMeshes=5 combinedMeshes=0
   Huts_Live: renderers=136 meshFilters=136 distinctMeshes=42 combinedMeshes=0

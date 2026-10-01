@@ -39,7 +39,7 @@ namespace Emergence.Editor
         public const string FloorScenePath = "Assets/Emergence/Scenes/EmergenceFloor_day.unity"; // D-878: born from demoscene_village_day
         public const string NatureRoot = "Assets/Fantastic Nature Pack";   // D-875: L3 family = FANTASTIC; Dreamscape is out (magenta in URP 17.5)
         public const string VillageRoot = "Assets/Fantastic Village Pack";
-        public const float GrassPerSqm = 0.2f;       // D-878: Nature grass as terrain TREE instances (pack table s.21: grass = Tree Objects)
+        public const float GrassPerSqm = 0.3f;       // D-878: Nature grass as terrain TREE instances (pack table s.21: grass = Tree Objects) // D-937: 0,2 → 0,4 — the meadow was never SEEN at 0,2 (instancer refused every clump); the demo is a dense meadow. Perf: MEASURE (soak/perfplay).
         public const float GrassPerTile = 0.8f;    // TD-032: Dreamscape waving grass clumps per open-grass tile (the meadow look — EP: "gräset syns inte / vajar inte"). ~0.8×5725 g-tiles ≈ 4.6k clumps; tune up if the editor handles it
         public const float GrassScale = 1.3f;      // Dreamscape grass clumps read a touch small at 1 in our scale
         public const float TreesPerForestTile = 0.9f;  // density budgets (AD/Producer iterate)
@@ -220,6 +220,9 @@ namespace Emergence.Editor
             // D-120 roads v1.1: 5th layer = COBBLESTONE for the paved-street tier. >4 layers needs URP's 8-layer
             // path — we now enable the _TERRAIN_8_LAYERS keyword on the terrain material (below) so it renders.
             int liCobble = AddLayer(layers, new[] { "Layer_pavingstone_01", "Layer_stone", "Layer_Cobblestone" }, new Color(0.55f, 0.53f, 0.5f));
+            // D-937: the SHORE is bleached sand (D-223's words), not the stone layer's hex cobble — SEEN ab-B-end.png: the lake
+            // wore a paved apron. The pack's own Layer_sand, 6th layer (8-layer path already on).
+            int liSand = AddLayer(layers, new[] { "Layer_sand", "Layer_Sand" }, new Color(0.78f, 0.72f, 0.55f));
             data.terrainLayers = layers.ToArray();
 
             // D-879 (Patrik): roads start as narrow trails and only widen/pave as the civilisation develops. At 256 the
@@ -247,11 +250,13 @@ namespace Emergence.Editor
                         // boulders standing on a lawn. A stone TILE is stone — full paint on it; the blurred field only HEMS it
                         // outward so the edge is a fringe, not an 8 m kerb.
                         float k = (tt == 's' || tt == 'i') ? 1f : Mathf.Clamp01((stoneF - 0.10f) / 0.30f);
-                        am[ay, ax, liGravel] = (0.55f + f * 0.25f) * k;
-                        am[ay, ax, liGrass] = 1f - 0.75f * k;
-                        am[ay, ax, liPath] = (0.20f - f * 0.10f) * k;
+                        // D-937 (SEEN ab-A-end.png): full gravel read as a PAVED square in a year-0 wilderness — the demo's stony
+                        // ground is rocks on thin grass with bare patches. Half the gravel, keep the grass under it.
+                        am[ay, ax, liGravel] = (0.30f + f * 0.20f) * k;
+                        am[ay, ax, liGrass] = 1f - 0.45f * k;
+                        am[ay, ax, liPath] = (0.15f - f * 0.08f) * k;
                     }
-                    else if (tt == 'a' || tt == 'c') { am[ay, ax, liPath] = 1f; }
+                    else if (tt == 'a' || tt == 'c') { am[ay, ax, liPath] = 0.65f; am[ay, ax, liGrass] = 0.35f; }   // D-937: an 8 m square of bare earth read as a plot; worn, not paved
                     else
                     {
                         // D-101: break the uniform "billiard green" — grass with noise-driven worn-earth
@@ -277,8 +282,13 @@ namespace Emergence.Editor
                     {
                         float shore = Mathf.Max(Mathf.Clamp01((wet - 0.12f) / 0.23f), shoreRel);
                         for (int l = 0; l < layers.Count; l++) am[ay, ax, l] *= 1f - shore;
-                        am[ay, ax, liGravel] += shore * 0.55f;
-                        am[ay, ax, liPath] += shore * 0.45f;
+                        // D-937 (SEEN ab-C-lake.png): pale sand under the whole lake showed through the pack's transparent water —
+                        // the lake read as a mudflat. Below the water line (field ≈ 0,38 on a lake / 80 % of a pond's peak) the
+                        // bottom is dark wet earth; the sand is the BAND between dry grass and the water's edge.
+                        float under = Mathf.Clamp01(Mathf.Max((wet - 0.36f) / 0.08f, (rel - 0.78f) / 0.10f));
+                        am[ay, ax, liSand]  += shore * (0.70f - 0.55f * under);
+                        am[ay, ax, liPath]  += shore * 0.30f * (1f - under);
+                        am[ay, ax, liField] += shore * 0.85f * under;   // dark dirt bed
                     }
                 }
             int trodden = EnvironmentOnly ? 0 : PaintTrodden(S, am, AlphaRes, liPath, liGrass); // D-921: live scene wears its ground via Fas3TroddenPainter // D-879: footfall wears the grass (states with pathUse)
@@ -515,7 +525,7 @@ namespace Emergence.Editor
                         }
                     }
                 data.SetTreeInstances(inst.ToArray(), true);
-                terrain.treeDistance = 220f; terrain.treeBillboardDistance = 120f; terrain.treeCrossFadeLength = 20f; terrain.treeMaximumFullLODCount = 400;
+                terrain.treeDistance = 150f; terrain.treeBillboardDistance = 150f; terrain.treeCrossFadeLength = 20f; terrain.treeMaximumFullLODCount = 400;   // D-937 MEASURED (perfplay y55, editor): grass 0/73k/146k clumps = 213/114/82 fps → ~4 ms per 73k; terrain trees here are ONLY grass, so the horizon is 150 m (camera stands at 50)
                 Debug.Log($"[Dresser] D-878 grass: {inst.Count} Nature P_GRASS tree-instances over the open meadow ({grassPfs.Length} prototypes)");
             }
             else Debug.LogWarning("[Dresser] no Nature P_GRASS_ prefabs — meadow grass skipped");
@@ -568,7 +578,8 @@ namespace Emergence.Editor
             if (!AssetDatabase.IsValidFolder(matDir)) AssetDatabase.CreateFolder(dir, "Mats");
             string variantPath = dir + "/" + packPrefab.name + "_inst.prefab";
             var cached = AssetDatabase.LoadAssetAtPath<GameObject>(variantPath);
-            if (cached != null && cached.GetComponentInChildren<LODGroup>(true) == null) return cached; // D-892b: regen stale (LODGroup) caches
+            // D-937: a cache is valid only if the ROOT carries the MeshRenderer — the terrain tree instancer needs it there
+            if (cached != null && cached.GetComponentInChildren<LODGroup>(true) == null && cached.GetComponent<MeshRenderer>() != null) return cached; // D-892b: regen stale (LODGroup) caches
 
             var tmp = (GameObject)PrefabUtility.InstantiatePrefab(packPrefab);
             if (tmp == null) return null;
@@ -602,12 +613,24 @@ namespace Emergence.Editor
                     }
                     if (changed) r.sharedMaterials = mats;
                 }
-                var saved = PrefabUtility.SaveAsPrefabAsset(tmp, variantPath);
+                // D-937 (Patrik 2026-10-01: "ser inte alls ut som demoscenen"; MEASURED Editor.log: "The tree P_GRASS_v1_02_FNP_inst
+                // couldn't be instanced because the prefab contains no valid mesh renderer" x4): the pack's grass prefab is a
+                // LODGroup ROOT with the mesh on a CHILD. D-892b stripped the LODGroup — and left a root with no renderer, so
+                // the terrain tree instancer refused every one of the 73 073 grass instances. The meadow has been EMPTY in
+                // every bake since. The mesh child becomes the prototype root (its offset is ≤ 4 cm, identity rotation/scale).
+                var rootToSave = tmp;
+                if (tmp.GetComponent<MeshRenderer>() == null)
+                {
+                    var mr = tmp.GetComponentInChildren<MeshRenderer>(true);
+                    if (mr != null) { rootToSave = mr.gameObject; rootToSave.transform.SetParent(null, false); rootToSave.name = packPrefab.name + "_inst"; }
+                }
+                var saved = PrefabUtility.SaveAsPrefabAsset(rootToSave, variantPath);
                 AssetDatabase.SaveAssets();
-                Debug.Log("[Dresser] D-892 instanced-grass twin saved: " + variantPath);
+                Debug.Log("[Dresser] D-892 instanced-grass twin saved: " + variantPath + " (root renderer: " + (saved != null && saved.GetComponent<MeshRenderer>() != null) + ")");
+                if (rootToSave != tmp) UnityEngine.Object.DestroyImmediate(rootToSave);
                 return saved != null ? saved : AssetDatabase.LoadAssetAtPath<GameObject>(variantPath);
             }
-            finally { UnityEngine.Object.DestroyImmediate(tmp); }
+            finally { if (tmp != null) UnityEngine.Object.DestroyImmediate(tmp); }
         }
 
         // TD-031 v2.1b: stamp tilled soil (the field layer) at every sim field cell, so the enclosed

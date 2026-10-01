@@ -65,7 +65,11 @@ namespace Emergence.Runtime
             fill.shadows = LightShadows.None;
             fill.transform.rotation = Quaternion.Euler(28f, 150f, 0f);
             fill.color = new Color(0.72f, 0.82f, 0.88f);
-            fill.intensity = phase == "day" ? 0.6f : (phase == "dusk" ? 0.14f : 0.07f);
+            // D-937 (Patrik 2026-10-01: "ser inte alls ut som demoscenen"): both demo scenes have ONE light and a DARK
+            // trilight (equator 0,09–0,11, ground 0,05–0,27). Our day had a 0,6 fill + a bright ambient (0,44/0,26) on top
+            // of the sun: MEASURED luminance std 0,07 in the live frame vs 0,125 (nature demo) / 0,284 (village demo).
+            // The fill was for Dreamscape's canopies (D-101e); the Nature pack (D-878) is lit as its own demo lights it.
+            fill.intensity = phase == "day" ? 0f : (phase == "dusk" ? 0.14f : 0.07f);
 
             switch (phase)
             {
@@ -81,14 +85,16 @@ namespace Emergence.Runtime
                     sun.color = new Color(0.6f, 0.7f, 0.95f);
                     RenderSettings.ambientLight = new Color32(48, 58, 84, 255);
                     break;
-                default:       // day — matched to the pack's own demo sun (warm, soft, lower)
+                default:       // day — D-937: the Nature demo's own law (Demoscene_fantastic_nature_day: sun 1,6 @ (0,953 0,900 0,769),
+                               // shadow strength 0,717, trilight sky 0,40/0,32/0,27 · equator 0,09/0,27/0,40 · ground 0,27/0,46/0,46)
                     sun.transform.rotation = Quaternion.Euler(45f, 335f, 0f);
-                    sun.intensity = 1.3f;
-                    sun.color = new Color(1f, 0.957f, 0.839f);
+                    sun.intensity = 1.6f;
+                    sun.color = new Color(0.953f, 0.900f, 0.769f);
+                    sun.shadowStrength = 0.717f;
                     RenderSettings.ambientMode = AmbientMode.Trilight;
-                    RenderSettings.ambientSkyColor = new Color(0.42f, 0.62f, 0.64f);
-                    RenderSettings.ambientEquatorColor = new Color(0.44f, 0.50f, 0.44f);
-                    RenderSettings.ambientGroundColor = new Color(0.26f, 0.28f, 0.22f);
+                    RenderSettings.ambientSkyColor = new Color(0.396f, 0.322f, 0.267f);
+                    RenderSettings.ambientEquatorColor = new Color(0.092f, 0.274f, 0.396f);
+                    RenderSettings.ambientGroundColor = new Color(0.273f, 0.461f, 0.462f);
                     if (season == "winter")
                     {
                         sun.intensity = 1.1f; sun.color = new Color(0.96f, 0.97f, 1f);
@@ -106,7 +112,9 @@ namespace Emergence.Runtime
                 case "night": RenderSettings.fogColor = new Color(0.16f, 0.20f, 0.32f); RenderSettings.fogStartDistance = 120f; RenderSettings.fogEndDistance = 950f; break;
                 // D-920 (review D-919): the documentary camera looks at 50–300 m, and 240 m of clear air gave it no depth.
                 // Haze from 70 m, cooler and a touch desaturated — the blue world — so the far village and treeline recede.
-                default:      RenderSettings.fogColor = new Color(0.62f, 0.72f, 0.86f); RenderSettings.fogStartDistance = 70f; RenderSettings.fogEndDistance = 800f; break;
+                // D-937: the demo's fog is bright cyan-white (0,60 0,97 1,0), not grey-blue — grey fog is what read as "wash".
+                // Range scaled from the demo's eye-level 6–320 m to the documentary camera's 50–120 m stand.
+                default:      RenderSettings.fogColor = new Color(0.599f, 0.965f, 1f); RenderSettings.fogStartDistance = 60f; RenderSettings.fogEndDistance = 600f; break;
             }
 
             PhaseGrade(phase);
