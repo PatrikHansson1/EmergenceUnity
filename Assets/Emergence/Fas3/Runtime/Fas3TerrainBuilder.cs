@@ -235,10 +235,11 @@ namespace Emergence.Runtime
         /// <summary>D-936: per-tile field of "the level this basin's base should be" — each body's mean NoiseH,
         /// spread by the same blur as the water field and normalised by it, so a cell between two bodies reads a
         /// weighted mix and a cell in one body reads that body's own level.</summary>
-        static float[] LakeBase(WorldState S, float[] waterBlurred, float vseed, float vseed2)
+        static float[] LakeBase(WorldState S, float[] waterBlurred, float vseed, float vseed2, out float[] peakField)
         {
             int W = S.W, H = S.H;
             var raw = new float[W * H];                 // body mean on the body's own tiles, 0 elsewhere
+            var rawPeak = new float[W * H];             // D-936b: the body's PEAK blurred field on its tiles — a pond's "1.0"
             var seen = new bool[W * H];
             var q = new Queue<int>(); var body = new List<int>();
             var note = new System.Text.StringBuilder();
@@ -262,12 +263,20 @@ namespace Emergence.Runtime
                     }
                 }
                 float mean = sum / body.Count;
-                foreach (int i in body) raw[i] = mean;
+                float peak = 0f; foreach (int i in body) if (waterBlurred[i] > peak) peak = waterBlurred[i];
+                foreach (int i in body) { raw[i] = mean; rawPeak[i] = peak; }
                 if (body.Count >= 2) note.Append(body.Count).Append("t:").Append(((hi - lo) * TerrainHeight).ToString("F1")).Append("m ");
             }
             LastLakeNote = note.Length > 0 ? "lake pad ironed base spread " + note.ToString().TrimEnd() : "no lakes";
             Blur(raw, W, H, 3, 2);                       // the SAME blur the water field got
-            for (int i = 0; i < raw.Length; i++) raw[i] = waterBlurred[i] > 1e-4f ? raw[i] / waterBlurred[i] : 0f;
+            Blur(rawPeak, W, H, 3, 2);
+            for (int i = 0; i < raw.Length; i++)
+            {
+                bool any = waterBlurred[i] > 1e-4f;
+                raw[i] = any ? raw[i] / waterBlurred[i] : 0f;
+                rawPeak[i] = any ? rawPeak[i] / waterBlurred[i] : 1f;
+            }
+            peakField = rawPeak;
             return raw;
         }
 
@@ -275,11 +284,17 @@ namespace Emergence.Runtime
         /// bowl AND the shore band the water level is read from), easing out to untouched ground at field 0.05 —
         /// a lake on a terrace with a beach, the hillside taking the slope outside it. (First cut ramped to 0.55:
         /// MEASURED shore band 10,1..17,5 m on the 211-tile lake — 7 m of slope left in the band, level fell to the floor.)</summary>
-        static float LakePad(float h, float[] water, float[] lakeBase, int W, int H, float sx, float sy)
+        static float LakePad(float h, float[] water, float[] lakeBase, float[] lakePeak, int W, int H, float sx, float sy)
         {
             float f = Sample(water, W, H, sx, sy);
-            if (f <= 0.05f) return h;
+            if (f <= 0.02f) return h;
             float t = Mathf.Clamp01((f - 0.05f) / 0.20f);
+            // D-936b (MEASURED bake 12:48: the 8/13/17-tile ponds' shore bands spanned 5,6/3,6/1,8 m — a pond's blurred field
+            // peaks at 0,14–0,26, so the absolute ramp above left it on the slope and the plane floated over the low side):
+            // a pond is level RELATIVE TO ITS OWN PEAK — fully flat from 45 % of it, easing out from 12 %.
+            float peak = Sample(lakePeak, W, H, sx, sy);
+            float tRel = Mathf.Clamp01((f / Mathf.Max(0.05f, peak) - 0.12f) / 0.33f);
+            if (tRel > t) t = tRel;
             float w = t * t * (3f - 2f * t);
             return Mathf.Lerp(h, Sample(lakeBase, W, H, sx, sy), w);
         }
@@ -321,7 +336,8 @@ namespace Emergence.Runtime
             // reading the highest water tile, chose the ravine. Iron the base under each body toward that
             // body's own mean noise height (the VillagePad law, applied to water), weighted by the same blurred
             // field that carves and paints, THEN carve. One field, four consumers.
-            var lakeBase = LakeBase(S, water, vseed, vseed2);
+            var lakeBase = LakeBase(S, water, vseed, vseed2, out var lakePeak);
+            LastLakePeak = lakePeak;
 
             var heights = new float[res, res];
             for (int ry = 0; ry < res; ry++)
@@ -331,7 +347,7 @@ namespace Emergence.Runtime
                     float sy = VertToTileY(ry, res, S.H);
                     float h = NoiseH(sx, sy, vseed, vseed2);
                     h = VillagePad(S, sx, sy, vseed, vseed2, h);
-                    h = LakePad(h, water, lakeBase, S.W, S.H, sx, sy);   // D-936
+                    h = LakePad(h, water, lakeBase, lakePeak, S.W, S.H, sx, sy);   // D-936
                     h += 0.030f * Sample(stone, S.W, S.H, sx, sy);   // stone ground stands a touch proud
                     h -= 0.075f * Sample(water, S.W, S.H, sx, sy);   // ponds and rivers lie in a basin
                     heights[ry, rx] = Mathf.Clamp01(h);
@@ -355,6 +371,17 @@ namespace Emergence.Runtime
         /// the shore is painted from it, and the water SURFACE is now shaped by it — one field, three
         /// consumers, so they cannot disagree about where the lake is.</summary>
         public static float[] LastWater { get; private set; }
+        /// <summary>D-936b: per-tile PEAK of the blurred field for the nearest body — a pond's own "1.0". The pad, the
+        /// shore paint and the scatter read wetness RELATIVE to it, so a pond is treated like a lake at its own scale.</summary>
+        public static float[] LastLakePeak { get; private set; }
+        /// <summary>D-936b: wetness relative to the local body's peak (0..1): 1 at the body's deepest, ~0 on dry ground.</summary>
+        public static float WaterRelAt(WorldState S, float sx, float sy)
+        {
+            if (LastWater == null) return 0f;
+            float f = Sample(LastWater, S.W, S.H, sx, sy);
+            float p = LastLakePeak != null ? Sample(LastLakePeak, S.W, S.H, sx, sy) : 1f;
+            return f / Mathf.Max(0.05f, p);
+        }
 
         /// <summary>Bilinear read of the blurred water field, for anyone shaping water.</summary>
         public static float WaterAt(WorldState S, float sx, float sy)

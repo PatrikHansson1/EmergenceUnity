@@ -9,13 +9,17 @@ namespace Emergence.Runtime
 {
     public sealed class EmergenceIntro : MonoBehaviour
     {
-        public float holdSeconds = 3.5f;   // fully shown
+        public float holdSeconds = 6f;     // fully shown (D-936: was 3.5 — the pace line below needs reading time)
         public float fadeSeconds = 2.5f;   // then eases out
         public string title = "EMERGENCE";
+        // D-936 (Patrik's cold play: "spelet går långsamt framåt ... inget hände"): the opening never said what the
+        // player is watching or how fast it moves. MEASURED pace: ~1 minute per year (soak 55,8 s/year); first child
+        // year 3 (Liv), first roofs year 6 (seq-8919). Say it once, in the game's voice, then get out of the way.
+        public string pace  = "Four souls in a wild land. A year passes in about a minute —\nthe first child comes around year 3, the first roof around year 6.";
         public string hint  = "Space pause  ·  1/2/3 speed  ·  WASD / drag / scroll  camera  ·  B book  ·  M almanac  ·  Esc settings";
 
         float _t0 = -1f;
-        GUIStyle _titleStyle, _hintStyle;
+        GUIStyle _titleStyle, _hintStyle, _paceStyle;
 
         void OnGUI()
         {
@@ -29,6 +33,7 @@ namespace Emergence.Runtime
             {
                 _titleStyle = new GUIStyle(EmergenceUI.Display) { fontSize = 60, alignment = TextAnchor.MiddleCenter };
                 _hintStyle  = new GUIStyle(EmergenceUI.Meta)    { alignment = TextAnchor.MiddleCenter };
+                _paceStyle  = new GUIStyle(EmergenceUI.Prose)   { alignment = TextAnchor.MiddleCenter, wordWrap = true };
             }
 
             EmergenceUI.Begin();
@@ -44,7 +49,8 @@ namespace Emergence.Runtime
 
             var dim = EmergenceUI.Ink70;
             GUI.color = new Color(dim.r, dim.g, dim.b, a);
-            GUI.Label(new Rect(0, H * 0.36f + 40f, W, 22f), hint, _hintStyle);
+            GUI.Label(new Rect(0, H * 0.36f + 44f, W, 44f), pace, _paceStyle);
+            GUI.Label(new Rect(0, H * 0.36f + 98f, W, 22f), hint, _hintStyle);
 
             GUI.color = prev;
             EmergenceUI.End();

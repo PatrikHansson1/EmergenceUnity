@@ -109,13 +109,19 @@ namespace Emergence.Runtime
                     // is only 1.1 m down: the water stood a metre or more below its own shore, everywhere. The shore is
                     // the mesh edge, so read the ground THERE: land cells with field 0.20..0.32 around the body; the
                     // plane sits ShoreDrop under the lowest of them (never above ground at the edge), floor+0.25 at least.
+                    // D-936b (SEEN live-verify-end.png: the 17-tile pond had a straight 8 m edge): a small pond's blur never
+                    // reaches 0.20 on land, so its outline fell back to the raw tiles and its shore band was empty. The
+                    // threshold is the BODY's: 60 % of its own peak field (0.20 for a lake, lower for a pond), band = +0.12.
+                    float peak = 0f;
+                    foreach (int i in body) { float fw = Fas3TerrainBuilder.WaterAt(S, i % W, i / W); if (fw > peak) peak = fw; }
+                    float thr = Mathf.Clamp(peak * 0.6f, 0.08f, 0.20f);
                     float bandMin = float.PositiveInfinity, bandMax = float.NegativeInfinity; int bandN = 0;
                     for (int y = Mathf.Max(0, minTy - 4); y <= Mathf.Min(H - 1, maxTy + 4); y++)
                         for (int x = Mathf.Max(0, minTx - 4); x <= Mathf.Min(W - 1, maxTx + 4); x++)
                         {
                             if (Fas3TerrainBuilder.Tile(S, x, y) == 'w') continue;
                             float f = Fas3TerrainBuilder.WaterAt(S, x, y);
-                            if (f < 0.20f || f > 0.32f) continue;
+                            if (f < thr || f > thr + 0.12f) continue;
                             var w = World(S, x, y);
                             float h = terrain.SampleHeight(w) + terrain.transform.position.y;
                             if (h < bandMin) bandMin = h; if (h > bandMax) bandMax = h; bandN++;
@@ -123,10 +129,10 @@ namespace Emergence.Runtime
                     float level = bandN > 0 ? Mathf.Max(floor + 0.25f, bandMin - ShoreDrop)
                                             : Mathf.Max(floor + 0.25f, rim - RimDrop);   // tiny pond with no band: old law
                     Detail += "body" + Bodies + " " + body.Count + "t level=" + level.ToString("F2") + " floor=" + floor.ToString("F2")
-                            + " rimTile=" + rim.ToString("F2") + " shoreBand=" + (bandN > 0 ? bandMin.ToString("F2") + ".." + bandMax.ToString("F2") + " n=" + bandN : "none")
+                            + " rimTile=" + rim.ToString("F2") + " shoreBand=" + (bandN > 0 ? bandMin.ToString("F2") + ".." + bandMax.ToString("F2") + " n=" + bandN : "none") + " thr=" + thr.ToString("F2")
                             + " depth=" + (level - floor).ToString("F2") + "m; ";
 
-                    var go = MakeSurface(S, lakePf, root.transform, level, minTx, maxTx, minTy, maxTy);
+                    var go = MakeSurface(S, lakePf, root.transform, level, minTx, maxTx, minTy, maxTy, thr);
                     if (go == null) continue;
                     go.name = "Water_" + Bodies + "_" + body.Count + "t";
                     Bodies++; Tiles += body.Count;
@@ -154,7 +160,7 @@ namespace Emergence.Runtime
         /// which an imported quad can never be. The pack's MATERIAL is kept — their water shader is
         /// the look we bought — and only its geometry is replaced.</summary>
         static GameObject MakeSurface(WorldState S, GameObject prefab, Transform parent, float level,
-                                      int minTx, int maxTx, int minTy, int maxTy)
+                                      int minTx, int maxTx, int minTy, int maxTy, float wetThr = 0.20f)
         {
             var go = new GameObject("surface");
             go.transform.SetParent(parent, true);
@@ -184,7 +190,7 @@ namespace Emergence.Runtime
             {
                 // D-928: a cell IS a tile (tile k spans world [8k-4, 8k+4], D-924 law) — its centre is the integer coordinate
                 float sx = minTx - 1 + gx, sy = minTy - 1 + gy;
-                if (Fas3TerrainBuilder.WaterAt(S, sx, sy) > 0.20f) return true;
+                if (Fas3TerrainBuilder.WaterAt(S, sx, sy) > wetThr) return true;   // D-936b: the body's own threshold
                 int tx = Mathf.Clamp(Mathf.RoundToInt(sx), 0, S.W - 1);
                 int ty = Mathf.Clamp(Mathf.RoundToInt(sy), 0, S.H - 1);
                 return Fas3TerrainBuilder.Tile(S, tx, ty) == 'w';

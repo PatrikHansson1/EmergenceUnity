@@ -261,9 +261,13 @@ namespace Emergence.Editor
                     // The band where the water HAS BEEN: bare shingle and worn earth, from the first wetness (field 0.12)
                     // to fully bare at 0.35, which is just under the water line the D-936 level law sets.
                     float wet = Fas3TerrainBuilder.WaterAt(S, sx, sy);
-                    if (wet > 0.12f)
+                    // D-936b: a pond's field peaks at 0,14–0,26, so the absolute band above barely touched it (SEEN
+                    // live-verify-end.png: the pond sat in plain grass). Read it RELATIVE to the body's own peak too.
+                    float rel = Fas3TerrainBuilder.WaterRelAt(S, sx, sy);
+                    float shoreRel = Mathf.Clamp01((rel - 0.40f) / 0.30f);
+                    if (wet > 0.12f || shoreRel > 0f)
                     {
-                        float shore = Mathf.Clamp01((wet - 0.12f) / 0.23f);
+                        float shore = Mathf.Max(Mathf.Clamp01((wet - 0.12f) / 0.23f), shoreRel);
                         for (int l = 0; l < layers.Count; l++) am[ay, ax, l] *= 1f - shore;
                         am[ay, ax, liGravel] += shore * 0.55f;
                         am[ay, ax, liPath] += shore * 0.45f;
@@ -1696,7 +1700,7 @@ namespace Emergence.Editor
                 float jx = Hash01(x, y, salt + 200 + i) - 0.5f, jy = Hash01(x, y, salt + 300 + i) - 0.5f;
                 // D-936 (SEEN eye-at-the-water.png: a tree standing in the lake): the water now fills its basin to the
                 // shore band, so a forest tile whose edge lies inside the basin (blurred field > 0.30) is wet ground.
-                if (Fas3TerrainBuilder.WaterAt(S, x + jx * 0.9f, y + jy * 0.9f) > 0.30f) continue;
+                if (Fas3TerrainBuilder.WaterAt(S, x + jx * 0.9f, y + jy * 0.9f) > 0.18f) continue;   // D-936b: 0.18 — the beach too; a pond's water line can sit at 0.20
                 var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, parent);
                 go.transform.position = Ground(S, x + jx * 0.9f, y + jy * 0.9f);
                 float tiltX = (Hash01(x, y, salt + 600 + i) - 0.5f) * 8f, tiltZ = (Hash01(x, y, salt + 700 + i) - 0.5f) * 8f;   // A3: ±4° lean

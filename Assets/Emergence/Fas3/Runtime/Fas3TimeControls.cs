@@ -149,6 +149,11 @@ namespace Emergence.Runtime
                               EmergenceUI.Ink100, EmergenceUI.Hairline, EmergenceUI.GoldLeaf);
             if (Paused)
                 GUI.Label(new Rect(r.x + EmergenceUI.Sp5, tallyBase + 6f, 90, 14), "PAUSED", EmergenceUI.Dim);
+            // D-936 (Patrik: "gick inte att spola framåt så mycket"): at 4x/max the clock can only play what the engine
+            // has already produced (lookahead buffer). An empty buffer means the engine itself sets the pace — SAY SO,
+            // instead of a tally that promises speed and delivers none. Honest, not a diagnostic (no numbers).
+            else if (SpeedIndex >= 2 && d.bufferMode && d.BufferedYears == 0)
+                GUI.Label(new Rect(r.x + EmergenceUI.Sp5, tallyBase + 6f, 200, 14), "the engine sets the pace", EmergenceUI.Dim);
 
             if (GUI.Button(new Rect(pauseX - 4f, tallyBase - 16f, 16f, 22f), GUIContent.none, GUIStyle.none))
                 SetPause(!Paused);
